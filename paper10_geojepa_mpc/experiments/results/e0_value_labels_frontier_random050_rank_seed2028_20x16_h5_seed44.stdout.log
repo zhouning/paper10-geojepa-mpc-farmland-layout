@@ -1,0 +1,52 @@
+CountyLevelEnv: Loading all Bishan county parcels...
+  52515 swappable parcels, 52515 assigned to townships
+  Building cross-township adjacency (52515 parcels)...
+  Cross-township parcel adjacencies: 3290 edges
+    T01-Bishan: 202 blocks
+    T02-Qinggang: 269 blocks
+    T03-Hechuan: 112 blocks
+    T04-Laifeng: 142 blocks
+    T05-Guangpu: 291 blocks
+    T06-Daxing: 179 blocks
+    T07-Zhengxing: 120 blocks
+    T08-Dalukou: 338 blocks
+    T09-Hebian: 282 blocks
+    T10-Shihe: 297 blocks
+    T11-Baxian: 132 blocks
+    T12-Jianlong: 78 blocks
+    T13-Qinglonghu: 158 blocks
+  Total: 2600 blocks, 51089/52515 parcels assigned
+  Load times: parcels=12.2s, adjacency=70.6s, blocks=0.1s, total=83.3s
+  Budget: 500 swaps, 5/step, 100 steps
+  Obs dim: 44212, Action dim: 2600
+  Initial avg farmland slope: 9.6157
+  Initial contiguity: 3.5852
+  Initial baimu fang: 109 patches, 46843.7 ha total
+  Block adjacency: median 5 neighbors
+  Cross-township block edges: 511
+{
+  "output": "paper10_geojepa_mpc\\experiments\\results\\e0_value_labels_frontier_random050_rank_seed2028_20x16_h5_seed44.npz",
+  "partial_output": "paper10_geojepa_mpc\\experiments\\results\\e0_value_labels_frontier_random050_rank_seed2028_20x16_h5_seed44.partial.npz",
+  "prepared_dir": "D:\\test",
+  "checkpoint": "paper10_geojepa_mpc\\experiments\\checkpoints\\e0_bishan_rank_seed2028\\rank_seed2028.pt",
+  "mask_mode": "executable",
+  "candidate_mode": "frontier_random",
+  "frontier_fraction": 0.5,
+  "advance_policy": "random",
+  "continuation_policy": "random",
+  "score_batch_size": 512,
+  "n_states_requested": 20,
+  "n_states_generated": 20,
+  "candidate_actions": 16,
+  "label_horizon": 5,
+  "gamma": 0.99,
+  "seed": 44,
+  "progress_every": 1,
+  "elapsed_sec": 843.5874368000077,
+  "return_mean": 1.4419478178024292,
+  "return_std": 4.164623260498047,
+  "one_step_reward_mean": 0.985366702079773,
+  "one_step_reward_std": 2.9745426177978516,
+  "candidate_score_mean": 0.42427149415016174,
+  "candidate_score_std": 0.8070693016052246
+}

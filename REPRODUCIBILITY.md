@@ -119,6 +119,53 @@ Re-running the recorded 100-step rollout requires the full Bishan data:
 The packaged five-seed summary reports mean total reward `65.2566` and sample
 standard deviation `5.0037`.
 
+## Packaged Frontier-Random Value-Head Scale-Up
+
+The repository also includes the 2026-06-08 20x16/h5 scale-up artifacts:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_frontier_random050_20x16_h5_seed44_top5_report_2026-06-08.md
+paper10_geojepa_mpc/experiments/results/e0_frontier_random050_value_head_20x16_h5_seed44_top5_rollout_summary.json
+paper10_geojepa_mpc/experiments/results/e0_value_labels_frontier_random050_rank_seed2028_20x16_h5_seed44.npz
+paper10_geojepa_mpc/experiments/checkpoints/e0_frontier_random050_value_head_20x16_h5_seed44_top5/value_head_seed3044.pt
+```
+
+Re-run value-label generation with the full Bishan data:
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 -m paper10_geojepa_mpc.experiments.value_label_generation --checkpoint paper10_geojepa_mpc\experiments\checkpoints\e0_bishan_rank_seed2028\rank_seed2028.pt --n-states 20 --candidate-actions 16 --label-horizon 5 --gamma 0.99 --seed 44 --mask-mode executable --candidate-mode frontier_random --frontier-fraction 0.5 --advance-policy random --continuation-policy random --progress-every 1 --partial-output reviewer_outputs\e0_value_labels_frontier_random050_rank_seed2028_20x16_h5_seed44.partial.npz --output reviewer_outputs\e0_value_labels_frontier_random050_rank_seed2028_20x16_h5_seed44.npz
+```
+
+Re-run the top-k monitor. In the packaged result, top-5 is the selected gate:
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 -m paper10_geojepa_mpc.experiments.value_label_monitor --input paper10_geojepa_mpc\experiments\results\e0_value_labels_frontier_random050_rank_seed2028_20x16_h5_seed44.npz --top-k 5 --output-json reviewer_outputs\e0_value_label_monitor_frontier_random050_20x16_h5_seed44_top5.json --output-md reviewer_outputs\e0_value_label_monitor_frontier_random050_20x16_h5_seed44_top5.md
+```
+
+Expected monitor fields are `decision=continue`,
+`candidate_topk_regret` near `0.1877`, and `candidate_topk_overlap` near
+`0.6300`.
+
+Re-run the packaged value-head training step:
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 -m paper10_geojepa_mpc.experiments.run_e0_value_head_train --transition-path tool2\transitions.npz --pairwise-path paper10_geojepa_mpc\experiments\results\e0_value_labels_frontier_random050_rank_seed2028_20x16_h5_seed44.npz --init-checkpoint paper10_geojepa_mpc\experiments\checkpoints\e0_bishan_rank_seed2028\rank_seed2028.pt --checkpoint-path reviewer_outputs\frontier_random050_value_head_20x16_top5\value_head.pt --output reviewer_outputs\frontier_random050_value_head_20x16_top5\metrics.json --epochs 3 --batch-size 16 --transition-samples 6000 --pairwise-states 20 --pairwise-subsample 16 --n-pairs 8 --candidate-top-k 5 --candidate-batch-states 1 --candidate-max-states 20 --checkpoint-metric auto --checkpoint-mode min --seed 3044 --device cpu
+```
+
+Expected key fields are `transition_loss_enabled=false`,
+`candidate_top5_hit_rate` near `0.9000`, and `candidate_top5_regret` near
+`0.1877`.
+
+Re-run the recorded 100-step rollout with full Bishan data:
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 -m paper10_geojepa_mpc.experiments.run_e0_env_rollout_smoke --checkpoint paper10_geojepa_mpc\experiments\checkpoints\e0_frontier_random050_value_head_20x16_h5_seed44_top5\value_head_seed3044.pt --prepared-dir . --rollout-steps 100 --horizon 5 --top-k 50 --seeds 0-4 --device cpu --mask-mode executable --selector value_filter --candidate-score-mode blend --candidate-value-weight 0.1 --output reviewer_outputs\frontier_random050_value_head_20x16_top5_5seed_rollout.json
+```
+
+The packaged five-seed summary reports mean total reward `69.4705`, sample
+standard deviation `1.0004`, and a `6.46%` mean-reward improvement over the
+10x12/top4 pilot.
+
 ## Expected Packaged Evidence
 
 The repository already includes the recorded Paper10 result artifacts under

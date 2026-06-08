@@ -12,16 +12,22 @@ as an external data dependency in `DATA_AVAILABILITY.md`.
 
 ## Latest Packaged Experiment
 
-This package now includes the 2026-06-08 `frontier_random050` value-head pilot:
+This package now includes the 2026-06-08 `frontier_random050` value-head
+20x16/h5 scale-up:
 
-- value labels: `paper10_geojepa_mpc/experiments/results/e0_value_labels_frontier_random050_rank_seed2028_10x12_h5_seed43.npz`
-- trained checkpoint: `paper10_geojepa_mpc/experiments/checkpoints/e0_frontier_random050_value_head_10x12_h5_seed43_top4/value_head_seed3043.pt`
-- pilot report: `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_10x12_h5_seed43_pilot_report_2026-06-08.md`
-- five-seed rollout summary: `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_value_head_10x12_h5_seed43_top4_rollout_summary.json`
+- value labels: `paper10_geojepa_mpc/experiments/results/e0_value_labels_frontier_random050_rank_seed2028_20x16_h5_seed44.npz`
+- trained checkpoint: `paper10_geojepa_mpc/experiments/checkpoints/e0_frontier_random050_value_head_20x16_h5_seed44_top5/value_head_seed3044.pt`
+- scale-up report: `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_20x16_h5_seed44_top5_report_2026-06-08.md`
+- five-seed rollout summary: `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_value_head_20x16_h5_seed44_top5_rollout_summary.json`
 
-The pilot uses `selector=value_filter`, executable masks, `H=5`, `K=50`, and
-candidate blend weight `0.1`. The recorded 100-step seeds 0-4 mean total reward
-is `65.2566` with sample standard deviation `5.0037`.
+The scale-up uses `selector=value_filter`, executable masks, `H=5`, `K=50`,
+candidate blend weight `0.1`, and the diagnostics-selected top-5 value-head
+gate. The recorded 100-step seeds 0-4 mean total reward is `69.4705` with sample
+standard deviation `1.0004`.
+
+The previous 10x12/h5 top-4 pilot remains packaged as the direct baseline. Its
+recorded 100-step seeds 0-4 mean total reward is `65.2566` with sample standard
+deviation `5.0037`.
 
 ## Repository Layout
 
@@ -92,7 +98,7 @@ After packaging, the same test suite was run from this repository directory:
 D:\adk\.venv\Scripts\python.exe -m pytest paper10_geojepa_mpc\tests -q -p no:cacheprovider
 ```
 
-Result: `88 passed in 47.16s`.
+Result: `88 passed in 43.25s`.
 
 Reviewers should run the relative-path command in `REPRODUCIBILITY.md` after
 cloning.

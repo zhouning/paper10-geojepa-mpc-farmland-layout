@@ -1,0 +1,70 @@
+{
+  "decision": "stop",
+  "diagnostics": {
+    "candidate_score_vs_return": {
+      "candidate_top1_return_regret_mean": 5.967598851211369,
+      "pairwise_comparable_fraction_mean": 1.0,
+      "pairwise_disagreement_rate_mean": 0.3129166666666666,
+      "pearson_flat": 0.31701449341690197,
+      "pearson_state_mean": 0.4046371922517323,
+      "spearman_flat": 0.35989108780359186,
+      "spearman_state_mean": 0.47897058823529404,
+      "top1_disagreement_rate": 1.0,
+      "topk_best_return_regret_mean": 0.46797910928726194,
+      "topk_overlap_fraction_mean": 0.4875
+    },
+    "label_variation": {
+      "one_step_reward_mean": 0.9853668125000695,
+      "one_step_reward_std": 2.9745427377503098,
+      "one_step_state_std_mean": 1.6782929139142488,
+      "one_step_state_std_median": 1.1934037291923545,
+      "residual_abs_mean": 1.8903238582850463,
+      "residual_mean": 0.456581077174269,
+      "residual_state_std_mean": 2.804552653183614,
+      "residual_state_std_median": 2.2329890462734303,
+      "residual_std": 3.47235727430282,
+      "residual_to_return_state_std_ratio": 0.9278584069076312,
+      "return_mean": 1.4419478896743385,
+      "return_state_std_mean": 3.0226084414438126,
+      "return_state_std_median": 2.5589918003386507,
+      "return_std": 4.1646232133671415
+    },
+    "n_candidates": 16,
+    "n_states": 20,
+    "one_step_vs_return": {
+      "one_step_top1_return_regret_mean": 3.005867969989777,
+      "pairwise_comparable_fraction_mean": 1.0,
+      "pairwise_disagreement_rate_mean": 0.3133333333333333,
+      "pearson_flat": 0.5705076454036524,
+      "pearson_state_mean": 0.41259842663723995,
+      "spearman_flat": 0.4975071778044708,
+      "spearman_state_mean": 0.49955882352941183,
+      "top1_disagreement_rate": 0.75,
+      "topk_best_return_regret_mean": 2.462647271156311,
+      "topk_overlap_fraction_mean": 0.55
+    },
+    "top_k": 4
+  },
+  "input": "paper10_geojepa_mpc\\experiments\\results\\e0_value_labels_frontier_random050_rank_seed2028_20x16_h5_seed44.npz",
+  "metrics": {
+    "candidate_pearson_flat": 0.31701449341690197,
+    "candidate_top1_disagreement": 1.0,
+    "candidate_topk_overlap": 0.4875,
+    "candidate_topk_regret": 0.46797910928726194,
+    "n_states": 20.0,
+    "one_step_top1_disagreement": 0.75,
+    "one_step_topk_overlap": 0.55,
+    "one_step_topk_regret": 2.462647271156311
+  },
+  "min_states": 10,
+  "reasons": [
+    "candidate top-k regret 0.4680 exceeds max 0.2500.",
+    "candidate top-k overlap 0.4875 is below min 0.5000."
+  ],
+  "thresholds": {
+    "candidate_topk_overlap_min": 0.5,
+    "candidate_topk_regret_max": 0.25,
+    "one_step_topk_regret_min": 0.25
+  },
+  "top_k": 4
+}
