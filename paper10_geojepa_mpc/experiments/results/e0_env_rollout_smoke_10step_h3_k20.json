@@ -1,0 +1,125 @@
+{
+  "checkpoint": "paper10_geojepa_mpc/experiments/checkpoints/e0_bishan_rank_seed2028/rank_seed2028.pt",
+  "elapsed_sec": 33.974802300013835,
+  "horizon": 3,
+  "max_steps": 10,
+  "prepared_dir": "D:\\test",
+  "seed": 0,
+  "steps": [
+    {
+      "action": 925,
+      "baimu_area_change_ha": -12.835856023395062,
+      "cont_change": -5.085564624840444e-05,
+      "n_candidates": 20,
+      "n_valid": 2381,
+      "reward": 5.078250010532128,
+      "select_time_sec": 1.123719399998663,
+      "slope_change_pct": -0.02543635899547715,
+      "step": 1
+    },
+    {
+      "action": 959,
+      "baimu_area_change_ha": -5.93335958378911,
+      "cont_change": 0.0002034225849922855,
+      "n_candidates": 20,
+      "n_valid": 2381,
+      "reward": 0.6495378150659247,
+      "select_time_sec": 1.0265377000032458,
+      "slope_change_pct": -0.03541777997108973,
+      "step": 2
+    },
+    {
+      "action": 1006,
+      "baimu_area_change_ha": -9.543516855067015,
+      "cont_change": 0.0005594121087293402,
+      "n_candidates": 20,
+      "n_valid": 2381,
+      "reward": 0.7736193806925405,
+      "select_time_sec": 0.9447410999855492,
+      "slope_change_pct": -0.06007113877502798,
+      "step": 3
+    },
+    {
+      "action": 1422,
+      "baimu_area_change_ha": -39.14396547272801,
+      "cont_change": 0.0005085564624809358,
+      "n_candidates": 20,
+      "n_valid": 2381,
+      "reward": 0.09399817470091731,
+      "select_time_sec": 0.8457026999967638,
+      "slope_change_pct": -0.11633640825579358,
+      "step": 4
+    },
+    {
+      "action": 561,
+      "baimu_area_change_ha": -56.7167647241652,
+      "cont_change": 0.0,
+      "n_candidates": 20,
+      "n_valid": 2380,
+      "reward": 1.4617312947314522,
+      "select_time_sec": 0.7596704000025056,
+      "slope_change_pct": -0.18655525219102148,
+      "step": 5
+    },
+    {
+      "action": 2346,
+      "baimu_area_change_ha": -58.85665170454383,
+      "cont_change": 0.0005594121087293402,
+      "n_candidates": 20,
+      "n_valid": 2380,
+      "reward": 0.27572354300225926,
+      "select_time_sec": 0.697332199983066,
+      "slope_change_pct": -0.1953827793002129,
+      "step": 6
+    },
+    {
+      "action": 1329,
+      "baimu_area_change_ha": -61.55840017592907,
+      "cont_change": 0.0006611234012252609,
+      "n_candidates": 20,
+      "n_valid": 2380,
+      "reward": 5.055084826910832,
+      "select_time_sec": 0.7693284999986645,
+      "slope_change_pct": -0.20131015744324218,
+      "step": 7
+    },
+    {
+      "action": 2414,
+      "baimu_area_change_ha": -73.4149412865281,
+      "cont_change": 0.0003051338774886503,
+      "n_candidates": 20,
+      "n_valid": 2380,
+      "reward": 0.4403000986921688,
+      "select_time_sec": 0.722319399996195,
+      "slope_change_pct": -0.23508373562758278,
+      "step": 8
+    },
+    {
+      "action": 610,
+      "baimu_area_change_ha": -83.46226975700856,
+      "cont_change": 0.00035598952373661064,
+      "n_candidates": 20,
+      "n_valid": 2380,
+      "reward": 1.756303035066412,
+      "select_time_sec": 0.7327866999839898,
+      "slope_change_pct": -0.297054380085272,
+      "step": 9
+    },
+    {
+      "action": 2204,
+      "baimu_area_change_ha": -92.37535218681693,
+      "cont_change": 0.0002034225849922855,
+      "n_candidates": 20,
+      "n_valid": 2380,
+      "reward": 5.3240959195270054,
+      "select_time_sec": 0.7122859999944922,
+      "slope_change_pct": -0.3218699246118979,
+      "step": 10
+    }
+  ],
+  "steps_run": 10,
+  "terminated": true,
+  "top_k": 20,
+  "total_reward": 20.90864409892164,
+  "truncated": false
+}

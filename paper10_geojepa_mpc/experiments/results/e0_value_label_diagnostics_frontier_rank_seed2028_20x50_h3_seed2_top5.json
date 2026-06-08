@@ -1,0 +1,46 @@
+{
+  "candidate_score_vs_return": {
+    "candidate_top1_return_regret_mean": 3.803134122490883,
+    "pairwise_comparable_fraction_mean": 1.0,
+    "pairwise_disagreement_rate_mean": 0.4549795918367347,
+    "pearson_flat": 0.05559651592637825,
+    "pearson_state_mean": 0.12926549434923135,
+    "spearman_flat": 0.04674442674442675,
+    "spearman_state_mean": 0.12718367346938775,
+    "top1_disagreement_rate": 0.9,
+    "topk_best_return_regret_mean": 0.9833858460187912,
+    "topk_overlap_fraction_mean": 0.19000000000000003
+  },
+  "input": "paper10_geojepa_mpc\\experiments\\results\\e0_value_labels_frontier_rank_seed2028_20x50_h3_seed2.npz",
+  "label_variation": {
+    "one_step_reward_mean": 0.7323149007041938,
+    "one_step_reward_std": 1.1285229951810771,
+    "one_step_state_std_mean": 0.6601063047088178,
+    "one_step_state_std_median": 0.4092689823755671,
+    "residual_abs_mean": 1.1443507355106994,
+    "residual_mean": 0.0537401008317247,
+    "residual_state_std_mean": 1.4479324606186559,
+    "residual_state_std_median": 1.474973233103089,
+    "residual_std": 2.092972118907189,
+    "residual_to_return_state_std_ratio": 0.8657092417047919,
+    "return_mean": 0.7860550015359186,
+    "return_state_std_mean": 1.6725389898429697,
+    "return_state_std_median": 1.6226150371324968,
+    "return_std": 2.3251564000149054
+  },
+  "n_candidates": 50,
+  "n_states": 20,
+  "one_step_vs_return": {
+    "one_step_top1_return_regret_mean": 2.496602500230074,
+    "pairwise_comparable_fraction_mean": 1.0,
+    "pairwise_disagreement_rate_mean": 0.3304489795918367,
+    "pearson_flat": 0.4381461028370424,
+    "pearson_state_mean": 0.2489378204889007,
+    "spearman_flat": 0.40649452649452655,
+    "spearman_state_mean": 0.42576230492196876,
+    "top1_disagreement_rate": 0.7,
+    "topk_best_return_regret_mean": 1.6319203201681376,
+    "topk_overlap_fraction_mean": 0.44000000000000006
+  },
+  "top_k": 5
+}

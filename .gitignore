@@ -1,0 +1,21 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+*.egg-info/
+.DS_Store
+Thumbs.db
+
+# External full-data directories. See DATA_AVAILABILITY.md.
+/tool2/*.npz
+/dem_slope_analysis/output/DLTB_with_slope.*
+/results_real/blocks/*
+!/results_real/blocks/README.md
+/townships.json
+
+# Local rerun outputs can be saved elsewhere or explicitly force-added.
+/reviewer_outputs/

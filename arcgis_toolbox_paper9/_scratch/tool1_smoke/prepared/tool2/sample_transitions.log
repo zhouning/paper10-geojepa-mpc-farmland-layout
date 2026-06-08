@@ -1,0 +1,25 @@
+2026-05-10 11:08:04,524 INFO [Tool 2] Sampling data under D:\test\arcgis_toolbox_paper9\_scratch\tool1_smoke\prepared\tool2
+2026-05-10 11:08:04,524 INFO   n_transition_episodes = 5
+2026-05-10 11:08:04,524 INFO   n_pairwise_states     = 100
+2026-05-10 11:08:04,524 INFO   n_pairwise_actions    = 10
+2026-05-10 11:08:04,524 INFO   seed                  = 0
+2026-05-10 11:08:04,524 INFO 
+[Tool 2] Building env via make_env ...
+2026-05-10 11:08:05,067 INFO Note: NumExpr detected 22 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 16.
+2026-05-10 11:08:05,067 INFO NumExpr defaulting to 16 threads.
+2026-05-10 11:08:15,019 INFO   env built in 10.5s; n_blocks=30, n_parcels=584, max_steps=100
+2026-05-10 11:08:15,022 INFO 
+[Tool 2] Collecting transitions (random policy) ...
+2026-05-10 11:08:15,138 INFO     episode 1/5 done (100 steps, total 100 transitions, 0.1s)
+2026-05-10 11:08:15,231 INFO     episode 2/5 done (100 steps, total 200 transitions, 0.2s)
+2026-05-10 11:08:15,333 INFO     episode 3/5 done (100 steps, total 300 transitions, 0.3s)
+2026-05-10 11:08:15,430 INFO     episode 4/5 done (100 steps, total 400 transitions, 0.4s)
+2026-05-10 11:08:15,498 INFO     episode 5/5 done (100 steps, total 500 transitions, 0.5s)
+2026-05-10 11:08:15,530 INFO [Tool 2] transitions: 500 rows in 0.5s -> D:\test\arcgis_toolbox_paper9\_scratch\tool1_smoke\prepared\tool2\transitions.npz
+2026-05-10 11:08:15,530 INFO 
+[Tool 2] Collecting pairwise data (state + N-actions reward) ...
+2026-05-10 11:08:16,433 INFO     pairwise: 100/100 states (0.9s elapsed, ETA 0.0s)
+2026-05-10 11:08:16,439 INFO [Tool 2] pairwise: 100 states × 10 actions in 0.9s -> D:\test\arcgis_toolbox_paper9\_scratch\tool1_smoke\prepared\tool2\pairwise.npz
+2026-05-10 11:08:16,439 INFO   reward std per state (median): 1.9142
+2026-05-10 11:08:16,443 INFO 
+[Tool 2] Done. Summary -> D:\test\arcgis_toolbox_paper9\_scratch\tool1_smoke\prepared\tool2\sample_transitions_summary.json

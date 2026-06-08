@@ -1,0 +1,22 @@
+{
+  "original_rank_seed2028": {
+    "candidate_actions": 20,
+    "candidate_states": 20,
+    "candidate_top1_hit_rate": 0.2,
+    "candidate_top1_regret": 1.8955163955688477,
+    "candidate_top5_hit_rate": 0.55,
+    "candidate_top5_regret": 0.633064016699791,
+    "candidate_top_k": 5,
+    "ranking_acc": 0.6052631735801697
+  },
+  "value_head_ft": {
+    "candidate_actions": 20,
+    "candidate_states": 20,
+    "candidate_top1_hit_rate": 0.3,
+    "candidate_top1_regret": 1.6380866527557374,
+    "candidate_top5_hit_rate": 0.65,
+    "candidate_top5_regret": 0.6249076843261718,
+    "candidate_top_k": 5,
+    "ranking_acc": 0.6842105388641357
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "config": {
+    "prepared_dir": "D:\\test\\arcgis_toolbox_paper9\\_scratch\\tool1_smoke\\prepared",
+    "n_transition_episodes": 5,
+    "n_pairwise_states": 100,
+    "n_pairwise_actions": 10,
+    "seed": 0,
+    "proj_crs": "EPSG:32648",
+    "n_blocks": 30,
+    "n_parcels": 584
+  },
+  "transitions": {
+    "elapsed_s": 0.5,
+    "n_transitions": 500,
+    "output": "D:\\test\\arcgis_toolbox_paper9\\_scratch\\tool1_smoke\\prepared\\tool2\\transitions.npz"
+  },
+  "pairwise": {
+    "elapsed_s": 0.9,
+    "n_states": 100,
+    "n_actions_per_state": 10,
+    "reward_std_median": 1.9141521453857422,
+    "reward_mean": -0.3179726004600525,
+    "reward_range": [
+      -110.35810089111328,
+      98.51176452636719
+    ],
+    "output": "D:\\test\\arcgis_toolbox_paper9\\_scratch\\tool1_smoke\\prepared\\tool2\\pairwise.npz"
+  }
+}

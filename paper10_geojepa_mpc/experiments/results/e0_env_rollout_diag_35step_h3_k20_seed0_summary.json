@@ -1,0 +1,28 @@
+{
+  "elapsed_sec": 55.711739899998065,
+  "final_metrics": {
+    "baimu_area_change_ha": -141.43362704316377,
+    "cont_change": 0.0034073282986240017,
+    "slope_change_pct": -0.5558871596487507
+  },
+  "horizon": 3,
+  "max_action_repeat": 13,
+  "mean_select_time_sec": 0.8624101885735789,
+  "negative_reward_steps": 10,
+  "negative_zero_swap_steps": 10,
+  "positive_reward_steps": 25,
+  "repeated_action_count": 1,
+  "seed": 0,
+  "steps_run": 35,
+  "top_k": 20,
+  "top_repeated_actions": [
+    {
+      "action": 2540,
+      "count": 13
+    }
+  ],
+  "total_reward": 20.440074758393113,
+  "unique_actions": 23,
+  "zero_reward_steps": 0,
+  "zero_swap_steps": 12
+}

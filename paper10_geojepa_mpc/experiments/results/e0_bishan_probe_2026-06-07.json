@@ -1,0 +1,44 @@
+{
+  "dataset": "bishan_full_tool2",
+  "device": "cpu",
+  "epochs": 1,
+  "batch_size": 16,
+  "transition_samples": 6000,
+  "pairwise_states": 1000,
+  "pairwise_subsample": 16,
+  "n_pairs": 4,
+  "seed": 2026,
+  "results": [
+    {
+      "config": "mse_only",
+      "elapsed_sec": 22.3083045000094,
+      "final_loss": 0.021308181807398796,
+      "final_mse": 0.021308181807398796,
+      "final_rank_loss": 0.0,
+      "final_sig_loss": 0.0,
+      "ranking_acc": 0.6448979377746582,
+      "train_ranking_acc": 0.5
+    },
+    {
+      "config": "rank",
+      "elapsed_sec": 70.28743080000277,
+      "final_loss": 0.057407163083553314,
+      "final_mse": 0.013206190429627895,
+      "final_rank_loss": 0.044200971722602844,
+      "final_sig_loss": 0.0,
+      "ranking_acc": 0.7673469185829163,
+      "train_ranking_acc": 0.841269850730896
+    },
+    {
+      "config": "rank_sigreg",
+      "elapsed_sec": 73.52323419999448,
+      "final_loss": 0.05982264131307602,
+      "final_mse": 0.013177718035876751,
+      "final_rank_loss": 0.04618467390537262,
+      "final_sig_loss": 0.046024784445762634,
+      "ranking_acc": 0.787401556968689,
+      "train_ranking_acc": 0.8253968358039856
+    }
+  ],
+  "interpretation": "One-epoch CPU probe only. It validates full-scale feasibility and suggests ranking supervision improves action-ranking accuracy over MSE-only. It is not a manuscript-grade result."
+}

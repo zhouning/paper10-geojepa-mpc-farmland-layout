@@ -1,0 +1,120 @@
+{
+  "aggregate_delta": {
+    "baimu_area_change_ha_mean": 16.219035365340716,
+    "cont_change_mean": -0.0011391664759582212,
+    "mean_score_time_sec": 0.0,
+    "mean_select_time_sec": 3.0059224876021036,
+    "slope_change_pct_mean": 0.02576513582306106,
+    "total_reward_mean": -11.087090315164133
+  },
+  "baseline": {
+    "aggregate": {
+      "baimu_area_change_ha_mean": -211.85442303743721,
+      "cont_change_mean": 0.019498054771530972,
+      "n_episodes": 5,
+      "negative_zero_swap_steps_sum": 0,
+      "slope_change_pct_mean": -1.26449443430059,
+      "total_reward_mean": 67.5436698503176,
+      "zero_swap_steps_sum": 0
+    },
+    "name": "original_seed0_from_5seed",
+    "seeds": [
+      {
+        "final_metrics": {
+          "baimu_area_change_ha": -234.36890440703036,
+          "cont_change": 0.018460599588069115,
+          "slope_change_pct": -1.2933209698030048
+        },
+        "mean_select_time_sec": 1.0840284999983851,
+        "seed": 0,
+        "total_reward": 70.95434469700466
+      },
+      {
+        "final_metrics": {
+          "baimu_area_change_ha": -212.4697149021566,
+          "cont_change": 0.021969639179189926,
+          "slope_change_pct": -1.2573836029355283
+        },
+        "mean_select_time_sec": 1.0186852660006844,
+        "seed": 1,
+        "total_reward": 66.61146840551982
+      },
+      {
+        "final_metrics": {
+          "baimu_area_change_ha": -219.63682778480648,
+          "cont_change": 0.017036641493121785,
+          "slope_change_pct": -1.2790419836250908
+        },
+        "mean_select_time_sec": 1.523798600997252,
+        "seed": 2,
+        "total_reward": 61.297599914019195
+      },
+      {
+        "final_metrics": {
+          "baimu_area_change_ha": -216.1815707304001,
+          "cont_change": 0.01886744475805413,
+          "slope_change_pct": -1.259650733894272
+        },
+        "mean_select_time_sec": 1.474740822997992,
+        "seed": 3,
+        "total_reward": 60.76247356686642
+      },
+      {
+        "final_metrics": {
+          "baimu_area_change_ha": -176.61509736279248,
+          "cont_change": 0.021155948839219896,
+          "slope_change_pct": -1.2330748812450534
+        },
+        "mean_select_time_sec": 1.101963126999617,
+        "seed": 4,
+        "total_reward": 78.09246266817792
+      }
+    ],
+    "timing": {
+      "mean_first_step_time_sec": 0.0,
+      "mean_rollout_time_sec": 0.0,
+      "mean_score_time_sec": 0.0,
+      "mean_select_time_sec": 1.240643263398786
+    }
+  },
+  "candidate": {
+    "aggregate": {
+      "baimu_area_change_ha_mean": -195.6353876720965,
+      "cont_change_mean": 0.01835888829557275,
+      "n_episodes": 1,
+      "negative_zero_swap_steps_sum": 0,
+      "slope_change_pct_mean": -1.2387292984775289,
+      "total_reward_mean": 56.456579535153466,
+      "zero_swap_steps_sum": 0
+    },
+    "name": "value_filter_blend010_common_cont_seed0",
+    "seeds": [
+      {
+        "final_metrics": {
+          "baimu_area_change_ha": -195.6353876720965,
+          "cont_change": 0.01835888829557275,
+          "slope_change_pct": -1.2387292984775289
+        },
+        "mean_select_time_sec": 4.246565751000889,
+        "seed": 0,
+        "total_reward": 56.456579535153466
+      }
+    ],
+    "timing": {
+      "mean_first_step_time_sec": 0.0,
+      "mean_rollout_time_sec": 0.0,
+      "mean_score_time_sec": 0.0,
+      "mean_select_time_sec": 4.246565751000889
+    }
+  },
+  "seed_deltas": [
+    {
+      "baimu_area_change_ha_delta": 38.73351673493386,
+      "cont_change_delta": -0.00010171129249636479,
+      "mean_select_time_sec_delta": 3.1625372510025045,
+      "seed": 0,
+      "slope_change_pct_delta": 0.05459167132547593,
+      "total_reward_delta": -14.497765161851191
+    }
+  ]
+}

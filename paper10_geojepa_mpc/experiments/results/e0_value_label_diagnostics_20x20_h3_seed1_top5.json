@@ -1,0 +1,34 @@
+{
+  "input": "paper10_geojepa_mpc\\experiments\\results\\e0_value_labels_20x20_h3_seed1.npz",
+  "label_variation": {
+    "one_step_reward_mean": 0.3346505660379262,
+    "one_step_reward_std": 1.4892167923439132,
+    "one_step_state_std_mean": 0.5250361365404708,
+    "one_step_state_std_median": 0.3589718356784146,
+    "residual_abs_mean": 0.7129492569058129,
+    "residual_mean": -0.006969649287530046,
+    "residual_state_std_mean": 1.3276323557557483,
+    "residual_state_std_median": 1.0927108919483162,
+    "residual_std": 1.6914309360216122,
+    "residual_to_return_state_std_ratio": 0.9352921605391575,
+    "return_mean": 0.3276809167503961,
+    "return_state_std_mean": 1.4194841053627807,
+    "return_state_std_median": 1.2044564204806996,
+    "return_std": 2.19857651640133
+  },
+  "n_candidates": 20,
+  "n_states": 20,
+  "one_step_vs_return": {
+    "one_step_top1_return_regret_mean": 1.0642431057989596,
+    "pairwise_comparable_fraction_mean": 1.0,
+    "pairwise_disagreement_rate_mean": 0.3357894736842105,
+    "pearson_flat": 0.6399458937636796,
+    "pearson_state_mean": 0.3566749016787586,
+    "spearman_flat": 0.49738210863817894,
+    "spearman_state_mean": 0.4382706766917293,
+    "top1_disagreement_rate": 0.8,
+    "topk_best_return_regret_mean": 0.47056481391191485,
+    "topk_overlap_fraction_mean": 0.56
+  },
+  "top_k": 5
+}

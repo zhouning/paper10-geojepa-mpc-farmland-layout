@@ -1,0 +1,167 @@
+{
+  "aggregate": {
+    "baimu_area_change_ha_mean": 0.0,
+    "cont_change_mean": -0.000127139115620567,
+    "n_episodes": 2,
+    "negative_zero_swap_steps_sum": 0,
+    "slope_change_pct_mean": -0.06931976750385088,
+    "total_reward_mean": 2.7550597007424775,
+    "zero_swap_steps_sum": 0
+  },
+  "checkpoint": "paper10_geojepa_mpc\\experiments\\checkpoints\\e0_bishan_rank_seed2028\\rank_seed2028.pt",
+  "elapsed_sec": 33.672585499996785,
+  "env_max_steps": 100,
+  "episode_summaries": [
+    {
+      "elapsed_sec": 3.0925840999989305,
+      "final_metrics": {
+        "baimu_area_change_ha": 0.0,
+        "cont_change": -5.085564624840444e-05,
+        "slope_change_pct": -0.028877525753341744
+      },
+      "horizon": 3,
+      "max_action_repeat": 1,
+      "mean_select_time_sec": 1.4215522000013152,
+      "negative_reward_steps": 0,
+      "negative_zero_swap_steps": 0,
+      "positive_reward_steps": 2,
+      "repeated_action_count": 0,
+      "seed": 0,
+      "steps_run": 2,
+      "top_k": 20,
+      "top_repeated_actions": [],
+      "total_reward": 1.1480086303690222,
+      "unique_actions": 2,
+      "zero_reward_steps": 0,
+      "zero_swap_steps": 0
+    },
+    {
+      "elapsed_sec": 2.1946114000165835,
+      "final_metrics": {
+        "baimu_area_change_ha": 0.0,
+        "cont_change": -0.00020342258499272958,
+        "slope_change_pct": -0.10976200925436001
+      },
+      "horizon": 3,
+      "max_action_repeat": 1,
+      "mean_select_time_sec": 0.9918688999896403,
+      "negative_reward_steps": 0,
+      "negative_zero_swap_steps": 0,
+      "positive_reward_steps": 2,
+      "repeated_action_count": 0,
+      "seed": 1,
+      "steps_run": 2,
+      "top_k": 20,
+      "top_repeated_actions": [],
+      "total_reward": 4.362110771115933,
+      "unique_actions": 2,
+      "zero_reward_steps": 0,
+      "zero_swap_steps": 0
+    }
+  ],
+  "episodes": [
+    {
+      "checkpoint": "paper10_geojepa_mpc\\experiments\\checkpoints\\e0_bishan_rank_seed2028\\rank_seed2028.pt",
+      "elapsed_sec": 3.0925840999989305,
+      "env_max_steps": 100,
+      "horizon": 3,
+      "mask_mode": "executable",
+      "prepared_dir": "D:\\test",
+      "rollout_steps": 2,
+      "seed": 0,
+      "steps": [
+        {
+          "action": 11,
+          "baimu_area_change_ha": 0.0,
+          "best_cumrew": 1.6229555010795593,
+          "completed_swaps": 5,
+          "cont_change": -0.00025427823124068993,
+          "n_base_valid": 2381,
+          "n_candidates": 20,
+          "n_executable_valid": 2316,
+          "n_valid": 2316,
+          "reward": 0.5524313494354928,
+          "select_time_sec": 1.4782902000006288,
+          "slope_change_pct": -0.01469733370646364,
+          "step": 1
+        },
+        {
+          "action": 1289,
+          "baimu_area_change_ha": 0.0,
+          "best_cumrew": 1.4569019377231598,
+          "completed_swaps": 5,
+          "cont_change": -5.085564624840444e-05,
+          "n_base_valid": 2381,
+          "n_candidates": 20,
+          "n_executable_valid": 2315,
+          "n_valid": 2315,
+          "reward": 0.5955772809335294,
+          "select_time_sec": 1.3648142000020016,
+          "slope_change_pct": -0.028877525753341744,
+          "step": 2
+        }
+      ],
+      "steps_run": 2,
+      "terminated": false,
+      "top_k": 20,
+      "total_reward": 1.1480086303690222,
+      "truncated": false
+    },
+    {
+      "checkpoint": "paper10_geojepa_mpc\\experiments\\checkpoints\\e0_bishan_rank_seed2028\\rank_seed2028.pt",
+      "elapsed_sec": 2.1946114000165835,
+      "env_max_steps": 100,
+      "horizon": 3,
+      "mask_mode": "executable",
+      "prepared_dir": "D:\\test",
+      "rollout_steps": 2,
+      "seed": 1,
+      "steps": [
+        {
+          "action": 610,
+          "baimu_area_change_ha": 0.0,
+          "best_cumrew": 1.3546187430620193,
+          "completed_swaps": 4,
+          "cont_change": 5.085564624796035e-05,
+          "n_base_valid": 2381,
+          "n_candidates": 20,
+          "n_executable_valid": 2316,
+          "n_valid": 2316,
+          "reward": 2.4800761876339616,
+          "select_time_sec": 1.1316806999966502,
+          "slope_change_pct": -0.061824594696734396,
+          "step": 1
+        },
+        {
+          "action": 1146,
+          "baimu_area_change_ha": 0.0,
+          "best_cumrew": 1.5004577934741974,
+          "completed_swaps": 5,
+          "cont_change": -0.00020342258499272958,
+          "n_base_valid": 2381,
+          "n_candidates": 20,
+          "n_executable_valid": 2315,
+          "n_valid": 2315,
+          "reward": 1.8820345834819718,
+          "select_time_sec": 0.8520570999826305,
+          "slope_change_pct": -0.10976200925436001,
+          "step": 2
+        }
+      ],
+      "steps_run": 2,
+      "terminated": false,
+      "top_k": 20,
+      "total_reward": 4.362110771115933,
+      "truncated": false
+    }
+  ],
+  "horizon": 3,
+  "mask_mode": "executable",
+  "prepared_dir": "D:\\test",
+  "rollout_steps": 2,
+  "seeds": [
+    0,
+    1
+  ],
+  "top_k": 20
+}

@@ -1,0 +1,26 @@
+{
+  "frontier_value_head_ft": {
+    "candidate_actions": 50,
+    "candidate_states": 20,
+    "candidate_top1_hit_rate": 0.2,
+    "candidate_top1_regret": 1.7819353818893433,
+    "candidate_top5_hit_rate": 0.55,
+    "candidate_top5_regret": 0.2913038432598114,
+    "candidate_top_k": 5,
+    "checkpoint_epoch": 1,
+    "checkpoint_value": 0.2913038432598114,
+    "ranking_acc": 0.6234309673309326
+  },
+  "original_rank_seed2028": {
+    "candidate_actions": 50,
+    "candidate_states": 20,
+    "candidate_top1_hit_rate": 0.1,
+    "candidate_top1_regret": 3.8031341075897216,
+    "candidate_top5_hit_rate": 0.4,
+    "candidate_top5_regret": 0.9833858579397201,
+    "candidate_top_k": 5,
+    "checkpoint_epoch": 5,
+    "checkpoint_value": 0.5301613477319479,
+    "ranking_acc": 0.5397489666938782
+  }
+}

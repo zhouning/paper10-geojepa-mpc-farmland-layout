@@ -1,0 +1,10 @@
+{
+  "candidate_actions": 50,
+  "candidate_states": 20,
+  "candidate_top1_hit_rate": 0.1,
+  "candidate_top1_regret": 3.8031341075897216,
+  "candidate_top5_hit_rate": 0.4,
+  "candidate_top5_regret": 0.9833858579397201,
+  "candidate_top_k": 5,
+  "ranking_acc": 0.5159235596656799
+}

@@ -1,0 +1,13 @@
+{
+  "candidate_actions": 50,
+  "candidate_states": 1000,
+  "candidate_top10_hit_rate": 0.84,
+  "candidate_top10_regret": 0.43561820904910564,
+  "candidate_top1_hit_rate": 0.358,
+  "candidate_top1_regret": 0.7685354979038238,
+  "candidate_top_k": 10,
+  "checkpoint": "paper10_geojepa_mpc\\experiments\\checkpoints\\e0_bishan_rank_seed2028\\rank_seed2028.pt",
+  "checkpoint_epoch": 5,
+  "checkpoint_metric": "candidate_top5_regret",
+  "checkpoint_value": 0.5301613477319479
+}

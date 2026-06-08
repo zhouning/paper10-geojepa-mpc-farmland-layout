@@ -1,0 +1,35 @@
+{
+  "checkpoint": "paper10_geojepa_mpc/experiments/checkpoints/e0_bishan_rank_seed2028/rank_seed2028.pt",
+  "chosen_action": 574,
+  "chosen_true_reward": 0.29575926065444946,
+  "horizon": 3,
+  "model_top_actions": [
+    574,
+    8,
+    1656,
+    797,
+    2380
+  ],
+  "model_top_scores": [
+    0.5198830366134644,
+    0.45380088686943054,
+    0.4376792013645172,
+    0.42356786131858826,
+    0.3634668290615082
+  ],
+  "mpc_info": {
+    "best_cumrew": 1.1317479759454727,
+    "continuation": "random",
+    "horizon": 3,
+    "mean_cumrew": 0.8608449414372444,
+    "n_candidates": 5,
+    "n_valid": 50,
+    "scoring": "reward"
+  },
+  "n_candidate_actions": 50,
+  "one_step_regret": 0.3827550411224365,
+  "state_index": 0,
+  "top_k": 5,
+  "true_best_action": 797,
+  "true_best_reward": 0.678514301776886
+}

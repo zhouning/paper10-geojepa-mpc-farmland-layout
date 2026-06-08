@@ -1,0 +1,9 @@
+numpy>=1.26
+torch>=2.3
+pytest>=8.0
+geopandas>=0.14
+gymnasium>=0.29
+libpysal>=4.10
+shapely>=2.0
+pandas>=2.0
+onnxruntime>=1.17
