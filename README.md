@@ -41,6 +41,8 @@ deviation `5.0037`.
   Tool2 dataset included in Git.
 - `paper7/data/`: small GeoFM embedding asset used by optional fusion tests and
   ablations.
+- `notebooks/paper10_frontier_random050_50x24_h5_colab.ipynb`: Google Colab
+  notebook for the next `frontier_random050` 50x24/h5 full-data run.
 - `docs/superpowers/`: Paper10 design and implementation planning notes.
 - `DATA_AVAILABILITY.md`: full-data layout and large-file policy.
 - `REPRODUCIBILITY.md`: commands for tests, smoke runs, and full-data runs.
@@ -80,6 +82,15 @@ prepared data under the repository root:
 
 See `DATA_AVAILABILITY.md` for exact placement and `REPRODUCIBILITY.md` for
 the command sequence.
+
+## Colab 50x24/h5 Run
+
+The repository includes
+`notebooks/paper10_frontier_random050_50x24_h5_colab.ipynb` for running the
+next `frontier_random050` 50x24/h5 experiment on Google Colab. The notebook
+mounts Google Drive, clones or updates this repository, validates the full
+Bishan data layout from Drive, writes long-running outputs back to Drive, and
+skips steps whose final artifacts already exist.
 
 ## Verification Status
 

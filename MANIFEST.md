@@ -17,6 +17,8 @@ data needed for smoke verification.
   Tool2 files used by tests and smoke commands.
 - `paper7/data/`: GeoFM embedding array and metadata used by optional fusion
   paths.
+- `notebooks/paper10_frontier_random050_50x24_h5_colab.ipynb`: Google Colab
+  notebook for the next `frontier_random050` 50x24/h5 full-data run.
 - `docs/superpowers/specs/2026-06-07-paper10-geojepa-mpc-design.md`: design
   specification.
 - `docs/superpowers/plans/2026-06-07-paper10-geojepa-mpc.md`: implementation
