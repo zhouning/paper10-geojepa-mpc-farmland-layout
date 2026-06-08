@@ -1,0 +1,83 @@
+{
+  "experiment": "e0_frontier_random050_value_head_10x12_h5_seed43_top4",
+  "date": "2026-06-08",
+  "label_dataset": "paper10_geojepa_mpc/experiments/results/e0_value_labels_frontier_random050_rank_seed2028_10x12_h5_seed43.npz",
+  "checkpoint": "paper10_geojepa_mpc/experiments/checkpoints/e0_frontier_random050_value_head_10x12_h5_seed43_top4/value_head_seed3043.pt",
+  "training_result": "paper10_geojepa_mpc/experiments/results/e0_frontier_random050_value_head_10x12_h5_seed43_top4.json",
+  "rollout_config": {
+    "selector": "value_filter",
+    "mask_mode": "executable",
+    "horizon": 5,
+    "top_k": 50,
+    "candidate_score_mode": "blend",
+    "candidate_value_weight": 0.1,
+    "rollout_steps": 100,
+    "n_rollouts": 1,
+    "random_continuation_mode": "independent"
+  },
+  "seed_summaries": [
+    {
+      "seed": 0,
+      "total_reward": 69.42933604309049,
+      "elapsed_sec": 283.06470789999,
+      "steps_run": 100,
+      "slope_change_pct": -1.316394828023508,
+      "cont_change": 0.016273806799399715,
+      "baimu_area_change_ha": -267.7441119178355
+    },
+    {
+      "seed": 1,
+      "total_reward": 69.17935442094561,
+      "elapsed_sec": 299.2396858999855,
+      "steps_run": 100,
+      "slope_change_pct": -1.150266088460355,
+      "cont_change": 0.021461082716708546,
+      "baimu_area_change_ha": -181.133859145391
+    },
+    {
+      "seed": 2,
+      "total_reward": 57.97502674979494,
+      "elapsed_sec": 324.1291645000456,
+      "steps_run": 100,
+      "slope_change_pct": -1.3425445684321071,
+      "cont_change": 0.02130851577796422,
+      "baimu_area_change_ha": -238.59000202226042
+    },
+    {
+      "seed": 3,
+      "total_reward": 67.4951044486168,
+      "elapsed_sec": 311.84105940000154,
+      "steps_run": 100,
+      "slope_change_pct": -1.3287172965960115,
+      "cont_change": 0.01968113509802416,
+      "baimu_area_change_ha": -224.34516023957133
+    },
+    {
+      "seed": 4,
+      "total_reward": 62.20419931786771,
+      "elapsed_sec": 263.6414021999808,
+      "steps_run": 100,
+      "slope_change_pct": -1.3234424560319373,
+      "cont_change": 0.020342258499249866,
+      "baimu_area_change_ha": -244.94311996544005
+    }
+  ],
+  "aggregate": {
+    "n_episodes": 5,
+    "total_reward_mean": 65.25660419606312,
+    "total_reward_std_sample": 5.003725847334351,
+    "total_reward_min": 57.97502674979494,
+    "total_reward_max": 69.42933604309049,
+    "slope_change_pct_mean": -1.2922730475087838,
+    "cont_change_mean": 0.019813359778269302,
+    "baimu_area_change_ha_mean": -231.35125065809967,
+    "elapsed_sec_mean": 296.38320398,
+    "zero_swap_steps_sum": 0,
+    "negative_zero_swap_steps_sum": 0
+  },
+  "comparison": {
+    "prior_independent_value_head_20x50_h3_seed2_value_filter_blend010_h5_k50_seeds0_4_mean": 62.034437893185824,
+    "delta_vs_prior_mean": 3.222166302877298,
+    "relative_delta_vs_prior_mean": 0.05194000267386746
+  }
+}

@@ -10,6 +10,19 @@ small smoke Tool2 dataset needed for reviewer-side verification. The full
 Bishan Tool2 dataset is larger than a normal source repository and is documented
 as an external data dependency in `DATA_AVAILABILITY.md`.
 
+## Latest Packaged Experiment
+
+This package now includes the 2026-06-08 `frontier_random050` value-head pilot:
+
+- value labels: `paper10_geojepa_mpc/experiments/results/e0_value_labels_frontier_random050_rank_seed2028_10x12_h5_seed43.npz`
+- trained checkpoint: `paper10_geojepa_mpc/experiments/checkpoints/e0_frontier_random050_value_head_10x12_h5_seed43_top4/value_head_seed3043.pt`
+- pilot report: `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_10x12_h5_seed43_pilot_report_2026-06-08.md`
+- five-seed rollout summary: `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_value_head_10x12_h5_seed43_top4_rollout_summary.json`
+
+The pilot uses `selector=value_filter`, executable masks, `H=5`, `K=50`, and
+candidate blend weight `0.1`. The recorded 100-step seeds 0-4 mean total reward
+is `65.2566` with sample standard deviation `5.0037`.
+
 ## Repository Layout
 
 - `paper10_geojepa_mpc/`: Paper10 models, planning utilities, training helpers,
@@ -64,14 +77,14 @@ the command sequence.
 
 ## Verification Status
 
-The source package was copied from `D:\test\paper10_geojepa_mpc` on
-2026-06-08. Before packaging, the Paper10 test suite was run with:
+The source package was copied from the active Paper10 workspace on 2026-06-08.
+Before packaging, the Paper10 test suite was run with:
 
 ```powershell
 D:\adk\.venv\Scripts\python.exe -m pytest paper10_geojepa_mpc\tests -q -p no:cacheprovider
 ```
 
-Result: `87 passed in 104.91s`.
+Result: `88 passed in 49.97s`.
 
 After packaging, the same test suite was run from this repository directory:
 
@@ -79,7 +92,7 @@ After packaging, the same test suite was run from this repository directory:
 D:\adk\.venv\Scripts\python.exe -m pytest paper10_geojepa_mpc\tests -q -p no:cacheprovider
 ```
 
-Result: `87 passed in 94.55s`.
+Result: `88 passed in 47.16s`.
 
 Reviewers should run the relative-path command in `REPRODUCIBILITY.md` after
 cloning.

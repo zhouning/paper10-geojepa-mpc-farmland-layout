@@ -133,6 +133,38 @@ suggests the current one-step reward head usually keeps good actions in the
 candidate pool but is noisy at the very top. The next modeling target should
 be short-horizon/value-aware ranking supervision, not simply larger `top_k`.
 
+## Current Value-Head Pilot Finding
+
+The 2026-06-08 `frontier_random050` value-label pilot tests whether mixed
+frontier/random long-horizon labels can train a useful value-head candidate
+filter. The useful monitor gate was `top_k=4`: top-3 was too strict, and top-5
+was too permissive because one-step reward already covered the best action.
+
+The value-head-only training path now skips transition MSE when
+`trainable_scope=value_head` and `lambda_sig=0`. This is important because the
+transition loss cannot update the value head in that configuration. The fixed
+path trains directly from value labels and records
+`transition_loss_enabled=false` in metrics.
+
+For the `10x12`, horizon-5, seed-43 label set:
+
+| Artifact | Result |
+| --- | ---: |
+| Label monitor | top-4 `continue` |
+| Training elapsed | 26.27 s |
+| Ranking accuracy | 0.8143 |
+| Candidate top-4 hit rate | 0.7000 |
+| Candidate top-4 regret | 0.1109 |
+| 100-step seeds 0-4 reward mean | 65.2566 |
+| 100-step seeds 0-4 reward std | 5.0037 |
+| 100-step seeds 0-4 slope change mean | -1.2923% |
+
+This improves over the prior `frontier_independent` value-head branch under the
+same value-filter blend0.1 100-step seed set (`62.0344` mean reward), but it is
+still a pilot because the label set has only 10 states and 12 candidate actions
+per state. The next scale-up should keep `frontier_random` labels and top-4
+monitoring while increasing state and candidate coverage.
+
 ## Current Scope
 
 Included now:
@@ -158,6 +190,8 @@ Included now:
 - `experiments.results.e0_env_rollout_full1_h5_k50_seed0_executable_mask_summary.json` matched H=5/K=50 Paper10 rollout summary
 - `experiments.results.e0_env_rollout_5seed_h5_k50_executable_mask.json` matched five-seed Paper10 rollout
 - `experiments.results.e0_rollout_candidate_diag_10step_h5_k50_seed0.json` rollout-state candidate ranking diagnostic
+- `experiments.results.e0_frontier_random050_10x12_h5_seed43_pilot_report_2026-06-08.md` value-head pilot report
+- `experiments.results.e0_frontier_random050_value_head_10x12_h5_seed43_top4_rollout_summary.json` value-head pilot five-seed rollout summary
 
 Not included yet:
 

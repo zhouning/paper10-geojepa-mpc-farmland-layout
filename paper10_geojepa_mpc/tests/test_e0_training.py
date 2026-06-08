@@ -2,6 +2,7 @@ import numpy as np
 import torch
 
 from paper10_geojepa_mpc.models.geojepa_transition_model import GeoJEPATransitionModel
+import paper10_geojepa_mpc.training.e0_training as e0_training
 from paper10_geojepa_mpc.training.e0_training import (
     evaluate_candidate_action_metrics,
     evaluate_pairwise_rank_accuracy,
@@ -654,3 +655,68 @@ def test_train_e0_smoke_config_can_freeze_all_but_value_head(tmp_path):
     assert checkpoint["trainable_scope"] == "value_head"
     assert checkpoint["rank_score_mode"] == "value"
     assert any(value_changed)
+
+
+def test_train_e0_smoke_config_skips_transition_loss_for_value_head_only(
+    tmp_path, monkeypatch
+):
+    rng = np.random.default_rng(67)
+    n_samples = 8
+    n_states = 4
+    n_blocks = 4
+    transition_path = tmp_path / "transitions.npz"
+    pairwise_path = tmp_path / "value_labels.npz"
+
+    block_features = rng.normal(size=(n_samples, n_blocks, 17)).astype("float32")
+    global_features = rng.normal(size=(n_samples, 12)).astype("float32")
+    actions = (np.arange(n_samples) % n_blocks).astype("int64")
+    rewards = rng.normal(size=n_samples).astype("float32")
+    next_block_features = block_features.copy()
+    next_block_features[np.arange(n_samples), actions, :] += 0.01
+    next_global_features = (global_features + 0.01).astype("float32")
+    np.savez(
+        transition_path,
+        block_features=block_features,
+        global_features=global_features,
+        actions=actions,
+        rewards=rewards,
+        next_block_features=next_block_features,
+        next_global_features=next_global_features,
+    )
+    np.savez(
+        pairwise_path,
+        states_bf=rng.normal(size=(n_states, n_blocks, 17)).astype("float32"),
+        states_gf=rng.normal(size=(n_states, 12)).astype("float32"),
+        actions=np.tile(np.arange(n_blocks, dtype="int64"), (n_states, 1)),
+        returns=np.tile(
+            np.asarray([0.0, 4.0, 1.0, 2.0], dtype=np.float32),
+            (n_states, 1),
+        ),
+    )
+
+    def fail_transition_mse_loss(*args, **kwargs):
+        raise AssertionError("transition_mse_loss should be skipped")
+
+    monkeypatch.setattr(e0_training, "transition_mse_loss", fail_transition_mse_loss)
+
+    metrics = train_e0_smoke_config(
+        transition_path=transition_path,
+        pairwise_path=pairwise_path,
+        n_blocks=n_blocks,
+        k_global=12,
+        epochs=1,
+        batch_size=4,
+        lambda_rank=1.0,
+        lambda_sig=0.0,
+        n_pairs=3,
+        pairwise_subsample=3,
+        trainable_scope="value_head",
+        rank_score_mode="value",
+        seed=71,
+        device="cpu",
+    )
+
+    assert metrics["transition_loss_enabled"] is False
+    assert metrics["final_mse"] == 0.0
+    assert metrics["n_transition_samples"] == n_samples
+    assert metrics["final_rank_loss"] >= 0.0

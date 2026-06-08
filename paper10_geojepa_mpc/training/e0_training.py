@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Dict, Optional
+import zipfile
 
 import numpy as np
 import torch
@@ -28,6 +29,31 @@ def load_npz_arrays(
                 array = array[:max_rows].copy()
             arrays[key] = array
         return arrays
+
+
+def _npz_array_shape(path: str | Path, key: str) -> tuple[int, ...]:
+    member_name = f"{key}.npy"
+    with zipfile.ZipFile(Path(path)) as archive:
+        with archive.open(member_name) as member:
+            version = np.lib.format.read_magic(member)
+            if version == (1, 0):
+                shape, _, _ = np.lib.format.read_array_header_1_0(member)
+            elif version == (2, 0):
+                shape, _, _ = np.lib.format.read_array_header_2_0(member)
+            else:
+                shape, _, _ = np.lib.format.read_array_header_2_0(member)
+    return tuple(int(dim) for dim in shape)
+
+
+def _npz_row_count(
+    path: str | Path,
+    key: str,
+    max_rows: Optional[int] = None,
+) -> int:
+    rows = _npz_array_shape(path, key)[0]
+    if max_rows is not None:
+        rows = min(rows, int(max_rows))
+    return int(rows)
 
 
 def _ensure_column(values: torch.Tensor) -> torch.Tensor:
@@ -374,22 +400,24 @@ def train_e0_smoke_config(
         raise ValueError("rank_score_mode must be 'reward', 'value', or 'blend'")
     if not 0.0 <= rank_value_weight <= 1.0:
         raise ValueError("rank_value_weight must be in [0, 1]")
+    if trainable_scope not in {"all", "reward_head", "value_head"}:
+        raise ValueError(
+            "trainable_scope must be 'all', 'reward_head', or 'value_head'"
+        )
+    transition_loss_enabled = trainable_scope in {"all", "reward_head"} or lambda_sig > 0
+    if not transition_loss_enabled and lambda_rank <= 0:
+        raise ValueError("lambda_rank must be positive when transition loss is disabled")
 
     torch.manual_seed(seed)
     np.random.seed(seed)
     device_obj = torch.device(device)
 
-    transition_data = load_npz_arrays(transition_path, max_rows=max_transition_samples)
-    pairwise_data = load_npz_arrays(pairwise_path, max_rows=max_pairwise_states)
-
-    bf = _to_tensor(transition_data["block_features"], device_obj, torch.float32)
-    gf = _to_tensor(transition_data["global_features"], device_obj, torch.float32)
-    actions = _to_tensor(transition_data["actions"], device_obj, torch.long)
-    rewards = _ensure_column(
-        _to_tensor(transition_data["rewards"], device_obj, torch.float32)
+    transition_data = (
+        load_npz_arrays(transition_path, max_rows=max_transition_samples)
+        if transition_loss_enabled
+        else None
     )
-    nbf = _to_tensor(transition_data["next_block_features"], device_obj, torch.float32)
-    ngf = _to_tensor(transition_data["next_global_features"], device_obj, torch.float32)
+    pairwise_data = load_npz_arrays(pairwise_path, max_rows=max_pairwise_states)
 
     pw_bf = _to_tensor(pairwise_data["states_bf"], device_obj, torch.float32)
     pw_gf = _to_tensor(pairwise_data["states_gf"], device_obj, torch.float32)
@@ -397,10 +425,34 @@ def train_e0_smoke_config(
     pairwise_label_key = _pairwise_label_key(pairwise_data)
     pw_rewards = _to_tensor(pairwise_data[pairwise_label_key], device_obj, torch.float32)
 
+    if transition_loss_enabled:
+        bf = _to_tensor(transition_data["block_features"], device_obj, torch.float32)
+        gf = _to_tensor(transition_data["global_features"], device_obj, torch.float32)
+        actions = _to_tensor(transition_data["actions"], device_obj, torch.long)
+        rewards = _ensure_column(
+            _to_tensor(transition_data["rewards"], device_obj, torch.float32)
+        )
+        nbf = _to_tensor(
+            transition_data["next_block_features"], device_obj, torch.float32
+        )
+        ngf = _to_tensor(
+            transition_data["next_global_features"], device_obj, torch.float32
+        )
+        n_samples = bf.shape[0]
+        block_feature_dim = bf.shape[-1]
+    else:
+        bf = gf = actions = rewards = nbf = ngf = None
+        n_samples = _npz_row_count(
+            transition_path,
+            "block_features",
+            max_rows=max_transition_samples,
+        )
+        block_feature_dim = pw_bf.shape[-1]
+
     model_kwargs = {
         "n_blocks": n_blocks,
         "k_global": k_global,
-        "block_feature_dim": bf.shape[-1],
+        "block_feature_dim": int(block_feature_dim),
     }
     init_checkpoint_path_obj = (
         Path(init_checkpoint_path) if init_checkpoint_path is not None else None
@@ -409,7 +461,7 @@ def train_e0_smoke_config(
         model = GeoJEPATransitionModel(
             n_blocks=n_blocks,
             k_global=k_global,
-            block_feature_dim=bf.shape[-1],
+            block_feature_dim=int(block_feature_dim),
         ).to(device_obj)
     else:
         model, init_checkpoint = load_e0_checkpoint(
@@ -432,35 +484,56 @@ def train_e0_smoke_config(
     final_rank_loss = 0.0
     final_sig_loss = 0.0
     final_train_rank_acc = 0.5
-    n_samples = bf.shape[0]
     checkpoint_path_obj = Path(checkpoint_path) if checkpoint_path is not None else None
     best_checkpoint_epoch = None
     best_checkpoint_value = None
 
     for epoch in range(1, epochs + 1):
         model.train()
-        permutation = torch.randperm(n_samples, device=device_obj, generator=generator)
-        for start in range(0, n_samples, batch_size):
+        if transition_loss_enabled:
+            permutation = torch.randperm(n_samples, device=device_obj, generator=generator)
+        else:
+            permutation = torch.randperm(
+                pw_bf.shape[0], device=device_obj, generator=generator
+            )
+        for start in range(0, permutation.shape[0], batch_size):
             idx = permutation[start : start + batch_size]
             optimizer.zero_grad()
 
-            mse_loss, mse_metrics, aux = transition_mse_loss(
-                model,
-                bf[idx],
-                gf[idx],
-                actions[idx],
-                rewards[idx],
-                nbf[idx],
-                ngf[idx],
-                return_aux=True,
-            )
+            if transition_loss_enabled:
+                mse_loss, mse_metrics, aux = transition_mse_loss(
+                    model,
+                    bf[idx],
+                    gf[idx],
+                    actions[idx],
+                    rewards[idx],
+                    nbf[idx],
+                    ngf[idx],
+                    return_aux=True,
+                )
+            else:
+                mse_loss = pw_bf.new_tensor(0.0)
+                aux = None
 
             if lambda_rank > 0:
-                n_pw = pw_bf.shape[0]
-                sub_n = min(pairwise_subsample, n_pw)
-                pw_idx = torch.randperm(
-                    n_pw, device=device_obj, generator=generator
-                )[:sub_n]
+                if transition_loss_enabled:
+                    n_pw = pw_bf.shape[0]
+                    sub_n = min(pairwise_subsample, n_pw)
+                    pw_idx = torch.randperm(
+                        n_pw, device=device_obj, generator=generator
+                    )[:sub_n]
+                else:
+                    sub_n = min(pairwise_subsample, idx.shape[0])
+                    if sub_n < idx.shape[0]:
+                        pw_idx = idx[
+                            torch.randperm(
+                                idx.shape[0],
+                                device=device_obj,
+                                generator=generator,
+                            )[:sub_n]
+                        ]
+                    else:
+                        pw_idx = idx
                 rank_loss, train_rank_acc = pairwise_ranking_loss_for_batch(
                     model,
                     pw_bf[pw_idx],
@@ -480,7 +553,7 @@ def train_e0_smoke_config(
             if lambda_sig > 0:
                 sig_loss = sigreg_loss(aux["latent"], n_projections=32, n_knots=16)
             else:
-                sig_loss = bf.new_tensor(0.0)
+                sig_loss = pw_bf.new_tensor(0.0)
 
             total_loss = mse_loss + lambda_rank * rank_loss + lambda_sig * sig_loss
             total_loss.backward()
@@ -570,6 +643,7 @@ def train_e0_smoke_config(
         "n_transition_samples": int(n_samples),
         "n_pairwise_states": int(pw_bf.shape[0]),
         "pairwise_label_key": pairwise_label_key,
+        "transition_loss_enabled": bool(transition_loss_enabled),
         "trainable_scope": trainable_scope,
         "rank_score_mode": rank_score_mode,
         "rank_value_weight": float(rank_value_weight),

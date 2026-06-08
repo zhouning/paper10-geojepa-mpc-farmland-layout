@@ -6,9 +6,9 @@ data needed for smoke verification.
 
 ## Included
 
-- `paper10_geojepa_mpc/`: 168 non-cache files copied from the active Paper10
-  workspace, including 51 Python files, 75 JSON files, 19 Markdown files,
-  5 NPZ files, 8 PyTorch checkpoint files, and 10 log files.
+- `paper10_geojepa_mpc/`: 191 non-cache files copied from the active Paper10
+  workspace, including 51 Python files, 88 JSON files, 26 Markdown files,
+  7 NPZ files, 9 PyTorch checkpoint files, and 10 log files.
 - `arcgis_toolbox_paper9/private_source/`: 10 Paper9 compatibility source files
   used by Paper10's real-environment rollout and value-label workflows.
 - `county_env.py`: Paper9 county-level environment implementation used by
@@ -23,6 +23,12 @@ data needed for smoke verification.
   plan.
 - `docs/superpowers/plans/2026-06-07-paper10-e0-smoke-training.md`: smoke
   training plan.
+- `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_10x12_h5_seed43_pilot_report_2026-06-08.md`:
+  latest `frontier_random050` value-head pilot report.
+- `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_value_head_10x12_h5_seed43_top4_rollout_summary.json`:
+  five-seed 100-step rollout summary for the latest pilot.
+- `paper10_geojepa_mpc/experiments/checkpoints/e0_frontier_random050_value_head_10x12_h5_seed43_top4/value_head_seed3043.pt`:
+  checkpoint used by the latest pilot rollouts.
 - Root reproducibility documents:
   - `README.md`
   - `REPRODUCIBILITY.md`
