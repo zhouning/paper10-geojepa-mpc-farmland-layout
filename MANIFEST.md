@@ -6,8 +6,8 @@ data needed for smoke verification.
 
 ## Included
 
-- `paper10_geojepa_mpc/`: 220 non-cache files copied from the active Paper10
-  workspace, including 51 Python files, 101 JSON files, 33 Markdown files,
+- `paper10_geojepa_mpc/`: 222 non-cache files copied from the active Paper10
+  workspace, including 53 Python files, 101 JSON files, 33 Markdown files,
   9 NPZ files, 10 PyTorch checkpoint files, and 16 log files.
 - `arcgis_toolbox_paper9/private_source/`: 10 Paper9 compatibility source files
   used by Paper10's real-environment rollout and value-label workflows.
@@ -19,6 +19,12 @@ data needed for smoke verification.
   paths.
 - `notebooks/paper10_frontier_random050_50x24_h5_colab.ipynb`: Google Colab
   notebook for the next `frontier_random050` 50x24/h5 full-data run.
+- `docs/macos_frontier_random050_50x24_h5.md`: macOS continuation guide for the
+  next `frontier_random050` 50x24/h5 full-data run.
+- `scripts/macos/run_frontier_random050_50x24_h5.sh`: resumable macOS local
+  runner for the same experiment.
+- `scripts/macos/frontier_random050_50x24_h5.env.example`: local path and device
+  configuration template for the macOS runner.
 - `docs/superpowers/specs/2026-06-07-paper10-geojepa-mpc-design.md`: design
   specification.
 - `docs/superpowers/plans/2026-06-07-paper10-geojepa-mpc.md`: implementation

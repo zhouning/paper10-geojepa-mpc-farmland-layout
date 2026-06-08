@@ -92,6 +92,14 @@ mounts Google Drive, clones or updates this repository, validates the full
 Bishan data layout from Drive, writes long-running outputs back to Drive, and
 skips steps whose final artifacts already exist.
 
+## macOS 50x24/h5 Run
+
+When Colab compute quota is unavailable, continue the same experiment locally
+from `docs/macos_frontier_random050_50x24_h5.md`. The tracked runner
+`scripts/macos/run_frontier_random050_50x24_h5.sh` validates local full-data
+placement, writes outputs outside the Git checkout, and skips steps whose final
+artifacts already exist.
+
 ## Verification Status
 
 The source package was copied from the active Paper10 workspace on 2026-06-08.

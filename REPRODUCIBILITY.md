@@ -65,6 +65,27 @@ townships.json
 Tool2 files are intentionally not committed to Git because they are about
 1.65 GB together.
 
+## macOS Frontier-Random 50x24/h5 Continuation
+
+If Colab quota is unavailable, use the macOS continuation package:
+
+```text
+docs/macos_frontier_random050_50x24_h5.md
+scripts/macos/frontier_random050_50x24_h5.env.example
+scripts/macos/run_frontier_random050_50x24_h5.sh
+```
+
+After `git pull`, create a Python virtual environment, copy the env template,
+set `DATA_ROOT` to the full Bishan data root, and run:
+
+```bash
+bash scripts/macos/run_frontier_random050_50x24_h5.sh
+```
+
+The script executes the same `frontier_random050` 50x24/h5 sequence as the
+Colab notebook, stores outputs under `RUN_ROOT`, and resumes by skipping any
+step whose final artifact already exists.
+
 ## Full Bishan Training Probe
 
 ```powershell
