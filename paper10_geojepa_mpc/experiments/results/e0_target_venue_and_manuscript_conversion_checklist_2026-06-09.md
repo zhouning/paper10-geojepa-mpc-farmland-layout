@@ -8,6 +8,10 @@ DOIs, add experimental evidence, change the positive claim, or resolve data
 rights. It defines the decisions and manuscript edits that must happen after a
 venue is selected.
 
+Use `e0_self_contained_manuscript_submission_gap_audit_2026-06-09.md` as the
+reviewer-risk blocker ledger before creating the final journal-specific
+manuscript file.
+
 ## One-sentence argument
 
 In constrained Bishan farmland swap planning, Paper10 shows that monitor-gated
@@ -98,17 +102,20 @@ Run these checks before submitting or creating the archive record:
 
 1. Confirm the manuscript uses the self-contained route unless a public Paper9
    citation exists.
-2. Confirm every citation key resolves after conversion to the target reference
+2. Confirm blockers in
+   `e0_self_contained_manuscript_submission_gap_audit_2026-06-09.md` are closed
+   or explicitly carried as venue-approved limitations.
+3. Confirm every citation key resolves after conversion to the target reference
    style.
-3. Confirm the final title, abstract, Results, Discussion, and Conclusion all
+4. Confirm the final title, abstract, Results, Discussion, and Conclusion all
    use the same claim boundary.
-4. Confirm figure/table numbering matches the source-data map.
-5. Confirm Data and Code Availability includes repository identifiers or
+5. Confirm figure/table numbering matches the source-data map.
+6. Confirm Data and Code Availability includes repository identifiers or
    reviewer links, not placeholders.
-6. Confirm full Tool2 and GPKG-root data access wording names a concrete public
+7. Confirm full Tool2 and GPKG-root data access wording names a concrete public
    or controlled route.
-7. Grep for prohibited broad-scale or public-Paper9 claims.
-8. Run reviewer smoke tests from the exact submission commit.
+8. Grep for prohibited broad-scale or public-Paper9 claims.
+9. Run reviewer smoke tests from the exact submission commit.
 
 ## Author action notes
 

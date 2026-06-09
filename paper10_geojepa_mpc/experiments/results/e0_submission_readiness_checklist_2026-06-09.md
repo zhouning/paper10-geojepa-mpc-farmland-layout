@@ -50,6 +50,7 @@ should be treated as negative diagnostics rather than successful scale-up.
 | Source-data map | `paper10_geojepa_mpc/experiments/results/e0_source_data_map_2026-06-09.md` | Figure, table, and claim-to-source mapping for archive source-data metadata. |
 | Archive release and DOI backfill checklist | `paper10_geojepa_mpc/experiments/results/e0_archive_release_and_doi_backfill_checklist_2026-06-09.md` | Ordered release, DOI/reviewer-link capture, full-data route, backfill, and final verification checklist. |
 | Target-venue and manuscript-conversion checklist | `paper10_geojepa_mpc/experiments/results/e0_target_venue_and_manuscript_conversion_checklist_2026-06-09.md` | Section-by-section conversion plan for turning the self-contained integrated draft into a journal-specific submission package after venue, reference, figure, DOI, and data-access decisions are fixed. |
+| Self-contained manuscript gap audit | `paper10_geojepa_mpc/experiments/results/e0_self_contained_manuscript_submission_gap_audit_2026-06-09.md` | Reviewer-risk ledger separating blocking submission gaps from risks that can be handled by bounded framing and final conversion. |
 | Self-contained Bishan task/environment Methods note | `paper10_geojepa_mpc/experiments/results/e0_bishan_task_environment_self_contained_methods_2026-06-09.md` | Code-derived task, state, action, reward, episode, and data-root wording that can be merged into Paper10 Methods if public Paper9 citation is unavailable. |
 | Reward and metric definitions | `paper10_geojepa_mpc/experiments/results/e0_reward_and_rollout_metric_definitions_2026-06-09.md` | Source-grounded reward, executable-mask, label-return, and rollout metric definitions. |
 | Citation and claim checklist | `paper10_geojepa_mpc/experiments/results/e0_citation_and_claim_checklist_2026-06-09.md` | Claim-to-evidence and citation-needs tracker. |
@@ -65,6 +66,7 @@ should be treated as negative diagnostics rather than successful scale-up.
 | Paper9 provenance is local-only in the older integrated draft. | Reviewers cannot verify a bibliography entry that cites an unpublished local file. | Use the self-contained integrated manuscript variant for public submission unless a public Paper9 citation becomes available. |
 | Target journal is not selected. | Citation style, word limits, abstract structure, figure limits, and data-policy wording remain unsettled. | Choose the target journal and convert the integrated draft to its format. |
 | Target-journal manuscript conversion is not planned. | Final formatting may drift from the bounded E0 claim, source-data map, or self-contained Paper9 replacement route. | Use `e0_target_venue_and_manuscript_conversion_checklist_2026-06-09.md` before creating the final journal-specific manuscript file. |
+| Self-contained manuscript gap audit is not closed. | A final manuscript could carry unresolved archive, data-access, figure-numbering, or reference-policy blockers into submission. | Use `e0_self_contained_manuscript_submission_gap_audit_2026-06-09.md` as the final blocker ledger before creating the journal-specific manuscript file. |
 | LeWorldModel citation policy is unresolved. | A 2026 arXiv preprint could be over-weighted as established prior art. | Decide whether the journal permits LeWM as a cited design comparison; otherwise cite peer-reviewed JEPA/world-model sources and keep LeWM as an internal related-work note. |
 | Repository and data archive identifiers are missing. | Data and Code Availability cannot be finalized. | Archive the exact submission commit and assign repository/data DOI or reviewer-access links. |
 | Submission and archive route is not selected. | Archive metadata, anonymity, DOI timing, and source-data requirements may drift by venue. | Use `e0_submission_route_and_archive_plan_2026-06-09.md` to choose the generic, Nature-family, or methods/reproducibility route before final formatting. |
@@ -106,9 +108,11 @@ should be treated as negative diagnostics rather than successful scale-up.
    manuscript, table draft, figure plan, and source-data map.
 9. Use `e0_target_venue_and_manuscript_conversion_checklist_2026-06-09.md` to
    convert the integrated manuscript draft into the target journal format.
-10. Run a final claim sweep for prohibited 50-state scale-up language and
+10. Use `e0_self_contained_manuscript_submission_gap_audit_2026-06-09.md` to
+    close the remaining blocker ledger before final manuscript creation.
+11. Run a final claim sweep for prohibited 50-state scale-up language and
    unresolved citation placeholders.
-11. Run tests and repository verification from a clean checkout or reviewer-like
+12. Run tests and repository verification from a clean checkout or reviewer-like
    environment before archive release.
 
 ## Claim-evidence guardrails
@@ -132,6 +136,8 @@ Paper10 E0 is not ready for journal submission until all items below are true:
 - Target journal, article format, word limits, and reference style are selected.
 - Target-venue manuscript conversion has been completed from the self-contained
   integrated draft without changing the E0 claim boundary.
+- Self-contained manuscript gap audit blockers are either closed or explicitly
+  carried as venue-approved limitations.
 - Submission/archive route is selected and documented.
 - Archive metadata fields are completed for the selected route.
 - Repository DOI or anonymous reviewer link is recorded.
