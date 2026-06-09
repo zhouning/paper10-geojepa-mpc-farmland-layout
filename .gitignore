@@ -22,3 +22,6 @@ Thumbs.db
 
 # Local macOS experiment config copied from the tracked example.
 /scripts/macos/frontier_random050_50x24_h5.env
+
+# Local Windows experiment config copied from the tracked example.
+/scripts/windows/frontier_random050_ablation.env.ps1

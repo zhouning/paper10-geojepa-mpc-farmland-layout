@@ -25,6 +25,13 @@ data needed for smoke verification.
   runner for the same experiment.
 - `scripts/macos/frontier_random050_50x24_h5.env.example`: local path and device
   configuration template for the macOS runner.
+- `docs/windows_frontier_random050_ablation.md`: Windows CPU continuation guide
+  for the next `frontier_random050` 50-state ablation grid.
+- `scripts/windows/run_frontier_random050_ablation_grid.ps1`: resumable Windows
+  PowerShell runner for label generation, diagnostics, monitor gates, and
+  optional value-head training after a passing gate.
+- `scripts/windows/frontier_random050_ablation.env.example.ps1`: local path,
+  device, and ablation-grid configuration template for the Windows runner.
 - `docs/superpowers/specs/2026-06-07-paper10-geojepa-mpc-design.md`: design
   specification.
 - `docs/superpowers/plans/2026-06-07-paper10-geojepa-mpc.md`: implementation

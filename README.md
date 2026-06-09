@@ -43,6 +43,10 @@ deviation `5.0037`.
   ablations.
 - `notebooks/paper10_frontier_random050_50x24_h5_colab.ipynb`: Google Colab
   notebook for the next `frontier_random050` 50x24/h5 full-data run.
+- `docs/windows_frontier_random050_ablation.md`: Windows CPU guide for the next
+  `frontier_random050` 50-state label-only ablation grid.
+- `scripts/windows/run_frontier_random050_ablation_grid.ps1`: resumable Windows
+  PowerShell runner for that ablation grid.
 - `docs/superpowers/`: Paper10 design and implementation planning notes.
 - `DATA_AVAILABILITY.md`: full-data layout and large-file policy.
 - `REPRODUCIBILITY.md`: commands for tests, smoke runs, and full-data runs.
@@ -100,6 +104,15 @@ from `docs/macos_frontier_random050_50x24_h5.md`. The tracked runner
 placement, writes outputs outside the Git checkout, and skips steps whose final
 artifacts already exist.
 
+## Windows 50-State Ablation
+
+The Windows workstation can run Paper10 on CPU with the full data rooted at
+`D:\test`. Use `docs/windows_frontier_random050_ablation.md` and
+`scripts/windows/run_frontier_random050_ablation_grid.ps1` for the next
+`frontier_random050` 50-state label-only ablation grid. The runner defaults to
+monitor-only mode and trains only when a gate passes and local config explicitly
+sets `TrainOnPass = 1`.
+
 ## Verification Status
 
 The source package was copied from the active Paper10 workspace on 2026-06-08.
@@ -118,6 +131,11 @@ D:\adk\.venv\Scripts\python.exe -m pytest paper10_geojepa_mpc\tests -q -p no:cac
 ```
 
 Result: `88 passed in 43.25s`.
+
+After adding the Windows ablation package on 2026-06-09, the suite was rerun
+from this repository directory with the same Python executable.
+
+Result: `104 passed in 4.29s`.
 
 Reviewers should run the relative-path command in `REPRODUCIBILITY.md` after
 cloning.

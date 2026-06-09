@@ -86,6 +86,31 @@ The script executes the same `frontier_random050` 50x24/h5 sequence as the
 Colab notebook, stores outputs under `RUN_ROOT`, and resumes by skipping any
 step whose final artifact already exists.
 
+## Windows Frontier-Random 50-State Ablation
+
+The Windows workstation has a CPU-only route for the next Paper10
+`frontier_random050` ablation grid:
+
+```text
+docs/windows_frontier_random050_ablation.md
+scripts/windows/frontier_random050_ablation.env.example.ps1
+scripts/windows/run_frontier_random050_ablation_grid.ps1
+```
+
+The runner uses `D:\test` as the full-data root by default, requires
+`DLTB_with_slope.gpkg`, and runs label generation plus top-3/top-4/top-5 monitor
+gates before any value-head training. Training remains disabled unless
+`TrainOnPass = 1` is set in the local env file.
+
+```powershell
+Copy-Item scripts\windows\frontier_random050_ablation.env.example.ps1 scripts\windows\frontier_random050_ablation.env.ps1
+powershell -ExecutionPolicy Bypass -File scripts\windows\run_frontier_random050_ablation_grid.ps1
+```
+
+Outputs are written under `D:\test\paper10_runs`, including
+`frontier_random050_ablation_summary.md` and
+`frontier_random050_ablation_summary.json`.
+
 ## Full Bishan Training Probe
 
 ```powershell
