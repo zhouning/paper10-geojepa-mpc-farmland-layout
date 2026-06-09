@@ -6,8 +6,8 @@ data needed for smoke verification.
 
 ## Included
 
-- `paper10_geojepa_mpc/`: 244 non-cache files copied from the active Paper10
-  workspace, including 55 Python files, 101 JSON files, 51 Markdown files,
+- `paper10_geojepa_mpc/`: 245 non-cache files copied from the active Paper10
+  workspace, including 55 Python files, 101 JSON files, 52 Markdown files,
   9 NPZ files, 10 PyTorch checkpoint files, and 16 log files.
 - `arcgis_toolbox_paper9/private_source/`: 10 Paper9 compatibility source files
   used by Paper10's real-environment rollout and value-label workflows.
@@ -95,6 +95,10 @@ data needed for smoke verification.
   and methods/reproducibility venue routes; code/data archive records; full
   Bishan data access decisions; licences; source-data mapping; and restricted
   data warnings.
+- `paper10_geojepa_mpc/experiments/results/e0_archive_metadata_templates_2026-06-09.md`:
+  fill-in archive metadata templates for the code/evidence record, full Bishan
+  Tool2 data record, prepared GPKG-root geospatial inputs record, restricted
+  access wording, source-data mapping, and dataset README skeleton.
 - `paper10_geojepa_mpc/experiments/results/e0_submission_readiness_checklist_2026-06-09.md`:
   submission-readiness tracker covering completed manuscript assets,
   unresolved blockers, reviewer-risk matrix, next-session action order, and

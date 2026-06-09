@@ -14,6 +14,13 @@ methods/reproducibility submission paths, see:
 paper10_geojepa_mpc/experiments/results/e0_submission_route_and_archive_plan_2026-06-09.md
 ```
 
+For fill-in archive metadata, controlled-access wording, and dataset README
+templates, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_archive_metadata_templates_2026-06-09.md
+```
+
 ## Included in This Repository
 
 Small reviewer smoke data is included at:

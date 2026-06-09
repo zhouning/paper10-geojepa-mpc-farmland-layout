@@ -8,6 +8,9 @@ new experimental evidence, repository identifiers, licences, access committees,
 or journal decisions. It defines what must be decided before submission and
 which archive record each decision should produce.
 
+Fill-in archive metadata templates are provided in
+`e0_archive_metadata_templates_2026-06-09.md`.
+
 ## Current defensible submission route
 
 The public manuscript route should use
@@ -83,9 +86,11 @@ Before submission, the code/evidence archive should include:
 5. If any full data are restricted, name the owner, access body, eligibility
    rules, request route, response expectation, and data-use agreement.
 6. Freeze final figure/table numbering and source-data mapping.
-7. Archive the exact submission commit and record the DOI or reviewer link in
+7. Fill the selected archive metadata fields in
+   `e0_archive_metadata_templates_2026-06-09.md`.
+8. Archive the exact submission commit and record the DOI or reviewer link in
    `e0_data_code_availability_draft_2026-06-09.md`.
-8. Re-run the citation, claim, and test verification checks from a clean
+9. Re-run the citation, claim, and test verification checks from a clean
    checkout before final submission.
 
 ## Submission warning

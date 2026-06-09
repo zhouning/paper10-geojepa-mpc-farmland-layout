@@ -15,7 +15,9 @@ Route planning note:
 `paper10_geojepa_mpc/experiments/results/e0_submission_route_and_archive_plan_2026-06-09.md`
 tracks the generic, Nature-family, and methods/reproducibility submission
 routes and the archive records that must be assigned before this statement is
-finalized.
+finalized. Fill-in archive metadata and controlled-access wording templates
+are tracked in
+`paper10_geojepa_mpc/experiments/results/e0_archive_metadata_templates_2026-06-09.md`.
 
 ## Dataset inventory and access routes
 
@@ -106,6 +108,9 @@ Generated preview figures and rerun outputs are written under ignored
   or provide an anonymous controlled-access reviewer route.
 - Add a dataset README or repository landing-page description that maps each
   file family to the manuscript results it supports.
+- Fill the archive record and dataset README fields in
+  `e0_archive_metadata_templates_2026-06-09.md` after selecting the repository
+  and access route.
 - Add licence metadata for the code and for any shareable data. Do not apply an
   open licence to third-party or restricted cadastral/geospatial data unless
   the authors have redistribution rights.
@@ -118,6 +123,7 @@ Generated preview figures and rerun outputs are written under ignored
 |---|---|---|
 | Persistent identifier | GitHub remote exists, but no archive DOI is recorded in the manuscript assets. | Create a versioned repository/data archive and record the DOI. |
 | Route selection | A route matrix now exists, but no target journal or archive route has been selected. | Choose the generic, Nature-family, or methods/reproducibility route and align archive timing with that route. |
+| Archive metadata | Fill-in metadata templates exist, but creator, licence, identifier, related-identifier, and controlled-access fields are not finalized. | Complete `e0_archive_metadata_templates_2026-06-09.md` after venue and repository choices. |
 | File manifest | `MANIFEST.md`, `DATA_AVAILABILITY.md`, and `REPRODUCIBILITY.md` describe included and external assets. | Align final archive file list with these documents. |
 | Figure source data | Figure-ready CSV files are tracked for seed-wise rewards and top-k diagnostics. | Confirm final figure numbers and include source-data mapping in the archive metadata. |
 | Full raw/processed data route | Full Tool2 and prepared geospatial data are external to Git. | Decide public deposit versus controlled/justified access. |
