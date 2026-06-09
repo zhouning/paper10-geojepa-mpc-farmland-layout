@@ -39,6 +39,8 @@ The compact local summaries are:
 ```text
 D:\test\paper10_runs\frontier_random050_ablation_summary.json
 D:\test\paper10_runs\frontier_random050_ablation_summary.md
+D:\test\paper10_runs\frontier_random050_ablation_posthoc_topk_summary.json
+D:\test\paper10_runs\frontier_random050_ablation_posthoc_topk_summary.md
 ```
 
 The generated `.npz` files and run directories are intentionally not committed.
@@ -63,12 +65,48 @@ started.
 | `50x24/h5 seed46 f1.0` | 4 | `stop` | 1.3982 | 0.2600 | 2.9863 |
 | `50x24/h5 seed46 f1.0` | 5 | `stop` | 1.3346 | 0.3240 | 2.8339 |
 
+## Post-hoc larger top-k checks
+
+After the default gate failed, post-hoc monitors were run for top-6, top-8,
+top-10, and top-12. These checks do not change the training decision; they are
+only diagnostic.
+
+All post-hoc checks also returned `stop`.
+
+| run | top-k | decision | candidate regret | candidate overlap | one-step regret |
+|---|---:|---|---:|---:|---:|
+| `50x16/h5 seed46 f0.5` | 6 | `stop` | 0.3010 | 0.6533 | 1.4748 |
+| `50x16/h5 seed46 f0.5` | 8 | `stop` | 0.1324 | 0.7350 | 0.1056 |
+| `50x16/h5 seed46 f0.5` | 10 | `stop` | 0.1324 | 0.7560 | 0.0811 |
+| `50x16/h5 seed46 f0.5` | 12 | `stop` | 0.1238 | 0.8067 | 0.0725 |
+| `50x20/h5 seed46 f0.5` | 6 | `stop` | 0.5164 | 0.5467 | 1.3441 |
+| `50x20/h5 seed46 f0.5` | 8 | `stop` | 0.4685 | 0.6175 | 0.1588 |
+| `50x20/h5 seed46 f0.5` | 10 | `stop` | 0.0780 | 0.7280 | 0.0739 |
+| `50x20/h5 seed46 f0.5` | 12 | `stop` | 0.0739 | 0.7550 | 0.0000 |
+| `50x24/h5 seed46 f0.75` | 6 | `stop` | 0.9522 | 0.3467 | 2.4113 |
+| `50x24/h5 seed46 f0.75` | 8 | `stop` | 0.9118 | 0.4250 | 2.0970 |
+| `50x24/h5 seed46 f0.75` | 10 | `stop` | 0.6931 | 0.4960 | 0.3802 |
+| `50x24/h5 seed46 f0.75` | 12 | `stop` | 0.2912 | 0.6167 | 0.3419 |
+| `50x24/h5 seed46 f1.0` | 6 | `stop` | 1.2449 | 0.3967 | 2.8339 |
+| `50x24/h5 seed46 f1.0` | 8 | `stop` | 1.2432 | 0.4675 | 2.7080 |
+| `50x24/h5 seed46 f1.0` | 10 | `stop` | 0.5200 | 0.5780 | 0.6433 |
+| `50x24/h5 seed46 f1.0` | 12 | `stop` | 0.2691 | 0.6400 | 0.6011 |
+
+The larger top-k checks fail for two different reasons. For `50x16` and
+`50x20`, regret becomes small at larger top-k, but one-step regret also becomes
+too small, meaning the label can be mostly solved by immediate reward and adds
+little multi-step filtering signal. For both `50x24` rows, candidate regret
+remains too high or overlap too low until the top-k is broad enough to weaken
+the value-filtering task.
+
 ## Conclusion
 
-Do not train value heads for these four 50-state rows. The least-bad row in this
-grid is `50x16/h5 seed46 f0.5` at top-5, but it still exceeds the candidate
-top-k regret threshold (`0.3840 > 0.2500`). Increasing candidate count or
-frontier fraction worsened the candidate gate under seed 46.
+Do not train value heads for these four 50-state rows. The least-bad default
+gate row is `50x16/h5 seed46 f0.5` at top-5, but it still exceeds the candidate
+top-k regret threshold (`0.3840 > 0.2500`). Larger top-k values do not rescue
+the decision: they either retain too much candidate regret or become mostly
+solvable by one-step reward. Increasing candidate count or frontier fraction
+worsened the candidate gate under seed 46.
 
 The current validated Paper10 scale-up evidence remains the reproducible
 `frontier_random050 20x16/h5 seed44 top5` route. Future 50-state work should
