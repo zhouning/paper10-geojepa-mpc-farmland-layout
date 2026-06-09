@@ -92,9 +92,39 @@ function Invoke-LoggedCommand {
     New-Directory (Split-Path -Parent $LogPath)
     $commandLine = "$File $($Arguments -join ' ')"
     Write-Host "`$ $commandLine"
-    & $File @Arguments 2>&1 | Tee-Object -FilePath $LogPath
-    if ($LASTEXITCODE -ne 0) {
-        throw "Command failed with exit code ${LASTEXITCODE}: $commandLine"
+    Set-Content -LiteralPath $LogPath -Value "`$ $commandLine" -Encoding UTF8
+
+    $StdoutTemp = [System.IO.Path]::GetTempFileName()
+    $StderrTemp = [System.IO.Path]::GetTempFileName()
+    try {
+        $Process = Start-Process `
+            -FilePath $File `
+            -ArgumentList $Arguments `
+            -WorkingDirectory (Get-Location).Path `
+            -RedirectStandardOutput $StdoutTemp `
+            -RedirectStandardError $StderrTemp `
+            -WindowStyle Hidden `
+            -Wait `
+            -PassThru
+
+        $StdoutLines = @(Get-Content -LiteralPath $StdoutTemp)
+        $StderrLines = @(Get-Content -LiteralPath $StderrTemp)
+        foreach ($Line in $StdoutLines) {
+            Write-Host $Line
+            Add-Content -LiteralPath $LogPath -Value $Line -Encoding UTF8
+        }
+        foreach ($Line in $StderrLines) {
+            Write-Host $Line
+            Add-Content -LiteralPath $LogPath -Value $Line -Encoding UTF8
+        }
+
+        if ($Process.ExitCode -ne 0) {
+            throw "Command failed with exit code $($Process.ExitCode): $commandLine"
+        }
+    }
+    finally {
+        Remove-Item -LiteralPath $StdoutTemp -Force -ErrorAction SilentlyContinue
+        Remove-Item -LiteralPath $StderrTemp -Force -ErrorAction SilentlyContinue
     }
 }
 

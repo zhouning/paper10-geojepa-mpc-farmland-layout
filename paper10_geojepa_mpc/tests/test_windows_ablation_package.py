@@ -52,6 +52,23 @@ def test_windows_ablation_runner_is_powershell_and_label_first():
         assert token in text
 
 
+def test_windows_runner_captures_native_stderr_without_native_command_error():
+    text = _read(RUNNER)
+
+    required_tokens = [
+        "Start-Process",
+        "-RedirectStandardOutput",
+        "-RedirectStandardError",
+        "$Process.ExitCode",
+        "Get-Content -LiteralPath $StdoutTemp",
+        "Get-Content -LiteralPath $StderrTemp",
+    ]
+    for token in required_tokens:
+        assert token in text
+
+    assert "& $File @Arguments 2>&1 | Tee-Object" not in text
+
+
 def test_windows_env_template_documents_local_overrides():
     text = _read(ENV_TEMPLATE)
 

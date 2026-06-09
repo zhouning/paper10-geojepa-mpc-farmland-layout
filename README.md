@@ -135,7 +135,7 @@ Result: `88 passed in 43.25s`.
 After adding the Windows ablation package on 2026-06-09, the suite was rerun
 from this repository directory with the same Python executable.
 
-Result: `104 passed in 4.29s`.
+Result: `105 passed in 3.74s`.
 
 Reviewers should run the relative-path command in `REPRODUCIBILITY.md` after
 cloning.
