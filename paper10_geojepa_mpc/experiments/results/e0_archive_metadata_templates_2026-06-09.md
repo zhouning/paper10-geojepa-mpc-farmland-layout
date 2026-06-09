@@ -19,6 +19,10 @@ Use `e0_archive_manifest_2026-06-09.csv` as the machine-readable checklist for
 which file families are included in Record 1, externalized into Records 2-3,
 or excluded from the archive by default.
 
+Use `e0_archive_release_and_doi_backfill_checklist_2026-06-09.md` for the
+release sequence, DOI or reviewer-link capture, and final backfill checks after
+these metadata fields are completed.
+
 Do not use a temporary cloud folder or a personal web link as the final data
 identifier. Use a repository DOI, accession, Handle, ARK, or another stable
 record identifier.

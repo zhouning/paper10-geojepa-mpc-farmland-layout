@@ -48,6 +48,7 @@ should be treated as negative diagnostics rather than successful scale-up.
 | Archive metadata templates | `paper10_geojepa_mpc/experiments/results/e0_archive_metadata_templates_2026-06-09.md` | Fill-in repository metadata, controlled-access wording, source-data mapping, and dataset README templates for final archive records. |
 | Machine-readable archive manifest | `paper10_geojepa_mpc/experiments/results/e0_archive_manifest_2026-06-09.csv` | CSV file-family checklist separating public archive contents, external full-data records, and excluded local/generated artifacts. |
 | Source-data map | `paper10_geojepa_mpc/experiments/results/e0_source_data_map_2026-06-09.md` | Figure, table, and claim-to-source mapping for archive source-data metadata. |
+| Archive release and DOI backfill checklist | `paper10_geojepa_mpc/experiments/results/e0_archive_release_and_doi_backfill_checklist_2026-06-09.md` | Ordered release, DOI/reviewer-link capture, full-data route, backfill, and final verification checklist. |
 | Self-contained Bishan task/environment Methods note | `paper10_geojepa_mpc/experiments/results/e0_bishan_task_environment_self_contained_methods_2026-06-09.md` | Code-derived task, state, action, reward, episode, and data-root wording that can be merged into Paper10 Methods if public Paper9 citation is unavailable. |
 | Reward and metric definitions | `paper10_geojepa_mpc/experiments/results/e0_reward_and_rollout_metric_definitions_2026-06-09.md` | Source-grounded reward, executable-mask, label-return, and rollout metric definitions. |
 | Citation and claim checklist | `paper10_geojepa_mpc/experiments/results/e0_citation_and_claim_checklist_2026-06-09.md` | Claim-to-evidence and citation-needs tracker. |
@@ -66,6 +67,7 @@ should be treated as negative diagnostics rather than successful scale-up.
 | Repository and data archive identifiers are missing. | Data and Code Availability cannot be finalized. | Archive the exact submission commit and assign repository/data DOI or reviewer-access links. |
 | Submission and archive route is not selected. | Archive metadata, anonymity, DOI timing, and source-data requirements may drift by venue. | Use `e0_submission_route_and_archive_plan_2026-06-09.md` to choose the generic, Nature-family, or methods/reproducibility route before final formatting. |
 | Archive metadata fields are not finalized. | Repository records may be inconsistent with the manuscript statement or missing required DataCite fields. | Fill `e0_archive_metadata_templates_2026-06-09.md` after selecting the repository, licence, creators, identifiers, and access route. |
+| DOI and reviewer-link backfill has not been executed. | Manuscript, archive metadata, and repository records may cite different identifiers or omit the exact submission commit. | Use `e0_archive_release_and_doi_backfill_checklist_2026-06-09.md` after archive release and before final submission. |
 | Machine-readable archive manifest is not frozen. | Repository uploads may omit required file families or accidentally include external/restricted data. | Freeze `e0_archive_manifest_2026-06-09.csv` after route, licence, and data-access decisions. |
 | Full Bishan data route is undecided. | Full reruns may be impossible for reviewers even though smoke verification works. | Decide public deposit versus controlled access for full `tool2/` and GPKG-root geospatial inputs, including licence or restriction terms. |
 | Figure/table numbering is not final. | Cross-references and source-data mapping may drift during formatting. | Select final figures/tables, freeze numbering, then update captions and the integrated draft. |
@@ -95,13 +97,15 @@ should be treated as negative diagnostics rather than successful scale-up.
 4. Decide repository/data archiving route and full Bishan data access route.
 5. Fill the selected metadata fields in
    `e0_archive_metadata_templates_2026-06-09.md`.
-6. Freeze the machine-readable archive manifest.
-7. Freeze the final figure/table set and update numbering across the integrated
+6. Use `e0_archive_release_and_doi_backfill_checklist_2026-06-09.md` to define
+   release tag, submission commit, DOI/reviewer-link, and backfill fields.
+7. Freeze the machine-readable archive manifest.
+8. Freeze the final figure/table set and update numbering across the integrated
    manuscript, table draft, figure plan, and source-data map.
-8. Convert the integrated manuscript draft into the target journal format.
-9. Run a final claim sweep for prohibited 50-state scale-up language and
+9. Convert the integrated manuscript draft into the target journal format.
+10. Run a final claim sweep for prohibited 50-state scale-up language and
    unresolved citation placeholders.
-10. Run tests and repository verification from a clean checkout or reviewer-like
+11. Run tests and repository verification from a clean checkout or reviewer-like
    environment before archive release.
 
 ## Claim-evidence guardrails
@@ -126,6 +130,8 @@ Paper10 E0 is not ready for journal submission until all items below are true:
 - Submission/archive route is selected and documented.
 - Archive metadata fields are completed for the selected route.
 - Repository DOI or anonymous reviewer link is recorded.
+- Repository DOI or anonymous reviewer link is backfilled consistently across
+  Data Availability, archive metadata, and release notes.
 - Full Bishan `tool2/` and GPKG-root geospatial data route is documented with
   licence or restriction terms.
 - Figure/table numbering and source-data mapping are frozen.

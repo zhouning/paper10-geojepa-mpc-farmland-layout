@@ -10,6 +10,8 @@ which archive record each decision should produce.
 
 Fill-in archive metadata templates are provided in
 `e0_archive_metadata_templates_2026-06-09.md`.
+The release and identifier backfill sequence is tracked in
+`e0_archive_release_and_doi_backfill_checklist_2026-06-09.md`.
 
 ## Current defensible submission route
 
@@ -88,9 +90,12 @@ Before submission, the code/evidence archive should include:
 6. Freeze final figure/table numbering and source-data mapping.
 7. Fill the selected archive metadata fields in
    `e0_archive_metadata_templates_2026-06-09.md`.
-8. Archive the exact submission commit and record the DOI or reviewer link in
+8. Use `e0_archive_release_and_doi_backfill_checklist_2026-06-09.md` to
+   release the exact submission commit, capture identifiers, and backfill
+   manuscript availability fields.
+9. Archive the exact submission commit and record the DOI or reviewer link in
    `e0_data_code_availability_draft_2026-06-09.md`.
-9. Re-run the citation, claim, and test verification checks from a clean
+10. Re-run the citation, claim, and test verification checks from a clean
    checkout before final submission.
 
 ## Submission warning

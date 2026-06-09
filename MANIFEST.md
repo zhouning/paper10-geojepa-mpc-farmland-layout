@@ -6,8 +6,8 @@ data needed for smoke verification.
 
 ## Included
 
-- `paper10_geojepa_mpc/`: 247 non-cache files copied from the active Paper10
-  workspace, including 55 Python files, 101 JSON files, 53 Markdown files,
+- `paper10_geojepa_mpc/`: 248 non-cache files copied from the active Paper10
+  workspace, including 55 Python files, 101 JSON files, 54 Markdown files,
   3 CSV files,
   9 NPZ files, 10 PyTorch checkpoint files, and 16 log files.
 - `arcgis_toolbox_paper9/private_source/`: 10 Paper9 compatibility source files
@@ -108,6 +108,10 @@ data needed for smoke verification.
   figure, table, and claim-to-source mapping for the current E0 manuscript
   package, including CSV, JSON, Markdown, NPZ, checkpoint, plotting-script, and
   external full-data-route references for archive source-data metadata.
+- `paper10_geojepa_mpc/experiments/results/e0_archive_release_and_doi_backfill_checklist_2026-06-09.md`:
+  release checklist for the code/evidence archive, full-data route decisions,
+  DOI or reviewer-link backfill, final verification, and no-go submission
+  warnings.
 - `paper10_geojepa_mpc/experiments/results/e0_submission_readiness_checklist_2026-06-09.md`:
   submission-readiness tracker covering completed manuscript assets,
   unresolved blockers, reviewer-risk matrix, next-session action order, and

@@ -34,6 +34,12 @@ For the current figure, table, and claim-to-source-data mapping, see:
 paper10_geojepa_mpc/experiments/results/e0_source_data_map_2026-06-09.md
 ```
 
+For the release sequence and DOI or reviewer-link backfill checklist, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_archive_release_and_doi_backfill_checklist_2026-06-09.md
+```
+
 ## Included in This Repository
 
 Small reviewer smoke data is included at:

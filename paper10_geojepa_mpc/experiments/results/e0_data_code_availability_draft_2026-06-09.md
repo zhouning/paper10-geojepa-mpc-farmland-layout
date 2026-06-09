@@ -22,6 +22,8 @@ The machine-readable archive manifest is tracked in
 `paper10_geojepa_mpc/experiments/results/e0_archive_manifest_2026-06-09.csv`.
 The current figure, table, and claim-to-source-data mapping is tracked in
 `paper10_geojepa_mpc/experiments/results/e0_source_data_map_2026-06-09.md`.
+The archive release and DOI or reviewer-link backfill checklist is tracked in
+`paper10_geojepa_mpc/experiments/results/e0_archive_release_and_doi_backfill_checklist_2026-06-09.md`.
 
 ## Dataset inventory and access routes
 
@@ -121,6 +123,9 @@ Generated preview figures and rerun outputs are written under ignored
 - Use `e0_source_data_map_2026-06-09.md` as the current source-data map for
   final archive metadata, then update it after final figure/table numbering is
   frozen.
+- Use `e0_archive_release_and_doi_backfill_checklist_2026-06-09.md` after
+  archive release to backfill the repository DOI, reviewer link, submission
+  commit hash, licences, and full-data access route consistently.
 - Add licence metadata for the code and for any shareable data. Do not apply an
   open licence to third-party or restricted cadastral/geospatial data unless
   the authors have redistribution rights.
