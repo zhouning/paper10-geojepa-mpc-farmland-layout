@@ -6,8 +6,8 @@ data needed for smoke verification.
 
 ## Included
 
-- `paper10_geojepa_mpc/`: 222 non-cache files copied from the active Paper10
-  workspace, including 53 Python files, 101 JSON files, 33 Markdown files,
+- `paper10_geojepa_mpc/`: 238 non-cache files copied from the active Paper10
+  workspace, including 55 Python files, 101 JSON files, 45 Markdown files,
   9 NPZ files, 10 PyTorch checkpoint files, and 16 log files.
 - `arcgis_toolbox_paper9/private_source/`: 10 Paper9 compatibility source files
   used by Paper10's real-environment rollout and value-label workflows.
@@ -73,6 +73,10 @@ data needed for smoke verification.
   value-label generation, monitor-gated selection, value-head-only training,
   rollout evaluation, reproducibility conditions, and 50-state boundary
   diagnostics.
+- `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_results_discussion_cited_draft_2026-06-09.md`:
+  citation-aware Results and Discussion draft that keeps quantitative E0 claims
+  tied to local evidence while using external references only for general
+  value-function, MPC, and world-model framing.
 - `paper10_geojepa_mpc/experiments/results/e0_reward_and_rollout_metric_definitions_2026-06-09.md`:
   source-grounded reward-function, executable-mask, value-label return, and
   rollout-metric definitions extracted from the packaged environment and E0

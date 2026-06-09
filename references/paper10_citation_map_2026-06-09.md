@@ -80,6 +80,11 @@ Markdown result artifacts. The discussion can cite `silver2016alphago` or
 `mnih2015dqn` only when explaining the general idea of learned value scoring, not
 as evidence for Paper10 performance.
 
+The draft
+`paper10_geojepa_mpc/experiments/results/e0_frontier_random050_results_discussion_cited_draft_2026-06-09.md`
+applies this policy: E0 numbers remain tied to local result artifacts, while
+external references frame value functions, MPC, and learned world models.
+
 ## Verification notes
 
 | key | public verification route | status |
