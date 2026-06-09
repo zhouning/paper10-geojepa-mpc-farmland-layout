@@ -47,6 +47,7 @@ Paper-facing writing assets are tracked under
 - `e0_frontier_random050_methods_draft_2026-06-09.md`
 - `e0_frontier_random050_results_discussion_cited_draft_2026-06-09.md`
 - `e0_data_code_availability_draft_2026-06-09.md`
+- `e0_submission_route_and_archive_plan_2026-06-09.md`
 - `e0_submission_readiness_checklist_2026-06-09.md`
 - `e0_bishan_task_environment_self_contained_methods_2026-06-09.md`
 - `e0_reward_and_rollout_metric_definitions_2026-06-09.md`

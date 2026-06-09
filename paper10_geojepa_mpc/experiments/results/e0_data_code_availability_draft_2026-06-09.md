@@ -11,6 +11,12 @@ before submission.
 Target journal: not fixed. This draft follows a generic Nature-style structure
 without assuming final journal-specific wording.
 
+Route planning note:
+`paper10_geojepa_mpc/experiments/results/e0_submission_route_and_archive_plan_2026-06-09.md`
+tracks the generic, Nature-family, and methods/reproducibility submission
+routes and the archive records that must be assigned before this statement is
+finalized.
+
 ## Dataset inventory and access routes
 
 | dataset or artifact family | supports | current location | access route | submission status |
@@ -91,6 +97,10 @@ Generated preview figures and rerun outputs are written under ignored
 - Archive the GitHub repository as a versioned release in Zenodo, Figshare,
   OSF, an institutional repository, or another durable repository that provides
   a DOI.
+- Use the route matrix in
+  `e0_submission_route_and_archive_plan_2026-06-09.md` to decide whether the
+  submission needs a public DOI before initial submission, an anonymous
+  reviewer link, or a controlled-access data record.
 - If journal policy requires full data access during review, deposit the full
   `tool2/` directory and prepared GPKG-root geospatial inputs before submission
   or provide an anonymous controlled-access reviewer route.
@@ -107,6 +117,7 @@ Generated preview figures and rerun outputs are written under ignored
 | item | current status | action before submission |
 |---|---|---|
 | Persistent identifier | GitHub remote exists, but no archive DOI is recorded in the manuscript assets. | Create a versioned repository/data archive and record the DOI. |
+| Route selection | A route matrix now exists, but no target journal or archive route has been selected. | Choose the generic, Nature-family, or methods/reproducibility route and align archive timing with that route. |
 | File manifest | `MANIFEST.md`, `DATA_AVAILABILITY.md`, and `REPRODUCIBILITY.md` describe included and external assets. | Align final archive file list with these documents. |
 | Figure source data | Figure-ready CSV files are tracked for seed-wise rewards and top-k diagnostics. | Confirm final figure numbers and include source-data mapping in the archive metadata. |
 | Full raw/processed data route | Full Tool2 and prepared geospatial data are external to Git. | Decide public deposit versus controlled/justified access. |
@@ -117,6 +128,8 @@ Generated preview figures and rerun outputs are written under ignored
 ## Missing information / risk flags
 
 - No repository DOI, dataset DOI, or anonymous reviewer link is recorded yet.
+- Target journal and archive route are not selected yet; availability wording
+  may need adjustment after venue choice.
 - Full Bishan Tool2 files and prepared GPKG-root geospatial inputs are external
   to Git; the final access route must be selected before submission.
 - If the prepared cadastral/geospatial data are restricted, the final statement

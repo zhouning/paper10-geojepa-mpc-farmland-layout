@@ -44,6 +44,7 @@ should be treated as negative diagnostics rather than successful scale-up.
 | Tables draft | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_manuscript_tables_2026-06-09.md` | Manuscript table contracts and quantitative source mapping. |
 | Figure plan | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_figure_plan_2026-06-09.md` | Figure contracts, caption drafts, source data, and figure-specific risk notes. |
 | Data and Code Availability draft | `paper10_geojepa_mpc/experiments/results/e0_data_code_availability_draft_2026-06-09.md` | Manuscript availability wording and archive/data DOI action list. |
+| Submission route and archive plan | `paper10_geojepa_mpc/experiments/results/e0_submission_route_and_archive_plan_2026-06-09.md` | Route matrix for generic, Nature-family, and methods/reproducibility venues plus archive record and restricted-data decisions. |
 | Self-contained Bishan task/environment Methods note | `paper10_geojepa_mpc/experiments/results/e0_bishan_task_environment_self_contained_methods_2026-06-09.md` | Code-derived task, state, action, reward, episode, and data-root wording that can be merged into Paper10 Methods if public Paper9 citation is unavailable. |
 | Reward and metric definitions | `paper10_geojepa_mpc/experiments/results/e0_reward_and_rollout_metric_definitions_2026-06-09.md` | Source-grounded reward, executable-mask, label-return, and rollout metric definitions. |
 | Citation and claim checklist | `paper10_geojepa_mpc/experiments/results/e0_citation_and_claim_checklist_2026-06-09.md` | Claim-to-evidence and citation-needs tracker. |
@@ -60,6 +61,7 @@ should be treated as negative diagnostics rather than successful scale-up.
 | Target journal is not selected. | Citation style, word limits, abstract structure, figure limits, and data-policy wording remain unsettled. | Choose the target journal and convert the integrated draft to its format. |
 | LeWorldModel citation policy is unresolved. | A 2026 arXiv preprint could be over-weighted as established prior art. | Decide whether the journal permits LeWM as a cited design comparison; otherwise cite peer-reviewed JEPA/world-model sources and keep LeWM as an internal related-work note. |
 | Repository and data archive identifiers are missing. | Data and Code Availability cannot be finalized. | Archive the exact submission commit and assign repository/data DOI or reviewer-access links. |
+| Submission and archive route is not selected. | Archive metadata, anonymity, DOI timing, and source-data requirements may drift by venue. | Use `e0_submission_route_and_archive_plan_2026-06-09.md` to choose the generic, Nature-family, or methods/reproducibility route before final formatting. |
 | Full Bishan data route is undecided. | Full reruns may be impossible for reviewers even though smoke verification works. | Decide public deposit versus controlled access for full `tool2/` and GPKG-root geospatial inputs, including licence or restriction terms. |
 | Figure/table numbering is not final. | Cross-references and source-data mapping may drift during formatting. | Select final figures/tables, freeze numbering, then update captions and the integrated draft. |
 | China-specific farmland policy literature has not been separately checked. | The Introduction may miss region-specific motivation if the target journal expects policy context. | Run a focused literature pass only if the target venue or framing needs it. |
@@ -81,14 +83,16 @@ should be treated as negative diagnostics rather than successful scale-up.
 
 1. Use the self-contained integrated manuscript variant as the working public
    submission draft, unless a public Paper9 citation becomes available.
-2. Select the target journal and format constraints.
-3. Decide repository/data archiving route and full Bishan data access route.
-4. Freeze the final figure/table set and update numbering across the integrated
+2. Select the target journal or venue family.
+3. Choose the submission/archive route in
+   `e0_submission_route_and_archive_plan_2026-06-09.md`.
+4. Decide repository/data archiving route and full Bishan data access route.
+5. Freeze the final figure/table set and update numbering across the integrated
    manuscript, table draft, figure plan, and source-data notes.
-5. Convert the integrated manuscript draft into the target journal format.
-6. Run a final claim sweep for prohibited 50-state scale-up language and
+6. Convert the integrated manuscript draft into the target journal format.
+7. Run a final claim sweep for prohibited 50-state scale-up language and
    unresolved citation placeholders.
-7. Run tests and repository verification from a clean checkout or reviewer-like
+8. Run tests and repository verification from a clean checkout or reviewer-like
    environment before archive release.
 
 ## Claim-evidence guardrails
@@ -110,6 +114,7 @@ Paper10 E0 is not ready for journal submission until all items below are true:
 - Public draft path uses the self-contained integrated manuscript variant and
   does not cite `zhou2026paper9_local` in the manuscript body.
 - Target journal, article format, word limits, and reference style are selected.
+- Submission/archive route is selected and documented.
 - Repository DOI or anonymous reviewer link is recorded.
 - Full Bishan `tool2/` and GPKG-root geospatial data route is documented with
   licence or restriction terms.
