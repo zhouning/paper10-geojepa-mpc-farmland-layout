@@ -28,6 +28,7 @@ The tracked reference inventory is intentionally small:
 | Local-only Paper9 BibTeX | `references/paper10_local_sources_2026-06-09.bib` | Temporary unpublished-source key for internal Paper10 drafting. |
 | Paper9 local-source status | `references/paper10_paper9_local_source_status_2026-06-09.md` | Documents the local Paper9 v6 source and replacement requirement. |
 | Integrated manuscript draft | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_integrated_manuscript_draft_2026-06-09.md` | Single-entry generic manuscript draft assembled from the cited Introduction, Methods, and Results/Discussion assets. |
+| Data and Code Availability draft | `paper10_geojepa_mpc/experiments/results/e0_data_code_availability_draft_2026-06-09.md` | Manuscript availability statement draft and repository/data DOI action list. |
 | Citation-inserted Introduction draft | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_introduction_cited_draft_2026-06-09.md` | First Introduction draft using verified citation keys. |
 | Citation-aware Results/Discussion draft | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_results_discussion_cited_draft_2026-06-09.md` | Results and Discussion draft using verified citation keys only for general interpretation, not as evidence for E0 numbers. |
 | Paper9-compatible environment | `county_env.py`, `arcgis_toolbox_paper9/private_source/` | Local method provenance; cite prior Paper9 manuscript if available. |
@@ -143,9 +144,11 @@ Do not write these claims unless future evidence changes:
    Paper10 Methods.
 2. Decide whether the target journal permits citation to the 2026 LeWM arXiv
    preprint; if not, use only the peer-reviewed JEPA/world-model sources.
-3. Use the integrated manuscript draft as the working single-entry manuscript
+3. Finalize Data and Code Availability: archive the repository, assign a DOI or
+   reviewer link, and choose the full Bishan data access route.
+4. Use the integrated manuscript draft as the working single-entry manuscript
    after the target journal's reference style is selected.
-4. Run a separate China-specific farmland or land-consolidation literature pass
+5. Run a separate China-specific farmland or land-consolidation literature pass
    if the Introduction needs region-specific policy context.
 
 ## Chinese author notes

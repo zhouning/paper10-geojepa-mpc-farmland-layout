@@ -388,6 +388,9 @@ redesign as the next step for 50-state value-head training.
   unsubmitted related-work note.
 - Select the target journal and convert Pandoc-style citation keys to the
   required reference format.
+- Finalize Data and Code Availability: archive the repository, add repository
+  and dataset DOI or reviewer-access links, choose code/data licences, and
+  define the access route for full Bishan Tool2 and GPKG-root geospatial data.
 - Fix figure and table numbering after final figure selection.
 - Decide whether China-specific farmland or land-consolidation policy
   citations are needed in the Introduction.

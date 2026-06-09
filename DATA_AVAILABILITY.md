@@ -1,5 +1,12 @@
 # Data Availability
 
+For manuscript submission wording and the current repository/data DOI action
+list, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_data_code_availability_draft_2026-06-09.md
+```
+
 ## Included in This Repository
 
 Small reviewer smoke data is included at:
