@@ -55,6 +55,16 @@ data needed for smoke verification.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_manuscript_section_draft_2026-06-09.md`:
   manuscript-style Results and Discussion draft for the E0 `frontier_random050`
   evidence package.
+- `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_manuscript_tables_2026-06-09.md`:
+  manuscript-ready E0 `frontier_random050` tables, captions, and placement
+  recommendations.
+- `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_seedwise_rewards_2026-06-09.csv`:
+  figure-ready seed-wise reward comparison for 10x12/top4 vs 20x16/top5.
+- `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_topk_diagnostics_2026-06-09.csv`:
+  figure-ready post-hoc top-k diagnostics for failed Windows 50-state labels.
+- `scripts/paper10/plot_frontier_random050_figures.py`:
+  offline plotting script for the seed-wise reward and top-k diagnostic figures;
+  writes generated figure files under ignored `reviewer_outputs/` by default.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_value_head_20x16_h5_seed44_top5_rollout_summary.json`:
   five-seed 100-step rollout summary for the 20x16/h5 scale-up.
 - `paper10_geojepa_mpc/experiments/checkpoints/e0_frontier_random050_value_head_20x16_h5_seed44_top5/value_head_seed3044.pt`:
