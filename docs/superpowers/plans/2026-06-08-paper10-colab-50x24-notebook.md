@@ -1,8 +1,14 @@
 # Paper10 Colab 50x24 Notebook Implementation Plan
 
+Status update, 2026-06-09: this plan is superseded as the next training route.
+The 50x24/h5 seed45 line was run on macOS with the GPKG root and failed the
+default and post-hoc monitor gates. Keep the notebook as a diagnostic template,
+but do not continue the seed45 label set into value-head training.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Create a complete Google Colab notebook for the next Paper10 `frontier_random050` 50x24/h5 experiment.
+**Original goal, now superseded:** Create a complete Google Colab notebook for
+the Paper10 `frontier_random050` 50x24/h5 experiment.
 
 **Architecture:** The notebook is a resumable experiment pipeline. It mounts Google Drive, clones the reviewer repository, validates full Bishan data placement, writes long-running outputs to Drive, and skips steps whose final artifacts already exist.
 

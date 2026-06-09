@@ -67,7 +67,13 @@ Tool2 files are intentionally not committed to Git because they are about
 
 ## macOS Frontier-Random 50x24/h5 Continuation
 
-If Colab quota is unavailable, use the macOS continuation package:
+This route is retained for reproducing or auditing the 50x24/h5 seed45
+diagnostic. It is no longer the next training route: the macOS seed45 run
+failed the default and post-hoc monitor gates, so do not continue it into
+value-head training.
+
+If Colab quota is unavailable and you need to reproduce that diagnostic, use
+the macOS continuation package:
 
 ```text
 docs/macos_frontier_random050_50x24_h5.md
@@ -84,12 +90,13 @@ bash scripts/macos/run_frontier_random050_50x24_h5.sh
 
 The script executes the same `frontier_random050` 50x24/h5 sequence as the
 Colab notebook, stores outputs under `RUN_ROOT`, and resumes by skipping any
-step whose final artifact already exists.
+step whose final artifact already exists. Treat any training step as valid only
+when the monitor gate returns `continue`.
 
 ## Windows Frontier-Random 50-State Ablation
 
-The Windows workstation has a CPU-only route for the next Paper10
-`frontier_random050` ablation grid:
+The Windows workstation has a CPU-only route for reproducing or editing the
+Paper10 `frontier_random050` ablation grid:
 
 ```text
 docs/windows_frontier_random050_ablation.md
@@ -110,6 +117,14 @@ powershell -ExecutionPolicy Bypass -File scripts\windows\run_frontier_random050_
 Outputs are written under `D:\test\paper10_runs`, including
 `frontier_random050_ablation_summary.md` and
 `frontier_random050_ablation_summary.json`.
+
+The packaged seed46 grid has already been run and all rows failed. For the
+current continuation decision and a narrow seed-sensitivity override example,
+see:
+
+```text
+docs/superpowers/notes/2026-06-09-paper10-50state-redesign-handoff.md
+```
 
 ## Full Bishan Training Probe
 

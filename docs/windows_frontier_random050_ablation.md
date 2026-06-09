@@ -15,8 +15,13 @@ head unless a gate passes and `TrainOnPass = 1` is explicitly enabled.
 
 Do not continue the macOS `50x24/h5 seed45` label set into value-head training.
 That run failed the top-3, top-4, and top-5 monitor gates. The Windows runner is
-for the next ablation grid, not for forcing that failed label set through
-training.
+for reproducing or editing pre-declared label-only grids, not for forcing failed
+label sets through training.
+
+The packaged Windows seed46 grid has now also been run. All default top-3,
+top-4, and top-5 gates failed, and post-hoc top-6/top-8/top-10/top-12 checks
+also returned `stop`. Treat the tracked grid as a completed negative diagnostic
+unless you edit the local ignored env file to run a new, pre-declared grid.
 
 ## 1. Pull the repository
 

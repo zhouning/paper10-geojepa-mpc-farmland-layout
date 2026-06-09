@@ -1,9 +1,16 @@
 # macOS continuation guide: frontier_random050 50x24/h5
 
-Use this guide when Colab quota is unavailable and the next Paper10
-`frontier_random050` 50x24/h5 experiment needs to continue on a macOS machine.
-The workflow keeps full data and generated outputs outside Git, so the macOS
-machine can `git pull` the repository and then run from local disk.
+Use this guide to reproduce, audit, or deliberately re-parameterize the Paper10
+`frontier_random050` 50x24/h5 macOS diagnostic. The workflow keeps full data
+and generated outputs outside Git, so the macOS machine can `git pull` the
+repository and then run from local disk.
+
+## Current status
+
+As of 2026-06-09, the `50x24/h5 seed45` macOS run has failed the default and
+post-hoc monitor gates. Do not continue that label set into value-head
+training. This guide is retained for reproduction, audit, or deliberate
+re-parameterization of the diagnostic workflow.
 
 ## 1. Pull the repository
 
@@ -77,10 +84,8 @@ bash scripts/macos/run_frontier_random050_50x24_h5.sh
 ```
 
 The script validates data layout, runs the test suite, generates the 50x24/h5
-value labels, runs top-3/top-4/top-5 diagnostics and monitors, selects the
-passing top-k gate, trains the value head, runs blend0.05 and blend0.10
-20-step gates, runs the 100-step seed0 rollout, writes a JSON summary and
-Markdown report, and packages outputs into a ZIP.
+value labels, and runs top-3/top-4/top-5 diagnostics and monitors. Downstream
+training is justified only if the monitor selects a passing top-k gate.
 
 ## Resume behavior
 

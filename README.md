@@ -29,6 +29,11 @@ The previous 10x12/h5 top-4 pilot remains packaged as the direct baseline. Its
 recorded 100-step seeds 0-4 mean total reward is `65.2566` with sample standard
 deviation `5.0037`.
 
+The tested 50-state `frontier_random050` label sets are negative diagnostics,
+not training inputs. The macOS `50x24/h5 seed45` run and the Windows seed46
+ablation grid failed the monitor gates, so the current paper-facing claim stays
+anchored on the reproducible 20x16/top5 result.
+
 ## Repository Layout
 
 - `paper10_geojepa_mpc/`: Paper10 models, planning utilities, training helpers,
@@ -42,9 +47,11 @@ deviation `5.0037`.
 - `paper7/data/`: small GeoFM embedding asset used by optional fusion tests and
   ablations.
 - `notebooks/paper10_frontier_random050_50x24_h5_colab.ipynb`: Google Colab
-  notebook for the next `frontier_random050` 50x24/h5 full-data run.
-- `docs/windows_frontier_random050_ablation.md`: Windows CPU guide for the next
-  `frontier_random050` 50-state label-only ablation grid.
+  notebook retained for 50x24/h5 diagnostic reproduction or re-parameterized
+  future runs.
+- `docs/windows_frontier_random050_ablation.md`: Windows CPU guide for
+  reproducing or editing the `frontier_random050` 50-state label-only ablation
+  grid.
 - `scripts/windows/run_frontier_random050_ablation_grid.ps1`: resumable Windows
   PowerShell runner for that ablation grid.
 - `docs/superpowers/`: Paper10 design and implementation planning notes.
@@ -87,19 +94,18 @@ prepared data under the repository root:
 See `DATA_AVAILABILITY.md` for exact placement and `REPRODUCIBILITY.md` for
 the command sequence.
 
-## Colab 50x24/h5 Run
+## Colab 50x24/h5 Diagnostic
 
 The repository includes
-`notebooks/paper10_frontier_random050_50x24_h5_colab.ipynb` for running the
-next `frontier_random050` 50x24/h5 experiment on Google Colab. The notebook
-mounts Google Drive, clones or updates this repository, validates the full
-Bishan data layout from Drive, writes long-running outputs back to Drive, and
-skips steps whose final artifacts already exist.
+`notebooks/paper10_frontier_random050_50x24_h5_colab.ipynb`. Its original
+50x24/h5 seed45 target has since failed the monitor gate on macOS, so the
+notebook should be treated as a diagnostic/reproduction template unless its
+parameters are deliberately changed.
 
-## macOS 50x24/h5 Run
+## macOS 50x24/h5 Diagnostic
 
-When Colab compute quota is unavailable, continue the same experiment locally
-from `docs/macos_frontier_random050_50x24_h5.md`. The tracked runner
+When Colab compute quota is unavailable, the same diagnostic can be reproduced
+locally from `docs/macos_frontier_random050_50x24_h5.md`. The tracked runner
 `scripts/macos/run_frontier_random050_50x24_h5.sh` validates local full-data
 placement, writes outputs outside the Git checkout, and skips steps whose final
 artifacts already exist.
@@ -108,10 +114,15 @@ artifacts already exist.
 
 The Windows workstation can run Paper10 on CPU with the full data rooted at
 `D:\test`. Use `docs/windows_frontier_random050_ablation.md` and
-`scripts/windows/run_frontier_random050_ablation_grid.ps1` for the next
-`frontier_random050` 50-state label-only ablation grid. The runner defaults to
+`scripts/windows/run_frontier_random050_ablation_grid.ps1` for reproducing or
+editing the `frontier_random050` 50-state label-only ablation grid. The packaged
+seed46 grid failed all default and post-hoc checks; reuse the runner only for
+reproduction or after editing the local ignored grid. The runner defaults to
 monitor-only mode and trains only when a gate passes and local config explicitly
 sets `TrainOnPass = 1`.
+
+For the current continuation decision, see
+`docs/superpowers/notes/2026-06-09-paper10-50state-redesign-handoff.md`.
 
 ## Verification Status
 
@@ -136,6 +147,12 @@ After adding the Windows ablation package on 2026-06-09, the suite was rerun
 from this repository directory with the same Python executable.
 
 Result: `105 passed in 3.74s`.
+
+After adding manuscript tables, figure assets, and the 50-state redesign
+handoff on 2026-06-09, the suite was rerun again from this repository directory
+with the same Python executable.
+
+Result: `108 passed in 3.91s`.
 
 Reviewers should run the relative-path command in `REPRODUCIBILITY.md` after
 cloning.

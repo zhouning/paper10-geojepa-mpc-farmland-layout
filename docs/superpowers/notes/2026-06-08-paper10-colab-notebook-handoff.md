@@ -2,6 +2,11 @@
 
 Date: 2026-06-08
 
+Superseded on 2026-06-09: the 50x24/h5 seed45 route failed the monitor gate on
+macOS and should not continue into value-head training. See
+`docs/superpowers/notes/2026-06-09-paper10-50state-redesign-handoff.md` for the
+current continuation decision.
+
 ## Current State
 
 The user approved creating a complete Google Colab notebook for the next

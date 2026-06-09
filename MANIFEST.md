@@ -18,9 +18,10 @@ data needed for smoke verification.
 - `paper7/data/`: GeoFM embedding array and metadata used by optional fusion
   paths.
 - `notebooks/paper10_frontier_random050_50x24_h5_colab.ipynb`: Google Colab
-  notebook for the next `frontier_random050` 50x24/h5 full-data run.
+  notebook retained for 50x24/h5 diagnostic reproduction or re-parameterized
+  future runs.
 - `docs/macos_frontier_random050_50x24_h5.md`: macOS continuation guide for the
-  next `frontier_random050` 50x24/h5 full-data run.
+  superseded `frontier_random050` 50x24/h5 diagnostic run.
 - `scripts/macos/run_frontier_random050_50x24_h5.sh`: resumable macOS local
   runner for the same experiment.
 - `scripts/macos/frontier_random050_50x24_h5.env.example`: local path and device
@@ -38,6 +39,9 @@ data needed for smoke verification.
   plan.
 - `docs/superpowers/plans/2026-06-07-paper10-e0-smoke-training.md`: smoke
   training plan.
+- `docs/superpowers/notes/2026-06-09-paper10-50state-redesign-handoff.md`:
+  current continuation decision for Paper10 after the failed 50-state
+  `frontier_random050` diagnostics.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_10x12_h5_seed43_pilot_report_2026-06-08.md`:
   `frontier_random050` value-head 10x12/h5 pilot report.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_value_head_10x12_h5_seed43_top4_rollout_summary.json`:
