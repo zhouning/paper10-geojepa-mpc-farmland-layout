@@ -6,8 +6,8 @@ data needed for smoke verification.
 
 ## Included
 
-- `paper10_geojepa_mpc/`: 242 non-cache files copied from the active Paper10
-  workspace, including 55 Python files, 101 JSON files, 49 Markdown files,
+- `paper10_geojepa_mpc/`: 243 non-cache files copied from the active Paper10
+  workspace, including 55 Python files, 101 JSON files, 50 Markdown files,
   9 NPZ files, 10 PyTorch checkpoint files, and 16 log files.
 - `arcgis_toolbox_paper9/private_source/`: 10 Paper9 compatibility source files
   used by Paper10's real-environment rollout and value-label workflows.
@@ -69,6 +69,10 @@ data needed for smoke verification.
   single-entry generic manuscript draft assembling the cited Introduction,
   Methods, Results, Discussion, abstract, conclusion, claim-evidence map, and
   submission blockers.
+- `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_integrated_manuscript_self_contained_methods_draft_2026-06-09.md`:
+  public-submission-oriented integrated manuscript variant whose Methods section
+  uses the packaged Paper10 task/environment and reward notes instead of the
+  local-only Paper9 citation placeholder.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_introduction_cited_draft_2026-06-09.md`:
   citation-inserted Introduction draft using the verified Paper10 BibTeX keys
   while preserving the unresolved Paper9 citation boundary.

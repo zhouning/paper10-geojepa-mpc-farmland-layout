@@ -42,6 +42,7 @@ Paper-facing writing assets are tracked under
 - `e0_frontier_random050_manuscript_tables_2026-06-09.md`
 - `e0_frontier_random050_manuscript_scaffold_2026-06-09.md`
 - `e0_frontier_random050_integrated_manuscript_draft_2026-06-09.md`
+- `e0_frontier_random050_integrated_manuscript_self_contained_methods_draft_2026-06-09.md`
 - `e0_frontier_random050_introduction_cited_draft_2026-06-09.md`
 - `e0_frontier_random050_methods_draft_2026-06-09.md`
 - `e0_frontier_random050_results_discussion_cited_draft_2026-06-09.md`
@@ -198,6 +199,12 @@ Result: `108 passed`.
 After adding the self-contained Bishan task/environment Methods note on
 2026-06-09, the suite was rerun again from this repository directory with the
 same Python executable.
+
+Result: `108 passed`.
+
+After adding the self-contained integrated manuscript variant on 2026-06-09,
+the suite was rerun again from this repository directory with the same Python
+executable.
 
 Result: `108 passed`.
 

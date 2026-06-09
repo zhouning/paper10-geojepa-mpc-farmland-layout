@@ -28,6 +28,7 @@ The tracked reference inventory is intentionally small:
 | Local-only Paper9 BibTeX | `references/paper10_local_sources_2026-06-09.bib` | Temporary unpublished-source key for internal Paper10 drafting. |
 | Paper9 local-source status | `references/paper10_paper9_local_source_status_2026-06-09.md` | Documents the local Paper9 v6 source and replacement requirement. |
 | Integrated manuscript draft | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_integrated_manuscript_draft_2026-06-09.md` | Single-entry generic manuscript draft assembled from the cited Introduction, Methods, and Results/Discussion assets. |
+| Self-contained integrated manuscript variant | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_integrated_manuscript_self_contained_methods_draft_2026-06-09.md` | Public-submission-oriented manuscript route that does not cite `zhou2026paper9_local` in the manuscript body. |
 | Data and Code Availability draft | `paper10_geojepa_mpc/experiments/results/e0_data_code_availability_draft_2026-06-09.md` | Manuscript availability statement draft and repository/data DOI action list. |
 | Submission-readiness checklist | `paper10_geojepa_mpc/experiments/results/e0_submission_readiness_checklist_2026-06-09.md` | Reviewer-risk matrix, submission blockers, action order, and claim-evidence guardrails for the current E0 package. |
 | Self-contained Bishan task/environment Methods note | `paper10_geojepa_mpc/experiments/results/e0_bishan_task_environment_self_contained_methods_2026-06-09.md` | Code-derived alternative route for describing the Bishan task, state, action, reward, episode, and data-root conditions if public Paper9 citation is unavailable. |
@@ -145,6 +146,8 @@ Do not write these claims unless future evidence changes:
    preprint, accepted article, Paper10 supplementary methods, or self-contained
    Paper10 Methods. A code-derived self-contained task/environment note now
    exists and can be merged with the reward-definition note for this route.
+   The self-contained integrated manuscript variant has already applied this
+   route in draft form.
 2. Decide whether the target journal permits citation to the 2026 LeWM arXiv
    preprint; if not, use only the peer-reviewed JEPA/world-model sources.
 3. Finalize Data and Code Availability: archive the repository, assign a DOI or
