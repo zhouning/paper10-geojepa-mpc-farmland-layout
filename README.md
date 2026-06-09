@@ -41,6 +41,7 @@ Paper-facing writing assets are tracked under
 - `e0_frontier_random050_manuscript_section_draft_2026-06-09.md`
 - `e0_frontier_random050_manuscript_tables_2026-06-09.md`
 - `e0_frontier_random050_manuscript_scaffold_2026-06-09.md`
+- `e0_frontier_random050_methods_draft_2026-06-09.md`
 - `e0_frontier_random050_figure_plan_2026-06-09.md`
 
 ## Repository Layout
@@ -162,6 +163,11 @@ the manuscript scaffold, and the figure plan on 2026-06-09, the suite was rerun
 again from this repository directory with the same Python executable.
 
 Result: `108 passed in 3.75s`.
+
+After adding the paper-facing Methods draft on 2026-06-09, the suite was rerun
+again from this repository directory with the same Python executable.
+
+Result: `108 passed in 4.68s`.
 
 Reviewers should run the relative-path command in `REPRODUCIBILITY.md` after
 cloning.
