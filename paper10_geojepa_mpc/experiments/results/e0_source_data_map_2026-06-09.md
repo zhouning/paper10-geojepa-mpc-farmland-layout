@@ -52,7 +52,7 @@ only as failed diagnostics and boundary evidence.
 | 20x16/top5 passed the monitor gate at top-5 with candidate regret `0.1877`, candidate overlap `0.6300`, and one-step regret `2.4626`. | `e0_value_label_monitor_frontier_random050_20x16_h5_seed44_top5.json`; `e0_frontier_random050_value_head_20x16_h5_seed44_top5_rollout_summary.json` | Supported. |
 | The GPKG root reproduces the packaged 20x16 labels. | `e0_macos_gpkg_reproduction_findings_2026-06-09.md`; `e0_value_labels_frontier_random050_rank_seed2028_20x16_h5_seed44.npz` | Supported if the full GPKG-root data route is available. |
 | Tested 50-state labels failed the monitor gate and should not be trained. | `e0_windows_frontier_random050_ablation_findings_2026-06-09.md`; `e0_macos_gpkg_reproduction_findings_2026-06-09.md`; `e0_frontier_random050_topk_diagnostics_2026-06-09.csv` | Supported as a boundary claim. |
-| Paper10 generally scales to 50 states. | None; current 50-state rows failed. | Not supported; do not claim. |
+| Paper10 shows general 50-state scalability. | None; current 50-state rows failed. | Not supported; do not claim. |
 | Paper9 task/reward provenance is publicly citable. | None in the public route; local placeholder is internal only. | Not supported unless a public Paper9 source becomes available. |
 
 ## File-family manifest for source data
@@ -78,5 +78,5 @@ only as failed diagnostics and boundary evidence.
 - Update this file if any final figure panels are added, removed, or merged.
 - Record the final archive DOI or reviewer link in
   `e0_data_code_availability_draft_2026-06-09.md`.
-- Keep the 50-state rows framed as failed diagnostics, not successful scale-up
+- Keep the 50-state rows framed as failed diagnostics, not passing scale-up
   evidence.

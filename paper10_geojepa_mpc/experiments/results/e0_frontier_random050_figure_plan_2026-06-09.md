@@ -17,7 +17,7 @@ The script writes PNG/SVG files under ignored `reviewer_outputs/` by default.
 The figure set should defend one bounded claim: monitor-gated value filtering
 improves GeoJEPA-MPC rollout stability at the reproducible 20x16/top5 scale,
 while the tested 50-state label sets expose a candidate-proposal boundary
-rather than a successful scale-up.
+rather than a passing scale-up result.
 
 ## Figure 1. Monitor-gated GeoJEPA-MPC value filtering workflow
 

@@ -15,7 +15,7 @@ monitor-gated `frontier_random050` value labels improve GeoJEPA-MPC rollout
 reward and seed stability at the reproducible 20x16/top5 scale, supported by
 five-seed rollout summaries, monitor diagnostics, and a GPKG-root reproduction
 audit, with the boundary that tested 50-state labels failed the monitor gate and
-should be treated as negative diagnostics rather than successful scale-up.
+should be treated as negative diagnostics rather than a passing scale-up result.
 
 ## Terminology ledger
 
@@ -49,6 +49,7 @@ should be treated as negative diagnostics rather than successful scale-up.
 | Machine-readable archive manifest | `paper10_geojepa_mpc/experiments/results/e0_archive_manifest_2026-06-09.csv` | CSV file-family checklist separating public archive contents, external full-data records, and excluded local/generated artifacts. |
 | Source-data map | `paper10_geojepa_mpc/experiments/results/e0_source_data_map_2026-06-09.md` | Figure, table, and claim-to-source mapping for archive source-data metadata. |
 | Data access and rights decision register | `paper10_geojepa_mpc/experiments/results/e0_data_access_and_rights_decision_register_2026-06-09.md` | Central register for code licence, generated-output rights, optional GeoFM rights, full Tool2 access, GPKG-root geospatial access, reviewer routes, and availability backfill fields. |
+| Reviewer smoke replication protocol | `paper10_geojepa_mpc/experiments/results/e0_reviewer_smoke_replication_protocol_2026-06-09.md` | Clone-only reviewer command sequence, expected smoke outputs, failure interpretation, and boundary between smoke checks and full Bishan reruns. |
 | Archive release and DOI backfill checklist | `paper10_geojepa_mpc/experiments/results/e0_archive_release_and_doi_backfill_checklist_2026-06-09.md` | Ordered release, DOI/reviewer-link capture, full-data route, backfill, and final verification checklist. |
 | Target-venue and manuscript-conversion checklist | `paper10_geojepa_mpc/experiments/results/e0_target_venue_and_manuscript_conversion_checklist_2026-06-09.md` | Section-by-section conversion plan for turning the self-contained integrated draft into a journal-specific submission package after venue, reference, figure, DOI, and data-access decisions are fixed. |
 | Self-contained manuscript gap audit | `paper10_geojepa_mpc/experiments/results/e0_self_contained_manuscript_submission_gap_audit_2026-06-09.md` | Reviewer-risk ledger separating blocking submission gaps from risks that can be handled by bounded framing and final conversion. |
@@ -87,7 +88,7 @@ should be treated as negative diagnostics rather than successful scale-up.
 | Contribution may look incremental. | The current positive claim is bounded to monitor-gated label selection improving GeoJEPA-MPC at 20x16/top5. | high | Make the contribution explicit as a label-quality-gated value-filtering workflow plus negative 50-state boundary diagnostics; avoid broad scale-up language. |
 | Evaluation may look too small. | Main evidence uses five rollout seeds and a 20-state/16-candidate label set; 50-state rows are negative diagnostics. | high | Present the limitation openly; add new experiments only after a pre-declared 50-state gate passes. |
 | Baseline completeness may be questioned. | Direct comparison is 10x12/top4 pilot and prior matched `frontier_independent` branch, not a broad external planner benchmark. | medium | Label current results as E0 evidence and avoid claiming superiority over all planning methods. |
-| 50-state overclaim risk. | All tested 50-state label sets failed gates before training. | high | Keep all 50-state wording as boundary diagnostics; do not say the method scales to 50 states. |
+| 50-state overclaim risk. | All tested 50-state label sets failed gates before training. | high | Keep all 50-state wording as boundary diagnostics; do not claim general 50-state scalability. |
 | GPKG/shapefile reproducibility risk. | macOS audit showed the GPKG root reproduces packaged 20x16 labels, while shapefile-first resolution does not. | medium | State the GPKG root as an experimental condition in Methods and Data Availability. |
 | Data/code availability risk. | Smoke data, outputs, and checkpoints are included; full data and DOI route remain external. | high | Add repository/data DOI or controlled-access route before submission. |
 | Paper9 citation risk. | The self-contained integrated manuscript variant now removes `zhou2026paper9_local` from the manuscript body, but final submission formatting and bibliography cleanup are still pending. | medium | Use the self-contained variant as the public draft path; keep the local placeholder only in internal source-status documents unless a public Paper9 citation becomes available. |
@@ -115,9 +116,12 @@ should be treated as negative diagnostics rather than successful scale-up.
    convert the integrated manuscript draft into the target journal format.
 11. Use `e0_self_contained_manuscript_submission_gap_audit_2026-06-09.md` to
     close the remaining blocker ledger before final manuscript creation.
-12. Run a final claim sweep for prohibited 50-state scale-up language and
+12. Use `e0_reviewer_smoke_replication_protocol_2026-06-09.md` to run and
+    record clone-only reviewer smoke verification from the exact archive
+    candidate.
+13. Run a final claim sweep for prohibited 50-state scale-up language and
    unresolved citation placeholders.
-13. Run tests and repository verification from a clean checkout or reviewer-like
+14. Run tests and repository verification from a clean checkout or reviewer-like
    environment before archive release.
 
 ## Claim-evidence guardrails
@@ -129,7 +133,7 @@ should be treated as negative diagnostics rather than successful scale-up.
 | GPKG root reproduces the packaged 20x16 labels. | Supported by macOS GPKG reproduction findings. |
 | Tested 50-state `frontier_random050` labels failed monitor gates. | Supported by macOS and Windows diagnostic findings. |
 | Tested 50-state labels support value-head training. | Not supported; do not claim. |
-| Paper10 generally scales to 50 states. | Not supported; do not claim. |
+| Paper10 shows general 50-state scalability. | Not supported; do not claim. |
 | Paper9 task/reward provenance is publicly citable. | Not yet supported; resolve `zhou2026paper9_local`. |
 
 ## Ready-to-submit gate
@@ -155,6 +159,7 @@ Paper10 E0 is not ready for journal submission until all items below are true:
   rights decision register.
 - Figure/table numbering and source-data mapping are frozen.
 - All manuscript citation keys resolve in the final bibliography.
-- A final prohibited-claim sweep finds no 50-state success or unverified Paper9
+- A final prohibited-claim sweep finds no passing 50-state result or unverified Paper9
   public-citation claims.
-- Reviewer smoke tests pass on the archived submission commit.
+- Reviewer smoke tests pass on the archived submission commit using
+  `e0_reviewer_smoke_replication_protocol_2026-06-09.md`.

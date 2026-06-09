@@ -69,7 +69,7 @@ data, manuscript source notes, and reproducibility documentation. The current
 paper-facing positive result is the 20x16/h5 top-5 value-head package with
 five-seed mean total reward `69.4705` and sample standard deviation `1.0004`.
 Tested 50-state `frontier_random050` runs are included only as failed
-diagnostics and should not be interpreted as successful scale-up evidence.
+diagnostics and should not be interpreted as positive scale-up evidence.
 
 Keywords:
 GeoJEPA-MPC; farmland layout planning; model predictive control; value labels;
@@ -232,7 +232,7 @@ The current detailed source-data map is tracked in
 |---|---|---|---|
 | Figure 1, workflow schematic | `[FINAL SOURCE OR ARTWORK FILE]` | Record 1 | Add only after final figure is selected. |
 | Figure 2, seed-wise reward comparison | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_seedwise_rewards_2026-06-09.csv` | Record 1 | Supports 10x12/top4 vs 20x16/top5 reward comparison. |
-| Figure 3, failed 50-state diagnostics | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_topk_diagnostics_2026-06-09.csv` | Record 1 | Boundary diagnostic only; not successful scale-up evidence. |
+| Figure 3, failed 50-state diagnostics | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_topk_diagnostics_2026-06-09.csv` | Record 1 | Boundary diagnostic only; not positive scale-up evidence. |
 | Main results table | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_manuscript_tables_2026-06-09.md` and rollout summaries | Record 1 | Confirm final table number before submission. |
 | Full rerun commands | `REPRODUCIBILITY.md` | Record 1 plus Records 2 and 3 if full reruns are required | Smoke verification runs from Record 1 alone. |
 

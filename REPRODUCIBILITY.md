@@ -19,6 +19,13 @@ python -m venv .venv
 
 ## Smoke Verification Included in Git
 
+For a reviewer-oriented command order, expected smoke outputs, and failure
+interpretation, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_reviewer_smoke_replication_protocol_2026-06-09.md
+```
+
 Run all Paper10 tests:
 
 ```powershell
@@ -234,3 +241,7 @@ The repository already includes the recorded Paper10 result artifacts under
 `paper10_geojepa_mpc/experiments/checkpoints/`. Re-running the full commands
 with the same data should reproduce the reported result structure and metrics,
 subject to normal CPU/GPU floating-point and library-version variation.
+
+The reviewer smoke protocol verifies the packaged clone and smoke data only.
+It should not be used as evidence for full Bishan reruns or for successful
+50-state scale-up.

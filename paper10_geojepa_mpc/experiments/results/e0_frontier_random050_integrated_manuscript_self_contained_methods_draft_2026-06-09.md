@@ -423,7 +423,7 @@ validated 20x16/top5 scale. The value filter increased the five-seed mean total
 reward from `65.2566` to `69.4705` relative to the 10x12/top4 pilot and reduced
 sample standard deviation from `5.0037` to `1.0004`. The same evidence defines
 the present boundary: tested 50-state label sets did not pass the monitor gate
-and should not be described as successful scale-up. Paper10 should therefore
+and should not be described as a passing scale-up result. Paper10 should therefore
 present 20x16/top5 as the current positive result and treat candidate-proposal
 redesign as the next step for 50-state value-head training.
 
@@ -463,6 +463,6 @@ redesign as the next step for 50-state value-head training.
 - This variant is the current no-local-Paper9 manuscript route: it does not
   cite `zhou2026paper9_local` in the manuscript body.
 - The positive claim is still 20x16/top5 only. The 50-state rows remain boundary
-  diagnostics and should not be written as successful scale-up.
+  diagnostics and should not be written as a passing scale-up result.
 - This draft still needs target-journal formatting, repository/data DOI links,
   figure/table numbering, and a final data-access route before submission.

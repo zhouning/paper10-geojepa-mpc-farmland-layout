@@ -35,7 +35,7 @@ The paper-facing claim remains bounded to the monitor-gated
 - mean-reward improvement: `4.2139`, or `6.46%`
 
 The tested 50-state `frontier_random050` runs are negative diagnostics only.
-They must not be described as successful scale-up evidence.
+They must not be described as positive scale-up evidence.
 
 ## Route matrix
 

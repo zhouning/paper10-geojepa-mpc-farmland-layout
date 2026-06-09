@@ -134,7 +134,7 @@ Do not write these claims unless future evidence changes:
 
 | prohibited claim | reason |
 |---|---|
-| The method scales to 50 states. | Every tested 50-state `frontier_random050` label set failed the monitor gate. |
+| The method shows general 50-state scalability. | Every tested 50-state `frontier_random050` label set failed the monitor gate. |
 | Failed 50-state rows were trained and performed poorly. | They were not trained because the gate failed. |
 | The GPKG/shapefile discrepancy is a model effect. | The evidence identifies a data-root resolution boundary. |
 | Top-k is fixed across all label sets. | The usable gate shifted from top-4 in 10x12 to top-5 in 20x16. |

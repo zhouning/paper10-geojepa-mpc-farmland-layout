@@ -28,7 +28,7 @@ decisions.
 The current paper-facing positive claim remains bounded to the monitor-gated
 `frontier_random050` 20x16/h5 top-5 value-head result. Tested 50-state
 `frontier_random050` rows remain failed diagnostics and must not be promoted
-to successful scale-up evidence.
+to positive scale-up evidence.
 
 ## Preconditions before release
 
@@ -48,7 +48,9 @@ to successful scale-up evidence.
 1. Confirm the submission commit contains the final manuscript-facing files,
    archive manifest, source-data map, metadata templates, tests, checkpoints,
    figure CSV source data, and reproducibility instructions.
-2. Run the reviewer smoke test suite from that commit:
+2. Run the reviewer smoke test suite from that commit. The reviewer-facing
+   command order, expected smoke outputs, and failure interpretation are in
+   `e0_reviewer_smoke_replication_protocol_2026-06-09.md`.
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest paper10_geojepa_mpc\tests -q -p no:cacheprovider
@@ -116,7 +118,7 @@ committed locally, and before creating or updating the public archive:
    citation checklist exists in the verified or local BibTeX files.
 4. Confirm the public self-contained manuscript body does not cite
    `@zhou2026paper9_local`.
-5. Grep for prohibited 50-state success wording and keep only guardrail or
+5. Grep for prohibited passing-50-state wording and keep only guardrail or
    failed-diagnostic uses.
 6. Run the full Paper10 test suite:
 
@@ -125,7 +127,8 @@ D:\adk\.venv\Scripts\python.exe -m pytest paper10_geojepa_mpc\tests -q -p no:cac
 ```
 
 7. If possible, clone the archive candidate into a clean directory and rerun
-   the reviewer smoke verification from the archived release or reviewer link.
+   `e0_reviewer_smoke_replication_protocol_2026-06-09.md` from the archived
+   release or reviewer link.
 8. Record the final submission commit, test result, DOI or reviewer link, and
    any remaining restricted-data route in the submission files.
 
