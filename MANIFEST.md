@@ -65,6 +65,9 @@ data needed for smoke verification.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_manuscript_scaffold_2026-06-09.md`:
   full-paper scaffold with title candidates, abstract draft, section plan,
   figure/table placement, and claim-evidence map for the E0 evidence package.
+- `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_figure_plan_2026-06-09.md`:
+  manuscript figure contracts, panel maps, source-data links, caption drafts,
+  and review-risk notes for E0 Figures 1-3.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_seedwise_rewards_2026-06-09.csv`:
   figure-ready seed-wise reward comparison for 10x12/top4 vs 20x16/top5.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_topk_diagnostics_2026-06-09.csv`:
