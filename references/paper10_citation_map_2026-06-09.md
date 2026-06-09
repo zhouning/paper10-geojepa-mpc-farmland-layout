@@ -4,13 +4,16 @@ Date: 2026-06-09
 
 This note turns the E0 citation checklist into manuscript-ready reference
 targets. It uses only sources that were located through public DOI, publisher,
-arXiv, or conference pages. It does not resolve the prior Paper9 citation; that
-entry still needs an author-supplied manuscript, preprint, or internal report
-identifier before it can become a bibliography entry.
+arXiv, or conference pages for the verified bibliography. It also records a
+separate local-only Paper9 source for internal drafting; this source is not a
+publicly verified bibliography entry and must be replaced or formalized before
+submission.
 
 BibTeX file:
 
 - `references/paper10_verified_references_2026-06-09.bib`
+- `references/paper10_local_sources_2026-06-09.bib` for local-only Paper9
+  manuscript provenance
 
 ## Citation policy for Paper10
 
@@ -20,7 +23,10 @@ BibTeX file:
   motivation source for JEPA world models.
 - Do not cite any source as evidence that Paper10 scales to 50 states. The local
   E0 evidence says the opposite for tested `frontier_random050` 50-state labels.
-- Keep prior Paper9 as a placeholder until the authors provide a citable source.
+- Use `zhou2026paper9_local` only as an internal-draft placeholder for the
+  local Paper9 manuscript. Before submission, replace it with a public preprint,
+  accepted article, final supplementary-methods citation, or a self-contained
+  Paper10 Methods section.
 
 ## Claim-to-citation map
 
@@ -32,7 +38,7 @@ BibTeX file:
 | `[CITATION: learned world models for planning]` | `ha2018recurrent_world_models`; `hafner2019planet`; `maes2026leworldmodel` | Learned latent dynamics/world models can support planning by rolling out candidate futures in a learned representation. |
 | `[CITATION: JEPA or self-supervised predictive representation learning]` | `assran2023ijepa`; `maes2026leworldmodel` | JEPA-style self-supervised learning predicts target embeddings from context embeddings rather than reconstructing pixels directly. |
 | `[CITATION: value functions or learned reranking for candidate action selection]` | `sutton2018reinforcement_learning`; `mnih2015dqn`; `silver2016alphago` | Value functions/action-value functions can score candidate states or actions; policy/value networks can be combined with search. |
-| `[CITATION: prior Paper9 environment or farmland reward definition]` | unresolved | Do not fill this placeholder yet. Use local repository evidence only until the Paper9 source is supplied. |
+| `[CITATION: prior Paper9 environment or farmland reward definition]` | `zhou2026paper9_local` (local-only) | Internal drafts may cite the local Paper9 v6 manuscript for Bishan CountyLevelEnv task/reward provenance; replace or formalize before submission. |
 
 ## Suggested manuscript usage
 
@@ -63,6 +69,8 @@ If the Methods motivate the reward terms, cite land-use and land-consolidation
 sources only for broad objective rationale. The exact reward formula must remain
 anchored to `county_env.py` and
 `paper10_geojepa_mpc/experiments/results/e0_reward_and_rollout_metric_definitions_2026-06-09.md`.
+For internal drafts, `zhou2026paper9_local` can mark the local Paper9
+task/reward provenance, but it is not a public-source substitute.
 
 ### Results and Discussion
 
@@ -92,11 +100,11 @@ as evidence for Paper10 performance.
 | `mnih2015dqn` | Nature DOI page, `10.1038/nature14236` | verified |
 | `silver2016alphago` | Nature DOI page, `10.1038/nature16961` | verified |
 | `sutton2018reinforcement_learning` | MIT Press book page | verified metadata, no DOI |
+| `zhou2026paper9_local` | local `D:\test\paper9_v6.tex`; see `paper10_paper9_local_source_status_2026-06-09.md` | local-only, unpublished; not public verified |
 
 ## Remaining citation gaps
 
-1. Locate the prior Paper9 manuscript, preprint, thesis, or internal technical
-   report that defines the original Bishan farmland environment and reward.
+1. Replace or formalize the local Paper9 source before submission.
 2. Decide whether the final journal allows citation to the 2026 LeWM arXiv
    preprint. If not, cite `assran2023ijepa` for JEPA and keep LeWM as an
    unsubmitted related-work note.

@@ -56,10 +56,12 @@ each planning step, the environment exposes a land-use state, block-level
 features, geospatial features, and a finite set of valid swap actions. The
 planner selects one executable action, applies it to the environment, and
 receives a reward that combines farmland layout objectives recorded by the
-Paper9-compatible county environment [CITATION NEEDED: prior Paper9 environment
-or farmland reward definition]. All E0 label-generation and rollout experiments
-reported here use the executable swap mask, so candidate actions are drawn only
-from swaps that the environment can apply at the current state.
+Paper9-compatible county environment [@zhou2026paper9_local]. This citation is
+a local-only manuscript placeholder for internal drafting and must be replaced
+with a public Paper9 source or a final supplementary-methods citation before
+submission. All E0 label-generation and rollout experiments reported here use
+the executable swap mask, so candidate actions are drawn only from swaps that
+the environment can apply at the current state.
 
 The full Bishan prepared dataset is external to the Git repository and is
 resolved through the repository-level data layout described in the
@@ -218,7 +220,9 @@ attempted.
 - The target journal and required Methods length are not fixed.
 - Literature citations for GeoJEPA, MPC planning, and farmland layout planning
   have been inserted from `references/paper10_verified_references_2026-06-09.bib`.
-  The prior Paper9 environment citation remains unresolved.
+  The Paper9 task/reward provenance is currently represented by local-only key
+  `zhou2026paper9_local` from `references/paper10_local_sources_2026-06-09.bib`;
+  replace or formalize it before submission.
 - The final manuscript should decide whether implementation details belong in
   the main Methods section or in supplementary Methods.
 - The reward formula has been extracted from the packaged environment into
@@ -244,4 +248,5 @@ attempted.
   训练失败或隐瞒负结果。
 - reward 公式已经单独整理到
   `e0_reward_and_rollout_metric_definitions_2026-06-09.md`；投稿前还需要统一
-  目标期刊格式，并补齐 Paper9 环境/奖励定义的正式引用。
+  目标期刊格式，并把 `zhou2026paper9_local` 替换为 Paper9 的正式公开引用或
+  Paper10 补充方法引用。

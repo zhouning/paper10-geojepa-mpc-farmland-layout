@@ -50,7 +50,9 @@ Paper-facing writing assets are tracked under
 Verified citation assets are tracked under `references/`:
 
 - `paper10_verified_references_2026-06-09.bib`
+- `paper10_local_sources_2026-06-09.bib`
 - `paper10_citation_map_2026-06-09.md`
+- `paper10_paper9_local_source_status_2026-06-09.md`
 
 ## Repository Layout
 

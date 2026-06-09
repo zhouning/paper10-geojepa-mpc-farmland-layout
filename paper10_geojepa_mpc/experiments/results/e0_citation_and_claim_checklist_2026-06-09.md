@@ -25,6 +25,8 @@ The tracked reference inventory is intentionally small:
 | Local source paper candidate | `D:\test\2603.19312v3.pdf` listed in `references/README.md` | Not committed; retrieve/verify before citing. |
 | Verified Paper10 citation map | `references/paper10_citation_map_2026-06-09.md` | Maps citation placeholders to verified source keys and supported wording. |
 | Verified Paper10 BibTeX | `references/paper10_verified_references_2026-06-09.bib` | First tracked bibliography file for Introduction and Methods citation insertion. |
+| Local-only Paper9 BibTeX | `references/paper10_local_sources_2026-06-09.bib` | Temporary unpublished-source key for internal Paper10 drafting. |
+| Paper9 local-source status | `references/paper10_paper9_local_source_status_2026-06-09.md` | Documents the local Paper9 v6 source and replacement requirement. |
 | Citation-inserted Introduction draft | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_introduction_cited_draft_2026-06-09.md` | First Introduction draft using verified citation keys. |
 | Paper9-compatible environment | `county_env.py`, `arcgis_toolbox_paper9/private_source/` | Local method provenance; cite prior Paper9 manuscript if available. |
 | Paper10 E0 experiments | `paper10_geojepa_mpc/experiments/results/` | Primary evidence for all reported results. |
@@ -134,7 +136,9 @@ Do not write these claims unless future evidence changes:
 
 ## Next writing actions
 
-1. Locate the prior Paper9 environment manuscript or method note.
+1. Replace or formalize `zhou2026paper9_local` before submission: public Paper9
+   preprint, accepted article, Paper10 supplementary methods, or self-contained
+   Paper10 Methods.
 2. Decide whether the target journal permits citation to the 2026 LeWM arXiv
    preprint; if not, use only the peer-reviewed JEPA/world-model sources.
 3. Merge the citation-inserted Introduction and Methods wording into the final
@@ -147,5 +151,6 @@ Do not write these claims unless future evidence changes:
 - 这份清单不是参考文献表，而是“哪些句子需要找文献、哪些结果已经有本地证据”的
   对照表。
 - 目前可以安全写 20x16/top5 的 paper-facing 结论；不能写 50-state 成功扩展。
-- 已经新增第一版 BibTeX 和 claim-to-citation map；下一步是把这些引用插入
-  Introduction/Methods，并补齐 Paper9 的正式可引用来源。
+- 已经新增第一版公开核验 BibTeX、claim-to-citation map，以及 Paper9 本地
+  unpublished 占位引用；投稿前必须把 `zhou2026paper9_local` 替换为正式公开引用
+  或 Paper10 补充方法引用。

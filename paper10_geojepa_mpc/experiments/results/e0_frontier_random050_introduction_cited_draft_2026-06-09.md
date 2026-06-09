@@ -4,9 +4,10 @@ Date: 2026-06-09
 
 This document converts the Paper10 E0 scaffold and verified citation map into a
 citation-inserted Introduction draft. It uses citation keys from
-`references/paper10_verified_references_2026-06-09.bib`. It does not insert a
-Paper9 bibliography key because the prior Paper9 environment source is still
-unresolved.
+`references/paper10_verified_references_2026-06-09.bib`. The Paper9
+environment/reward source is now tracked separately as a local-only manuscript
+placeholder in `references/paper10_local_sources_2026-06-09.bib`; this
+Introduction draft does not need to cite it directly.
 
 ## One-sentence argument
 
@@ -97,8 +98,9 @@ the next step for 50-state scale-up.
 
 ## Assumptions or missing inputs
 
-- The prior Paper9 environment or reward-definition paper still needs a citable
-  source; do not replace it with an invented BibTeX key.
+- The prior Paper9 environment or reward-definition source is represented only
+  by local key `zhou2026paper9_local`; replace or formalize it before
+  submission.
 - The target journal and reference style are not fixed. This draft uses
   Pandoc-style citation keys only as manuscript placeholders.
 - China-specific farmland or land-consolidation policy citations may be added

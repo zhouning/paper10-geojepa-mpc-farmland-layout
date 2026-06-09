@@ -92,9 +92,15 @@ data needed for smoke verification.
   writes generated figure files under ignored `reviewer_outputs/` by default.
 - `references/paper10_verified_references_2026-06-09.bib`:
   verified BibTeX entries for the first Paper10 manuscript citation pass.
+- `references/paper10_local_sources_2026-06-09.bib`:
+  local-only unpublished-source placeholders for internal manuscript drafting,
+  including Paper9 task/reward provenance.
 - `references/paper10_citation_map_2026-06-09.md`:
-  claim-to-citation mapping for the E0 manuscript draft, including unresolved
+  claim-to-citation mapping for the E0 manuscript draft, including local-only
   Paper9 and 50-state boundary notes.
+- `references/paper10_paper9_local_source_status_2026-06-09.md`:
+  status note documenting the local Paper9 v6 manuscript source and the
+  requirement to replace or formalize it before submission.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_value_head_20x16_h5_seed44_top5_rollout_summary.json`:
   five-seed 100-step rollout summary for the 20x16/h5 scale-up.
 - `paper10_geojepa_mpc/experiments/checkpoints/e0_frontier_random050_value_head_20x16_h5_seed44_top5/value_head_seed3044.pt`:

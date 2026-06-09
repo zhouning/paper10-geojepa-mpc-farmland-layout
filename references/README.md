@@ -12,8 +12,12 @@ Tracked citation assets:
 
 - `paper10_verified_references_2026-06-09.bib`: verified BibTeX entries for
   the first manuscript citation pass.
+- `paper10_local_sources_2026-06-09.bib`: local-only BibTeX placeholders for
+  unpublished/internal sources used during drafting.
 - `paper10_citation_map_2026-06-09.md`: claim-to-citation mapping for the
   Paper10 E0 manuscript draft.
+- `paper10_paper9_local_source_status_2026-06-09.md`: status note for the
+  local Paper9 source used as temporary task/reward provenance.
 
 The third-party PDF is not committed here. Reviewers can retrieve the paper
 from its public source and use this repository for Paper10 code, data layout,
