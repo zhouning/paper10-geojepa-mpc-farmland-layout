@@ -18,6 +18,8 @@ routes and the archive records that must be assigned before this statement is
 finalized. Fill-in archive metadata and controlled-access wording templates
 are tracked in
 `paper10_geojepa_mpc/experiments/results/e0_archive_metadata_templates_2026-06-09.md`.
+The machine-readable archive manifest is tracked in
+`paper10_geojepa_mpc/experiments/results/e0_archive_manifest_2026-06-09.csv`.
 The current figure, table, and claim-to-source-data mapping is tracked in
 `paper10_geojepa_mpc/experiments/results/e0_source_data_map_2026-06-09.md`.
 
@@ -113,6 +115,9 @@ Generated preview figures and rerun outputs are written under ignored
 - Fill the archive record and dataset README fields in
   `e0_archive_metadata_templates_2026-06-09.md` after selecting the repository
   and access route.
+- Use `e0_archive_manifest_2026-06-09.csv` to verify which file families belong
+  in the public code/evidence archive, which require external records, and
+  which stay excluded.
 - Use `e0_source_data_map_2026-06-09.md` as the current source-data map for
   final archive metadata, then update it after final figure/table numbering is
   frozen.
@@ -129,6 +134,7 @@ Generated preview figures and rerun outputs are written under ignored
 | Persistent identifier | GitHub remote exists, but no archive DOI is recorded in the manuscript assets. | Create a versioned repository/data archive and record the DOI. |
 | Route selection | A route matrix now exists, but no target journal or archive route has been selected. | Choose the generic, Nature-family, or methods/reproducibility route and align archive timing with that route. |
 | Archive metadata | Fill-in metadata templates exist, but creator, licence, identifier, related-identifier, and controlled-access fields are not finalized. | Complete `e0_archive_metadata_templates_2026-06-09.md` after venue and repository choices. |
+| Machine-readable archive manifest | A file-family archive manifest is tracked, but final repository identifiers and licences are not assigned. | Update `e0_archive_manifest_2026-06-09.csv` if archive membership changes after venue or licence decisions. |
 | File manifest | `MANIFEST.md`, `DATA_AVAILABILITY.md`, and `REPRODUCIBILITY.md` describe included and external assets. | Align final archive file list with these documents. |
 | Figure source data | Figure-ready CSV files are tracked for seed-wise rewards and top-k diagnostics. | Confirm final figure numbers and include source-data mapping in the archive metadata. |
 | Source-data map | A claim, figure, and table source-data map is now tracked, but final journal numbering is not frozen. | Update `e0_source_data_map_2026-06-09.md` after final figure/table selection. |

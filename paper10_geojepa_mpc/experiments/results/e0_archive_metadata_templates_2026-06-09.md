@@ -15,6 +15,10 @@ for the public code and packaged E0 evidence, and decide separately whether the
 full Bishan `tool2/` data and prepared GPKG-root geospatial inputs can be
 public or must be controlled.
 
+Use `e0_archive_manifest_2026-06-09.csv` as the machine-readable checklist for
+which file families are included in Record 1, externalized into Records 2-3,
+or excluded from the archive by default.
+
 Do not use a temporary cloud folder or a personal web link as the final data
 identifier. Use a repository DOI, accession, Handle, ARK, or another stable
 record identifier.
@@ -78,6 +82,9 @@ Public archive after release, or anonymous reviewer link during peer review:
 ```
 
 ### Included file families for Record 1
+
+The machine-readable version of this inventory is
+`e0_archive_manifest_2026-06-09.csv`.
 
 | file family | archive handling | notes |
 |---|---|---|

@@ -21,6 +21,13 @@ templates, see:
 paper10_geojepa_mpc/experiments/results/e0_archive_metadata_templates_2026-06-09.md
 ```
 
+For a machine-readable archive manifest that separates included, externalized,
+and excluded file families, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_archive_manifest_2026-06-09.csv
+```
+
 For the current figure, table, and claim-to-source-data mapping, see:
 
 ```text

@@ -46,6 +46,7 @@ should be treated as negative diagnostics rather than successful scale-up.
 | Data and Code Availability draft | `paper10_geojepa_mpc/experiments/results/e0_data_code_availability_draft_2026-06-09.md` | Manuscript availability wording and archive/data DOI action list. |
 | Submission route and archive plan | `paper10_geojepa_mpc/experiments/results/e0_submission_route_and_archive_plan_2026-06-09.md` | Route matrix for generic, Nature-family, and methods/reproducibility venues plus archive record and restricted-data decisions. |
 | Archive metadata templates | `paper10_geojepa_mpc/experiments/results/e0_archive_metadata_templates_2026-06-09.md` | Fill-in repository metadata, controlled-access wording, source-data mapping, and dataset README templates for final archive records. |
+| Machine-readable archive manifest | `paper10_geojepa_mpc/experiments/results/e0_archive_manifest_2026-06-09.csv` | CSV file-family checklist separating public archive contents, external full-data records, and excluded local/generated artifacts. |
 | Source-data map | `paper10_geojepa_mpc/experiments/results/e0_source_data_map_2026-06-09.md` | Figure, table, and claim-to-source mapping for archive source-data metadata. |
 | Self-contained Bishan task/environment Methods note | `paper10_geojepa_mpc/experiments/results/e0_bishan_task_environment_self_contained_methods_2026-06-09.md` | Code-derived task, state, action, reward, episode, and data-root wording that can be merged into Paper10 Methods if public Paper9 citation is unavailable. |
 | Reward and metric definitions | `paper10_geojepa_mpc/experiments/results/e0_reward_and_rollout_metric_definitions_2026-06-09.md` | Source-grounded reward, executable-mask, label-return, and rollout metric definitions. |
@@ -65,6 +66,7 @@ should be treated as negative diagnostics rather than successful scale-up.
 | Repository and data archive identifiers are missing. | Data and Code Availability cannot be finalized. | Archive the exact submission commit and assign repository/data DOI or reviewer-access links. |
 | Submission and archive route is not selected. | Archive metadata, anonymity, DOI timing, and source-data requirements may drift by venue. | Use `e0_submission_route_and_archive_plan_2026-06-09.md` to choose the generic, Nature-family, or methods/reproducibility route before final formatting. |
 | Archive metadata fields are not finalized. | Repository records may be inconsistent with the manuscript statement or missing required DataCite fields. | Fill `e0_archive_metadata_templates_2026-06-09.md` after selecting the repository, licence, creators, identifiers, and access route. |
+| Machine-readable archive manifest is not frozen. | Repository uploads may omit required file families or accidentally include external/restricted data. | Freeze `e0_archive_manifest_2026-06-09.csv` after route, licence, and data-access decisions. |
 | Full Bishan data route is undecided. | Full reruns may be impossible for reviewers even though smoke verification works. | Decide public deposit versus controlled access for full `tool2/` and GPKG-root geospatial inputs, including licence or restriction terms. |
 | Figure/table numbering is not final. | Cross-references and source-data mapping may drift during formatting. | Select final figures/tables, freeze numbering, then update captions and the integrated draft. |
 | Source-data map is not frozen to final numbering. | Archive metadata may drift from final figure/table labels. | Update `e0_source_data_map_2026-06-09.md` after final figure/table numbering and before archive release. |
@@ -93,12 +95,13 @@ should be treated as negative diagnostics rather than successful scale-up.
 4. Decide repository/data archiving route and full Bishan data access route.
 5. Fill the selected metadata fields in
    `e0_archive_metadata_templates_2026-06-09.md`.
-6. Freeze the final figure/table set and update numbering across the integrated
+6. Freeze the machine-readable archive manifest.
+7. Freeze the final figure/table set and update numbering across the integrated
    manuscript, table draft, figure plan, and source-data map.
-7. Convert the integrated manuscript draft into the target journal format.
-8. Run a final claim sweep for prohibited 50-state scale-up language and
+8. Convert the integrated manuscript draft into the target journal format.
+9. Run a final claim sweep for prohibited 50-state scale-up language and
    unresolved citation placeholders.
-9. Run tests and repository verification from a clean checkout or reviewer-like
+10. Run tests and repository verification from a clean checkout or reviewer-like
    environment before archive release.
 
 ## Claim-evidence guardrails

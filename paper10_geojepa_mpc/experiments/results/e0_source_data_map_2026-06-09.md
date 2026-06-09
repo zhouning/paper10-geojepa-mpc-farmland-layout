@@ -12,6 +12,8 @@ figure/table numbering is frozen.
 The mappings below belong to the code and packaged E0 evidence archive
 described as Record 1 in
 `paper10_geojepa_mpc/experiments/results/e0_archive_metadata_templates_2026-06-09.md`.
+The machine-readable archive inventory is
+`paper10_geojepa_mpc/experiments/results/e0_archive_manifest_2026-06-09.csv`.
 Full reruns from scratch still require the external full Bishan `tool2/` data
 and prepared GPKG-root geospatial inputs described in `DATA_AVAILABILITY.md`.
 
@@ -61,6 +63,7 @@ only as failed diagnostics and boundary evidence.
 | `e0_value_labels_frontier_random050_rank_seed2028_*.npz` | Value-label arrays used by monitor, training, and reproduction checks. | Include packaged NPZ files in Record 1; full reruns need external data. |
 | `paper10_geojepa_mpc/experiments/checkpoints/` | Value-head and rank checkpoints used by packaged runs. | Include in Record 1. |
 | `scripts/paper10/plot_frontier_random050_figures.py` | Rebuilds draft Figure 2 and Figure 3 previews from tracked CSVs. | Include in Record 1. |
+| `e0_archive_manifest_2026-06-09.csv` | Machine-readable archive file-family checklist. | Include in Record 1. |
 | `reviewer_outputs/` | Local generated previews and rerun outputs. | Exclude unless final figure exports are intentionally selected and documented. |
 
 ## Finalization checklist
