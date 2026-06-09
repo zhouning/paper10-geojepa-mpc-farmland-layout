@@ -12,6 +12,8 @@ Fill-in archive metadata templates are provided in
 `e0_archive_metadata_templates_2026-06-09.md`.
 The release and identifier backfill sequence is tracked in
 `e0_archive_release_and_doi_backfill_checklist_2026-06-09.md`.
+The manuscript conversion sequence after target-venue selection is tracked in
+`e0_target_venue_and_manuscript_conversion_checklist_2026-06-09.md`.
 
 ## Current defensible submission route
 
@@ -80,6 +82,9 @@ Before submission, the code/evidence archive should include:
 ## Action order
 
 1. Select the target journal or venue family.
+   Use `e0_target_venue_and_manuscript_conversion_checklist_2026-06-09.md` to
+   record the article type, abstract format, reference style, figure/table
+   limits, and section conversion requirements.
 2. Decide whether to archive through GitHub release plus Zenodo, Figshare, OSF,
    an institutional repository, or another durable record.
 3. Select code licence and data licence or restriction terms.

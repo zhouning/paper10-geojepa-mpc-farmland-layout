@@ -52,6 +52,7 @@ Paper-facing writing assets are tracked under
 - `e0_archive_manifest_2026-06-09.csv`
 - `e0_source_data_map_2026-06-09.md`
 - `e0_archive_release_and_doi_backfill_checklist_2026-06-09.md`
+- `e0_target_venue_and_manuscript_conversion_checklist_2026-06-09.md`
 - `e0_submission_readiness_checklist_2026-06-09.md`
 - `e0_bishan_task_environment_self_contained_methods_2026-06-09.md`
 - `e0_reward_and_rollout_metric_definitions_2026-06-09.md`
@@ -232,6 +233,12 @@ Result: `108 passed`.
 After adding the E0 archive release and DOI backfill checklist on 2026-06-09,
 the suite was rerun again from this repository directory with the same Python
 executable.
+
+Result: `108 passed`.
+
+After adding the E0 target-venue and manuscript-conversion checklist on
+2026-06-09, the suite was rerun again from this repository directory with the
+same Python executable.
 
 Result: `108 passed`.
 

@@ -6,8 +6,8 @@ data needed for smoke verification.
 
 ## Included
 
-- `paper10_geojepa_mpc/`: 248 non-cache files copied from the active Paper10
-  workspace, including 55 Python files, 101 JSON files, 54 Markdown files,
+- `paper10_geojepa_mpc/`: 249 non-cache files copied from the active Paper10
+  workspace, including 55 Python files, 101 JSON files, 55 Markdown files,
   3 CSV files,
   9 NPZ files, 10 PyTorch checkpoint files, and 16 log files.
 - `arcgis_toolbox_paper9/private_source/`: 10 Paper9 compatibility source files
@@ -112,6 +112,10 @@ data needed for smoke verification.
   release checklist for the code/evidence archive, full-data route decisions,
   DOI or reviewer-link backfill, final verification, and no-go submission
   warnings.
+- `paper10_geojepa_mpc/experiments/results/e0_target_venue_and_manuscript_conversion_checklist_2026-06-09.md`:
+  target-venue and manuscript-conversion checklist for turning the
+  self-contained integrated draft into a journal-specific submission package
+  after format, citation, figure, DOI, and data-access decisions are fixed.
 - `paper10_geojepa_mpc/experiments/results/e0_submission_readiness_checklist_2026-06-09.md`:
   submission-readiness tracker covering completed manuscript assets,
   unresolved blockers, reviewer-risk matrix, next-session action order, and
