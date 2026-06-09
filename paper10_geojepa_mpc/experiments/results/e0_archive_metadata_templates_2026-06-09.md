@@ -210,6 +210,8 @@ Reviewer route:
 ## Source-data mapping template
 
 Update this table after final figure and table numbering is frozen.
+The current detailed source-data map is tracked in
+`e0_source_data_map_2026-06-09.md`.
 
 | manuscript item | source files | archive record | notes |
 |---|---|---|---|

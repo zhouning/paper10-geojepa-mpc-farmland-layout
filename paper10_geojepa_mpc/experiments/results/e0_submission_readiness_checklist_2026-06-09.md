@@ -46,6 +46,7 @@ should be treated as negative diagnostics rather than successful scale-up.
 | Data and Code Availability draft | `paper10_geojepa_mpc/experiments/results/e0_data_code_availability_draft_2026-06-09.md` | Manuscript availability wording and archive/data DOI action list. |
 | Submission route and archive plan | `paper10_geojepa_mpc/experiments/results/e0_submission_route_and_archive_plan_2026-06-09.md` | Route matrix for generic, Nature-family, and methods/reproducibility venues plus archive record and restricted-data decisions. |
 | Archive metadata templates | `paper10_geojepa_mpc/experiments/results/e0_archive_metadata_templates_2026-06-09.md` | Fill-in repository metadata, controlled-access wording, source-data mapping, and dataset README templates for final archive records. |
+| Source-data map | `paper10_geojepa_mpc/experiments/results/e0_source_data_map_2026-06-09.md` | Figure, table, and claim-to-source mapping for archive source-data metadata. |
 | Self-contained Bishan task/environment Methods note | `paper10_geojepa_mpc/experiments/results/e0_bishan_task_environment_self_contained_methods_2026-06-09.md` | Code-derived task, state, action, reward, episode, and data-root wording that can be merged into Paper10 Methods if public Paper9 citation is unavailable. |
 | Reward and metric definitions | `paper10_geojepa_mpc/experiments/results/e0_reward_and_rollout_metric_definitions_2026-06-09.md` | Source-grounded reward, executable-mask, label-return, and rollout metric definitions. |
 | Citation and claim checklist | `paper10_geojepa_mpc/experiments/results/e0_citation_and_claim_checklist_2026-06-09.md` | Claim-to-evidence and citation-needs tracker. |
@@ -66,6 +67,7 @@ should be treated as negative diagnostics rather than successful scale-up.
 | Archive metadata fields are not finalized. | Repository records may be inconsistent with the manuscript statement or missing required DataCite fields. | Fill `e0_archive_metadata_templates_2026-06-09.md` after selecting the repository, licence, creators, identifiers, and access route. |
 | Full Bishan data route is undecided. | Full reruns may be impossible for reviewers even though smoke verification works. | Decide public deposit versus controlled access for full `tool2/` and GPKG-root geospatial inputs, including licence or restriction terms. |
 | Figure/table numbering is not final. | Cross-references and source-data mapping may drift during formatting. | Select final figures/tables, freeze numbering, then update captions and the integrated draft. |
+| Source-data map is not frozen to final numbering. | Archive metadata may drift from final figure/table labels. | Update `e0_source_data_map_2026-06-09.md` after final figure/table numbering and before archive release. |
 | China-specific farmland policy literature has not been separately checked. | The Introduction may miss region-specific motivation if the target journal expects policy context. | Run a focused literature pass only if the target venue or framing needs it. |
 
 ## Reviewer-risk matrix
@@ -92,7 +94,7 @@ should be treated as negative diagnostics rather than successful scale-up.
 5. Fill the selected metadata fields in
    `e0_archive_metadata_templates_2026-06-09.md`.
 6. Freeze the final figure/table set and update numbering across the integrated
-   manuscript, table draft, figure plan, and source-data notes.
+   manuscript, table draft, figure plan, and source-data map.
 7. Convert the integrated manuscript draft into the target journal format.
 8. Run a final claim sweep for prohibited 50-state scale-up language and
    unresolved citation placeholders.

@@ -21,6 +21,12 @@ templates, see:
 paper10_geojepa_mpc/experiments/results/e0_archive_metadata_templates_2026-06-09.md
 ```
 
+For the current figure, table, and claim-to-source-data mapping, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_source_data_map_2026-06-09.md
+```
+
 ## Included in This Repository
 
 Small reviewer smoke data is included at:

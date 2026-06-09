@@ -18,6 +18,8 @@ routes and the archive records that must be assigned before this statement is
 finalized. Fill-in archive metadata and controlled-access wording templates
 are tracked in
 `paper10_geojepa_mpc/experiments/results/e0_archive_metadata_templates_2026-06-09.md`.
+The current figure, table, and claim-to-source-data mapping is tracked in
+`paper10_geojepa_mpc/experiments/results/e0_source_data_map_2026-06-09.md`.
 
 ## Dataset inventory and access routes
 
@@ -111,6 +113,9 @@ Generated preview figures and rerun outputs are written under ignored
 - Fill the archive record and dataset README fields in
   `e0_archive_metadata_templates_2026-06-09.md` after selecting the repository
   and access route.
+- Use `e0_source_data_map_2026-06-09.md` as the current source-data map for
+  final archive metadata, then update it after final figure/table numbering is
+  frozen.
 - Add licence metadata for the code and for any shareable data. Do not apply an
   open licence to third-party or restricted cadastral/geospatial data unless
   the authors have redistribution rights.
@@ -126,6 +131,7 @@ Generated preview figures and rerun outputs are written under ignored
 | Archive metadata | Fill-in metadata templates exist, but creator, licence, identifier, related-identifier, and controlled-access fields are not finalized. | Complete `e0_archive_metadata_templates_2026-06-09.md` after venue and repository choices. |
 | File manifest | `MANIFEST.md`, `DATA_AVAILABILITY.md`, and `REPRODUCIBILITY.md` describe included and external assets. | Align final archive file list with these documents. |
 | Figure source data | Figure-ready CSV files are tracked for seed-wise rewards and top-k diagnostics. | Confirm final figure numbers and include source-data mapping in the archive metadata. |
+| Source-data map | A claim, figure, and table source-data map is now tracked, but final journal numbering is not frozen. | Update `e0_source_data_map_2026-06-09.md` after final figure/table selection. |
 | Full raw/processed data route | Full Tool2 and prepared geospatial data are external to Git. | Decide public deposit versus controlled/justified access. |
 | Restricted-data rationale | Raw cadastral/geospatial restriction is inferred from Paper9 local-source notes and repository policy, but the responsible access body is not named. | Add the data owner, responsible institution, request route, eligibility, and data-use conditions. |
 | Licence | Repository/data licence is not fixed in this statement. | Add code licence and data licence or restriction terms. |

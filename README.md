@@ -49,6 +49,7 @@ Paper-facing writing assets are tracked under
 - `e0_data_code_availability_draft_2026-06-09.md`
 - `e0_submission_route_and_archive_plan_2026-06-09.md`
 - `e0_archive_metadata_templates_2026-06-09.md`
+- `e0_source_data_map_2026-06-09.md`
 - `e0_submission_readiness_checklist_2026-06-09.md`
 - `e0_bishan_task_environment_self_contained_methods_2026-06-09.md`
 - `e0_reward_and_rollout_metric_definitions_2026-06-09.md`
@@ -215,6 +216,11 @@ on 2026-06-09, the suite was rerun again from this repository directory with
 the same Python executable.
 
 Result: `108 passed in 4.11s`.
+
+After adding the E0 source-data map on 2026-06-09, the suite was rerun again
+from this repository directory with the same Python executable.
+
+Result: `108 passed`.
 
 Reviewers should run the relative-path command in `REPRODUCIBILITY.md` after
 cloning.
