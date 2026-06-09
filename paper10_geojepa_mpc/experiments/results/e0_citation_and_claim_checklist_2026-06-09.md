@@ -23,6 +23,8 @@ The tracked reference inventory is intentionally small:
 |---|---|---|
 | LE-WM project | `references/README.md` | Motivation and comparison point for world-model planning. |
 | Local source paper candidate | `D:\test\2603.19312v3.pdf` listed in `references/README.md` | Not committed; retrieve/verify before citing. |
+| Verified Paper10 citation map | `references/paper10_citation_map_2026-06-09.md` | Maps citation placeholders to verified source keys and supported wording. |
+| Verified Paper10 BibTeX | `references/paper10_verified_references_2026-06-09.bib` | First tracked bibliography file for Introduction and Methods citation insertion. |
 | Paper9-compatible environment | `county_env.py`, `arcgis_toolbox_paper9/private_source/` | Local method provenance; cite prior Paper9 manuscript if available. |
 | Paper10 E0 experiments | `paper10_geojepa_mpc/experiments/results/` | Primary evidence for all reported results. |
 
@@ -131,17 +133,19 @@ Do not write these claims unless future evidence changes:
 
 ## Next writing actions
 
-1. Retrieve or verify the LE-WM paper/source listed in `references/README.md`.
-2. Locate the prior Paper9 environment manuscript or method note.
-3. Run a targeted literature search for the seven placeholders above.
-4. Add only verified references to a tracked bibliography file.
-5. Insert citations into the Introduction and Methods draft after each claim is
+1. Locate the prior Paper9 environment manuscript or method note.
+2. Decide whether the target journal permits citation to the 2026 LeWM arXiv
+   preprint; if not, use only the peer-reviewed JEPA/world-model sources.
+3. Insert citations from `references/paper10_citation_map_2026-06-09.md` into
+   the Introduction and Methods draft after each claim is
    matched to a verified source.
+4. Run a separate China-specific farmland or land-consolidation literature pass
+   if the Introduction needs region-specific policy context.
 
 ## Chinese author notes
 
 - 这份清单不是参考文献表，而是“哪些句子需要找文献、哪些结果已经有本地证据”的
   对照表。
 - 目前可以安全写 20x16/top5 的 paper-facing 结论；不能写 50-state 成功扩展。
-- 下一步如果要真正补引用，应先做定向文献检索，再建立 BibTeX/RIS，而不是直接在
-  正文里填未经核对的文献。
+- 已经新增第一版 BibTeX 和 claim-to-citation map；下一步是把这些引用插入
+  Introduction/Methods，并补齐 Paper9 的正式可引用来源。

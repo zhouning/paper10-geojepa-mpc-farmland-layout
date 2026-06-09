@@ -87,6 +87,11 @@ data needed for smoke verification.
 - `scripts/paper10/plot_frontier_random050_figures.py`:
   offline plotting script for the seed-wise reward and top-k diagnostic figures;
   writes generated figure files under ignored `reviewer_outputs/` by default.
+- `references/paper10_verified_references_2026-06-09.bib`:
+  verified BibTeX entries for the first Paper10 manuscript citation pass.
+- `references/paper10_citation_map_2026-06-09.md`:
+  claim-to-citation mapping for the E0 manuscript draft, including unresolved
+  Paper9 and 50-state boundary notes.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_value_head_20x16_h5_seed44_top5_rollout_summary.json`:
   five-seed 100-step rollout summary for the 20x16/h5 scale-up.
 - `paper10_geojepa_mpc/experiments/checkpoints/e0_frontier_random050_value_head_20x16_h5_seed44_top5/value_head_seed3044.pt`:

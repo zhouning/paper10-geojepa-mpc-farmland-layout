@@ -46,6 +46,11 @@ Paper-facing writing assets are tracked under
 - `e0_citation_and_claim_checklist_2026-06-09.md`
 - `e0_frontier_random050_figure_plan_2026-06-09.md`
 
+Verified citation assets are tracked under `references/`:
+
+- `paper10_verified_references_2026-06-09.bib`
+- `paper10_citation_map_2026-06-09.md`
+
 ## Repository Layout
 
 - `paper10_geojepa_mpc/`: Paper10 models, planning utilities, training helpers,
