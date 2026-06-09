@@ -19,6 +19,10 @@ Use `e0_archive_manifest_2026-06-09.csv` as the machine-readable checklist for
 which file families are included in Record 1, externalized into Records 2-3,
 or excluded from the archive by default.
 
+Use `e0_data_access_and_rights_decision_register_2026-06-09.md` before filling
+licence, rights, data-owner, controlled-access, reviewer-route, and optional
+GeoFM redistribution fields.
+
 Use `e0_archive_release_and_doi_backfill_checklist_2026-06-09.md` for the
 release sequence, DOI or reviewer-link capture, and final backfill checks after
 these metadata fields are completed.

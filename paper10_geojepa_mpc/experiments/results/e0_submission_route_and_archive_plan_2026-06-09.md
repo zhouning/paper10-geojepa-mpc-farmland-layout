@@ -12,6 +12,8 @@ Fill-in archive metadata templates are provided in
 `e0_archive_metadata_templates_2026-06-09.md`.
 The release and identifier backfill sequence is tracked in
 `e0_archive_release_and_doi_backfill_checklist_2026-06-09.md`.
+The data-access and rights decisions that must precede DOI backfill are tracked
+in `e0_data_access_and_rights_decision_register_2026-06-09.md`.
 The manuscript conversion sequence after target-venue selection is tracked in
 `e0_target_venue_and_manuscript_conversion_checklist_2026-06-09.md`.
 
@@ -88,19 +90,22 @@ Before submission, the code/evidence archive should include:
 2. Decide whether to archive through GitHub release plus Zenodo, Figshare, OSF,
    an institutional repository, or another durable record.
 3. Select code licence and data licence or restriction terms.
-4. Decide whether full Bishan `tool2/` data and prepared GPKG-root geospatial
+4. Use `e0_data_access_and_rights_decision_register_2026-06-09.md` to record
+   code licence, generated-output rights, optional GeoFM rights, full Tool2
+   access, GPKG-root access, and reviewer-route decisions.
+5. Decide whether full Bishan `tool2/` data and prepared GPKG-root geospatial
    inputs can be public.
-5. If any full data are restricted, name the owner, access body, eligibility
+6. If any full data are restricted, name the owner, access body, eligibility
    rules, request route, response expectation, and data-use agreement.
-6. Freeze final figure/table numbering and source-data mapping.
-7. Fill the selected archive metadata fields in
+7. Freeze final figure/table numbering and source-data mapping.
+8. Fill the selected archive metadata fields in
    `e0_archive_metadata_templates_2026-06-09.md`.
-8. Use `e0_archive_release_and_doi_backfill_checklist_2026-06-09.md` to
+9. Use `e0_archive_release_and_doi_backfill_checklist_2026-06-09.md` to
    release the exact submission commit, capture identifiers, and backfill
    manuscript availability fields.
-9. Archive the exact submission commit and record the DOI or reviewer link in
+10. Archive the exact submission commit and record the DOI or reviewer link in
    `e0_data_code_availability_draft_2026-06-09.md`.
-10. Re-run the citation, claim, and test verification checks from a clean
+11. Re-run the citation, claim, and test verification checks from a clean
    checkout before final submission.
 
 ## Submission warning

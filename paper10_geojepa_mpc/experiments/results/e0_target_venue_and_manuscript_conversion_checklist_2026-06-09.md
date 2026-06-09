@@ -86,6 +86,10 @@ SELECTED]` are filled.
 | `[DATA LICENCE OR DATA RIGHTS TERMS TO BE SELECTED]` | Terms for generated E0 outputs, smoke data, and any shareable data. | Author/institution decision. |
 | `[FINAL MANUSCRIPT FILE TO BE CREATED]` | Journal-formatted manuscript file. | Created after the above fields are fixed. |
 
+Use `e0_data_access_and_rights_decision_register_2026-06-09.md` as the source
+for licence, rights, public-versus-controlled data route, optional GeoFM, and
+reviewer-route decisions before filling these fields.
+
 ## Claim-evidence guardrails during conversion
 
 | claim type | allowed wording | prohibited direction |

@@ -15,6 +15,7 @@ claim a passing 50-state result.
 - `e0_submission_readiness_checklist_2026-06-09.md`
 - `e0_data_code_availability_draft_2026-06-09.md`
 - `e0_source_data_map_2026-06-09.md`
+- `e0_data_access_and_rights_decision_register_2026-06-09.md`
 - `e0_archive_release_and_doi_backfill_checklist_2026-06-09.md`
 
 ## One-sentence argument under audit
@@ -36,6 +37,7 @@ and remain negative diagnostics.
 | Full Bishan `tool2/` route is undecided. | Full training and rollout reruns need `tool2/transitions.npz` and `tool2/pairwise.npz`, which are external to Git. | Choose public DOI or controlled-access record, including owner, access route, eligibility, review criteria, and data-use terms. |
 | GPKG-root geospatial access route is undecided. | The positive 20x16/top5 reproduction depends on the GPKG-root convention, but the prepared geospatial inputs are external. | Decide public deposit or controlled-access metadata for `DLTB_with_slope.gpkg`, `results_real/blocks/`, and `townships.json`. |
 | Code and data licences are not fixed. | Archive metadata and Data Availability cannot be finalized without rights terms. | Select code licence and generated-data rights; confirm whether optional GeoFM files may remain in the public archive. |
+| Data-access and rights decisions are not centralized. | DOI, licence, reviewer-route, and controlled-access wording can drift across Data Availability, archive metadata, and final manuscript files. | Use `e0_data_access_and_rights_decision_register_2026-06-09.md` as the single decision register before backfilling final wording. |
 | Figure and table numbering are not frozen. | Source-data mapping, captions, and final manuscript cross-references may drift. | Select final main and supplementary figures/tables, then update the figure plan, table draft, source-data map, and manuscript text. |
 | Reference policy is unresolved. | The public manuscript must not cite local-only Paper9 material, and the LeWorldModel preprint policy depends on the venue. | Keep the self-contained Paper10 task route; decide whether the target journal permits the 2026 arXiv LeWorldModel citation. |
 

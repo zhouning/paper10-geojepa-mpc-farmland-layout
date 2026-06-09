@@ -1,0 +1,79 @@
+# Paper10 E0 data access and rights decision register
+
+Date: 2026-06-09
+
+This register lists the data, code, model, and derived-output rights decisions
+that must be made before the Paper10 E0 manuscript can be submitted. It does
+not assign licences, data owners, access committees, repository identifiers,
+embargoes, reviewer links, or publication decisions. Its purpose is to keep
+the manuscript Data and Code Availability statement, archive metadata, source
+data map, and final submission files aligned.
+
+## Scope
+
+Use this register before filling:
+
+- `[CODE LICENCE TO BE SELECTED]`
+- `[DATA LICENCE OR DATA RIGHTS TERMS TO BE SELECTED]`
+- `[REPOSITORY/DOI TO BE ADDED]`
+- `[FULL TOOL2 DOI TO BE ADDED]`
+- `[RESTRICTED-DATA ACCESS ROUTE TO BE ADDED]`
+- `[PUBLIC DOI OR REVIEWER LINK TO BE ADDED]`
+
+The current positive E0 claim remains limited to the monitor-gated
+`frontier_random050` 20x16/top5 result. The tested 50-state rows remain failed
+diagnostics and do not change any data-access route.
+
+## Decision register
+
+| item | current package status | supports | candidate access route | required author decision | unresolved fields |
+|---|---|---|---|---|---|
+| Paper10 source code, tests, scripts, and notebooks | Included in Git. | Reviewer smoke verification, value-label generation, rollout evaluation, plotting, and manuscript reproducibility. | Public code/evidence archive with DOI or private reviewer link during review. | Select software licence, archive platform, release tag, and exact submission commit. | `[CODE LICENCE TO BE SELECTED]`; `[REPOSITORY/DOI TO BE ADDED]`; `[PUBLIC DOI OR REVIEWER LINK TO BE ADDED]`; `[SUBMISSION COMMIT HASH]` |
+| Small reviewer smoke Tool2 data | Included in Git under `arcgis_toolbox_paper9/_scratch/tool1_smoke/prepared/tool2/`. | Automated tests and smoke-scale verification. | Included with Record 1 if rights allow. | Confirm the smoke data can be redistributed with the repository archive and state any data rights terms. | `[DATA LICENCE OR DATA RIGHTS TERMS TO BE SELECTED]` |
+| Generated E0 JSON, Markdown, CSV, and NPZ outputs | Included in Git under `paper10_geojepa_mpc/experiments/results/`. | Main 20x16/top5 result, 10x12/top4 baseline, monitor diagnostics, source-data mapping, and failed 50-state diagnostics. | Public code/evidence archive with Record 1. | Select generated-output rights terms and confirm no restricted raw geospatial data are embedded beyond permitted derived outputs. | `[DATA LICENCE OR DATA RIGHTS TERMS TO BE SELECTED]`; `[REPOSITORY/DOI TO BE ADDED]` |
+| E0 checkpoints | Included in Git under `paper10_geojepa_mpc/experiments/checkpoints/`. | Reproducing packaged rollouts and value-filter evaluation. | Public code/evidence archive with Record 1. | Decide whether checkpoint files are covered by the software licence, data rights terms, or a separate model-weight licence. | `[CODE LICENCE TO BE SELECTED]`; `[DATA LICENCE OR DATA RIGHTS TERMS TO BE SELECTED]` |
+| Optional GeoFM asset | Included in Git under `paper7/data/`. | Optional fusion tests and ablations. | Include only if redistribution terms are confirmed; otherwise remove, replace, or document as external. | Confirm source, owner, licence, and whether it can remain in a public archive. | Optional GeoFM rights field in archive manifest; `[DATA LICENCE OR DATA RIGHTS TERMS TO BE SELECTED]` |
+| Full Bishan Tool2 data | External to Git; expected as `tool2/transitions.npz` and `tool2/pairwise.npz`. | Full-scale training and real-environment rollout reruns. | Public dataset DOI if redistribution rights exist; otherwise controlled-access repository or institutional access route. | Identify owner, repository or access body, public-versus-controlled route, reviewer access, eligibility, review criteria, and data-use terms. | `[FULL TOOL2 DOI TO BE ADDED]`; `[FULL TOOL2 CONTROLLED-ACCESS RECORD TO BE ADDED]`; `[RESTRICTED-DATA ACCESS ROUTE TO BE ADDED]` |
+| Prepared GPKG-root geospatial inputs | External to Git; expected as `dem_slope_analysis/output/DLTB_with_slope.gpkg`, `results_real/blocks/`, and `townships.json`. | Reproducible 20x16 label generation and full real-environment rollouts. | Public dataset DOI only if rights allow; otherwise controlled access with public metadata. | Identify geospatial data owner, restriction reason, access body, reviewer route, eligibility, review criteria, response expectation, and data-use agreement. | `[GPKG-ROOT DOI TO BE ADDED]`; `[RESTRICTED-DATA ACCESS ROUTE TO BE ADDED]` |
+| Generated figure previews and rerun outputs | Ignored under `reviewer_outputs/` unless intentionally exported. | Local visual checks and rerun previews. | Excluded by default; include only selected final exports with source-data mapping. | Decide final figure exports and whether any generated files become submitted source data. | Final figure/table numbering and source-data map fields |
+| Paper9 local manuscript source | Not a public data record; local-only status note exists. | Internal task/reward provenance during drafting only. | Do not use as public data, code, or citation route. | Replace with self-contained Paper10 Methods route unless a public Paper9 source is created and verified. | Public Paper9 citation decision |
+
+## Required access wording fields for restricted data
+
+If full Tool2 or GPKG-root geospatial data are not public, the final manuscript
+must name:
+
+- restriction reason;
+- responsible owner or access body;
+- request route;
+- eligible requesters;
+- review criteria;
+- data-use agreement or no-redistribution terms;
+- reviewer access route;
+- expected response time if known.
+
+Do not use only "available upon request" or "available upon reasonable request"
+without these details.
+
+## Minimum archive rights decisions
+
+| decision | acceptable close-out | not acceptable |
+|---|---|---|
+| Code licence | A named software licence recorded in the repository and archive metadata. | Leaving `[CODE LICENCE TO BE SELECTED]` in manuscript or archive files. |
+| Generated-output rights | A named data licence or rights statement for E0 outputs, smoke data, CSV source data, NPZ labels, and checkpoints if applicable. | Applying an open licence to third-party or restricted geospatial data without rights. |
+| Full Tool2 route | Public DOI or controlled-access record with public metadata and reviewer route. | Temporary cloud folder or informal private transfer as the final route. |
+| GPKG-root route | Public DOI or controlled-access metadata record with concrete request process. | Omitting the GPKG-root condition from Data Availability. |
+| Optional GeoFM asset | Confirmed redistribution terms or removal/replacement before final archive. | Assuming it can be redistributed because it is small. |
+
+## Backfill order
+
+1. Decide code licence and generated-data rights terms.
+2. Confirm optional GeoFM redistribution status.
+3. Select Record 1 archive platform and create DOI or reviewer link.
+4. Decide full Tool2 public deposit versus controlled access.
+5. Decide GPKG-root geospatial public deposit versus controlled access.
+6. Fill Record 2 and Record 3 metadata templates or restricted-access fields.
+7. Backfill Data and Code Availability, archive metadata, source-data map, and
+   final manuscript files.
+8. Re-run archive manifest, citation, prohibited-claim, and smoke-test checks
+   from the exact submission commit.

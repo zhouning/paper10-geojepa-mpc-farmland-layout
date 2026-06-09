@@ -20,6 +20,11 @@ Use this file after selecting the target venue and archive route. It covers:
   Availability statement and archive metadata;
 - rerunning final checks from the exact submission commit.
 
+Use `e0_data_access_and_rights_decision_register_2026-06-09.md` before this
+release sequence to centralize code licence, generated-output rights, optional
+GeoFM rights, full Tool2 access, GPKG-root access, and reviewer-route
+decisions.
+
 The current paper-facing positive claim remains bounded to the monitor-gated
 `frontier_random050` 20x16/h5 top-5 value-head result. Tested 50-state
 `frontier_random050` rows remain failed diagnostics and must not be promoted

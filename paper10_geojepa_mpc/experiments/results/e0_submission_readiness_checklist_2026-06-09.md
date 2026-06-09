@@ -48,6 +48,7 @@ should be treated as negative diagnostics rather than successful scale-up.
 | Archive metadata templates | `paper10_geojepa_mpc/experiments/results/e0_archive_metadata_templates_2026-06-09.md` | Fill-in repository metadata, controlled-access wording, source-data mapping, and dataset README templates for final archive records. |
 | Machine-readable archive manifest | `paper10_geojepa_mpc/experiments/results/e0_archive_manifest_2026-06-09.csv` | CSV file-family checklist separating public archive contents, external full-data records, and excluded local/generated artifacts. |
 | Source-data map | `paper10_geojepa_mpc/experiments/results/e0_source_data_map_2026-06-09.md` | Figure, table, and claim-to-source mapping for archive source-data metadata. |
+| Data access and rights decision register | `paper10_geojepa_mpc/experiments/results/e0_data_access_and_rights_decision_register_2026-06-09.md` | Central register for code licence, generated-output rights, optional GeoFM rights, full Tool2 access, GPKG-root geospatial access, reviewer routes, and availability backfill fields. |
 | Archive release and DOI backfill checklist | `paper10_geojepa_mpc/experiments/results/e0_archive_release_and_doi_backfill_checklist_2026-06-09.md` | Ordered release, DOI/reviewer-link capture, full-data route, backfill, and final verification checklist. |
 | Target-venue and manuscript-conversion checklist | `paper10_geojepa_mpc/experiments/results/e0_target_venue_and_manuscript_conversion_checklist_2026-06-09.md` | Section-by-section conversion plan for turning the self-contained integrated draft into a journal-specific submission package after venue, reference, figure, DOI, and data-access decisions are fixed. |
 | Self-contained manuscript gap audit | `paper10_geojepa_mpc/experiments/results/e0_self_contained_manuscript_submission_gap_audit_2026-06-09.md` | Reviewer-risk ledger separating blocking submission gaps from risks that can be handled by bounded framing and final conversion. |
@@ -74,6 +75,7 @@ should be treated as negative diagnostics rather than successful scale-up.
 | DOI and reviewer-link backfill has not been executed. | Manuscript, archive metadata, and repository records may cite different identifiers or omit the exact submission commit. | Use `e0_archive_release_and_doi_backfill_checklist_2026-06-09.md` after archive release and before final submission. |
 | Machine-readable archive manifest is not frozen. | Repository uploads may omit required file families or accidentally include external/restricted data. | Freeze `e0_archive_manifest_2026-06-09.csv` after route, licence, and data-access decisions. |
 | Full Bishan data route is undecided. | Full reruns may be impossible for reviewers even though smoke verification works. | Decide public deposit versus controlled access for full `tool2/` and GPKG-root geospatial inputs, including licence or restriction terms. |
+| Data-access and rights decisions are not centralized. | Final Data Availability, archive metadata, source-data mapping, and reviewer-route wording may diverge. | Use `e0_data_access_and_rights_decision_register_2026-06-09.md` as the single decision register before DOI and licence backfill. |
 | Figure/table numbering is not final. | Cross-references and source-data mapping may drift during formatting. | Select final figures/tables, freeze numbering, then update captions and the integrated draft. |
 | Source-data map is not frozen to final numbering. | Archive metadata may drift from final figure/table labels. | Update `e0_source_data_map_2026-06-09.md` after final figure/table numbering and before archive release. |
 | China-specific farmland policy literature has not been separately checked. | The Introduction may miss region-specific motivation if the target journal expects policy context. | Run a focused literature pass only if the target venue or framing needs it. |
@@ -99,20 +101,23 @@ should be treated as negative diagnostics rather than successful scale-up.
 3. Choose the submission/archive route in
    `e0_submission_route_and_archive_plan_2026-06-09.md`.
 4. Decide repository/data archiving route and full Bishan data access route.
-5. Fill the selected metadata fields in
+5. Use `e0_data_access_and_rights_decision_register_2026-06-09.md` to centralize
+   code licence, generated-output rights, optional GeoFM rights, full Tool2
+   access, GPKG-root access, and reviewer-route decisions.
+6. Fill the selected metadata fields in
    `e0_archive_metadata_templates_2026-06-09.md`.
-6. Use `e0_archive_release_and_doi_backfill_checklist_2026-06-09.md` to define
+7. Use `e0_archive_release_and_doi_backfill_checklist_2026-06-09.md` to define
    release tag, submission commit, DOI/reviewer-link, and backfill fields.
-7. Freeze the machine-readable archive manifest.
-8. Freeze the final figure/table set and update numbering across the integrated
+8. Freeze the machine-readable archive manifest.
+9. Freeze the final figure/table set and update numbering across the integrated
    manuscript, table draft, figure plan, and source-data map.
-9. Use `e0_target_venue_and_manuscript_conversion_checklist_2026-06-09.md` to
+10. Use `e0_target_venue_and_manuscript_conversion_checklist_2026-06-09.md` to
    convert the integrated manuscript draft into the target journal format.
-10. Use `e0_self_contained_manuscript_submission_gap_audit_2026-06-09.md` to
+11. Use `e0_self_contained_manuscript_submission_gap_audit_2026-06-09.md` to
     close the remaining blocker ledger before final manuscript creation.
-11. Run a final claim sweep for prohibited 50-state scale-up language and
+12. Run a final claim sweep for prohibited 50-state scale-up language and
    unresolved citation placeholders.
-12. Run tests and repository verification from a clean checkout or reviewer-like
+13. Run tests and repository verification from a clean checkout or reviewer-like
    environment before archive release.
 
 ## Claim-evidence guardrails
@@ -145,6 +150,9 @@ Paper10 E0 is not ready for journal submission until all items below are true:
   Data Availability, archive metadata, and release notes.
 - Full Bishan `tool2/` and GPKG-root geospatial data route is documented with
   licence or restriction terms.
+- Code licence, generated-output rights, optional GeoFM rights, full-data
+  access routes, and reviewer routes are centralized in the data-access and
+  rights decision register.
 - Figure/table numbering and source-data mapping are frozen.
 - All manuscript citation keys resolve in the final bibliography.
 - A final prohibited-claim sweep finds no 50-state success or unverified Paper9

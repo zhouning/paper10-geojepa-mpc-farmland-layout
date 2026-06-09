@@ -34,6 +34,14 @@ For the current figure, table, and claim-to-source-data mapping, see:
 paper10_geojepa_mpc/experiments/results/e0_source_data_map_2026-06-09.md
 ```
 
+For the data-access and rights decision register, including full Tool2,
+GPKG-root geospatial inputs, optional GeoFM rights, code licence, generated-data
+rights, and reviewer routes, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_data_access_and_rights_decision_register_2026-06-09.md
+```
+
 For the release sequence and DOI or reviewer-link backfill checklist, see:
 
 ```text

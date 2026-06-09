@@ -14,6 +14,9 @@ described as Record 1 in
 `paper10_geojepa_mpc/experiments/results/e0_archive_metadata_templates_2026-06-09.md`.
 The machine-readable archive inventory is
 `paper10_geojepa_mpc/experiments/results/e0_archive_manifest_2026-06-09.csv`.
+Data-access and rights decisions for code, generated E0 outputs, optional
+GeoFM files, full Tool2 data, and GPKG-root geospatial inputs are tracked in
+`paper10_geojepa_mpc/experiments/results/e0_data_access_and_rights_decision_register_2026-06-09.md`.
 Full reruns from scratch still require the external full Bishan `tool2/` data
 and prepared GPKG-root geospatial inputs described in `DATA_AVAILABILITY.md`.
 
