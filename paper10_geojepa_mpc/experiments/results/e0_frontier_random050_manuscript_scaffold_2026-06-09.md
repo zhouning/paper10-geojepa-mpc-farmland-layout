@@ -188,7 +188,7 @@ pre-declared monitor gate passes.
 | The 20x16/top5 result improves stability, not only best-case reward. | Sample std fell from `5.0037` to `1.0004`; minimum seed reward rose from `57.9750` to `67.7135`. | supported |
 | The 20x16/top5 labels are reproducible under the GPKG data root. | macOS reproduction matched arrays exactly or within floating-point tolerance. | supported |
 | Existing 50-state labels should not be trained. | macOS seed45 and Windows seed46 rows failed default and post-hoc monitor checks. | supported |
-| GeoJEPA-MPC has demonstrated 50-state value-head scale-up. | No 50-state label set passed the monitor gate. | not supported |
+| Direct value-head training is supported for the tested 50-state labels. | No 50-state label set passed the monitor gate. | not supported |
 
 ## Assumptions or missing inputs
 

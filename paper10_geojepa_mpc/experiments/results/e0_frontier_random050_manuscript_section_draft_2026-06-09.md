@@ -144,7 +144,7 @@ should present 20x16/top5 as the main E0 value-filter result and frame the
 | 20x16/top5 is the current main E0 result. | Mean reward `69.4705`, sample std `1.0004`, selected top-5 monitor gate passed. | Supported. |
 | The 20x16/top5 result is reproducible under the GPKG root. | macOS GPKG reproduction matched packaged arrays exactly or within floating-point tolerance. | Supported. |
 | 50-state value-head training is not justified by current labels. | macOS seed45 and Windows seed46 default and post-hoc monitors all returned `stop`. | Supported. |
-| The method has demonstrated 50-state scale-up. | No 50-state label set passed the monitor gate. | Not supported. |
+| Direct value-head training is supported for the tested 50-state labels. | No 50-state label set passed the monitor gate. | Not supported. |
 
 ## Assumptions or missing inputs
 

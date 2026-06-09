@@ -85,6 +85,11 @@ The draft
 applies this policy: E0 numbers remain tied to local result artifacts, while
 external references frame value functions, MPC, and learned world models.
 
+The integrated draft
+`paper10_geojepa_mpc/experiments/results/e0_frontier_random050_integrated_manuscript_draft_2026-06-09.md`
+assembles the cited section drafts into a single generic manuscript entry point
+while retaining the same citation policy and submission blockers.
+
 ## Verification notes
 
 | key | public verification route | status |

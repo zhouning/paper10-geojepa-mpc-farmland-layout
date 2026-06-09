@@ -27,6 +27,7 @@ The tracked reference inventory is intentionally small:
 | Verified Paper10 BibTeX | `references/paper10_verified_references_2026-06-09.bib` | First tracked bibliography file for Introduction and Methods citation insertion. |
 | Local-only Paper9 BibTeX | `references/paper10_local_sources_2026-06-09.bib` | Temporary unpublished-source key for internal Paper10 drafting. |
 | Paper9 local-source status | `references/paper10_paper9_local_source_status_2026-06-09.md` | Documents the local Paper9 v6 source and replacement requirement. |
+| Integrated manuscript draft | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_integrated_manuscript_draft_2026-06-09.md` | Single-entry generic manuscript draft assembled from the cited Introduction, Methods, and Results/Discussion assets. |
 | Citation-inserted Introduction draft | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_introduction_cited_draft_2026-06-09.md` | First Introduction draft using verified citation keys. |
 | Citation-aware Results/Discussion draft | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_results_discussion_cited_draft_2026-06-09.md` | Results and Discussion draft using verified citation keys only for general interpretation, not as evidence for E0 numbers. |
 | Paper9-compatible environment | `county_env.py`, `arcgis_toolbox_paper9/private_source/` | Local method provenance; cite prior Paper9 manuscript if available. |
@@ -78,7 +79,7 @@ abstract and Results.
 | 20x16/top5 reduces seed sensitivity. | Sample std `5.0037` to `1.0004`; minimum reward `57.9750` to `67.7135`; tables doc | supported |
 | 20x16 labels reproduce under the GPKG data root. | `e0_macos_gpkg_reproduction_findings_2026-06-09.md` | supported |
 | Tested 50-state label sets should not be trained. | macOS seed45 finding; Windows seed46 ablation finding; post-hoc top-k CSV/tables | supported |
-| GeoJEPA-MPC has demonstrated 50-state value-head scale-up. | No passing 50-state gate exists. | not supported; do not claim |
+| Direct value-head training is supported for the tested 50-state labels. | No passing 50-state gate exists. | not supported; do not claim |
 
 ## Figure and table citation hooks
 
@@ -142,9 +143,8 @@ Do not write these claims unless future evidence changes:
    Paper10 Methods.
 2. Decide whether the target journal permits citation to the 2026 LeWM arXiv
    preprint; if not, use only the peer-reviewed JEPA/world-model sources.
-3. Merge the citation-inserted Introduction, Methods, and Results/Discussion
-   wording into the final manuscript once the target journal's reference style
-   is selected.
+3. Use the integrated manuscript draft as the working single-entry manuscript
+   after the target journal's reference style is selected.
 4. Run a separate China-specific farmland or land-consolidation literature pass
    if the Introduction needs region-specific policy context.
 

@@ -147,14 +147,14 @@ material should include the array-level reproduction audit. Without that
 protocol detail, an independent rerun could generate different labels before
 model training begins.
 
-The current evidence does not support a direct 50-state value-head scale-up
-claim. All tested 50-state labels failed the monitor gate before training, and
-larger top-k diagnostics did not produce a pre-declared passing condition. The
-next scale-up attempt should therefore change the candidate proposal strategy,
-the label-generation budget, or the monitor design before training. Until such
-a label set passes, the defensible manuscript claim is that monitor-gated
-frontier-random labels improved GeoJEPA-MPC at the validated 20x16/top5 scale
-and revealed candidate proposal design as the next bottleneck.
+The current evidence does not support direct value-head training for the tested
+50-state labels. All tested 50-state labels failed the monitor gate before
+training, and larger top-k diagnostics did not produce a pre-declared passing
+condition. The next scale-up attempt should therefore change the candidate
+proposal strategy, the label-generation budget, or the monitor design before
+training. Until such a label set passes, the defensible manuscript claim is that
+monitor-gated frontier-random labels improved GeoJEPA-MPC at the validated
+20x16/top5 scale and revealed candidate proposal design as the next bottleneck.
 
 ## Section outline
 
@@ -178,7 +178,7 @@ and revealed candidate proposal design as the next bottleneck.
 | The 20x16/top5 gain improved stability, not only best-case reward. | Sample std fell by `4.0034`; minimum seed reward rose from `57.9750` to `67.7135`. | supported |
 | The 20x16/top5 labels are reproducible under the GPKG root. | macOS GPKG reproduction matched key arrays exactly or within floating-point tolerance. | supported |
 | Tested 50-state labels should not be trained under the current policy. | macOS seed45 and Windows seed46 rows failed default and post-hoc monitor checks. | supported |
-| Paper10 proves direct 50-state value-head scale-up. | No tested 50-state label set passed the monitor gate. | not supported |
+| Direct value-head training is supported for the tested 50-state labels. | No tested 50-state label set passed the monitor gate. | not supported |
 
 ## Citation-use note
 
