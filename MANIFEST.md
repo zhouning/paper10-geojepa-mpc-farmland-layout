@@ -70,6 +70,10 @@ data needed for smoke verification.
   value-label generation, monitor-gated selection, value-head-only training,
   rollout evaluation, reproducibility conditions, and 50-state boundary
   diagnostics.
+- `paper10_geojepa_mpc/experiments/results/e0_reward_and_rollout_metric_definitions_2026-06-09.md`:
+  source-grounded reward-function, executable-mask, value-label return, and
+  rollout-metric definitions extracted from the packaged environment and E0
+  rollout scripts.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_figure_plan_2026-06-09.md`:
   manuscript figure contracts, panel maps, source-data links, caption drafts,
   and review-risk notes for E0 Figures 1-3.

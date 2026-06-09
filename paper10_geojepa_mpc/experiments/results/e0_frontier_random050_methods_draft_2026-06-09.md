@@ -153,6 +153,14 @@ deviation `5.0037`, and minimum reward `57.9750`. The reported improvement is
 therefore a distribution-level gain across seeds 0-4 rather than a single best
 seed.
 
+The exact reward and reporting definitions are recorded in
+`e0_reward_and_rollout_metric_definitions_2026-06-09.md`. In brief, the
+per-step environment reward combines normalized stepwise farmland-slope
+reduction, normalized stepwise contiguity change, normalized baimu-fang area
+change, a bonus for newly counted baimu-fang patches, an asymmetric penalty for
+baimu-fang area loss, and a zero-swap penalty. Rollout total reward is the
+un-discounted sum of this per-step reward over the 100-step episode.
+
 ### Reproducibility and negative-label boundary
 
 The package includes compact source artifacts for reproducing the paper-facing
@@ -189,8 +197,9 @@ attempted.
   prior Paper9 environment details still need to be inserted by source.
 - The final manuscript should decide whether implementation details belong in
   the main Methods section or in supplementary Methods.
-- The exact reward formula should be copied from the environment or prior
-  paper source before submission rather than paraphrased from memory.
+- The reward formula has been extracted from the packaged environment into
+  `e0_reward_and_rollout_metric_definitions_2026-06-09.md`; before submission,
+  align notation with the target journal and any prior Paper9 wording.
 
 ## Why this structure
 
@@ -209,5 +218,6 @@ attempted.
   50-state 扩展。
 - 50-state 部分只写成 label gate 未通过的边界诊断，避免被审稿人理解为
   训练失败或隐瞒负结果。
-- 投稿前还需要补 reward 公式、目标期刊格式、以及 GeoJEPA/MPC/农地规划相关
-  引用。
+- reward 公式已经单独整理到
+  `e0_reward_and_rollout_metric_definitions_2026-06-09.md`；投稿前还需要统一
+  目标期刊格式和 GeoJEPA/MPC/农地规划相关引用。
