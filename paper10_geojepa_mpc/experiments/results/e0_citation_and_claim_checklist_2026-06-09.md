@@ -30,6 +30,7 @@ The tracked reference inventory is intentionally small:
 | Integrated manuscript draft | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_integrated_manuscript_draft_2026-06-09.md` | Single-entry generic manuscript draft assembled from the cited Introduction, Methods, and Results/Discussion assets. |
 | Data and Code Availability draft | `paper10_geojepa_mpc/experiments/results/e0_data_code_availability_draft_2026-06-09.md` | Manuscript availability statement draft and repository/data DOI action list. |
 | Submission-readiness checklist | `paper10_geojepa_mpc/experiments/results/e0_submission_readiness_checklist_2026-06-09.md` | Reviewer-risk matrix, submission blockers, action order, and claim-evidence guardrails for the current E0 package. |
+| Self-contained Bishan task/environment Methods note | `paper10_geojepa_mpc/experiments/results/e0_bishan_task_environment_self_contained_methods_2026-06-09.md` | Code-derived alternative route for describing the Bishan task, state, action, reward, episode, and data-root conditions if public Paper9 citation is unavailable. |
 | Citation-inserted Introduction draft | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_introduction_cited_draft_2026-06-09.md` | First Introduction draft using verified citation keys. |
 | Citation-aware Results/Discussion draft | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_results_discussion_cited_draft_2026-06-09.md` | Results and Discussion draft using verified citation keys only for general interpretation, not as evidence for E0 numbers. |
 | Paper9-compatible environment | `county_env.py`, `arcgis_toolbox_paper9/private_source/` | Local method provenance; cite prior Paper9 manuscript if available. |
@@ -142,7 +143,8 @@ Do not write these claims unless future evidence changes:
 
 1. Replace or formalize `zhou2026paper9_local` before submission: public Paper9
    preprint, accepted article, Paper10 supplementary methods, or self-contained
-   Paper10 Methods.
+   Paper10 Methods. A code-derived self-contained task/environment note now
+   exists and can be merged with the reward-definition note for this route.
 2. Decide whether the target journal permits citation to the 2026 LeWM arXiv
    preprint; if not, use only the peer-reviewed JEPA/world-model sources.
 3. Finalize Data and Code Availability: archive the repository, assign a DOI or

@@ -114,8 +114,12 @@ actions. The planner selects one executable action, applies it to the
 environment, and receives a reward that combines farmland layout objectives
 recorded by the Paper9-compatible county environment [@zhou2026paper9_local].
 This citation is a local-only manuscript placeholder for internal drafting and
-must be replaced with a public Paper9 source or final supplementary-methods
-citation before submission.
+must be replaced with a public Paper9 source, final supplementary-methods
+citation, or self-contained Paper10 task/environment Methods before
+submission. A code-derived self-contained route is drafted in
+`e0_bishan_task_environment_self_contained_methods_2026-06-09.md` and should be
+merged with `e0_reward_and_rollout_metric_definitions_2026-06-09.md` if the
+final manuscript cannot cite a public Paper9 source.
 
 The full Bishan prepared dataset is external to the Git repository and is
 resolved through the repository-level data layout described in the
@@ -371,7 +375,7 @@ redesign as the next step for 50-state value-head training.
 | Land-use allocation and land consolidation can be framed as spatial multi-criteria optimization or decision support. | `yao2018spatial_optimization_land_use`; `stewart2014multiobjective_gis_land_use`; `demetriou2012ipdss_land_consolidation`; `demetriou2014ipdss_land_consolidation_book` | supported by external literature |
 | Long-horizon action choice can be framed through MPC and value functions. | `mayne2014mpc_future_promise`; `rawlings2017model_predictive_control`; `sutton2018reinforcement_learning`; `mnih2015dqn`; `silver2016alphago` | supported by external literature |
 | Learned world models and JEPA-style representation learning motivate the GeoJEPA-MPC framing. | `ha2018recurrent_world_models`; `hafner2019planet`; `assran2023ijepa`; `maes2026leworldmodel` | supported, with LeWM marked as preprint |
-| The Paper9-compatible environment provides current task/reward provenance. | `zhou2026paper9_local`; packaged `county_env.py`; reward definition note | local-only placeholder, replace before submission |
+| The Paper9-compatible environment provides current task/reward provenance. | `zhou2026paper9_local`; packaged `county_env.py`; self-contained Bishan task/environment note; reward definition note | local-only placeholder still unresolved; code-derived replacement route drafted |
 | 20x16/top5 is the current main E0 positive result. | Mean reward `69.4705`, sample std `1.0004`, selected top-5 monitor gate passed. | supported |
 | The 20x16/top5 result improves stability, not only best-case reward. | Sample std fell from `5.0037` to `1.0004`; minimum seed reward rose from `57.9750` to `67.7135`. | supported |
 | The 20x16/top5 labels are reproducible under the GPKG root. | macOS GPKG reproduction matched key arrays exactly or within floating-point tolerance. | supported |
@@ -382,7 +386,8 @@ redesign as the next step for 50-state value-head training.
 
 - Replace or formalize `zhou2026paper9_local` before submission: public Paper9
   preprint, accepted article, Paper10 supplementary methods, or self-contained
-  Paper10 Methods.
+  Paper10 Methods using the Bishan task/environment note and reward-definition
+  note.
 - Decide whether the target journal permits citation to the 2026 LeWM arXiv
   preprint; if not, cite `assran2023ijepa` for JEPA and keep LeWM as an
   unsubmitted related-work note.
@@ -402,4 +407,6 @@ redesign as the next step for 50-state value-head training.
 - The positive claim is 20x16/top5 only. The 50-state rows are boundary
   diagnostics and should not be written as successful scale-up.
 - The only non-public citation key is `zhou2026paper9_local`; it must be
-  replaced or formalized before submission.
+  replaced or formalized before submission. A self-contained Paper10 Methods
+  route now exists, but it has not yet been merged into a final submission
+  manuscript.

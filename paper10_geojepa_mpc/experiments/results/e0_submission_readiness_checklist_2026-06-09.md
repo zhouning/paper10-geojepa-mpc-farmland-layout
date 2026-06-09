@@ -43,6 +43,7 @@ should be treated as negative diagnostics rather than successful scale-up.
 | Tables draft | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_manuscript_tables_2026-06-09.md` | Manuscript table contracts and quantitative source mapping. |
 | Figure plan | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_figure_plan_2026-06-09.md` | Figure contracts, caption drafts, source data, and figure-specific risk notes. |
 | Data and Code Availability draft | `paper10_geojepa_mpc/experiments/results/e0_data_code_availability_draft_2026-06-09.md` | Manuscript availability wording and archive/data DOI action list. |
+| Self-contained Bishan task/environment Methods note | `paper10_geojepa_mpc/experiments/results/e0_bishan_task_environment_self_contained_methods_2026-06-09.md` | Code-derived task, state, action, reward, episode, and data-root wording that can be merged into Paper10 Methods if public Paper9 citation is unavailable. |
 | Reward and metric definitions | `paper10_geojepa_mpc/experiments/results/e0_reward_and_rollout_metric_definitions_2026-06-09.md` | Source-grounded reward, executable-mask, label-return, and rollout metric definitions. |
 | Citation and claim checklist | `paper10_geojepa_mpc/experiments/results/e0_citation_and_claim_checklist_2026-06-09.md` | Claim-to-evidence and citation-needs tracker. |
 | Verified bibliography | `references/paper10_verified_references_2026-06-09.bib` | Publicly verified first-pass bibliography. |
@@ -54,7 +55,7 @@ should be treated as negative diagnostics rather than successful scale-up.
 
 | blocker | risk if unresolved | required action |
 |---|---|---|
-| Paper9 provenance is local-only. | Reviewers cannot verify the task/reward source, and the bibliography would cite an unpublished local file. | Replace `zhou2026paper9_local` with a public Paper9 preprint/article, a formal supplementary-methods citation, or a fully self-contained Paper10 Methods description. |
+| Paper9 provenance is local-only. | Reviewers cannot verify the task/reward source, and the bibliography would cite an unpublished local file. | Replace `zhou2026paper9_local` with a public Paper9 preprint/article, or merge the self-contained Bishan task/environment note plus reward-definition note into Paper10 Methods/supplement. |
 | Target journal is not selected. | Citation style, word limits, abstract structure, figure limits, and data-policy wording remain unsettled. | Choose the target journal and convert the integrated draft to its format. |
 | LeWorldModel citation policy is unresolved. | A 2026 arXiv preprint could be over-weighted as established prior art. | Decide whether the journal permits LeWM as a cited design comparison; otherwise cite peer-reviewed JEPA/world-model sources and keep LeWM as an internal related-work note. |
 | Repository and data archive identifiers are missing. | Data and Code Availability cannot be finalized. | Archive the exact submission commit and assign repository/data DOI or reviewer-access links. |
@@ -72,13 +73,15 @@ should be treated as negative diagnostics rather than successful scale-up.
 | 50-state overclaim risk. | All tested 50-state label sets failed gates before training. | high | Keep all 50-state wording as boundary diagnostics; do not say the method scales to 50 states. |
 | GPKG/shapefile reproducibility risk. | macOS audit showed the GPKG root reproduces packaged 20x16 labels, while shapefile-first resolution does not. | medium | State the GPKG root as an experimental condition in Methods and Data Availability. |
 | Data/code availability risk. | Smoke data, outputs, and checkpoints are included; full data and DOI route remain external. | high | Add repository/data DOI or controlled-access route before submission. |
-| Paper9 citation risk. | `zhou2026paper9_local` is local-only and unpublished. | high | Resolve before submission; do not leave the local placeholder in the final bibliography. |
+| Paper9 citation risk. | `zhou2026paper9_local` is local-only and unpublished; a code-derived self-contained replacement note now exists but has not been merged into final Methods. | high | Resolve before submission by choosing public Paper9 citation or self-contained Paper10 Methods; do not leave the local placeholder in the final bibliography. |
 | Reference-policy risk. | Verified references exist, but target-journal style and LeWM policy are unresolved. | medium | Freeze target journal, reference style, and preprint policy before final manuscript conversion. |
 
 ## Action order for the next session
 
 1. Resolve the Paper9 provenance path: public citation, supplementary methods,
-   or self-contained Paper10 Methods.
+   or self-contained Paper10 Methods using
+   `e0_bishan_task_environment_self_contained_methods_2026-06-09.md` plus
+   `e0_reward_and_rollout_metric_definitions_2026-06-09.md`.
 2. Select the target journal and format constraints.
 3. Decide repository/data archiving route and full Bishan data access route.
 4. Freeze the final figure/table set and update numbering across the integrated
@@ -105,7 +108,8 @@ should be treated as negative diagnostics rather than successful scale-up.
 
 Paper10 E0 is not ready for journal submission until all items below are true:
 
-- Public or self-contained replacement for `zhou2026paper9_local` is in place.
+- Public citation or self-contained Paper10 Methods replacement for
+  `zhou2026paper9_local` is in place.
 - Target journal, article format, word limits, and reference style are selected.
 - Repository DOI or anonymous reviewer link is recorded.
 - Full Bishan `tool2/` and GPKG-root geospatial data route is documented with

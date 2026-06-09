@@ -45,8 +45,22 @@ Local-only BibTeX:
 - If the target venue permits citation of unpublished manuscripts, keep the
   local-only entry clearly marked as unpublished and author-verified.
 
+## Self-contained Paper10 replacement route
+
+The repository now includes a code-derived task/environment Methods note:
+
+- `paper10_geojepa_mpc/experiments/results/e0_bishan_task_environment_self_contained_methods_2026-06-09.md`
+
+This note describes the Bishan task, data-root convention, parcel/block/township
+hierarchy, state features, block-action semantics, greedy paired-swap execution,
+episode termination, and the route for merging the reward-definition note into
+Paper10 Methods. It is not a public Paper9 citation. It is a replacement route
+only if the final manuscript moves the relevant task and reward details into
+Paper10 main Methods, supplementary Methods, or a citable code/data supplement.
+
 ## Remaining action
 
 Author decision needed: choose whether Paper9 will be cited as a separate
-public work, moved into Paper10 supplementary methods, or treated as local code
-provenance only.
+public work, moved into Paper10 supplementary methods using the self-contained
+Methods note plus reward-definition note, or treated as local code provenance
+only.

@@ -58,10 +58,15 @@ planner selects one executable action, applies it to the environment, and
 receives a reward that combines farmland layout objectives recorded by the
 Paper9-compatible county environment [@zhou2026paper9_local]. This citation is
 a local-only manuscript placeholder for internal drafting and must be replaced
-with a public Paper9 source or a final supplementary-methods citation before
-submission. All E0 label-generation and rollout experiments reported here use
-the executable swap mask, so candidate actions are drawn only from swaps that
-the environment can apply at the current state.
+with a public Paper9 source, a final supplementary-methods citation, or the
+self-contained Paper10 task/environment description before submission. The
+code-derived replacement route is drafted in
+`e0_bishan_task_environment_self_contained_methods_2026-06-09.md` and should be
+merged with `e0_reward_and_rollout_metric_definitions_2026-06-09.md` if the
+final manuscript cannot cite a public Paper9 source. All E0 label-generation
+and rollout experiments reported here use the executable swap mask, so
+candidate actions are drawn only from swaps that the environment can apply at
+the current state.
 
 The full Bishan prepared dataset is external to the Git repository and is
 resolved through the repository-level data layout described in the
@@ -222,7 +227,11 @@ attempted.
   have been inserted from `references/paper10_verified_references_2026-06-09.bib`.
   The Paper9 task/reward provenance is currently represented by local-only key
   `zhou2026paper9_local` from `references/paper10_local_sources_2026-06-09.bib`;
-  replace or formalize it before submission.
+  replace or formalize it before submission. If no public Paper9 citation is
+  available, merge
+  `e0_bishan_task_environment_self_contained_methods_2026-06-09.md` with
+  `e0_reward_and_rollout_metric_definitions_2026-06-09.md` and cite Paper10
+  supplementary Methods/code instead.
 - The final manuscript should decide whether implementation details belong in
   the main Methods section or in supplementary Methods.
 - The reward formula has been extracted from the packaged environment into

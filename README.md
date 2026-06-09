@@ -47,6 +47,7 @@ Paper-facing writing assets are tracked under
 - `e0_frontier_random050_results_discussion_cited_draft_2026-06-09.md`
 - `e0_data_code_availability_draft_2026-06-09.md`
 - `e0_submission_readiness_checklist_2026-06-09.md`
+- `e0_bishan_task_environment_self_contained_methods_2026-06-09.md`
 - `e0_reward_and_rollout_metric_definitions_2026-06-09.md`
 - `e0_citation_and_claim_checklist_2026-06-09.md`
 - `e0_frontier_random050_figure_plan_2026-06-09.md`
@@ -191,6 +192,12 @@ Result: `108 passed`.
 
 After adding the submission-readiness checklist on 2026-06-09, the suite was
 rerun again from this repository directory with the same Python executable.
+
+Result: `108 passed`.
+
+After adding the self-contained Bishan task/environment Methods note on
+2026-06-09, the suite was rerun again from this repository directory with the
+same Python executable.
 
 Result: `108 passed`.
 
