@@ -27,7 +27,7 @@ data needed for smoke verification.
 - `scripts/macos/frontier_random050_50x24_h5.env.example`: local path and device
   configuration template for the macOS runner.
 - `docs/windows_frontier_random050_ablation.md`: Windows CPU continuation guide
-  for the next `frontier_random050` 50-state ablation grid.
+  for reproducing or editing the `frontier_random050` 50-state ablation grid.
 - `scripts/windows/run_frontier_random050_ablation_grid.ps1`: resumable Windows
   PowerShell runner for label generation, diagnostics, monitor gates, and
   optional value-head training after a passing gate.
@@ -51,8 +51,8 @@ data needed for smoke verification.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_20x16_h5_seed44_top5_report_2026-06-08.md`:
   latest `frontier_random050` value-head 20x16/h5 scale-up report.
 - `paper10_geojepa_mpc/experiments/results/e0_windows_frontier_random050_ablation_findings_2026-06-09.md`:
-  Windows CPU 50-state ablation findings for the next `frontier_random050`
-  candidate-grid diagnosis.
+  Windows CPU 50-state ablation findings for the completed negative
+  `frontier_random050` candidate-grid diagnosis.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_results_synthesis_2026-06-09.md`:
   paper-facing synthesis of the E0 `frontier_random050` pilot, scale-up,
   reproduction audit, and 50-state boundary diagnostics.
@@ -62,6 +62,9 @@ data needed for smoke verification.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_manuscript_tables_2026-06-09.md`:
   manuscript-ready E0 `frontier_random050` tables, captions, and placement
   recommendations.
+- `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_manuscript_scaffold_2026-06-09.md`:
+  full-paper scaffold with title candidates, abstract draft, section plan,
+  figure/table placement, and claim-evidence map for the E0 evidence package.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_seedwise_rewards_2026-06-09.csv`:
   figure-ready seed-wise reward comparison for 10x12/top4 vs 20x16/top5.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_topk_diagnostics_2026-06-09.csv`:

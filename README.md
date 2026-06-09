@@ -34,6 +34,14 @@ not training inputs. The macOS `50x24/h5 seed45` run and the Windows seed46
 ablation grid failed the monitor gates, so the current paper-facing claim stays
 anchored on the reproducible 20x16/top5 result.
 
+Paper-facing writing assets are tracked under
+`paper10_geojepa_mpc/experiments/results/`:
+
+- `e0_frontier_random050_results_synthesis_2026-06-09.md`
+- `e0_frontier_random050_manuscript_section_draft_2026-06-09.md`
+- `e0_frontier_random050_manuscript_tables_2026-06-09.md`
+- `e0_frontier_random050_manuscript_scaffold_2026-06-09.md`
+
 ## Repository Layout
 
 - `paper10_geojepa_mpc/`: Paper10 models, planning utilities, training helpers,
@@ -148,11 +156,11 @@ from this repository directory with the same Python executable.
 
 Result: `105 passed in 3.74s`.
 
-After adding manuscript tables, figure assets, and the 50-state redesign
-handoff on 2026-06-09, the suite was rerun again from this repository directory
-with the same Python executable.
+After adding manuscript tables, figure assets, the 50-state redesign handoff,
+and the manuscript scaffold on 2026-06-09, the suite was rerun again from this
+repository directory with the same Python executable.
 
-Result: `108 passed in 3.91s`.
+Result: `108 passed in 4.98s`.
 
 Reviewers should run the relative-path command in `REPRODUCIBILITY.md` after
 cloning.
