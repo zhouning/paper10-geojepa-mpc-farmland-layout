@@ -74,6 +74,9 @@ data needed for smoke verification.
   source-grounded reward-function, executable-mask, value-label return, and
   rollout-metric definitions extracted from the packaged environment and E0
   rollout scripts.
+- `paper10_geojepa_mpc/experiments/results/e0_citation_and_claim_checklist_2026-06-09.md`:
+  manuscript citation-needs and claim-evidence checklist separating local E0
+  evidence from external literature still requiring verification.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_figure_plan_2026-06-09.md`:
   manuscript figure contracts, panel maps, source-data links, caption drafts,
   and review-risk notes for E0 Figures 1-3.
