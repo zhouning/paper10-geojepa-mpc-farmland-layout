@@ -65,6 +65,9 @@ data needed for smoke verification.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_manuscript_scaffold_2026-06-09.md`:
   full-paper scaffold with title candidates, abstract draft, section plan,
   figure/table placement, and claim-evidence map for the E0 evidence package.
+- `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_introduction_cited_draft_2026-06-09.md`:
+  citation-inserted Introduction draft using the verified Paper10 BibTeX keys
+  while preserving the unresolved Paper9 citation boundary.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_methods_draft_2026-06-09.md`:
   paper-facing Methods draft covering task formulation, `frontier_random050`
   value-label generation, monitor-gated selection, value-head-only training,

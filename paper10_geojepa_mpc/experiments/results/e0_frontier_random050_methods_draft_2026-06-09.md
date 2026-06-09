@@ -44,15 +44,22 @@ multi-step labels passing candidate-quality checks, supported by the packaged
 
 ### Task formulation and data root
 
-We formulate Bishan farmland layout optimization as a constrained sequential
-swap-planning task. At each planning step, the environment exposes a land-use
-state, block-level features, geospatial features, and a finite set of valid
-swap actions. The planner selects one executable action, applies it to the
-environment, and receives a reward that combines farmland layout objectives
-recorded by the Paper9-compatible county environment. All E0 label-generation
-and rollout experiments reported here use the executable swap mask, so
-candidate actions are drawn only from swaps that the environment can apply at
-the current state.
+Spatial land-use allocation and land-consolidation studies have long treated
+parcel or site decisions as GIS-based, multi-criteria optimization and
+decision-support problems
+[@aerts2003linear_integer_land_use_allocation;
+@stewart2014multiobjective_gis_land_use;
+@yao2018spatial_optimization_land_use;
+@demetriou2012ipdss_land_consolidation]. We formulate Bishan farmland layout
+optimization as a constrained sequential swap-planning task in that family. At
+each planning step, the environment exposes a land-use state, block-level
+features, geospatial features, and a finite set of valid swap actions. The
+planner selects one executable action, applies it to the environment, and
+receives a reward that combines farmland layout objectives recorded by the
+Paper9-compatible county environment [CITATION NEEDED: prior Paper9 environment
+or farmland reward definition]. All E0 label-generation and rollout experiments
+reported here use the executable swap mask, so candidate actions are drawn only
+from swaps that the environment can apply at the current state.
 
 The full Bishan prepared dataset is external to the Git repository and is
 resolved through the repository-level data layout described in the
@@ -68,11 +75,19 @@ of the experimental condition rather than an incidental file-format choice.
 The value-filtering workflow starts from the packaged GeoJEPA-MPC rank
 checkpoint `rank_seed2028.pt`. The checkpoint is wrapped by the Paper9 adapter
 so that it can score executable actions in the farmland environment and support
-model-predictive candidate selection. In the base planning interface, candidate
-actions are scored from the current state and evaluated over a finite planning
-horizon. The E0 experiments do not claim a new transition model; they test
-whether a separately trained value head can improve candidate filtering on top
-of this existing rank checkpoint.
+model-predictive candidate selection. This planning interface follows the
+general model-predictive-control idea of choosing actions from finite-horizon
+predictions under constraints
+[@mayne2014mpc_future_promise; @rawlings2017model_predictive_control]. It also
+uses the broader world-model premise that learned latent dynamics can support
+planning [@ha2018recurrent_world_models; @hafner2019planet]. The JEPA
+terminology follows joint-embedding predictive representation learning
+[@assran2023ijepa], with LeWorldModel cited only as a recent preprint design
+comparison for JEPA-style world models [@maes2026leworldmodel]. In the base
+planning interface, candidate actions are scored from the current state and
+evaluated over a finite planning horizon. The E0 experiments do not claim a new
+transition model; they test whether a separately trained value head can improve
+candidate filtering on top of this existing rank checkpoint.
 
 ### Frontier-random value-label generation
 
@@ -124,6 +139,14 @@ the trainable scope to the value head, which contains 8,321 trainable
 parameters in the packaged runs. The checkpoint metric is selected from the
 candidate top-k diagnostic, so the 20x16/top5 run selects the best checkpoint
 by `candidate_top5_regret`.
+
+The value head is used as a learned candidate filter rather than as evidence
+that the transition model has been retrained. This use is consistent with the
+general reinforcement-learning distinction between immediate rewards and value
+estimates of future return [@sutton2018reinforcement_learning; @mnih2015dqn]
+and with search systems that combine learned policy or value estimates with
+candidate evaluation [@silver2016alphago]. The Paper10 evidence for this value
+filter, however, remains local to the monitor-approved E0 labels and rollouts.
 
 For the main 20x16/top5 experiment, value-head training uses 20 pairwise label
 states, candidate top-k `5`, pairwise subsample `16`, 8 pairs per batch item,
@@ -188,13 +211,14 @@ attempted.
 | Value-head training does not retrain the transition model in these runs. | Training metrics record `transition_loss_enabled=false`, `lambda_sig=0.0`, and 8,321 trainable parameters. | supported |
 | The comparison with 10x12/top4 uses matched rollout settings. | Both summaries record `selector=value_filter`, executable masks, horizon `5`, top-k `50`, blend mode, candidate value weight `0.1`, and seeds 0-4. | supported |
 | The tested 50-state rows should not be trained. | macOS seed45 and Windows seed46 50-state labels failed default and post-hoc monitor gates. | supported |
-| The method has demonstrated successful 50-state value-head scale-up. | No tested 50-state label set passed the monitor gate. | not supported |
+| A positive 50-state value-head claim can be made from the current E0 evidence. | No tested 50-state label set passed the monitor gate. | not supported |
 
 ## Assumptions or missing inputs
 
 - The target journal and required Methods length are not fixed.
-- Literature citations for GeoJEPA, MPC planning, farmland layout planning, and
-  prior Paper9 environment details still need to be inserted by source.
+- Literature citations for GeoJEPA, MPC planning, and farmland layout planning
+  have been inserted from `references/paper10_verified_references_2026-06-09.bib`.
+  The prior Paper9 environment citation remains unresolved.
 - The final manuscript should decide whether implementation details belong in
   the main Methods section or in supplementary Methods.
 - The reward formula has been extracted from the packaged environment into
@@ -220,4 +244,4 @@ attempted.
   训练失败或隐瞒负结果。
 - reward 公式已经单独整理到
   `e0_reward_and_rollout_metric_definitions_2026-06-09.md`；投稿前还需要统一
-  目标期刊格式和 GeoJEPA/MPC/农地规划相关引用。
+  目标期刊格式，并补齐 Paper9 环境/奖励定义的正式引用。

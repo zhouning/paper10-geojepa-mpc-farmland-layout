@@ -25,6 +25,7 @@ The tracked reference inventory is intentionally small:
 | Local source paper candidate | `D:\test\2603.19312v3.pdf` listed in `references/README.md` | Not committed; retrieve/verify before citing. |
 | Verified Paper10 citation map | `references/paper10_citation_map_2026-06-09.md` | Maps citation placeholders to verified source keys and supported wording. |
 | Verified Paper10 BibTeX | `references/paper10_verified_references_2026-06-09.bib` | First tracked bibliography file for Introduction and Methods citation insertion. |
+| Citation-inserted Introduction draft | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_introduction_cited_draft_2026-06-09.md` | First Introduction draft using verified citation keys. |
 | Paper9-compatible environment | `county_env.py`, `arcgis_toolbox_paper9/private_source/` | Local method provenance; cite prior Paper9 manuscript if available. |
 | Paper10 E0 experiments | `paper10_geojepa_mpc/experiments/results/` | Primary evidence for all reported results. |
 
@@ -136,9 +137,8 @@ Do not write these claims unless future evidence changes:
 1. Locate the prior Paper9 environment manuscript or method note.
 2. Decide whether the target journal permits citation to the 2026 LeWM arXiv
    preprint; if not, use only the peer-reviewed JEPA/world-model sources.
-3. Insert citations from `references/paper10_citation_map_2026-06-09.md` into
-   the Introduction and Methods draft after each claim is
-   matched to a verified source.
+3. Merge the citation-inserted Introduction and Methods wording into the final
+   manuscript once the target journal's reference style is selected.
 4. Run a separate China-specific farmland or land-consolidation literature pass
    if the Introduction needs region-specific policy context.
 
