@@ -46,6 +46,9 @@ data needed for smoke verification.
   checkpoint used by the 10x12/h5 pilot rollouts.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_20x16_h5_seed44_top5_report_2026-06-08.md`:
   latest `frontier_random050` value-head 20x16/h5 scale-up report.
+- `paper10_geojepa_mpc/experiments/results/e0_windows_frontier_random050_ablation_findings_2026-06-09.md`:
+  Windows CPU 50-state ablation findings for the next `frontier_random050`
+  candidate-grid diagnosis.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_value_head_20x16_h5_seed44_top5_rollout_summary.json`:
   five-seed 100-step rollout summary for the 20x16/h5 scale-up.
 - `paper10_geojepa_mpc/experiments/checkpoints/e0_frontier_random050_value_head_20x16_h5_seed44_top5/value_head_seed3044.pt`:
