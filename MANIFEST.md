@@ -52,6 +52,9 @@ data needed for smoke verification.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_results_synthesis_2026-06-09.md`:
   paper-facing synthesis of the E0 `frontier_random050` pilot, scale-up,
   reproduction audit, and 50-state boundary diagnostics.
+- `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_manuscript_section_draft_2026-06-09.md`:
+  manuscript-style Results and Discussion draft for the E0 `frontier_random050`
+  evidence package.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_value_head_20x16_h5_seed44_top5_rollout_summary.json`:
   five-seed 100-step rollout summary for the 20x16/h5 scale-up.
 - `paper10_geojepa_mpc/experiments/checkpoints/e0_frontier_random050_value_head_20x16_h5_seed44_top5/value_head_seed3044.pt`:
