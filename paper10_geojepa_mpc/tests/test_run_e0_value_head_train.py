@@ -1,5 +1,6 @@
 from argparse import Namespace
 import json
+import sys
 
 from paper10_geojepa_mpc.experiments import run_e0_value_head_train
 
@@ -30,6 +31,7 @@ def _args(**overrides):
         "checkpoint_mode": "min",
         "allow_init_action_emb_mismatch": False,
         "no_init_checkpoint": False,
+        "disable_transition_loss": False,
         "trainable_scope": "value_head",
         "rank_value_weight": 0.5,
         "seed": 3035,
@@ -64,6 +66,7 @@ def test_build_train_kwargs_maps_cli_to_value_head_training_defaults():
     assert kwargs["checkpoint_metric"] == "candidate_top3_regret"
     assert kwargs["max_transition_samples"] == 2048
     assert kwargs["max_pairwise_states"] == 128
+    assert kwargs["disable_transition_loss"] is False
 
 
 def test_build_train_kwargs_maps_transfer_training_options():
@@ -84,6 +87,40 @@ def test_build_train_kwargs_can_disable_checkpoint_initialization():
     )
 
     assert kwargs["init_checkpoint_path"] is None
+
+
+def test_build_train_kwargs_maps_disable_transition_loss():
+    kwargs = run_e0_value_head_train.build_train_kwargs(
+        _args(disable_transition_loss=True)
+    )
+
+    assert kwargs["disable_transition_loss"] is True
+
+
+def test_parse_args_allows_all_scope_with_disabled_transition_loss(
+    monkeypatch, tmp_path
+):
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "run_e0_value_head_train.py",
+            "--pairwise-path",
+            "pairwise.npz",
+            "--checkpoint-path",
+            str(tmp_path / "checkpoint.pt"),
+            "--output",
+            str(tmp_path / "metrics.json"),
+            "--trainable-scope",
+            "all",
+            "--disable-transition-loss",
+        ],
+    )
+
+    args = run_e0_value_head_train.parse_args()
+
+    assert args.trainable_scope == "all"
+    assert args.disable_transition_loss is True
 
 
 def test_run_training_writes_metrics_json(monkeypatch, tmp_path):

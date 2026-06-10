@@ -333,6 +333,7 @@ def _save_e0_checkpoint(
     allow_init_action_emb_mismatch: bool = False,
     init_skipped_state_keys: Optional[list[str]] = None,
     init_copied_state_key_count: Optional[int] = None,
+    disable_transition_loss: bool = False,
 ) -> None:
     checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
     torch.save(
@@ -355,6 +356,7 @@ def _save_e0_checkpoint(
                 if init_copied_state_key_count is None
                 else int(init_copied_state_key_count)
             ),
+            "disable_transition_loss": bool(disable_transition_loss),
         },
         checkpoint_path,
     )
@@ -486,6 +488,7 @@ def train_e0_smoke_config(
     checkpoint_mode: str = "min",
     init_checkpoint_path: Optional[str | Path] = None,
     allow_init_action_emb_mismatch: bool = False,
+    disable_transition_loss: bool = False,
     trainable_scope: str = "all",
     rank_score_mode: str = "reward",
     rank_value_weight: float = 0.5,
@@ -501,7 +504,13 @@ def train_e0_smoke_config(
         raise ValueError("rank_value_weight must be in [0, 1]")
     if trainable_scope not in _TRAINABLE_SCOPES:
         raise ValueError(_trainable_scope_message())
-    transition_loss_enabled = trainable_scope in {"all", "reward_head"} or lambda_sig > 0
+    if disable_transition_loss and lambda_sig > 0:
+        raise ValueError("lambda_sig must be 0 when transition loss is disabled")
+    transition_loss_enabled = (
+        False
+        if disable_transition_loss
+        else trainable_scope in {"all", "reward_head"} or lambda_sig > 0
+    )
     if not transition_loss_enabled and lambda_rank <= 0:
         raise ValueError("lambda_rank must be positive when transition loss is disabled")
 
@@ -727,6 +736,7 @@ def train_e0_smoke_config(
                     allow_init_action_emb_mismatch,
                     init_skipped_state_keys,
                     init_copied_state_key_count,
+                    disable_transition_loss,
                 )
 
     ranking_acc = evaluate_pairwise_rank_accuracy(
@@ -755,6 +765,7 @@ def train_e0_smoke_config(
         "n_pairwise_states": int(pw_bf.shape[0]),
         "pairwise_label_key": pairwise_label_key,
         "transition_loss_enabled": bool(transition_loss_enabled),
+        "disable_transition_loss": bool(disable_transition_loss),
         "trainable_scope": trainable_scope,
         "allow_init_action_emb_mismatch": bool(allow_init_action_emb_mismatch),
         "init_skipped_state_keys": list(init_skipped_state_keys),

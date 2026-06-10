@@ -46,6 +46,7 @@ def build_train_kwargs(args) -> dict:
         "checkpoint_mode": args.checkpoint_mode,
         "init_checkpoint_path": None if args.no_init_checkpoint else args.init_checkpoint,
         "allow_init_action_emb_mismatch": bool(args.allow_init_action_emb_mismatch),
+        "disable_transition_loss": bool(args.disable_transition_loss),
         "trainable_scope": args.trainable_scope,
         "rank_score_mode": "value",
         "rank_value_weight": float(args.rank_value_weight),
@@ -117,8 +118,13 @@ def parse_args():
         help="Copy compatible checkpoint weights while reinitializing action_emb.weight.",
     )
     parser.add_argument(
+        "--disable-transition-loss",
+        action="store_true",
+        help="Skip transition MSE and train only from pairwise ranking labels.",
+    )
+    parser.add_argument(
         "--trainable-scope",
-        choices=("value_head", "value_head_action_emb"),
+        choices=("all", "value_head", "value_head_action_emb"),
         default="value_head",
     )
     parser.add_argument("--rank-value-weight", type=float, default=0.5)
