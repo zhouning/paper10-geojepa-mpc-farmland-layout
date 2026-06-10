@@ -42,6 +42,10 @@ class TorchModelMPCAdapter:
                 value_weight=self.value_weight,
             )
         out_aux = {}
+        if "value" in aux:
+            out_aux["value"] = (
+                aux["value"].squeeze(-1).detach().cpu().numpy().astype(np.float32)
+            )
         if self.score_mode != "reward":
             out_aux["score_mode"] = self.score_mode
             if self.score_mode == "blend":

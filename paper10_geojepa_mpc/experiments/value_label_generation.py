@@ -1,4 +1,5 @@
 import argparse
+import importlib.util
 import json
 from pathlib import Path
 import sys
@@ -133,12 +134,38 @@ def select_top_scored_actions(
     return valid_actions[order].astype(np.int64), scores[order].astype(np.float32)
 
 
+def _scalar_scores_from_adapter_output(
+    rewards: np.ndarray,
+    aux: dict,
+    score_mode: str,
+    value_weight: float,
+) -> np.ndarray:
+    if score_mode not in {"reward", "value", "blend"}:
+        raise ValueError("score_mode must be 'reward', 'value', or 'blend'")
+    if not 0.0 <= value_weight <= 1.0:
+        raise ValueError("value_weight must be in [0, 1]")
+
+    rewards = np.asarray(rewards, dtype=np.float32).reshape(-1)
+    if score_mode == "reward":
+        return rewards
+    if "value" not in aux:
+        raise ValueError("score_mode requires adapter aux['value']")
+    values = np.asarray(aux["value"], dtype=np.float32).reshape(-1)
+    if values.shape != rewards.shape:
+        raise ValueError("adapter aux['value'] must match rewards shape")
+    if score_mode == "value":
+        return values
+    return (1.0 - float(value_weight)) * rewards + float(value_weight) * values
+
+
 def _score_actions_with_adapter(
     adapter,
     block_features: np.ndarray,
     global_features: np.ndarray,
     valid_actions: np.ndarray,
     score_batch_size: int = 512,
+    score_mode: str = "reward",
+    value_weight: float = 0.5,
 ) -> np.ndarray:
     if score_batch_size <= 0:
         raise ValueError("score_batch_size must be positive")
@@ -149,13 +176,23 @@ def _score_actions_with_adapter(
         chunk = valid_actions[start : start + score_batch_size]
         bf_batch = np.repeat(block_features[np.newaxis], chunk.shape[0], axis=0)
         gf_batch = np.repeat(global_features[np.newaxis], chunk.shape[0], axis=0)
-        _, _, rewards, _ = adapter.batch_predict(bf_batch, gf_batch, chunk)
-        scores.append(np.asarray(rewards, dtype=np.float32).reshape(-1))
+        _, _, rewards, aux = adapter.batch_predict(bf_batch, gf_batch, chunk)
+        scores.append(
+            _scalar_scores_from_adapter_output(
+                rewards,
+                aux,
+                score_mode=score_mode,
+                value_weight=value_weight,
+            )
+        )
     return np.concatenate(scores).astype(np.float32)
 
 
 def make_adapter_candidate_selector(
-    adapter, score_batch_size: int = 512
+    adapter,
+    score_batch_size: int = 512,
+    score_mode: str = "reward",
+    value_weight: float = 0.5,
 ) -> CandidateSelectorFn:
     def selector(
         env,
@@ -171,6 +208,8 @@ def make_adapter_candidate_selector(
             global_features,
             valid_actions,
             score_batch_size=score_batch_size,
+            score_mode=score_mode,
+            value_weight=value_weight,
         )
         return select_top_scored_actions(valid_actions, scores, candidate_actions)
 
@@ -181,6 +220,8 @@ def make_frontier_random_candidate_selector(
     adapter,
     frontier_fraction: float = 0.5,
     score_batch_size: int = 512,
+    score_mode: str = "reward",
+    value_weight: float = 0.5,
 ) -> CandidateSelectorFn:
     if not 0.0 < frontier_fraction <= 1.0:
         raise ValueError("frontier_fraction must be in (0, 1]")
@@ -199,6 +240,8 @@ def make_frontier_random_candidate_selector(
             global_features,
             valid_actions,
             score_batch_size=score_batch_size,
+            score_mode=score_mode,
+            value_weight=value_weight,
         )
         frontier_count = max(1, int(round(candidate_actions * frontier_fraction)))
         frontier_count = min(frontier_count, candidate_actions, valid_actions.size)
@@ -265,6 +308,8 @@ def build_adapter_generation_components(
     continuation_policy_name: str,
     score_batch_size: int = 512,
     frontier_fraction: float = 0.5,
+    candidate_score_mode: str = "reward",
+    candidate_value_weight: float = 0.5,
 ) -> tuple[Optional[CandidateSelectorFn], Optional[PolicyFn], Optional[PolicyFn]]:
     if candidate_mode not in {"random", "frontier", "frontier_random"}:
         raise ValueError(
@@ -277,13 +322,18 @@ def build_adapter_generation_components(
 
     if candidate_mode == "frontier":
         candidate_selector = make_adapter_candidate_selector(
-            adapter, score_batch_size=score_batch_size
+            adapter,
+            score_batch_size=score_batch_size,
+            score_mode=candidate_score_mode,
+            value_weight=candidate_value_weight,
         )
     elif candidate_mode == "frontier_random":
         candidate_selector = make_frontier_random_candidate_selector(
             adapter,
             frontier_fraction=frontier_fraction,
             score_batch_size=score_batch_size,
+            score_mode=candidate_score_mode,
+            value_weight=candidate_value_weight,
         )
     else:
         candidate_selector = None
@@ -310,6 +360,29 @@ def requires_adapter_for_generation(
         or advance_policy_name == "model_top1"
         or continuation_policy_name == "model_top1"
     )
+
+
+def _make_label_env(env_source: str, prepared_dir: str):
+    if env_source == "paper9":
+        from private_source.blocks_env import make_env
+
+        return make_env(prepared_dir=prepared_dir)
+
+    if env_source == "neijiang":
+        env_script = Path(prepared_dir) / "county_env_neijiang.py"
+        if not env_script.exists():
+            raise FileNotFoundError(f"Neijiang env wrapper not found: {env_script}")
+        spec = importlib.util.spec_from_file_location(
+            "neijiang_cross_region_county_env",
+            env_script,
+        )
+        if spec is None or spec.loader is None:
+            raise ImportError(f"Cannot load Neijiang env wrapper: {env_script}")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module.make_neijiang_env()
+
+    raise ValueError(f"Unsupported env_source: {env_source}")
 
 
 def _rollout_return_from_first_action(
@@ -625,8 +698,11 @@ def _summary(dataset: dict[str, np.ndarray], elapsed_sec: float, args) -> dict:
         "partial_output": str(args.partial_output) if args.partial_output else None,
         "prepared_dir": str(args.prepared_dir),
         "checkpoint": str(args.checkpoint) if args.checkpoint else None,
+        "env_source": args.env_source,
         "mask_mode": args.mask_mode,
         "candidate_mode": args.candidate_mode,
+        "candidate_score_mode": args.candidate_score_mode,
+        "candidate_value_weight": float(args.candidate_value_weight),
         "frontier_fraction": float(args.frontier_fraction),
         "advance_policy": args.advance_policy,
         "continuation_policy": args.continuation_policy,
@@ -655,6 +731,12 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--checkpoint", default=None)
     parser.add_argument("--prepared-dir", default=str(ROOT))
+    parser.add_argument(
+        "--env-source",
+        choices=("paper9", "neijiang"),
+        default="paper9",
+        help="Environment factory: paper9 prepared layout or Neijiang cross-region wrapper.",
+    )
     parser.add_argument("--n-states", type=int, default=20)
     parser.add_argument("--candidate-actions", type=int, default=20)
     parser.add_argument("--label-horizon", type=int, default=3)
@@ -666,6 +748,12 @@ def parse_args():
         choices=("random", "frontier", "frontier_random"),
         default="random",
     )
+    parser.add_argument(
+        "--candidate-score-mode",
+        choices=("reward", "value", "blend"),
+        default="reward",
+    )
+    parser.add_argument("--candidate-value-weight", type=float, default=0.5)
     parser.add_argument("--frontier-fraction", type=float, default=0.5)
     parser.add_argument("--advance-policy", choices=("random", "model_top1"), default="random")
     parser.add_argument(
@@ -698,9 +786,7 @@ def main() -> None:
         sys.path.insert(0, str(PAPER9_DIR))
 
     from paper10_geojepa_mpc.planning.env_masks import executable_swap_mask
-    from private_source.blocks_env import make_env
-
-    env = make_env(prepared_dir=args.prepared_dir)
+    env = _make_label_env(args.env_source, args.prepared_dir)
     needs_adapter = requires_adapter_for_generation(
         args.candidate_mode,
         args.advance_policy,
@@ -734,6 +820,8 @@ def main() -> None:
             continuation_policy_name=args.continuation_policy,
             score_batch_size=args.score_batch_size,
             frontier_fraction=args.frontier_fraction,
+            candidate_score_mode=args.candidate_score_mode,
+            candidate_value_weight=args.candidate_value_weight,
         )
     )
     progress_callback = (

@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
 
+from paper10_geojepa_mpc.experiments import value_label_generation
 from paper10_geojepa_mpc.experiments.value_label_generation import (
     build_adapter_generation_components,
     discounted_return,
@@ -216,6 +217,16 @@ class ActionScoreAdapter:
         return block_features, global_features, rewards, {}
 
 
+class ActionRewardValueAdapter:
+    def batch_predict(self, block_features, global_features, actions):
+        action_array = np.asarray(actions, dtype=np.int64)
+        reward_lookup = np.asarray([0.0, 10.0, 5.0], dtype=np.float32)
+        value_lookup = np.asarray([20.0, 1.0, 15.0], dtype=np.float32)
+        rewards = reward_lookup[action_array]
+        values = value_lookup[action_array]
+        return block_features, global_features, rewards, {"value": values}
+
+
 def test_adapter_candidate_selector_scores_valid_actions():
     selector = make_adapter_candidate_selector(ActionScoreAdapter())
     env = TinyValueEnv()
@@ -232,6 +243,27 @@ def test_adapter_candidate_selector_scores_valid_actions():
 
     np.testing.assert_array_equal(actions, np.array([3, 2], dtype=np.int64))
     np.testing.assert_allclose(scores, np.array([1.5, 1.0], dtype=np.float32))
+
+
+def test_adapter_candidate_selector_can_score_by_value_head():
+    selector = make_adapter_candidate_selector(
+        ActionRewardValueAdapter(),
+        score_mode="value",
+    )
+    env = TinyValueEnv()
+    valid = np.array([0, 1, 2], dtype=np.int64)
+
+    actions, scores = selector(
+        env,
+        env._get_block_features(),
+        env._get_global_features(),
+        valid,
+        2,
+        np.random.default_rng(31),
+    )
+
+    np.testing.assert_array_equal(actions, np.array([0, 2], dtype=np.int64))
+    np.testing.assert_allclose(scores, np.array([20.0, 15.0], dtype=np.float32))
 
 
 def test_frontier_random_candidate_selector_mixes_scored_frontier_and_random_actions():
@@ -329,6 +361,21 @@ def test_build_adapter_generation_components_maps_frontier_random_mode():
     np.testing.assert_allclose(scores, actions.astype(np.float32) * 0.5)
     assert advance_policy is None
     assert continuation_policy is None
+
+
+def test_make_label_env_can_load_neijiang_env_factory(tmp_path):
+    env_script = tmp_path / "county_env_neijiang.py"
+    env_script.write_text(
+        "class TinyEnv:\n"
+        "    n_blocks = 3711\n"
+        "def make_neijiang_env(**kwargs):\n"
+        "    return TinyEnv()\n",
+        encoding="utf-8",
+    )
+
+    env = value_label_generation._make_label_env("neijiang", str(tmp_path))
+
+    assert env.n_blocks == 3711
 
 
 def test_build_adapter_generation_components_rejects_unknown_modes():

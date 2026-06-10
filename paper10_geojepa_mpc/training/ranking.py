@@ -11,7 +11,7 @@ def pairwise_margin_ranking_loss(
     target = torch.sign(true_i - true_j)
     nonzero = target != 0
     if nonzero.sum() == 0:
-        return pred_i.new_tensor(0.0)
+        return (pred_i - pred_j).sum() * 0.0
 
     pred_diff = pred_i - pred_j
     per_pair = torch.clamp(-target * pred_diff + margin, min=0.0)
