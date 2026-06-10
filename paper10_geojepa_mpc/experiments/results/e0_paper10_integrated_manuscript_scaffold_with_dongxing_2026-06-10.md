@@ -7,6 +7,9 @@ the Dongxing/Neijiang real-environment experiments. It is intended as the
 current writing spine for Paper10. It does not replace the detailed result
 notes; it tells the paper-level story those notes support.
 
+Companion table package:
+`e0_paper10_integrated_manuscript_tables_with_dongxing_2026-06-10.md`.
+
 ## One-Sentence Argument
 
 In constrained farmland layout planning, we show that monitor-gated
