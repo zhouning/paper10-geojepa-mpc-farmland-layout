@@ -149,14 +149,20 @@ Use this structure:
 5. Transfer limitation: state that scratch remains stronger than current
    Bishan-initialized transfer on Dongxing primary reward.
 
-## Next Decision
+## Low-Label-Budget Update
 
-The next experiment should only be run if it answers a specific manuscript
-question. The best candidate is:
+The low-label-budget transfer test has now been run with the existing 50x16
+label file. See
+`e0_dongxing_low_label_budget_family_2026-06-10.md`.
 
-- low-label-budget transfer test using the existing 50x16 label file, e.g.
-  training with the first 5, 10, 20, and 50 states, to test whether transfer
-  helps when Dongxing labels are scarce.
+The family-level result is mixed rather than a clean transfer win:
 
-Do not keep repeating full 50x16 runs without a budget question. The current
-evidence is already sufficient to rule out a broad "transfer wins" claim.
+- scratch is higher at 5 labels;
+- scratch is higher at 10 labels;
+- transfer is higher at 20 labels;
+- transfer consistently gives stronger slope reduction;
+- scratch consistently gives stronger contiguity and baimu-area gains.
+
+This reinforces the main synthesis: Dongxing is a useful external-region stress
+test and calibration study, but the current evidence still rules out a broad
+"transfer wins" claim.
