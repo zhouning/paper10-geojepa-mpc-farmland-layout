@@ -44,7 +44,7 @@ def build_train_kwargs(args) -> dict:
             args.candidate_top_k,
         ),
         "checkpoint_mode": args.checkpoint_mode,
-        "init_checkpoint_path": args.init_checkpoint,
+        "init_checkpoint_path": None if args.no_init_checkpoint else args.init_checkpoint,
         "allow_init_action_emb_mismatch": bool(args.allow_init_action_emb_mismatch),
         "trainable_scope": args.trainable_scope,
         "rank_score_mode": "value",
@@ -86,6 +86,11 @@ def parse_args():
             / "e0_bishan_rank_seed2028"
             / "rank_seed2028.pt"
         ),
+    )
+    parser.add_argument(
+        "--no-init-checkpoint",
+        action="store_true",
+        help="Train from a fresh GeoJEPATransitionModel instead of loading a checkpoint.",
     )
     parser.add_argument("--checkpoint-path", required=True)
     parser.add_argument("--output", required=True)

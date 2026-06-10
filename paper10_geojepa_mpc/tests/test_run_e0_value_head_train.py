@@ -29,6 +29,7 @@ def _args(**overrides):
         "checkpoint_metric": "auto",
         "checkpoint_mode": "min",
         "allow_init_action_emb_mismatch": False,
+        "no_init_checkpoint": False,
         "trainable_scope": "value_head",
         "rank_value_weight": 0.5,
         "seed": 3035,
@@ -75,6 +76,14 @@ def test_build_train_kwargs_maps_transfer_training_options():
 
     assert kwargs["allow_init_action_emb_mismatch"] is True
     assert kwargs["trainable_scope"] == "value_head_action_emb"
+
+
+def test_build_train_kwargs_can_disable_checkpoint_initialization():
+    kwargs = run_e0_value_head_train.build_train_kwargs(
+        _args(no_init_checkpoint=True)
+    )
+
+    assert kwargs["init_checkpoint_path"] is None
 
 
 def test_run_training_writes_metrics_json(monkeypatch, tmp_path):
