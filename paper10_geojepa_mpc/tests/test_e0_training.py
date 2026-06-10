@@ -657,6 +657,126 @@ def test_train_e0_smoke_config_can_freeze_all_but_value_head(tmp_path):
     assert any(value_changed)
 
 
+def test_set_trainable_scope_can_train_value_head_and_action_embedding():
+    model = GeoJEPATransitionModel(n_blocks=4, k_global=12)
+
+    trainable_names = e0_training._set_trainable_scope(
+        model,
+        "value_head_action_emb",
+    )
+
+    assert trainable_names
+    assert all(
+        name.startswith("value_head.") or name.startswith("action_emb.")
+        for name in trainable_names
+    )
+    assert any(name.startswith("value_head.") for name in trainable_names)
+    assert any(name.startswith("action_emb.") for name in trainable_names)
+    for name, parameter in model.named_parameters():
+        assert parameter.requires_grad is (name in trainable_names)
+
+
+def test_train_e0_smoke_config_can_transfer_with_action_embedding_mismatch(tmp_path):
+    rng = np.random.default_rng(73)
+    n_samples = 8
+    n_states = 4
+    source_blocks = 4
+    target_blocks = 6
+    transition_path = tmp_path / "target_transitions.npz"
+    pairwise_path = tmp_path / "target_value_labels.npz"
+    init_checkpoint_path = tmp_path / "source.pt"
+    output_checkpoint_path = tmp_path / "transfer_value_action.pt"
+
+    block_features = rng.normal(size=(n_samples, target_blocks, 17)).astype("float32")
+    global_features = rng.normal(size=(n_samples, 12)).astype("float32")
+    actions = (np.arange(n_samples) % target_blocks).astype("int64")
+    rewards = rng.normal(size=n_samples).astype("float32")
+    next_block_features = block_features.copy()
+    next_block_features[np.arange(n_samples), actions, :] += 0.01
+    next_global_features = (global_features + 0.01).astype("float32")
+    np.savez(
+        transition_path,
+        block_features=block_features,
+        global_features=global_features,
+        actions=actions,
+        rewards=rewards,
+        next_block_features=next_block_features,
+        next_global_features=next_global_features,
+    )
+    np.savez(
+        pairwise_path,
+        states_bf=rng.normal(size=(n_states, target_blocks, 17)).astype("float32"),
+        states_gf=rng.normal(size=(n_states, 12)).astype("float32"),
+        actions=np.tile(np.arange(target_blocks, dtype="int64"), (n_states, 1)),
+        returns=np.tile(
+            np.asarray([0.0, 4.0, 1.0, 2.0, 5.0, 3.0], dtype=np.float32),
+            (n_states, 1),
+        ),
+    )
+
+    torch.manual_seed(79)
+    source_model = GeoJEPATransitionModel(n_blocks=source_blocks, k_global=12)
+    source_state = {
+        name: value.detach().clone()
+        for name, value in source_model.state_dict().items()
+    }
+    torch.save(
+        {
+            "model_class": "GeoJEPATransitionModel",
+            "model_kwargs": {
+                "n_blocks": source_blocks,
+                "k_global": 12,
+                "block_feature_dim": 17,
+            },
+            "state_dict": source_state,
+            "epoch": 1,
+            "checkpoint_metric": "ranking_acc",
+            "checkpoint_value": 0.5,
+            "metrics": {"ranking_acc": 0.5},
+        },
+        init_checkpoint_path,
+    )
+
+    metrics = train_e0_smoke_config(
+        transition_path=transition_path,
+        pairwise_path=pairwise_path,
+        n_blocks=target_blocks,
+        k_global=12,
+        epochs=1,
+        batch_size=4,
+        lr=0.0,
+        lambda_rank=1.0,
+        lambda_sig=0.0,
+        n_pairs=3,
+        pairwise_subsample=3,
+        checkpoint_path=output_checkpoint_path,
+        checkpoint_metric="ranking_acc",
+        checkpoint_mode="max",
+        init_checkpoint_path=init_checkpoint_path,
+        allow_init_action_emb_mismatch=True,
+        trainable_scope="value_head_action_emb",
+        rank_score_mode="value",
+        seed=83,
+        device="cpu",
+    )
+
+    loaded, checkpoint = load_e0_checkpoint(output_checkpoint_path, device="cpu")
+    state = loaded.state_dict()
+
+    assert loaded.n_blocks == target_blocks
+    assert loaded.action_emb.weight.shape[0] == target_blocks
+    assert metrics["transition_loss_enabled"] is False
+    assert metrics["trainable_scope"] == "value_head_action_emb"
+    assert metrics["allow_init_action_emb_mismatch"] is True
+    assert metrics["init_skipped_state_keys"] == ["action_emb.weight"]
+    assert checkpoint["allow_init_action_emb_mismatch"] is True
+    assert checkpoint["init_skipped_state_keys"] == ["action_emb.weight"]
+    for name, expected in source_state.items():
+        if name == "action_emb.weight":
+            continue
+        torch.testing.assert_close(state[name], expected)
+
+
 def test_train_e0_smoke_config_skips_transition_loss_for_value_head_only(
     tmp_path, monkeypatch
 ):

@@ -276,17 +276,29 @@ def _state_dict_cpu(model) -> Dict[str, torch.Tensor]:
     return {key: value.detach().cpu().clone() for key, value in model.state_dict().items()}
 
 
+_TRAINABLE_SCOPES = {"all", "reward_head", "value_head", "value_head_action_emb"}
+
+
+def _trainable_scope_message() -> str:
+    return (
+        "trainable_scope must be 'all', 'reward_head', 'value_head', "
+        "or 'value_head_action_emb'"
+    )
+
+
 def _set_trainable_scope(model, trainable_scope: str) -> list[str]:
-    if trainable_scope not in {"all", "reward_head", "value_head"}:
-        raise ValueError(
-            "trainable_scope must be 'all', 'reward_head', or 'value_head'"
-        )
+    if trainable_scope not in _TRAINABLE_SCOPES:
+        raise ValueError(_trainable_scope_message())
 
     trainable = []
     for name, parameter in model.named_parameters():
         is_trainable = (
             trainable_scope == "all"
             or name.startswith(f"{trainable_scope}.")
+            or (
+                trainable_scope == "value_head_action_emb"
+                and (name.startswith("value_head.") or name.startswith("action_emb."))
+            )
         )
         parameter.requires_grad = is_trainable
         if is_trainable:
@@ -318,6 +330,9 @@ def _save_e0_checkpoint(
     trainable_scope: str = "all",
     rank_score_mode: str = "reward",
     rank_value_weight: float = 0.5,
+    allow_init_action_emb_mismatch: bool = False,
+    init_skipped_state_keys: Optional[list[str]] = None,
+    init_copied_state_key_count: Optional[int] = None,
 ) -> None:
     checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
     torch.save(
@@ -333,6 +348,13 @@ def _save_e0_checkpoint(
             "trainable_scope": trainable_scope,
             "rank_score_mode": rank_score_mode,
             "rank_value_weight": float(rank_value_weight),
+            "allow_init_action_emb_mismatch": bool(allow_init_action_emb_mismatch),
+            "init_skipped_state_keys": list(init_skipped_state_keys or []),
+            "init_copied_state_key_count": (
+                None
+                if init_copied_state_key_count is None
+                else int(init_copied_state_key_count)
+            ),
         },
         checkpoint_path,
     )
@@ -364,6 +386,82 @@ def load_e0_checkpoint(path: str | Path, device: str = "cpu"):
     return model, checkpoint
 
 
+def _check_transfer_model_kwargs(
+    checkpoint_kwargs: Dict[str, object],
+    requested_kwargs: Dict[str, object],
+) -> None:
+    ignored = {"n_blocks", "n_actions"}
+    shared_keys = (set(checkpoint_kwargs) & set(requested_kwargs)) - ignored
+    mismatched = [
+        key
+        for key in sorted(shared_keys)
+        if checkpoint_kwargs[key] != requested_kwargs[key]
+    ]
+    if mismatched:
+        raise ValueError(
+            "init checkpoint model_kwargs do not match requested training config "
+            f"for keys: {mismatched}"
+        )
+
+
+def _load_transfer_compatible_checkpoint(
+    path: str | Path,
+    model_kwargs: Dict[str, object],
+    device: str = "cpu",
+):
+    checkpoint = torch.load(Path(path), map_location=device, weights_only=False)
+    if checkpoint.get("model_class") != "GeoJEPATransitionModel":
+        raise ValueError(f"Unsupported checkpoint model: {checkpoint.get('model_class')}")
+    _check_transfer_model_kwargs(checkpoint["model_kwargs"], model_kwargs)
+
+    model = GeoJEPATransitionModel(**model_kwargs).to(device)
+    loaded_state = dict(checkpoint["state_dict"])
+    model_state = model.state_dict()
+
+    unexpected_keys = [key for key in loaded_state if key not in model_state]
+    if unexpected_keys:
+        raise ValueError(f"Unexpected checkpoint state keys: {unexpected_keys}")
+
+    missing_keys = [key for key in model_state if key not in loaded_state]
+    for key in missing_keys:
+        if key.startswith("value_head."):
+            reward_key = key.replace("value_head.", "reward_head.", 1)
+            if (
+                reward_key in loaded_state
+                and loaded_state[reward_key].shape == model_state[key].shape
+            ):
+                loaded_state[key] = loaded_state[reward_key].detach().clone()
+
+    missing_after_fallback = [key for key in model_state if key not in loaded_state]
+    if missing_after_fallback:
+        raise ValueError(f"Missing checkpoint state keys: {missing_after_fallback}")
+
+    copied_state = {}
+    skipped_keys = []
+    shape_mismatches = []
+    for key, value in loaded_state.items():
+        if value.shape == model_state[key].shape:
+            copied_state[key] = value
+        elif key == "action_emb.weight":
+            skipped_keys.append(key)
+        else:
+            shape_mismatches.append((key, tuple(value.shape), tuple(model_state[key].shape)))
+
+    if shape_mismatches:
+        raise ValueError(f"Checkpoint state shape mismatches: {shape_mismatches}")
+
+    target_state = dict(model_state)
+    target_state.update(copied_state)
+    model.load_state_dict(target_state, strict=True)
+
+    checkpoint = dict(checkpoint)
+    checkpoint["missing_state_keys"] = missing_keys
+    checkpoint["init_skipped_state_keys"] = skipped_keys
+    checkpoint["init_copied_state_key_count"] = len(copied_state)
+    model.eval()
+    return model, checkpoint
+
+
 def train_e0_smoke_config(
     transition_path: str | Path,
     pairwise_path: str | Path,
@@ -387,6 +485,7 @@ def train_e0_smoke_config(
     checkpoint_metric: str = "candidate_top5_regret",
     checkpoint_mode: str = "min",
     init_checkpoint_path: Optional[str | Path] = None,
+    allow_init_action_emb_mismatch: bool = False,
     trainable_scope: str = "all",
     rank_score_mode: str = "reward",
     rank_value_weight: float = 0.5,
@@ -400,10 +499,8 @@ def train_e0_smoke_config(
         raise ValueError("rank_score_mode must be 'reward', 'value', or 'blend'")
     if not 0.0 <= rank_value_weight <= 1.0:
         raise ValueError("rank_value_weight must be in [0, 1]")
-    if trainable_scope not in {"all", "reward_head", "value_head"}:
-        raise ValueError(
-            "trainable_scope must be 'all', 'reward_head', or 'value_head'"
-        )
+    if trainable_scope not in _TRAINABLE_SCOPES:
+        raise ValueError(_trainable_scope_message())
     transition_loss_enabled = trainable_scope in {"all", "reward_head"} or lambda_sig > 0
     if not transition_loss_enabled and lambda_rank <= 0:
         raise ValueError("lambda_rank must be positive when transition loss is disabled")
@@ -457,6 +554,8 @@ def train_e0_smoke_config(
     init_checkpoint_path_obj = (
         Path(init_checkpoint_path) if init_checkpoint_path is not None else None
     )
+    init_skipped_state_keys = []
+    init_copied_state_key_count = None
     if init_checkpoint_path_obj is None:
         model = GeoJEPATransitionModel(
             n_blocks=n_blocks,
@@ -464,13 +563,22 @@ def train_e0_smoke_config(
             block_feature_dim=int(block_feature_dim),
         ).to(device_obj)
     else:
-        model, init_checkpoint = load_e0_checkpoint(
-            init_checkpoint_path_obj, device=str(device_obj)
-        )
-        if init_checkpoint["model_kwargs"] != model_kwargs:
-            raise ValueError(
-                "init checkpoint model_kwargs do not match requested training config"
+        if allow_init_action_emb_mismatch:
+            model, init_checkpoint = _load_transfer_compatible_checkpoint(
+                init_checkpoint_path_obj,
+                model_kwargs,
+                device=str(device_obj),
             )
+        else:
+            model, init_checkpoint = load_e0_checkpoint(
+                init_checkpoint_path_obj, device=str(device_obj)
+            )
+            if init_checkpoint["model_kwargs"] != model_kwargs:
+                raise ValueError(
+                    "init checkpoint model_kwargs do not match requested training config"
+                )
+        init_skipped_state_keys = list(init_checkpoint.get("init_skipped_state_keys", []))
+        init_copied_state_key_count = init_checkpoint.get("init_copied_state_key_count")
         model.train()
     trainable_parameter_names = _set_trainable_scope(model, trainable_scope)
     optimizer = torch.optim.Adam(
@@ -616,6 +724,9 @@ def train_e0_smoke_config(
                     trainable_scope,
                     rank_score_mode,
                     rank_value_weight,
+                    allow_init_action_emb_mismatch,
+                    init_skipped_state_keys,
+                    init_copied_state_key_count,
                 )
 
     ranking_acc = evaluate_pairwise_rank_accuracy(
@@ -645,6 +756,13 @@ def train_e0_smoke_config(
         "pairwise_label_key": pairwise_label_key,
         "transition_loss_enabled": bool(transition_loss_enabled),
         "trainable_scope": trainable_scope,
+        "allow_init_action_emb_mismatch": bool(allow_init_action_emb_mismatch),
+        "init_skipped_state_keys": list(init_skipped_state_keys),
+        "init_copied_state_key_count": (
+            None
+            if init_copied_state_key_count is None
+            else int(init_copied_state_key_count)
+        ),
         "rank_score_mode": rank_score_mode,
         "rank_value_weight": float(rank_value_weight),
         "n_trainable_parameters": int(

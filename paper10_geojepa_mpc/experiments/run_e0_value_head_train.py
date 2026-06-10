@@ -45,7 +45,8 @@ def build_train_kwargs(args) -> dict:
         ),
         "checkpoint_mode": args.checkpoint_mode,
         "init_checkpoint_path": args.init_checkpoint,
-        "trainable_scope": "value_head",
+        "allow_init_action_emb_mismatch": bool(args.allow_init_action_emb_mismatch),
+        "trainable_scope": args.trainable_scope,
         "rank_score_mode": "value",
         "rank_value_weight": float(args.rank_value_weight),
         "seed": int(args.seed),
@@ -105,6 +106,16 @@ def parse_args():
     parser.add_argument("--candidate-max-states", type=int, default=None)
     parser.add_argument("--checkpoint-metric", default="auto")
     parser.add_argument("--checkpoint-mode", choices=("min", "max"), default="min")
+    parser.add_argument(
+        "--allow-init-action-emb-mismatch",
+        action="store_true",
+        help="Copy compatible checkpoint weights while reinitializing action_emb.weight.",
+    )
+    parser.add_argument(
+        "--trainable-scope",
+        choices=("value_head", "value_head_action_emb"),
+        default="value_head",
+    )
     parser.add_argument("--rank-value-weight", type=float, default=0.5)
     parser.add_argument("--seed", type=int, default=3035)
     parser.add_argument("--eval-seed", type=int, default=12345)

@@ -28,6 +28,8 @@ def _args(**overrides):
         "candidate_max_states": 64,
         "checkpoint_metric": "auto",
         "checkpoint_mode": "min",
+        "allow_init_action_emb_mismatch": False,
+        "trainable_scope": "value_head",
         "rank_value_weight": 0.5,
         "seed": 3035,
         "eval_seed": 12345,
@@ -54,12 +56,25 @@ def test_build_train_kwargs_maps_cli_to_value_head_training_defaults():
     assert kwargs["init_checkpoint_path"].endswith("base.pt")
     assert kwargs["checkpoint_path"].endswith("value.pt")
     assert kwargs["trainable_scope"] == "value_head"
+    assert kwargs["allow_init_action_emb_mismatch"] is False
     assert kwargs["rank_score_mode"] == "value"
     assert kwargs["compute_candidate_metrics"] is True
     assert kwargs["candidate_top_k"] == 3
     assert kwargs["checkpoint_metric"] == "candidate_top3_regret"
     assert kwargs["max_transition_samples"] == 2048
     assert kwargs["max_pairwise_states"] == 128
+
+
+def test_build_train_kwargs_maps_transfer_training_options():
+    kwargs = run_e0_value_head_train.build_train_kwargs(
+        _args(
+            allow_init_action_emb_mismatch=True,
+            trainable_scope="value_head_action_emb",
+        )
+    )
+
+    assert kwargs["allow_init_action_emb_mismatch"] is True
+    assert kwargs["trainable_scope"] == "value_head_action_emb"
 
 
 def test_run_training_writes_metrics_json(monkeypatch, tmp_path):
