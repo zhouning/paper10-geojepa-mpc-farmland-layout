@@ -68,13 +68,22 @@ PUBLIC_PLACEHOLDER_PATTERN = re.compile(
     r"\[[A-Z0-9 /_-]+(?:TO BE ADDED|TO BE ASSIGNED|TO BE SELECTED|IF AVAILABLE)\]"
 )
 
-PUBLIC_PLACEHOLDER_DOCS = (
+PUBLIC_SUBMISSION_DOCS = (
     Path("README.md"),
     Path("REPRODUCIBILITY.md"),
     Path("MANIFEST.md"),
     Path("DATA_AVAILABILITY.md"),
     INTEGRATED_MANUSCRIPT,
     SELF_CONTAINED_MANUSCRIPT,
+)
+
+PUBLIC_VAGUE_DATA_ROUTE_PATTERN = re.compile(
+    r"available upon(?: reasonable)? request"
+    r"|temporary cloud"
+    r"|personal web(?:site| link)"
+    r"|drive link"
+    r"|cloud link",
+    re.IGNORECASE,
 )
 
 ARCHIVE_REQUIRED_FIELDS = (
@@ -298,7 +307,7 @@ def check_excluded_paths_not_tracked(root: Path) -> CheckResult:
 def check_public_submission_placeholders_absent(root: Path) -> CheckResult:
     hits = []
     checked = 0
-    for rel_path in PUBLIC_PLACEHOLDER_DOCS:
+    for rel_path in PUBLIC_SUBMISSION_DOCS:
         path = root / rel_path
         if not path.exists():
             continue
@@ -318,6 +327,33 @@ def check_public_submission_placeholders_absent(root: Path) -> CheckResult:
         "public_submission_placeholders_absent",
         True,
         f"{checked} public-facing docs contain no unresolved bracket placeholders",
+    )
+
+
+def check_public_data_route_wording_specific(root: Path) -> CheckResult:
+    hits = []
+    checked = 0
+    for rel_path in PUBLIC_SUBMISSION_DOCS:
+        path = root / rel_path
+        if not path.exists():
+            continue
+
+        checked += 1
+        for line_no, line in enumerate(read_text(path).splitlines(), start=1):
+            match = PUBLIC_VAGUE_DATA_ROUTE_PATTERN.search(line)
+            if match:
+                hits.append(f"{rel_path}:{line_no}: {match.group(0)}")
+
+    if hits:
+        return CheckResult(
+            "public_data_route_wording_specific",
+            False,
+            "vague public data-route wording found: " + " | ".join(hits),
+        )
+    return CheckResult(
+        "public_data_route_wording_specific",
+        True,
+        f"{checked} public-facing docs use specific data/access-route wording",
     )
 
 
@@ -450,6 +486,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_archive_manifest_included_paths_resolve,
     check_excluded_paths_not_tracked,
     check_public_submission_placeholders_absent,
+    check_public_data_route_wording_specific,
     check_forbidden_50_state_claims,
     check_self_contained_manuscript_no_paper9_placeholder,
     check_citation_keys_resolve,

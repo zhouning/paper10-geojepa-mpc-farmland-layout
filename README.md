@@ -303,5 +303,12 @@ same Python executable.
 
 Result: `115 passed`.
 
+After extending the submission preflight checker to reject vague public
+data-route wording in public-facing docs and integrated manuscript drafts on
+2026-06-10, the suite was rerun again from this repository directory with the
+same Python executable.
+
+Result: `116 passed`.
+
 Reviewers should run the relative-path command in `REPRODUCIBILITY.md` after
 cloning.
