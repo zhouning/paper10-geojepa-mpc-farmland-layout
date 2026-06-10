@@ -59,6 +59,13 @@ train from transition MSE when `lambda_sig=0`.
 .\.venv\Scripts\python.exe -X utf8 -m paper10_geojepa_mpc.experiments.run_e0_value_head_train --transition-path arcgis_toolbox_paper9\_scratch\tool1_smoke\prepared\tool2\transitions.npz --pairwise-path paper10_geojepa_mpc\experiments\results\e0_value_labels_frontier_random050_rank_seed2028_10x12_h5_seed43.npz --init-checkpoint paper10_geojepa_mpc\experiments\checkpoints\e0_bishan_rank_seed2028\rank_seed2028.pt --checkpoint-path reviewer_outputs\value_head_smoke\value_head.pt --output reviewer_outputs\value_head_smoke\metrics.json --epochs 1 --batch-size 16 --transition-samples 500 --pairwise-states 10 --pairwise-subsample 10 --n-pairs 8 --candidate-top-k 4 --candidate-batch-states 1 --candidate-max-states 10 --checkpoint-metric auto --checkpoint-mode min --seed 3043 --device cpu
 ```
 
+Run the submission preflight checks after editing manuscript, archive, or
+availability files:
+
+```powershell
+.\.venv\Scripts\python.exe scripts/paper10/preflight_submission_checks.py
+```
+
 ## Full Bishan Dataset Setup
 
 Place the full prepared data under the repository root:

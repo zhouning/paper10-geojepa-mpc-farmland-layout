@@ -6,8 +6,8 @@ data needed for smoke verification.
 
 ## Included
 
-- `paper10_geojepa_mpc/`: 253 non-cache files copied from the active Paper10
-  workspace, including 55 Python files, 101 JSON files, 59 Markdown files,
+- `paper10_geojepa_mpc/`: 254 non-cache files copied from the active Paper10
+  workspace, including 56 Python files, 101 JSON files, 59 Markdown files,
   3 CSV files,
   9 NPZ files, 10 PyTorch checkpoint files, and 16 log files.
 - `arcgis_toolbox_paper9/private_source/`: 10 Paper9 compatibility source files
@@ -156,6 +156,10 @@ data needed for smoke verification.
 - `scripts/paper10/plot_frontier_random050_figures.py`:
   offline plotting script for the seed-wise reward and top-k diagnostic figures;
   writes generated figure files under ignored `reviewer_outputs/` by default.
+- `scripts/paper10/preflight_submission_checks.py`:
+  submission preflight checker for archive manifest required fields,
+  prohibited 50-state wording, public-manuscript Paper9 placeholder leakage,
+  citation-key resolution, and reviewer smoke protocol/log cross-links.
 - `references/paper10_verified_references_2026-06-09.bib`:
   verified BibTeX entries for the first Paper10 manuscript citation pass.
 - `references/paper10_local_sources_2026-06-09.bib`:

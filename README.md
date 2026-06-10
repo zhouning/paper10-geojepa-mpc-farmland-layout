@@ -123,6 +123,13 @@ Run the included smoke data summary:
 .\.venv\Scripts\python.exe paper10_geojepa_mpc\experiments\run_e0_smoke.py
 ```
 
+Run the submission preflight checks before archive release or manuscript
+backfill:
+
+```powershell
+.\.venv\Scripts\python.exe scripts/paper10/preflight_submission_checks.py
+```
+
 ## Full Experiments
 
 Full Bishan training and real-environment rollout commands require the external
@@ -276,6 +283,11 @@ After running and logging the reviewer smoke replication protocol on
 same Python executable.
 
 Result: `108 passed`.
+
+After adding the submission preflight checker on 2026-06-10, the suite was
+rerun again from this repository directory with the same Python executable.
+
+Result: `111 passed`.
 
 Reviewers should run the relative-path command in `REPRODUCIBILITY.md` after
 cloning.

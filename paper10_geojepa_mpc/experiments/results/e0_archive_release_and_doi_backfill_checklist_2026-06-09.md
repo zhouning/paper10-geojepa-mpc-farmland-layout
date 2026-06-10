@@ -113,27 +113,33 @@ Run these checks after all backfilled identifiers and metadata fields are
 committed locally, and before creating or updating the public archive:
 
 1. `git diff --check`
-2. Parse `e0_archive_manifest_2026-06-09.csv` with a CSV parser and confirm all
+2. Run the bundled preflight checker:
+
+```powershell
+.\.venv\Scripts\python.exe scripts/paper10/preflight_submission_checks.py
+```
+
+3. Parse `e0_archive_manifest_2026-06-09.csv` with a CSV parser and confirm all
    rows have `record_id`, `path_or_pattern`, `access_route`, `archive_action`,
    and `status`.
-3. Confirm every citation key used by the public manuscript, citation map, and
+4. Confirm every citation key used by the public manuscript, citation map, and
    citation checklist exists in the verified or local BibTeX files.
-4. Confirm the public self-contained manuscript body does not cite
+5. Confirm the public self-contained manuscript body does not cite
    `@zhou2026paper9_local`.
-5. Grep for prohibited passing-50-state wording and keep only guardrail or
+6. Grep for prohibited passing-50-state wording and keep only guardrail or
    failed-diagnostic uses.
-6. Run the full Paper10 test suite:
+7. Run the full Paper10 test suite:
 
 ```powershell
 D:\adk\.venv\Scripts\python.exe -m pytest paper10_geojepa_mpc\tests -q -p no:cacheprovider
 ```
 
-7. If possible, clone the archive candidate into a clean directory and rerun
+8. If possible, clone the archive candidate into a clean directory and rerun
    `e0_reviewer_smoke_replication_protocol_2026-06-09.md` from the archived
    release or reviewer link.
    Record the exact result in a new verification log if the archived candidate
    commit differs from `534e0f8115a55d5c080bf21bb888657ccd9dd585`.
-8. Record the final submission commit, test result, DOI or reviewer link, and
+9. Record the final submission commit, test result, DOI or reviewer link, and
    any remaining restricted-data route in the submission files.
 
 ## No-go warnings
