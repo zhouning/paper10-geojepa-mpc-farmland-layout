@@ -51,6 +51,8 @@ to positive scale-up evidence.
 2. Run the reviewer smoke test suite from that commit. The reviewer-facing
    command order, expected smoke outputs, and failure interpretation are in
    `e0_reviewer_smoke_replication_protocol_2026-06-09.md`.
+   The latest tracked local execution log is
+   `e0_reviewer_smoke_verification_log_2026-06-10.md`.
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest paper10_geojepa_mpc\tests -q -p no:cacheprovider
@@ -129,6 +131,8 @@ D:\adk\.venv\Scripts\python.exe -m pytest paper10_geojepa_mpc\tests -q -p no:cac
 7. If possible, clone the archive candidate into a clean directory and rerun
    `e0_reviewer_smoke_replication_protocol_2026-06-09.md` from the archived
    release or reviewer link.
+   Record the exact result in a new verification log if the archived candidate
+   commit differs from `534e0f8115a55d5c080bf21bb888657ccd9dd585`.
 8. Record the final submission commit, test result, DOI or reviewer link, and
    any remaining restricted-data route in the submission files.
 

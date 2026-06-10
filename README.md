@@ -53,6 +53,7 @@ Paper-facing writing assets are tracked under
 - `e0_source_data_map_2026-06-09.md`
 - `e0_data_access_and_rights_decision_register_2026-06-09.md`
 - `e0_reviewer_smoke_replication_protocol_2026-06-09.md`
+- `e0_reviewer_smoke_verification_log_2026-06-10.md`
 - `e0_archive_release_and_doi_backfill_checklist_2026-06-09.md`
 - `e0_target_venue_and_manuscript_conversion_checklist_2026-06-09.md`
 - `e0_self_contained_manuscript_submission_gap_audit_2026-06-09.md`
@@ -113,6 +114,8 @@ For the ordered reviewer-side smoke replication protocol, including expected
 array shapes and the boundary between clone-only smoke checks and full Bishan
 reruns, see
 `paper10_geojepa_mpc/experiments/results/e0_reviewer_smoke_replication_protocol_2026-06-09.md`.
+The latest local execution log for that protocol is
+`paper10_geojepa_mpc/experiments/results/e0_reviewer_smoke_verification_log_2026-06-10.md`.
 
 Run the included smoke data summary:
 
@@ -265,6 +268,12 @@ Result: `108 passed`.
 After adding the E0 reviewer smoke replication protocol on 2026-06-09, the
 suite was rerun again from this repository directory with the same Python
 executable.
+
+Result: `108 passed`.
+
+After running and logging the reviewer smoke replication protocol on
+2026-06-10, the suite was rerun again from this repository directory with the
+same Python executable.
 
 Result: `108 passed`.
 

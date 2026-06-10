@@ -26,6 +26,12 @@ interpretation, see:
 paper10_geojepa_mpc/experiments/results/e0_reviewer_smoke_replication_protocol_2026-06-09.md
 ```
 
+For the latest tracked local execution log of that protocol, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_reviewer_smoke_verification_log_2026-06-10.md
+```
+
 Run all Paper10 tests:
 
 ```powershell
@@ -243,5 +249,8 @@ with the same data should reproduce the reported result structure and metrics,
 subject to normal CPU/GPU floating-point and library-version variation.
 
 The reviewer smoke protocol verifies the packaged clone and smoke data only.
-It should not be used as evidence for full Bishan reruns or for successful
-50-state scale-up.
+It should not be used as evidence for full Bishan reruns or for a passing
+50-state result.
+
+The 2026-06-10 smoke verification log records the current Windows execution of
+the protocol at commit `534e0f8115a55d5c080bf21bb888657ccd9dd585`.

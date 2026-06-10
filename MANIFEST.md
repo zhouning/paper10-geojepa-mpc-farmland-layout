@@ -6,8 +6,8 @@ data needed for smoke verification.
 
 ## Included
 
-- `paper10_geojepa_mpc/`: 252 non-cache files copied from the active Paper10
-  workspace, including 55 Python files, 101 JSON files, 58 Markdown files,
+- `paper10_geojepa_mpc/`: 253 non-cache files copied from the active Paper10
+  workspace, including 55 Python files, 101 JSON files, 59 Markdown files,
   3 CSV files,
   9 NPZ files, 10 PyTorch checkpoint files, and 16 log files.
 - `arcgis_toolbox_paper9/private_source/`: 10 Paper9 compatibility source files
@@ -116,6 +116,10 @@ data needed for smoke verification.
   reviewer-oriented clone-only smoke replication protocol with command order,
   expected smoke outputs, failure interpretation, and explicit separation from
   full Bishan reruns and failed 50-state diagnostics.
+- `paper10_geojepa_mpc/experiments/results/e0_reviewer_smoke_verification_log_2026-06-10.md`:
+  local execution log for the reviewer smoke protocol at commit
+  `534e0f8115a55d5c080bf21bb888657ccd9dd585`, including pytest, smoke data
+  header, smoke-scale training, and optional value-head smoke results.
 - `paper10_geojepa_mpc/experiments/results/e0_archive_release_and_doi_backfill_checklist_2026-06-09.md`:
   release checklist for the code/evidence archive, full-data route decisions,
   DOI or reviewer-link backfill, final verification, and no-go submission

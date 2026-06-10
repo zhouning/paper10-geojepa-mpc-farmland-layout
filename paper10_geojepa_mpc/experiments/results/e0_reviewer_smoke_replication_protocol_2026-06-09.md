@@ -8,6 +8,9 @@ training and real-environment rollouts require the external full Bishan
 `tool2/` data and prepared GPKG-root geospatial inputs documented in
 `DATA_AVAILABILITY.md`.
 
+The latest tracked local execution log for this protocol is
+`e0_reviewer_smoke_verification_log_2026-06-10.md`.
+
 ## What this protocol verifies
 
 The reviewer smoke route verifies that:
