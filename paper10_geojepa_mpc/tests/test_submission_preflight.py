@@ -20,11 +20,12 @@ def test_submission_preflight_cli_passes_current_repository():
     payload = json.loads(result.stdout)
 
     assert payload["ok"] is True
-    assert payload["total_checks"] >= 8
+    assert payload["total_checks"] >= 9
     assert payload["failed_checks"] == []
     assert "archive_manifest_required_fields" in payload["passed_checks"]
     assert "archive_manifest_included_paths_resolve" in payload["passed_checks"]
     assert "excluded_paths_not_tracked" in payload["passed_checks"]
+    assert "public_submission_placeholders_absent" in payload["passed_checks"]
     assert "forbidden_50_state_claims" in payload["passed_checks"]
     assert "self_contained_manuscript_no_paper9_placeholder" in payload["passed_checks"]
     assert "reviewer_smoke_protocol_links" in payload["passed_checks"]
@@ -181,3 +182,30 @@ def test_submission_preflight_reports_tracked_dot_prefixed_excluded_path(tmp_pat
         for item in payload["checks"]
     }["excluded_paths_not_tracked"]
     assert ".pytest_cache/README.md" in details
+
+
+def test_submission_preflight_reports_public_placeholder_leakage(tmp_path):
+    fixture = tmp_path / "repo"
+    fixture.mkdir()
+    (fixture / "README.md").write_text(
+        "Archive record: [REPOSITORY/DOI TO BE ADDED]\n",
+        encoding="utf-8",
+    )
+
+    result = subprocess.run(
+        [sys.executable, str(SCRIPT), "--root", str(fixture), "--json"],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert result.returncode == 1
+    payload = json.loads(result.stdout)
+    assert "public_submission_placeholders_absent" in payload["failed_checks"]
+    details = {
+        item["name"]: item["details"]
+        for item in payload["checks"]
+    }["public_submission_placeholders_absent"]
+    assert "README.md:1" in details
+    assert "[REPOSITORY/DOI TO BE ADDED]" in details

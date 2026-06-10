@@ -19,6 +19,9 @@ SELF_CONTAINED_MANUSCRIPT = (
     RESULTS
     / "e0_frontier_random050_integrated_manuscript_self_contained_methods_draft_2026-06-09.md"
 )
+INTEGRATED_MANUSCRIPT = (
+    RESULTS / "e0_frontier_random050_integrated_manuscript_draft_2026-06-09.md"
+)
 SMOKE_PROTOCOL = RESULTS / "e0_reviewer_smoke_replication_protocol_2026-06-09.md"
 SMOKE_LOG = RESULTS / "e0_reviewer_smoke_verification_log_2026-06-10.md"
 
@@ -59,6 +62,19 @@ FORBIDDEN_50_STATE_PATTERNS = (
     r"successful 50-state",
     r"successful scale-up evidence",
     r"successful scale-up",
+)
+
+PUBLIC_PLACEHOLDER_PATTERN = re.compile(
+    r"\[[A-Z0-9 /_-]+(?:TO BE ADDED|TO BE ASSIGNED|TO BE SELECTED|IF AVAILABLE)\]"
+)
+
+PUBLIC_PLACEHOLDER_DOCS = (
+    Path("README.md"),
+    Path("REPRODUCIBILITY.md"),
+    Path("MANIFEST.md"),
+    Path("DATA_AVAILABILITY.md"),
+    INTEGRATED_MANUSCRIPT,
+    SELF_CONTAINED_MANUSCRIPT,
 )
 
 ARCHIVE_REQUIRED_FIELDS = (
@@ -279,6 +295,32 @@ def check_excluded_paths_not_tracked(root: Path) -> CheckResult:
     )
 
 
+def check_public_submission_placeholders_absent(root: Path) -> CheckResult:
+    hits = []
+    checked = 0
+    for rel_path in PUBLIC_PLACEHOLDER_DOCS:
+        path = root / rel_path
+        if not path.exists():
+            continue
+
+        checked += 1
+        for line_no, line in enumerate(read_text(path).splitlines(), start=1):
+            for match in PUBLIC_PLACEHOLDER_PATTERN.finditer(line):
+                hits.append(f"{rel_path}:{line_no}: {match.group(0)}")
+
+    if hits:
+        return CheckResult(
+            "public_submission_placeholders_absent",
+            False,
+            "public-facing placeholder tokens found: " + " | ".join(hits),
+        )
+    return CheckResult(
+        "public_submission_placeholders_absent",
+        True,
+        f"{checked} public-facing docs contain no unresolved bracket placeholders",
+    )
+
+
 def check_forbidden_50_state_claims(root: Path) -> CheckResult:
     pattern = re.compile("|".join(FORBIDDEN_50_STATE_PATTERNS), re.IGNORECASE)
     hits = []
@@ -407,6 +449,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_archive_manifest_required_fields,
     check_archive_manifest_included_paths_resolve,
     check_excluded_paths_not_tracked,
+    check_public_submission_placeholders_absent,
     check_forbidden_50_state_claims,
     check_self_contained_manuscript_no_paper9_placeholder,
     check_citation_keys_resolve,

@@ -158,9 +158,10 @@ data needed for smoke verification.
   writes generated figure files under ignored `reviewer_outputs/` by default.
 - `scripts/paper10/preflight_submission_checks.py`:
   submission preflight checker for archive manifest required fields,
-  included-path resolution, excluded/local Git-tracking guardrails, prohibited
-  50-state wording, public-manuscript Paper9 placeholder leakage, citation-key
-  resolution, and reviewer smoke protocol/log cross-links.
+  included-path resolution, excluded/local Git-tracking guardrails,
+  public-facing placeholder leakage, prohibited 50-state wording,
+  public-manuscript Paper9 placeholder leakage, citation-key resolution, and
+  reviewer smoke protocol/log cross-links.
 - `references/paper10_verified_references_2026-06-09.bib`:
   verified BibTeX entries for the first Paper10 manuscript citation pass.
 - `references/paper10_local_sources_2026-06-09.bib`:

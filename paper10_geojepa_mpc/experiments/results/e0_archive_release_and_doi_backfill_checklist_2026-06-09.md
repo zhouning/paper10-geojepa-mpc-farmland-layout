@@ -125,24 +125,26 @@ committed locally, and before creating or updating the public archive:
 4. Confirm Record 1 include/include-after-rights-check paths resolve inside the
    repository, while excluded/local full-data and cache patterns are not tracked
    by Git except for documented route README placeholders.
-5. Confirm every citation key used by the public manuscript, citation map, and
+5. Confirm public-facing root docs and integrated manuscript drafts contain no
+   unresolved bracket placeholders such as `[REPOSITORY/DOI TO BE ADDED]`.
+6. Confirm every citation key used by the public manuscript, citation map, and
    citation checklist exists in the verified or local BibTeX files.
-6. Confirm the public self-contained manuscript body does not cite
+7. Confirm the public self-contained manuscript body does not cite
    `@zhou2026paper9_local`.
-7. Grep for prohibited passing-50-state wording and keep only guardrail or
+8. Grep for prohibited passing-50-state wording and keep only guardrail or
    failed-diagnostic uses.
-8. Run the full Paper10 test suite:
+9. Run the full Paper10 test suite:
 
 ```powershell
 D:\adk\.venv\Scripts\python.exe -m pytest paper10_geojepa_mpc\tests -q -p no:cacheprovider
 ```
 
-8. If possible, clone the archive candidate into a clean directory and rerun
+10. If possible, clone the archive candidate into a clean directory and rerun
    `e0_reviewer_smoke_replication_protocol_2026-06-09.md` from the archived
    release or reviewer link.
    Record the exact result in a new verification log if the archived candidate
    commit differs from `534e0f8115a55d5c080bf21bb888657ccd9dd585`.
-9. Record the final submission commit, test result, DOI or reviewer link, and
+11. Record the final submission commit, test result, DOI or reviewer link, and
    any remaining restricted-data route in the submission files.
 
 ## No-go warnings
