@@ -51,6 +51,12 @@ def parse_args():
         ),
     )
     parser.add_argument("--prepared-dir", default=str(ROOT))
+    parser.add_argument(
+        "--env-source",
+        choices=("paper9", "neijiang"),
+        default="paper9",
+        help="Environment factory: paper9 prepared layout or Neijiang cross-region wrapper.",
+    )
     parser.add_argument("--max-steps", type=int, default=None)
     parser.add_argument("--rollout-steps", type=int, default=3)
     parser.add_argument("--horizon", type=int, default=3)
@@ -87,6 +93,28 @@ def parse_args():
     parser.add_argument("--progress-interval", type=int, default=10)
     parser.add_argument("--output", default=None)
     return parser.parse_args()
+
+
+def _make_rollout_env(args):
+    env_source = getattr(args, "env_source", "paper9")
+    if env_source == "paper9":
+        from private_source.blocks_env import make_env
+
+        return make_env(prepared_dir=args.prepared_dir)
+
+    if env_source == "neijiang":
+        env_script = Path(args.prepared_dir) / "county_env_neijiang.py"
+        if not env_script.exists():
+            raise FileNotFoundError(f"Neijiang env wrapper not found: {env_script}")
+        spec = importlib.util.spec_from_file_location(
+            "neijiang_cross_region_county_env",
+            env_script,
+        )
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module.make_neijiang_env()
+
+    raise ValueError(f"Unsupported env_source: {env_source}")
 
 
 def _run_episode(
@@ -189,6 +217,7 @@ def _run_episode(
     return {
         "checkpoint": str(args.checkpoint),
         "prepared_dir": str(args.prepared_dir),
+        "env_source": getattr(args, "env_source", "paper9"),
         "seed": int(seed),
         "horizon": args.horizon,
         "top_k": args.top_k,
@@ -247,6 +276,7 @@ def _build_multiseed_result(
     return {
         "checkpoint": str(args.checkpoint),
         "prepared_dir": str(args.prepared_dir),
+        "env_source": getattr(args, "env_source", "paper9"),
         "seeds": [int(seed) for seed in seeds],
         "completed_seeds": completed_seeds,
         "pending_seeds": pending_seeds,
@@ -307,9 +337,7 @@ def main() -> None:
     args = parse_args()
     started = perf_counter()
 
-    from private_source.blocks_env import make_env
-
-    env = make_env(prepared_dir=args.prepared_dir)
+    env = _make_rollout_env(args)
     rollout_limit = resolve_rollout_limit(env, args.max_steps, args.rollout_steps)
     adapter_score_mode = args.model_score_mode
     adapter_value_weight = args.model_value_weight

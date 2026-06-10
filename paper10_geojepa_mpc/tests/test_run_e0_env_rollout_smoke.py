@@ -1,8 +1,10 @@
 from types import SimpleNamespace
 import json
+import sys
 
 import numpy as np
 
+from paper10_geojepa_mpc.experiments import run_e0_env_rollout_smoke
 from paper10_geojepa_mpc.experiments.run_e0_env_rollout_smoke import (
     _build_multiseed_result,
     _partial_output_path,
@@ -368,3 +370,38 @@ def test_write_multiseed_progress_writes_partial_file(tmp_path):
     assert data["complete"] is False
     assert data["completed_seeds"] == [0]
     assert data["pending_seeds"] == [1]
+
+
+def test_parse_args_accepts_neijiang_env_source(monkeypatch, tmp_path):
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "run_e0_env_rollout_smoke.py",
+            "--env-source",
+            "neijiang",
+            "--prepared-dir",
+            str(tmp_path),
+        ],
+    )
+
+    args = run_e0_env_rollout_smoke.parse_args()
+
+    assert args.env_source == "neijiang"
+    assert args.prepared_dir == str(tmp_path)
+
+
+def test_make_rollout_env_can_load_neijiang_env_factory(tmp_path):
+    env_script = tmp_path / "county_env_neijiang.py"
+    env_script.write_text(
+        "class TinyEnv:\n"
+        "    n_blocks = 3711\n"
+        "def make_neijiang_env(**kwargs):\n"
+        "    return TinyEnv()\n",
+        encoding="utf-8",
+    )
+    args = SimpleNamespace(env_source="neijiang", prepared_dir=str(tmp_path))
+
+    env = run_e0_env_rollout_smoke._make_rollout_env(args)
+
+    assert env.n_blocks == 3711
