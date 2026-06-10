@@ -122,13 +122,16 @@ committed locally, and before creating or updating the public archive:
 3. Parse `e0_archive_manifest_2026-06-09.csv` with a CSV parser and confirm all
    rows have `record_id`, `path_or_pattern`, `access_route`, `archive_action`,
    and `status`.
-4. Confirm every citation key used by the public manuscript, citation map, and
+4. Confirm Record 1 include/include-after-rights-check paths resolve inside the
+   repository, while excluded/local full-data and cache patterns are not tracked
+   by Git except for documented route README placeholders.
+5. Confirm every citation key used by the public manuscript, citation map, and
    citation checklist exists in the verified or local BibTeX files.
-5. Confirm the public self-contained manuscript body does not cite
+6. Confirm the public self-contained manuscript body does not cite
    `@zhou2026paper9_local`.
-6. Grep for prohibited passing-50-state wording and keep only guardrail or
+7. Grep for prohibited passing-50-state wording and keep only guardrail or
    failed-diagnostic uses.
-7. Run the full Paper10 test suite:
+8. Run the full Paper10 test suite:
 
 ```powershell
 D:\adk\.venv\Scripts\python.exe -m pytest paper10_geojepa_mpc\tests -q -p no:cacheprovider

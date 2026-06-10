@@ -289,5 +289,12 @@ rerun again from this repository directory with the same Python executable.
 
 Result: `111 passed`.
 
+After extending the submission preflight checker to validate archive manifest
+path resolution and excluded/local Git-tracking guardrails on 2026-06-10, the
+suite was rerun again from this repository directory with the same Python
+executable.
+
+Result: `114 passed`.
+
 Reviewers should run the relative-path command in `REPRODUCIBILITY.md` after
 cloning.

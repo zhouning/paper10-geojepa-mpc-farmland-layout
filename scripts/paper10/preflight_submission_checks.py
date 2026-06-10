@@ -6,8 +6,9 @@ import argparse
 import csv
 import json
 import re
+import subprocess
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Callable
 
 
@@ -67,6 +68,14 @@ ARCHIVE_REQUIRED_FIELDS = (
     "archive_action",
     "status",
 )
+
+INCLUDED_ARCHIVE_ACTIONS = {"include", "include_after_rights_check"}
+EXCLUDED_ARCHIVE_ACTIONS = {"exclude", "exclude_unless_selected", "exclude_from_git"}
+ALLOWED_TRACKED_EXCLUDED_PATHS = {
+    "tool2/README.md",
+    "dem_slope_analysis/output/README.md",
+    "results_real/blocks/README.md",
+}
 
 SMOKE_LINK_DOCS = (
     Path("README.md"),
@@ -144,6 +153,129 @@ def check_archive_manifest_required_fields(root: Path) -> CheckResult:
         "archive_manifest_required_fields",
         True,
         f"{len(rows)} rows contain required fields",
+    )
+
+
+def read_archive_manifest_rows(root: Path) -> tuple[list[dict[str, str]], str | None]:
+    path = root / ARCHIVE_MANIFEST
+    if not path.exists():
+        return [], f"missing archive manifest: {ARCHIVE_MANIFEST}"
+    with path.open(newline="", encoding="utf-8") as handle:
+        return list(csv.DictReader(handle)), None
+
+
+def normalize_manifest_pattern(value: str) -> str:
+    normalized = value.strip().replace("\\", "/")
+    while normalized.startswith("./"):
+        normalized = normalized[2:]
+    return normalized.lstrip("/")
+
+
+def has_glob(pattern: str) -> bool:
+    return any(char in pattern for char in "*?[")
+
+
+def manifest_path_matches(root: Path, pattern: str) -> list[Path]:
+    normalized = normalize_manifest_pattern(pattern)
+    if not normalized:
+        return []
+    if has_glob(normalized):
+        return [path for path in root.glob(normalized) if path.exists()]
+    candidate = root / normalized.rstrip("/")
+    return [candidate] if candidate.exists() else []
+
+
+def check_archive_manifest_included_paths_resolve(root: Path) -> CheckResult:
+    rows, error = read_archive_manifest_rows(root)
+    if error:
+        return CheckResult("archive_manifest_included_paths_resolve", False, error)
+
+    missing = []
+    checked = 0
+    for index, row in enumerate(rows, start=2):
+        if row.get("record_id") != "record1_code_evidence":
+            continue
+        if row.get("archive_action") not in INCLUDED_ARCHIVE_ACTIONS:
+            continue
+
+        checked += 1
+        pattern = row.get("path_or_pattern", "")
+        if not manifest_path_matches(root, pattern):
+            missing.append(f"line {index}: {pattern}")
+
+    if missing:
+        return CheckResult(
+            "archive_manifest_included_paths_resolve",
+            False,
+            "included paths do not resolve: " + "; ".join(missing),
+        )
+    return CheckResult(
+        "archive_manifest_included_paths_resolve",
+        True,
+        f"{checked} Record 1 include/include_after_rights_check paths resolve",
+    )
+
+
+def git_tracked_files(root: Path) -> list[str]:
+    try:
+        result = subprocess.run(
+            ["git", "ls-files"],
+            cwd=root,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return []
+    return [
+        line.strip().replace("\\", "/")
+        for line in result.stdout.splitlines()
+        if line.strip()
+    ]
+
+
+def tracked_file_matches_pattern(tracked_path: str, pattern: str) -> bool:
+    normalized = normalize_manifest_pattern(pattern)
+    if not normalized:
+        return False
+    if has_glob(normalized):
+        return PurePosixPath(tracked_path).match(normalized)
+    prefix = normalized.rstrip("/")
+    return tracked_path == prefix or tracked_path.startswith(prefix + "/")
+
+
+def check_excluded_paths_not_tracked(root: Path) -> CheckResult:
+    rows, error = read_archive_manifest_rows(root)
+    if error:
+        return CheckResult("excluded_paths_not_tracked", False, error)
+
+    tracked = git_tracked_files(root)
+    violations = []
+    checked = 0
+    for index, row in enumerate(rows, start=2):
+        if row.get("record_id") != "excluded_or_local":
+            continue
+        if row.get("archive_action") not in EXCLUDED_ARCHIVE_ACTIONS:
+            continue
+
+        checked += 1
+        pattern = row.get("path_or_pattern", "")
+        for tracked_path in tracked:
+            if tracked_path in ALLOWED_TRACKED_EXCLUDED_PATHS:
+                continue
+            if tracked_file_matches_pattern(tracked_path, pattern):
+                violations.append(f"line {index}: {tracked_path}")
+
+    if violations:
+        return CheckResult(
+            "excluded_paths_not_tracked",
+            False,
+            "excluded/local paths tracked by Git: " + "; ".join(violations),
+        )
+    return CheckResult(
+        "excluded_paths_not_tracked",
+        True,
+        f"{checked} excluded/local manifest patterns have no tracked payload files",
     )
 
 
@@ -273,6 +405,8 @@ def check_reviewer_smoke_protocol_links(root: Path) -> CheckResult:
 CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_required_paths_exist,
     check_archive_manifest_required_fields,
+    check_archive_manifest_included_paths_resolve,
+    check_excluded_paths_not_tracked,
     check_forbidden_50_state_claims,
     check_self_contained_manuscript_no_paper9_placeholder,
     check_citation_keys_resolve,
