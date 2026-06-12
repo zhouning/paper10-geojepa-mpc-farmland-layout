@@ -66,6 +66,48 @@ availability files:
 .\.venv\Scripts\python.exe scripts/paper10/preflight_submission_checks.py
 ```
 
+Generate draft integrated Dongxing Figure 4 and Figure 5 previews from tracked
+CSV source data:
+
+```powershell
+.\.venv\Scripts\python.exe scripts/paper10/plot_integrated_dongxing_figures.py
+```
+
+Use the current generic figure/table numbering freeze before manuscript
+conversion:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_integrated_figure_table_numbering_freeze_2026-06-11.md
+```
+
+Use the current no-go decision packet before creating a journal-specific
+submission manuscript:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_submission_blocker_decision_packet_2026-06-11.md
+```
+
+Use the current with-Dongxing target-venue and manuscript-conversion checklist
+before creating or formatting the final journal-specific manuscript:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_integrated_target_venue_and_manuscript_conversion_checklist_with_dongxing_2026-06-12.md
+```
+
+Use the current citation and statistical-reporting policy before final citation
+formatting, table-caption editing, or inferential wording:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md
+```
+
+Use the current CEUS reviewer-improvement packet before converting Methods,
+Discussion, Data Availability, or reviewer-response text:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_ceus_reviewer_improvement_packet_2026-06-12.md
+```
+
 ## Full Bishan Dataset Setup
 
 Place the full prepared data under the repository root:

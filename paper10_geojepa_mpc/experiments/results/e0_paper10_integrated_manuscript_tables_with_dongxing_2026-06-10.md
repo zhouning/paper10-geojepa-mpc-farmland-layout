@@ -12,6 +12,17 @@ The table package keeps the main manuscript claim bounded: Paper10 demonstrates
 monitor-gated value filtering and cross-region calibration, not robust
 Bishan-to-Dongxing transfer superiority.
 
+Current manuscript-conversion numbering is frozen in
+`e0_integrated_figure_table_numbering_freeze_2026-06-11.md`. The internal table
+numbers below are preserved for traceability; under the freeze, Dongxing
+return-label scaling is Main Table 3 and Main Figure 4, while Dongxing
+low-label transfer stress testing is Supplementary Figure S1.
+
+Current citation and statistical-reporting wording is controlled by
+`e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md`. The
+tables below report descriptive means, sample standard deviations, seeds, and
+checkpoint aggregates; they do not add formal hypothesis-test wording.
+
 ## Table 1. Bishan Monitor-Selected Training Gates
 
 **Caption.** Monitor-gated label selection for the two Bishan value-head
@@ -136,6 +147,12 @@ writing-control table for the manuscript and response package.
 It should guide abstract, conclusion, and limitation wording.
 
 ## Placement Recommendation
+
+For the current generic integrated draft, follow
+`e0_integrated_figure_table_numbering_freeze_2026-06-11.md` before journal-
+specific conversion. The freeze maps this package to Main Table 1, Main Table
+2, Main Table 3, Supplementary Table S1, Supplementary Table S2, and Internal
+Control Table C1.
 
 Main text:
 

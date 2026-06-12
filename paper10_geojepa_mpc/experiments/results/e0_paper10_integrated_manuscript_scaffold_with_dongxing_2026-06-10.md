@@ -10,6 +10,20 @@ notes; it tells the paper-level story those notes support.
 Companion table package:
 `e0_paper10_integrated_manuscript_tables_with_dongxing_2026-06-10.md`.
 
+Current figure/table conversion numbering is frozen in
+`e0_integrated_figure_table_numbering_freeze_2026-06-11.md`. Use that file for
+main-versus-supplementary placement when converting this scaffold into a
+submission manuscript.
+
+Current citation and statistical-reporting wording is controlled by
+`e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md`. Use
+that file before final reference styling, table-caption edits, or any
+inferential wording.
+
+Current CEUS reviewer-improvement controls are recorded in
+`e0_ceus_reviewer_improvement_packet_2026-06-12.md`. Use that file before
+final Methods, Discussion, Data Availability, or reviewer-response conversion.
+
 ## One-Sentence Argument
 
 In constrained farmland layout planning, we show that monitor-gated
@@ -31,6 +45,9 @@ and naive Bishan-to-Dongxing transfer are not robustly supported.
 | Bishan E0 | Main Paper10 environment and `frontier_random050` value-label evidence | Use as the primary positive validation setting. |
 | Dongxing/Neijiang | Second real county-level environment used for cross-region stress testing | Use as external-region evidence, not as a pure transfer benchmark. |
 | return-label scaling | Increasing real-environment return labels from pairwise-only to 20x16 and 50x16 in Dongxing | Use for local calibration evidence. |
+| planning-unit abstraction | Block-level/equal-unit abstraction used for current executable swaps | State as a current modeling boundary; do not imply arbitrary cadastral parcel exchange is already solved. |
+| queen contiguity | Adjacency abstraction used by the current environment for contiguity metrics | For irregular cadastral parcels, name shared-perimeter-weighted contiguity as the required extension. |
+| paired inference | Hard executable swap scheduler applied at deployment | Explain as soft training and hard inference, not as a full Constrained MDP solver. |
 
 ## Title Candidates
 
@@ -117,6 +134,16 @@ sweep, return-label generation, and low-label-budget tests.
 deviation, final slope change, contiguity change, baimu-area change, and
 checkpoint-level variability.
 
+**CEUS conversion hooks.** State that the current implementation optimizes a
+block-level planning-unit abstraction with queen-contiguity topology. For
+irregular cadastral parcel deployment, the final manuscript should identify
+area-tolerance matching, shared-perimeter-weighted contiguity, and parcel
+shape features as required extensions rather than implemented results. Also
+explain that the pipeline uses soft training and hard inference: reward/count
+penalties shape candidate rankings during training, while executable masks and
+paired inference enforce feasible swaps during rollout. Do not describe this
+as a Constrained MDP, CPO, or RCPO implementation.
+
 ### 3. Results
 
 **Result 1: Bishan monitor gate selected trainable value-label targets.**
@@ -175,6 +202,20 @@ against these simplified interpretations. The remaining limitation is that
 evidence is still two-region and descriptive; broader transfer claims require a
 pre-registered multi-region protocol.
 
+**Spatial abstraction and topology boundary.** The current evidence supports a
+block-level planning workflow, not arbitrary irregular cadastral parcel
+exchange. Queen contiguity is a computationally efficient topology for the
+implemented environment, but CEUS-facing Discussion should state that
+engineering deployment on irregular parcels requires area-tolerance matching,
+shared-perimeter-weighted contiguity, and parcel shape or compactness features.
+
+**Planning-support calibration.** The Dongxing `candidate-value-weight=1.0`
+result should be used to show that value filtering is a calibratable planner
+component. It should not be presented as a universal default. In a planning
+support system, post-training controls should be framed as constrained
+candidate filtering or planner calibration, not as unrestricted user editing
+of the learned representation.
+
 **Future route.** The next technical work should focus on candidate proposal
 design and pre-declared monitor thresholds for larger labels, plus additional
 external regions if cross-region transfer is to become a primary claim.
@@ -190,6 +231,13 @@ claim a reproducible, monitor-gated calibration workflow for real geospatial
 planning, not broad transfer superiority.
 
 ## Figure and Table Plan
+
+Numbering note: this quick source map preserves the scaffold's original
+candidate sequence. For the current submission-control numbering, use
+`e0_integrated_figure_table_numbering_freeze_2026-06-11.md`; under that freeze,
+Dongxing return-label scaling is Main Figure 4, the low-label transfer stress
+test is Supplementary Figure S1, and Dongxing return-label scaling is Main
+Table 3.
 
 | item | source artifact | manuscript role |
 |---|---|---|
@@ -213,6 +261,9 @@ planning, not broad transfer superiority.
 | Bishan-initialized transfer robustly beats Dongxing scratch adaptation. | Scratch remains higher at 50x16 and at 5/10 low-label budgets. | not supported |
 | Low-label transfer may help at moderate label budget. | Transfer exceeds scratch at 20 labels by `4.2484`, but not at 5 or 10 labels. | partially supported |
 | GeoJEPA-MPC provides a calibration workflow rather than a single fixed checkpoint. | Bishan monitor-gate selection, Dongxing planner weight sweep, return-label scaling, and low-label stress test. | supported |
+| Irregular cadastral parcel deployment is already solved. | Current implementation uses a block-level planning-unit abstraction and queen-contiguity topology. | not supported; state as limitation |
+| Soft training and hard inference are an implementation tradeoff. | Reward/count penalties guide ranking during training; executable masks and paired inference enforce feasible rollouts. | supported as method rationale |
+| Shared-perimeter-weighted contiguity was evaluated. | No current Paper10 result implements this topology. | not supported; future extension |
 
 ## Assumptions or Missing Inputs
 
@@ -225,6 +276,9 @@ planning, not broad transfer superiority.
 - The final manuscript must decide whether Dongxing belongs in the main text
   as a full Results subsection or as a shorter external-validation section with
   supplementary tables.
+- The final CEUS manuscript must add the irregular-parcel, shared-perimeter,
+  and soft-training/hard-inference limitations from
+  `e0_ceus_reviewer_improvement_packet_2026-06-12.md`.
 
 ## Why This Structure
 

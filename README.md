@@ -62,6 +62,19 @@ Paper-facing writing assets are tracked under
 - `e0_reward_and_rollout_metric_definitions_2026-06-09.md`
 - `e0_citation_and_claim_checklist_2026-06-09.md`
 - `e0_frontier_random050_figure_plan_2026-06-09.md`
+- `e0_paper10_integrated_manuscript_scaffold_with_dongxing_2026-06-10.md`
+- `e0_paper10_integrated_manuscript_tables_with_dongxing_2026-06-10.md`
+- `e0_post_dongxing_submission_gap_audit_2026-06-10.md`
+- `e0_integrated_dongxing_figure_plan_2026-06-11.md`
+- `e0_source_data_map_with_dongxing_2026-06-11.md`
+- `e0_integrated_figure_table_numbering_freeze_2026-06-11.md`
+- `e0_submission_blocker_decision_packet_2026-06-11.md`
+- `e0_integrated_target_venue_and_manuscript_conversion_checklist_with_dongxing_2026-06-12.md`
+- `e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md`
+- `e0_ceus_reviewer_improvement_packet_2026-06-12.md`
+- `e0_data_code_availability_draft_2026-06-09.md` now includes the
+  Dongxing/Neijiang prepared-data access route that must be closed before
+  submission.
 
 Verified citation assets are tracked under `references/`:
 
@@ -129,6 +142,32 @@ backfill:
 ```powershell
 .\.venv\Scripts\python.exe scripts/paper10/preflight_submission_checks.py
 ```
+
+Generate draft integrated Dongxing Figure 4 and Figure 5 previews from tracked
+CSV source data:
+
+```powershell
+.\.venv\Scripts\python.exe scripts/paper10/plot_integrated_dongxing_figures.py
+```
+
+Before manuscript conversion, use
+`paper10_geojepa_mpc/experiments/results/e0_integrated_figure_table_numbering_freeze_2026-06-11.md`
+as the current generic figure/table numbering freeze.
+Use
+`paper10_geojepa_mpc/experiments/results/e0_submission_blocker_decision_packet_2026-06-11.md`
+as the current no-go decision packet before creating a journal-specific
+submission manuscript.
+Use
+`paper10_geojepa_mpc/experiments/results/e0_integrated_target_venue_and_manuscript_conversion_checklist_with_dongxing_2026-06-12.md`
+as the current with-Dongxing target-venue and manuscript-conversion checklist.
+Use
+`paper10_geojepa_mpc/experiments/results/e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md`
+as the current citation and statistical-reporting boundary before final
+manuscript conversion.
+Use
+`paper10_geojepa_mpc/experiments/results/e0_ceus_reviewer_improvement_packet_2026-06-12.md`
+as the current CEUS reviewer-improvement packet before converting Methods,
+Discussion, Data Availability, or reviewer-response text.
 
 ## Full Experiments
 
@@ -309,6 +348,31 @@ data-route wording in public-facing docs and integrated manuscript drafts on
 same Python executable.
 
 Result: `116 passed`.
+
+After adding integrated Dongxing Figure 4/5 source-data maps, the offline
+Dongxing plotting script, Dongxing/Neijiang Data Availability route checks, and
+preflight cross-link checks on 2026-06-11, the suite was rerun again from this
+repository directory with the same Python executable.
+
+Result: `133 passed in 8.86s`.
+
+After adding the integrated figure/table numbering freeze and preflight
+cross-link check on 2026-06-11, the suite was rerun again from this repository
+directory with the same Python executable.
+
+Result: `133 passed in 9.38s`.
+
+After adding the with-Dongxing target-venue and manuscript-conversion checklist
+and preflight cross-link check on 2026-06-12, the suite was rerun again from
+this repository directory with the same Python executable.
+
+Result: `133 passed in 16.30s`.
+
+After adding the integrated citation and statistical-reporting policy and
+preflight cross-link check on 2026-06-12, the suite was rerun again from this
+repository directory with the same Python executable.
+
+Result: `133 passed in 10.78s`.
 
 Reviewers should run the relative-path command in `REPRODUCIBILITY.md` after
 cloning.

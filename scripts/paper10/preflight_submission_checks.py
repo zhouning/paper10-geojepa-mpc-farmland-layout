@@ -22,8 +22,41 @@ SELF_CONTAINED_MANUSCRIPT = (
 INTEGRATED_MANUSCRIPT = (
     RESULTS / "e0_frontier_random050_integrated_manuscript_draft_2026-06-09.md"
 )
+DATA_CODE_AVAILABILITY = RESULTS / "e0_data_code_availability_draft_2026-06-09.md"
+DATA_ACCESS_RIGHTS_REGISTER = (
+    RESULTS / "e0_data_access_and_rights_decision_register_2026-06-09.md"
+)
 SMOKE_PROTOCOL = RESULTS / "e0_reviewer_smoke_replication_protocol_2026-06-09.md"
 SMOKE_LOG = RESULTS / "e0_reviewer_smoke_verification_log_2026-06-10.md"
+INTEGRATED_DONGXING_SCAFFOLD = (
+    RESULTS / "e0_paper10_integrated_manuscript_scaffold_with_dongxing_2026-06-10.md"
+)
+INTEGRATED_DONGXING_TABLES = (
+    RESULTS / "e0_paper10_integrated_manuscript_tables_with_dongxing_2026-06-10.md"
+)
+INTEGRATED_DONGXING_FIGURE_PLAN = (
+    RESULTS / "e0_integrated_dongxing_figure_plan_2026-06-11.md"
+)
+INTEGRATED_DONGXING_SOURCE_DATA_MAP = (
+    RESULTS / "e0_source_data_map_with_dongxing_2026-06-11.md"
+)
+INTEGRATED_FIGURE_TABLE_NUMBERING_FREEZE = (
+    RESULTS / "e0_integrated_figure_table_numbering_freeze_2026-06-11.md"
+)
+SUBMISSION_BLOCKER_DECISION_PACKET = (
+    RESULTS / "e0_submission_blocker_decision_packet_2026-06-11.md"
+)
+INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST = (
+    RESULTS
+    / "e0_integrated_target_venue_and_manuscript_conversion_checklist_with_dongxing_2026-06-12.md"
+)
+INTEGRATED_CITATION_STATISTICS_POLICY = (
+    RESULTS / "e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md"
+)
+CEUS_REVIEWER_IMPROVEMENT_PACKET = (
+    RESULTS / "e0_ceus_reviewer_improvement_packet_2026-06-12.md"
+)
+DONGXING_PLOT_SCRIPT = Path("scripts") / "paper10" / "plot_integrated_dongxing_figures.py"
 
 REQUIRED_PATHS = (
     Path("README.md"),
@@ -47,9 +80,21 @@ REQUIRED_PATHS = (
     / "tool2"
     / "pairwise.npz",
     ARCHIVE_MANIFEST,
+    DATA_CODE_AVAILABILITY,
+    DATA_ACCESS_RIGHTS_REGISTER,
     SELF_CONTAINED_MANUSCRIPT,
     SMOKE_PROTOCOL,
     SMOKE_LOG,
+    INTEGRATED_DONGXING_SCAFFOLD,
+    INTEGRATED_DONGXING_TABLES,
+    INTEGRATED_DONGXING_FIGURE_PLAN,
+    INTEGRATED_DONGXING_SOURCE_DATA_MAP,
+    INTEGRATED_FIGURE_TABLE_NUMBERING_FREEZE,
+    SUBMISSION_BLOCKER_DECISION_PACKET,
+    INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST,
+    INTEGRATED_CITATION_STATISTICS_POLICY,
+    CEUS_REVIEWER_IMPROVEMENT_PACKET,
+    DONGXING_PLOT_SCRIPT,
     Path("references") / "paper10_verified_references_2026-06-09.bib",
     Path("references") / "paper10_local_sources_2026-06-09.bib",
     Path("references") / "paper10_citation_map_2026-06-09.md",
@@ -83,6 +128,19 @@ PUBLIC_VAGUE_DATA_ROUTE_PATTERN = re.compile(
     r"|personal web(?:site| link)"
     r"|drive link"
     r"|cloud link",
+    re.IGNORECASE,
+)
+
+UNSUPPORTED_INFERENTIAL_STATS_PATTERN = re.compile(
+    r"statistically significant"
+    r"|significant at"
+    r"|\bp\s*[<=>]\s*\d"
+    r"|p-value"
+    r"|p value"
+    r"|confidence interval"
+    r"|formal superiority"
+    r"|non[- ]inferiority"
+    r"|equivalence test",
     re.IGNORECASE,
 )
 
@@ -480,6 +538,608 @@ def check_reviewer_smoke_protocol_links(root: Path) -> CheckResult:
     )
 
 
+def check_integrated_dongxing_source_data_links(root: Path) -> CheckResult:
+    required_files = [
+        INTEGRATED_DONGXING_SCAFFOLD,
+        INTEGRATED_DONGXING_TABLES,
+        INTEGRATED_DONGXING_FIGURE_PLAN,
+        INTEGRATED_DONGXING_SOURCE_DATA_MAP,
+        DONGXING_PLOT_SCRIPT,
+        RESULTS / "e0_dongxing_return_label_family_summary_2026-06-10.csv",
+        RESULTS / "e0_dongxing_low_label_budget_family_summary_2026-06-10.csv",
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "integrated_dongxing_source_data_links",
+            False,
+            "missing Dongxing source-data files: " + ", ".join(missing),
+        )
+
+    figure_plan = read_text(root / INTEGRATED_DONGXING_FIGURE_PLAN)
+    source_map = read_text(root / INTEGRATED_DONGXING_SOURCE_DATA_MAP)
+    plot_script = read_text(root / DONGXING_PLOT_SCRIPT)
+    scaffold = read_text(root / INTEGRATED_DONGXING_SCAFFOLD)
+    tables = read_text(root / INTEGRATED_DONGXING_TABLES)
+
+    source_tokens = [
+        "e0_dongxing_return_label_family_summary_2026-06-10.csv",
+        "e0_dongxing_low_label_budget_family_summary_2026-06-10.csv",
+    ]
+    missing_tokens = []
+    for label, text in [
+        (str(INTEGRATED_DONGXING_FIGURE_PLAN), figure_plan),
+        (str(INTEGRATED_DONGXING_SOURCE_DATA_MAP), source_map),
+        (str(INTEGRATED_DONGXING_SCAFFOLD), scaffold),
+        (str(INTEGRATED_DONGXING_TABLES), tables),
+    ]:
+        for token in source_tokens:
+            if token not in text:
+                missing_tokens.append(f"{label}: {token}")
+
+    for label, text in [
+        (str(INTEGRATED_DONGXING_FIGURE_PLAN), figure_plan),
+        (str(INTEGRATED_DONGXING_SOURCE_DATA_MAP), source_map),
+        (str(INTEGRATED_DONGXING_SCAFFOLD), scaffold),
+    ]:
+        for token in ["Figure 4", "Figure 5"]:
+            if token not in text:
+                missing_tokens.append(f"{label}: {token}")
+
+    script_tokens = [
+        "e0_dongxing_return_label_family_summary_2026-06-10.csv",
+        "e0_dongxing_low_label_budget_family_summary_2026-06-10.csv",
+        "dongxing_return_label_scaling",
+        "dongxing_low_label_budget_stress_test",
+    ]
+    for token in script_tokens:
+        if token not in plot_script:
+            missing_tokens.append(f"{DONGXING_PLOT_SCRIPT}: {token}")
+
+    for token in [
+        INTEGRATED_DONGXING_SCAFFOLD.name,
+        INTEGRATED_DONGXING_TABLES.name,
+        str(DONGXING_PLOT_SCRIPT).replace("\\", "/"),
+        "not robustly supported",
+    ]:
+        if token not in source_map.replace("\\", "/"):
+            missing_tokens.append(f"{INTEGRATED_DONGXING_SOURCE_DATA_MAP}: {token}")
+        if token not in figure_plan.replace("\\", "/"):
+            missing_tokens.append(f"{INTEGRATED_DONGXING_FIGURE_PLAN}: {token}")
+
+    if missing_tokens:
+        return CheckResult(
+            "integrated_dongxing_source_data_links",
+            False,
+            "missing Dongxing cross-links: " + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "integrated_dongxing_source_data_links",
+        True,
+        "Dongxing figure plan, source-data map, scaffold, tables, and plotting script are cross-linked",
+    )
+
+
+def check_dongxing_data_availability_routes(root: Path) -> CheckResult:
+    required_files = [
+        DATA_CODE_AVAILABILITY,
+        DATA_ACCESS_RIGHTS_REGISTER,
+        RESULTS / "e0_dongxing_local_data_cross_region_audit_2026-06-10.md",
+        INTEGRATED_DONGXING_SOURCE_DATA_MAP,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "dongxing_data_availability_routes",
+            False,
+            "missing Dongxing availability files: " + ", ".join(missing),
+        )
+
+    availability = read_text(root / DATA_CODE_AVAILABILITY)
+    rights_register = read_text(root / DATA_ACCESS_RIGHTS_REGISTER)
+
+    required_tokens = [
+        "Dongxing/Neijiang",
+        "e0_source_data_map_with_dongxing_2026-06-11.md",
+        "e0_dongxing_return_label_family_summary_2026-06-10.csv",
+        "e0_dongxing_low_label_budget_family_summary_2026-06-10.csv",
+        "3711-block",
+        "76,376",
+        "public deposit",
+        "controlled-access",
+        "[DONGXING/NEIJIANG DATA DOI TO BE ADDED]",
+        "[DONGXING/NEIJIANG CONTROLLED-ACCESS RECORD TO BE ADDED]",
+    ]
+    missing_tokens = []
+    for label, text in [
+        (str(DATA_CODE_AVAILABILITY), availability),
+        (str(DATA_ACCESS_RIGHTS_REGISTER), rights_register),
+    ]:
+        for token in required_tokens:
+            if token not in text:
+                missing_tokens.append(f"{label}: {token}")
+
+    local_path_patterns = [
+        r"D:\\test\\neijiang_cross_region",
+        r"D:\\test\\dongxing",
+    ]
+    for pattern in local_path_patterns:
+        if re.search(pattern, availability):
+            missing_tokens.append(f"{DATA_CODE_AVAILABILITY}: public statement leaks {pattern}")
+
+    if missing_tokens:
+        return CheckResult(
+            "dongxing_data_availability_routes",
+            False,
+            "Dongxing availability route gaps: " + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "dongxing_data_availability_routes",
+        True,
+        "Data/Code Availability and rights register cover Dongxing public/control access routes",
+    )
+
+
+def check_integrated_figure_table_numbering_frozen(root: Path) -> CheckResult:
+    required_files = [
+        INTEGRATED_DONGXING_SCAFFOLD,
+        INTEGRATED_DONGXING_TABLES,
+        INTEGRATED_DONGXING_FIGURE_PLAN,
+        INTEGRATED_DONGXING_SOURCE_DATA_MAP,
+        INTEGRATED_FIGURE_TABLE_NUMBERING_FREEZE,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "integrated_figure_table_numbering_frozen",
+            False,
+            "missing integrated numbering files: " + ", ".join(missing),
+        )
+
+    freeze = read_text(root / INTEGRATED_FIGURE_TABLE_NUMBERING_FREEZE)
+    scaffold = read_text(root / INTEGRATED_DONGXING_SCAFFOLD)
+    tables = read_text(root / INTEGRATED_DONGXING_TABLES)
+    figure_plan = read_text(root / INTEGRATED_DONGXING_FIGURE_PLAN)
+    source_map = read_text(root / INTEGRATED_DONGXING_SOURCE_DATA_MAP)
+
+    freeze_tokens = [
+        "not a target-journal final layout",
+        INTEGRATED_DONGXING_SCAFFOLD.name,
+        INTEGRATED_DONGXING_TABLES.name,
+        INTEGRATED_DONGXING_FIGURE_PLAN.name,
+        INTEGRATED_DONGXING_SOURCE_DATA_MAP.name,
+        "Main Figure 1",
+        "Main Figure 2",
+        "Main Figure 3",
+        "Main Figure 4",
+        "Supplementary Figure S1",
+        "Main Table 1",
+        "Main Table 2",
+        "Main Table 3",
+        "Supplementary Table S1",
+        "Supplementary Table S2",
+        "Internal Control Table C1",
+        "failed monitor gates",
+        "do not support robust Bishan-to-Dongxing transfer superiority",
+        "e0_frontier_random050_seedwise_rewards_2026-06-09.csv",
+        "e0_frontier_random050_topk_diagnostics_2026-06-09.csv",
+        "e0_dongxing_return_label_family_summary_2026-06-10.csv",
+        "e0_dongxing_low_label_budget_family_summary_2026-06-10.csv",
+    ]
+    missing_tokens = []
+    for token in freeze_tokens:
+        if token not in freeze:
+            missing_tokens.append(f"{INTEGRATED_FIGURE_TABLE_NUMBERING_FREEZE}: {token}")
+
+    freeze_name = INTEGRATED_FIGURE_TABLE_NUMBERING_FREEZE.name
+    linked_docs = [
+        INTEGRATED_DONGXING_SCAFFOLD,
+        INTEGRATED_DONGXING_TABLES,
+        INTEGRATED_DONGXING_FIGURE_PLAN,
+        INTEGRATED_DONGXING_SOURCE_DATA_MAP,
+        Path("README.md"),
+        Path("MANIFEST.md"),
+        Path("DATA_AVAILABILITY.md"),
+        Path("REPRODUCIBILITY.md"),
+    ]
+    doc_text = {
+        str(INTEGRATED_DONGXING_SCAFFOLD): scaffold,
+        str(INTEGRATED_DONGXING_TABLES): tables,
+        str(INTEGRATED_DONGXING_FIGURE_PLAN): figure_plan,
+        str(INTEGRATED_DONGXING_SOURCE_DATA_MAP): source_map,
+    }
+    for rel_path in linked_docs:
+        path = root / rel_path
+        if not path.exists():
+            missing_tokens.append(f"{rel_path}: missing file")
+            continue
+        text = doc_text.get(str(rel_path), read_text(path))
+        if freeze_name not in text:
+            missing_tokens.append(f"{rel_path}: {freeze_name}")
+
+    for label, text in [
+        (str(INTEGRATED_DONGXING_SOURCE_DATA_MAP), source_map),
+        (str(INTEGRATED_DONGXING_FIGURE_PLAN), figure_plan),
+        (str(INTEGRATED_DONGXING_TABLES), tables),
+    ]:
+        for token in ["Main Figure 4", "Supplementary Figure S1", "Main Table 3"]:
+            if token not in text:
+                missing_tokens.append(f"{label}: {token}")
+
+    if missing_tokens:
+        return CheckResult(
+            "integrated_figure_table_numbering_frozen",
+            False,
+            "figure/table numbering freeze gaps: " + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "integrated_figure_table_numbering_frozen",
+        True,
+        "integrated main/supplementary figure and table numbering is frozen and cross-linked",
+    )
+
+
+def check_submission_blocker_decision_packet_current(root: Path) -> CheckResult:
+    required_files = [
+        SUBMISSION_BLOCKER_DECISION_PACKET,
+        RESULTS / "e0_post_dongxing_submission_gap_audit_2026-06-10.md",
+        DATA_CODE_AVAILABILITY,
+        DATA_ACCESS_RIGHTS_REGISTER,
+        INTEGRATED_FIGURE_TABLE_NUMBERING_FREEZE,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "submission_blocker_decision_packet_current",
+            False,
+            "missing submission blocker decision files: " + ", ".join(missing),
+        )
+
+    packet = read_text(root / SUBMISSION_BLOCKER_DECISION_PACKET)
+    required_tokens = [
+        "not a final manuscript",
+        "Do not submit until",
+        "Target journal and article type",
+        "Repository DOI or reviewer link",
+        "Code licence",
+        "Generated-data rights",
+        "Full Bishan Tool2 data access route",
+        "GPKG-root geospatial inputs access route",
+        "Dongxing/Neijiang prepared data access route",
+        "Citation policy",
+        "Statistical reporting policy",
+        "Current status: unresolved",
+        "Do not claim robust Bishan-to-Dongxing transfer superiority",
+        "Do not claim direct 50-state Bishan scale-up success",
+        "e0_post_dongxing_submission_gap_audit_2026-06-10.md",
+        "e0_integrated_figure_table_numbering_freeze_2026-06-11.md",
+        "e0_data_code_availability_draft_2026-06-09.md",
+        "e0_data_access_and_rights_decision_register_2026-06-09.md",
+        "e0_archive_release_and_doi_backfill_checklist_2026-06-09.md",
+        "e0_source_data_map_with_dongxing_2026-06-11.md",
+    ]
+    missing_tokens = []
+    for token in required_tokens:
+        if token not in packet:
+            missing_tokens.append(f"{SUBMISSION_BLOCKER_DECISION_PACKET}: {token}")
+
+    packet_name = SUBMISSION_BLOCKER_DECISION_PACKET.name
+    linked_docs = [
+        Path("README.md"),
+        Path("MANIFEST.md"),
+        Path("DATA_AVAILABILITY.md"),
+        Path("REPRODUCIBILITY.md"),
+        RESULTS / "e0_post_dongxing_submission_gap_audit_2026-06-10.md",
+        DATA_CODE_AVAILABILITY,
+        DATA_ACCESS_RIGHTS_REGISTER,
+        INTEGRATED_FIGURE_TABLE_NUMBERING_FREEZE,
+    ]
+    for rel_path in linked_docs:
+        path = root / rel_path
+        if not path.exists():
+            missing_tokens.append(f"{rel_path}: missing file")
+            continue
+        if packet_name not in read_text(path):
+            missing_tokens.append(f"{rel_path}: {packet_name}")
+
+    if missing_tokens:
+        return CheckResult(
+            "submission_blocker_decision_packet_current",
+            False,
+            "submission blocker decision packet gaps: " + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "submission_blocker_decision_packet_current",
+        True,
+        "submission blocker decision packet is current and cross-linked",
+    )
+
+
+def check_integrated_target_venue_conversion_checklist_current(
+    root: Path,
+) -> CheckResult:
+    required_files = [
+        INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST,
+        SUBMISSION_BLOCKER_DECISION_PACKET,
+        INTEGRATED_FIGURE_TABLE_NUMBERING_FREEZE,
+        INTEGRATED_DONGXING_SOURCE_DATA_MAP,
+        INTEGRATED_DONGXING_SCAFFOLD,
+        INTEGRATED_DONGXING_TABLES,
+        RESULTS / "e0_post_dongxing_submission_gap_audit_2026-06-10.md",
+        RESULTS / "e0_target_venue_and_manuscript_conversion_checklist_2026-06-09.md",
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "integrated_target_venue_conversion_checklist_current",
+            False,
+            "missing integrated target-venue conversion files: " + ", ".join(missing),
+        )
+
+    checklist = read_text(root / INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST)
+    required_tokens = [
+        INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST.name,
+        "Dongxing/Neijiang",
+        INTEGRATED_DONGXING_SCAFFOLD.name,
+        INTEGRATED_DONGXING_TABLES.name,
+        INTEGRATED_FIGURE_TABLE_NUMBERING_FREEZE.name,
+        SUBMISSION_BLOCKER_DECISION_PACKET.name,
+        INTEGRATED_DONGXING_SOURCE_DATA_MAP.name,
+        "Target journal and article type",
+        "Repository DOI or reviewer link",
+        "Dongxing/Neijiang prepared data access route",
+        "Do not claim robust Bishan-to-Dongxing transfer superiority",
+        "Do not claim direct 50-state Bishan scale-up success",
+        "Main Figure 4",
+        "Supplementary Figure S1",
+        "Main Table 3",
+    ]
+
+    missing_tokens = []
+    for token in required_tokens:
+        if token not in checklist:
+            missing_tokens.append(f"{INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST}: {token}")
+
+    checklist_name = INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST.name
+    linked_docs = [
+        Path("README.md"),
+        Path("MANIFEST.md"),
+        Path("DATA_AVAILABILITY.md"),
+        Path("REPRODUCIBILITY.md"),
+        SUBMISSION_BLOCKER_DECISION_PACKET,
+        INTEGRATED_FIGURE_TABLE_NUMBERING_FREEZE,
+        RESULTS / "e0_post_dongxing_submission_gap_audit_2026-06-10.md",
+        RESULTS / "e0_target_venue_and_manuscript_conversion_checklist_2026-06-09.md",
+    ]
+    for rel_path in linked_docs:
+        path = root / rel_path
+        if not path.exists():
+            missing_tokens.append(f"{rel_path}: missing file")
+            continue
+        if checklist_name not in read_text(path):
+            missing_tokens.append(f"{rel_path}: {checklist_name}")
+
+    if missing_tokens:
+        return CheckResult(
+            "integrated_target_venue_conversion_checklist_current",
+            False,
+            "integrated target-venue checklist gaps: " + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "integrated_target_venue_conversion_checklist_current",
+        True,
+        "integrated target-venue/manuscript conversion checklist is current and cross-linked",
+    )
+
+
+def check_integrated_citation_statistics_policy_current(root: Path) -> CheckResult:
+    required_files = [
+        INTEGRATED_CITATION_STATISTICS_POLICY,
+        SUBMISSION_BLOCKER_DECISION_PACKET,
+        INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST,
+        INTEGRATED_DONGXING_SCAFFOLD,
+        INTEGRATED_DONGXING_TABLES,
+        RESULTS / "e0_citation_and_claim_checklist_2026-06-09.md",
+        Path("references") / "paper10_citation_map_2026-06-09.md",
+        Path("references") / "paper10_verified_references_2026-06-09.bib",
+        Path("references") / "paper10_local_sources_2026-06-09.bib",
+        Path("references") / "paper10_paper9_local_source_status_2026-06-09.md",
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "integrated_citation_statistics_policy_current",
+            False,
+            "missing citation/statistics policy files: " + ", ".join(missing),
+        )
+
+    policy = read_text(root / INTEGRATED_CITATION_STATISTICS_POLICY)
+    required_tokens = [
+        INTEGRATED_CITATION_STATISTICS_POLICY.name,
+        "not a final reference style",
+        "not a target-journal statistical-analysis plan",
+        "references/paper10_citation_map_2026-06-09.md",
+        "references/paper10_verified_references_2026-06-09.bib",
+        "references/paper10_local_sources_2026-06-09.bib",
+        "references/paper10_paper9_local_source_status_2026-06-09.md",
+        SUBMISSION_BLOCKER_DECISION_PACKET.name,
+        INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST.name,
+        "Target journal and article type",
+        "Citation policy",
+        "Statistical reporting policy",
+        "zhou2026paper9_local",
+        "local-only",
+        "self-contained Paper10 Methods route",
+        "maes2026leworldmodel",
+        "2026 arXiv preprint",
+        "No formal hypothesis tests have been run",
+        "Do not use `statistically significant`",
+        "p-values",
+        "descriptive means",
+        "sample standard deviations",
+        "Do not claim robust Bishan-to-Dongxing transfer superiority",
+        "Do not claim direct 50-state Bishan scale-up success",
+    ]
+
+    missing_tokens = []
+    for token in required_tokens:
+        if token not in policy:
+            missing_tokens.append(f"{INTEGRATED_CITATION_STATISTICS_POLICY}: {token}")
+
+    policy_name = INTEGRATED_CITATION_STATISTICS_POLICY.name
+    linked_docs = [
+        Path("README.md"),
+        Path("MANIFEST.md"),
+        Path("REPRODUCIBILITY.md"),
+        SUBMISSION_BLOCKER_DECISION_PACKET,
+        INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST,
+        RESULTS / "e0_post_dongxing_submission_gap_audit_2026-06-10.md",
+        RESULTS / "e0_citation_and_claim_checklist_2026-06-09.md",
+        INTEGRATED_DONGXING_SCAFFOLD,
+        INTEGRATED_DONGXING_TABLES,
+        Path("references") / "paper10_citation_map_2026-06-09.md",
+    ]
+    for rel_path in linked_docs:
+        path = root / rel_path
+        if not path.exists():
+            missing_tokens.append(f"{rel_path}: missing file")
+            continue
+        if policy_name not in read_text(path):
+            missing_tokens.append(f"{rel_path}: {policy_name}")
+
+    inferential_docs = [
+        SELF_CONTAINED_MANUSCRIPT,
+        INTEGRATED_DONGXING_SCAFFOLD,
+        INTEGRATED_DONGXING_TABLES,
+    ]
+    for rel_path in inferential_docs:
+        path = root / rel_path
+        if not path.exists():
+            missing_tokens.append(f"{rel_path}: missing file")
+            continue
+        for line_no, line in enumerate(read_text(path).splitlines(), start=1):
+            match = UNSUPPORTED_INFERENTIAL_STATS_PATTERN.search(line)
+            if match:
+                missing_tokens.append(
+                    f"{rel_path}:{line_no}: unsupported inferential wording "
+                    f"{match.group(0)}"
+                )
+
+    if missing_tokens:
+        return CheckResult(
+            "integrated_citation_statistics_policy_current",
+            False,
+            "citation/statistical reporting policy gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "integrated_citation_statistics_policy_current",
+        True,
+        "citation and statistical-reporting policy is current and cross-linked",
+    )
+
+
+def check_ceus_reviewer_improvement_packet_current(root: Path) -> CheckResult:
+    required_files = [
+        CEUS_REVIEWER_IMPROVEMENT_PACKET,
+        INTEGRATED_DONGXING_SCAFFOLD,
+        INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST,
+        SUBMISSION_BLOCKER_DECISION_PACKET,
+        DATA_CODE_AVAILABILITY,
+        DATA_ACCESS_RIGHTS_REGISTER,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "ceus_reviewer_improvement_packet_current",
+            False,
+            "missing CEUS reviewer-improvement files: " + ", ".join(missing),
+        )
+
+    packet = read_text(root / CEUS_REVIEWER_IMPROVEMENT_PACKET)
+    scaffold = read_text(root / INTEGRATED_DONGXING_SCAFFOLD)
+    target_checklist = read_text(root / INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST)
+
+    packet_tokens = [
+        "CEUS Research Article candidate",
+        "Paper9 has not been formally submitted",
+        "self-contained Paper10 Methods route",
+        "D:\\test\\tool2\\transitions.npz",
+        "D:\\test\\dem_slope_analysis\\output\\DLTB_with_slope.gpkg",
+        "D:\\test\\results_real\\blocks",
+        "D:\\test\\neijiang_cross_region",
+        "area-tolerance matching",
+        "shared-perimeter-weighted contiguity",
+        "soft training and hard inference",
+        "Constrained MDP",
+        "candidate-value-weight=1.0",
+        "external optimizer baseline",
+        "No new full Bishan rerun was run in this pass",
+        "Do not claim robust Bishan-to-Dongxing transfer superiority",
+        "Do not claim direct 50-state Bishan scale-up success",
+    ]
+    scaffold_tokens = [
+        CEUS_REVIEWER_IMPROVEMENT_PACKET.name,
+        "area-tolerance matching",
+        "shared-perimeter-weighted contiguity",
+        "soft training and hard inference",
+        "candidate-value-weight=1.0",
+        "Constrained MDP, CPO, or RCPO",
+    ]
+    checklist_tokens = [
+        CEUS_REVIEWER_IMPROVEMENT_PACKET.name,
+        "CEUS Research Article candidate route",
+        "area-tolerance matching",
+        "shared-perimeter-weighted contiguity",
+        "Soft training and hard inference",
+        "candidate-value-weight=1.0",
+    ]
+
+    missing_tokens = []
+    for token in packet_tokens:
+        if token not in packet:
+            missing_tokens.append(f"{CEUS_REVIEWER_IMPROVEMENT_PACKET}: {token}")
+    for token in scaffold_tokens:
+        if token not in scaffold:
+            missing_tokens.append(f"{INTEGRATED_DONGXING_SCAFFOLD}: {token}")
+    for token in checklist_tokens:
+        if token not in target_checklist:
+            missing_tokens.append(
+                f"{INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST}: {token}"
+            )
+
+    packet_name = CEUS_REVIEWER_IMPROVEMENT_PACKET.name
+    linked_docs = [
+        Path("README.md"),
+        Path("MANIFEST.md"),
+        Path("DATA_AVAILABILITY.md"),
+        Path("REPRODUCIBILITY.md"),
+        SUBMISSION_BLOCKER_DECISION_PACKET,
+        INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST,
+        INTEGRATED_DONGXING_SCAFFOLD,
+    ]
+    for rel_path in linked_docs:
+        path = root / rel_path
+        if not path.exists():
+            missing_tokens.append(f"{rel_path}: missing file")
+            continue
+        if packet_name not in read_text(path):
+            missing_tokens.append(f"{rel_path}: {packet_name}")
+
+    if missing_tokens:
+        return CheckResult(
+            "ceus_reviewer_improvement_packet_current",
+            False,
+            "CEUS reviewer-improvement packet gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "ceus_reviewer_improvement_packet_current",
+        True,
+        "CEUS reviewer-improvement packet is current and cross-linked",
+    )
+
+
 CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_required_paths_exist,
     check_archive_manifest_required_fields,
@@ -491,6 +1151,13 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_self_contained_manuscript_no_paper9_placeholder,
     check_citation_keys_resolve,
     check_reviewer_smoke_protocol_links,
+    check_integrated_dongxing_source_data_links,
+    check_dongxing_data_availability_routes,
+    check_integrated_figure_table_numbering_frozen,
+    check_submission_blocker_decision_packet_current,
+    check_integrated_target_venue_conversion_checklist_current,
+    check_integrated_citation_statistics_policy_current,
+    check_ceus_reviewer_improvement_packet_current,
 )
 
 

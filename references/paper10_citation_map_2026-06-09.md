@@ -15,6 +15,10 @@ BibTeX file:
 - `references/paper10_local_sources_2026-06-09.bib` for local-only Paper9
   manuscript provenance
 
+Current integrated citation and statistical-reporting control file:
+
+- `paper10_geojepa_mpc/experiments/results/e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md`
+
 ## Citation policy for Paper10
 
 - Cite a source only for the specific claim it supports.

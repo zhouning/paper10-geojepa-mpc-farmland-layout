@@ -32,11 +32,43 @@ For the current figure, table, and claim-to-source-data mapping, see:
 
 ```text
 paper10_geojepa_mpc/experiments/results/e0_source_data_map_2026-06-09.md
+paper10_geojepa_mpc/experiments/results/e0_source_data_map_with_dongxing_2026-06-11.md
+```
+
+For the current generic manuscript-conversion figure/table numbering freeze,
+including main and supplementary placement for Dongxing evidence, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_integrated_figure_table_numbering_freeze_2026-06-11.md
+```
+
+For the current no-go decision packet that consolidates unresolved target
+journal, DOI/reviewer-link, licence, data-access, citation, statistics, and
+export-format blockers, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_submission_blocker_decision_packet_2026-06-11.md
+```
+
+For the current with-Dongxing target-venue and manuscript-conversion checklist,
+including section-by-section conversion actions and Data and Code Availability
+backfill fields, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_integrated_target_venue_and_manuscript_conversion_checklist_with_dongxing_2026-06-12.md
+```
+
+For the current CEUS reviewer-improvement packet, including `D:\test` local
+data discovery, full Bishan and Dongxing/Neijiang rerun feasibility, and the
+no-copy/no-redistribution boundary for full geospatial payloads, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_ceus_reviewer_improvement_packet_2026-06-12.md
 ```
 
 For the data-access and rights decision register, including full Tool2,
 GPKG-root geospatial inputs, optional GeoFM rights, code licence, generated-data
-rights, and reviewer routes, see:
+rights, Dongxing/Neijiang prepared-data access, and reviewer routes, see:
 
 ```text
 paper10_geojepa_mpc/experiments/results/e0_data_access_and_rights_decision_register_2026-06-09.md

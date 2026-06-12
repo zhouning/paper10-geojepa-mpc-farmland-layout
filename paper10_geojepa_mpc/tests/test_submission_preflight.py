@@ -30,6 +30,13 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "forbidden_50_state_claims" in payload["passed_checks"]
     assert "self_contained_manuscript_no_paper9_placeholder" in payload["passed_checks"]
     assert "reviewer_smoke_protocol_links" in payload["passed_checks"]
+    assert "integrated_dongxing_source_data_links" in payload["passed_checks"]
+    assert "dongxing_data_availability_routes" in payload["passed_checks"]
+    assert "integrated_figure_table_numbering_frozen" in payload["passed_checks"]
+    assert "submission_blocker_decision_packet_current" in payload["passed_checks"]
+    assert "integrated_target_venue_conversion_checklist_current" in payload["passed_checks"]
+    assert "integrated_citation_statistics_policy_current" in payload["passed_checks"]
+    assert "ceus_reviewer_improvement_packet_current" in payload["passed_checks"]
 
 
 def test_submission_preflight_reports_missing_required_path(tmp_path):

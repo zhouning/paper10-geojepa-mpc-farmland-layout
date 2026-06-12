@@ -9,6 +9,10 @@ embargoes, reviewer links, or publication decisions. Its purpose is to keep
 the manuscript Data and Code Availability statement, archive metadata, source
 data map, and final submission files aligned.
 
+The current no-go blocker packet for coordinating these decisions before
+manuscript conversion is
+`e0_submission_blocker_decision_packet_2026-06-11.md`.
+
 ## Scope
 
 Use this register before filling:
@@ -18,7 +22,10 @@ Use this register before filling:
 - `[REPOSITORY/DOI TO BE ADDED]`
 - `[FULL TOOL2 DOI TO BE ADDED]`
 - `[RESTRICTED-DATA ACCESS ROUTE TO BE ADDED]`
+- `[DONGXING/NEIJIANG DATA DOI TO BE ADDED]`
+- `[DONGXING/NEIJIANG CONTROLLED-ACCESS RECORD TO BE ADDED]`
 - `[PUBLIC DOI OR REVIEWER LINK TO BE ADDED]`
+- `e0_submission_blocker_decision_packet_2026-06-11.md`
 
 The current positive E0 claim remains limited to the monitor-gated
 `frontier_random050` 20x16/top5 result. The tested 50-state rows remain failed
@@ -35,13 +42,15 @@ diagnostics and do not change any data-access route.
 | Optional GeoFM asset | Included in Git under `paper7/data/`. | Optional fusion tests and ablations. | Include only if redistribution terms are confirmed; otherwise remove, replace, or document as external. | Confirm source, owner, licence, and whether it can remain in a public archive. | Optional GeoFM rights field in archive manifest; `[DATA LICENCE OR DATA RIGHTS TERMS TO BE SELECTED]` |
 | Full Bishan Tool2 data | External to Git; expected as `tool2/transitions.npz` and `tool2/pairwise.npz`. | Full-scale training and real-environment rollout reruns. | Public dataset DOI if redistribution rights exist; otherwise controlled-access repository or institutional access route. | Identify owner, repository or access body, public-versus-controlled route, reviewer access, eligibility, review criteria, and data-use terms. | `[FULL TOOL2 DOI TO BE ADDED]`; `[FULL TOOL2 CONTROLLED-ACCESS RECORD TO BE ADDED]`; `[RESTRICTED-DATA ACCESS ROUTE TO BE ADDED]` |
 | Prepared GPKG-root geospatial inputs | External to Git; expected as `dem_slope_analysis/output/DLTB_with_slope.gpkg`, `results_real/blocks/`, and `townships.json`. | Reproducible 20x16 label generation and full real-environment rollouts. | Public dataset DOI only if rights allow; otherwise controlled access with public metadata. | Identify geospatial data owner, restriction reason, access body, reviewer route, eligibility, review criteria, response expectation, and data-use agreement. | `[GPKG-ROOT DOI TO BE ADDED]`; `[RESTRICTED-DATA ACCESS ROUTE TO BE ADDED]` |
+| Dongxing/Neijiang derived summaries and source-data CSVs | Included in Git under `paper10_geojepa_mpc/experiments/results/` as Markdown and CSV result summaries, including `e0_dongxing_return_label_family_summary_2026-06-10.csv`, `e0_dongxing_low_label_budget_family_summary_2026-06-10.csv`, and `e0_source_data_map_with_dongxing_2026-06-11.md`. | Integrated manuscript tables, Figure 4 return-label scaling, Figure 5 low-label transfer stress test, and reviewer claim audit. | Public code/evidence archive with Record 1. | Select generated-output rights terms and confirm no restricted raw geospatial data are embedded beyond permitted aggregate or derived outputs. | `[DATA LICENCE OR DATA RIGHTS TERMS TO BE SELECTED]`; `[REPOSITORY/DOI TO BE ADDED]` |
+| Dongxing/Neijiang prepared data and environment files | External to Git; audited in `e0_dongxing_local_data_cross_region_audit_2026-06-10.md`; includes prepared 3711-block products, 76,376 parcel assignments, `trajectories_6k_neijiang.npz`, `pairwise_data_neijiang.npz`, slope-enriched geospatial inputs, and environment wrapper files. | Full external-region training and rollout reruns, action-space adaptation, return-label scaling, and low-label transfer stress testing. | Public dataset DOI if redistribution rights exist; otherwise controlled-access repository or institutional access route with public metadata. | Identify Dongxing/Neijiang data owner, restriction reason, repository or access body, reviewer access route, eligible requesters, review criteria, response expectation, and data-use or no-redistribution terms. | `[DONGXING/NEIJIANG DATA DOI TO BE ADDED]`; `[DONGXING/NEIJIANG CONTROLLED-ACCESS RECORD TO BE ADDED]`; `[RESTRICTED-DATA ACCESS ROUTE TO BE ADDED]` |
 | Generated figure previews and rerun outputs | Ignored under `reviewer_outputs/` unless intentionally exported. | Local visual checks and rerun previews. | Excluded by default; include only selected final exports with source-data mapping. | Decide final figure exports and whether any generated files become submitted source data. | Final figure/table numbering and source-data map fields |
 | Paper9 local manuscript source | Not a public data record; local-only status note exists. | Internal task/reward provenance during drafting only. | Do not use as public data, code, or citation route. | Replace with self-contained Paper10 Methods route unless a public Paper9 source is created and verified. | Public Paper9 citation decision |
 
 ## Required access wording fields for restricted data
 
-If full Tool2 or GPKG-root geospatial data are not public, the final manuscript
-must name:
+If full Tool2, GPKG-root geospatial data, or Dongxing/Neijiang prepared data
+are not public, the final manuscript must name:
 
 - restriction reason;
 - responsible owner or access body;
@@ -63,6 +72,7 @@ without these details.
 | Generated-output rights | A named data licence or rights statement for E0 outputs, smoke data, CSV source data, NPZ labels, and checkpoints if applicable. | Applying an open licence to third-party or restricted geospatial data without rights. |
 | Full Tool2 route | Public DOI or controlled-access record with public metadata and reviewer route. | Temporary cloud folder or informal private transfer as the final route. |
 | GPKG-root route | Public DOI or controlled-access metadata record with concrete request process. | Omitting the GPKG-root condition from Data Availability. |
+| Dongxing/Neijiang route | Public DOI or controlled-access metadata record with concrete request process and reviewer route. | Citing only local paths or derived CSVs as if they allow full external-region reruns. |
 | Optional GeoFM asset | Confirmed redistribution terms or removal/replacement before final archive. | Assuming it can be redistributed because it is small. |
 
 ## Backfill order
@@ -72,8 +82,11 @@ without these details.
 3. Select Record 1 archive platform and create DOI or reviewer link.
 4. Decide full Tool2 public deposit versus controlled access.
 5. Decide GPKG-root geospatial public deposit versus controlled access.
-6. Fill Record 2 and Record 3 metadata templates or restricted-access fields.
-7. Backfill Data and Code Availability, archive metadata, source-data map, and
+6. Decide Dongxing/Neijiang prepared-data public deposit versus controlled
+   access.
+7. Fill Record 2, Record 3, and Dongxing/Neijiang metadata templates or
+   restricted-access fields.
+8. Backfill Data and Code Availability, archive metadata, source-data map, and
    final manuscript files.
-8. Re-run archive manifest, citation, prohibited-claim, and smoke-test checks
+9. Re-run archive manifest, citation, prohibited-claim, and smoke-test checks
    from the exact submission commit.

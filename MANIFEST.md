@@ -6,9 +6,9 @@ data needed for smoke verification.
 
 ## Included
 
-- `paper10_geojepa_mpc/`: 254 non-cache files copied from the active Paper10
-  workspace, including 56 Python files, 101 JSON files, 59 Markdown files,
-  3 CSV files,
+- `paper10_geojepa_mpc/`: 288 non-cache files copied from the active Paper10
+  workspace, including 57 Python files, 101 JSON files, 85 Markdown files,
+  10 CSV files,
   9 NPZ files, 10 PyTorch checkpoint files, and 16 log files.
 - `arcgis_toolbox_paper9/private_source/`: 10 Paper9 compatibility source files
   used by Paper10's real-environment rollout and value-label workflows.
@@ -88,9 +88,9 @@ data needed for smoke verification.
   value-function, MPC, and world-model framing.
 - `paper10_geojepa_mpc/experiments/results/e0_data_code_availability_draft_2026-06-09.md`:
   manuscript-ready Data and Code Availability draft mapping included smoke
-  data, generated E0 artifacts, checkpoints, external full Bishan data, GPKG
-  reproducibility inputs, repository DOI needs, and restricted-data access
-  blockers.
+  data, generated E0 artifacts, checkpoints, external full Bishan data,
+  Dongxing/Neijiang prepared data, GPKG reproducibility inputs, repository DOI
+  needs, and restricted-data access blockers.
 - `paper10_geojepa_mpc/experiments/results/e0_submission_route_and_archive_plan_2026-06-09.md`:
   route-specific submission and archiving plan covering generic, Nature-family,
   and methods/reproducibility venue routes; code/data archive records; full
@@ -111,7 +111,8 @@ data needed for smoke verification.
 - `paper10_geojepa_mpc/experiments/results/e0_data_access_and_rights_decision_register_2026-06-09.md`:
   data-access and rights decision register for code licence, generated-output
   rights, optional GeoFM redistribution, full Tool2 access, GPKG-root
-  geospatial access, reviewer routes, and final availability backfill fields.
+  geospatial access, Dongxing/Neijiang prepared-data access, reviewer routes,
+  and final availability backfill fields.
 - `paper10_geojepa_mpc/experiments/results/e0_reviewer_smoke_replication_protocol_2026-06-09.md`:
   reviewer-oriented clone-only smoke replication protocol with command order,
   expected smoke outputs, failure interpretation, and explicit separation from
@@ -149,19 +150,66 @@ data needed for smoke verification.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_figure_plan_2026-06-09.md`:
   manuscript figure contracts, panel maps, source-data links, caption drafts,
   and review-risk notes for E0 Figures 1-3.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_integrated_manuscript_scaffold_with_dongxing_2026-06-10.md`:
+  integrated Paper10 manuscript spine that adds Dongxing/Neijiang evidence
+  while preserving the bounded transfer claim.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_integrated_manuscript_tables_with_dongxing_2026-06-10.md`:
+  manuscript-ready Bishan and Dongxing table package for the integrated
+  scaffold.
+- `paper10_geojepa_mpc/experiments/results/e0_post_dongxing_submission_gap_audit_2026-06-10.md`:
+  post-Dongxing submission blocker and reviewer-risk ledger.
+- `paper10_geojepa_mpc/experiments/results/e0_integrated_dongxing_figure_plan_2026-06-11.md`:
+  figure contract and caption-risk plan for integrated Figures 1-5.
+- `paper10_geojepa_mpc/experiments/results/e0_source_data_map_with_dongxing_2026-06-11.md`:
+  source-data map binding Dongxing Figure 4 and Figure 5 to tracked CSVs,
+  tables, and the with-Dongxing scaffold.
+- `paper10_geojepa_mpc/experiments/results/e0_integrated_figure_table_numbering_freeze_2026-06-11.md`:
+  current generic manuscript-conversion freeze for main/supplementary figure
+  and table numbering with Dongxing evidence.
+- `paper10_geojepa_mpc/experiments/results/e0_submission_blocker_decision_packet_2026-06-11.md`:
+  current no-go decision packet collecting target venue, DOI/reviewer-link,
+  licence, data-access, citation, statistics, and final export blockers before
+  journal-specific manuscript conversion.
+- `paper10_geojepa_mpc/experiments/results/e0_integrated_target_venue_and_manuscript_conversion_checklist_with_dongxing_2026-06-12.md`:
+  current with-Dongxing target-venue and manuscript-conversion checklist for
+  turning the integrated scaffold, tables, figure/table freeze, source-data
+  map, and blocker packet into a journal-specific manuscript after author
+  decisions are closed.
+- `paper10_geojepa_mpc/experiments/results/e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md`:
+  current with-Dongxing citation and statistical-reporting policy that keeps
+  local-only sources, preprints, descriptive results, and any future
+  inferential claims under explicit manuscript-conversion control.
+- `paper10_geojepa_mpc/experiments/results/e0_ceus_reviewer_improvement_packet_2026-06-12.md`:
+  current CEUS Research Article candidate-route improvement packet, including
+  reviewer concern mapping, `D:\test` local data discovery, experiment
+  feasibility decisions, and no-overclaim locks for irregular parcels,
+  contiguity topology, soft-training/hard-inference wording, and transfer
+  claims.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_seedwise_rewards_2026-06-09.csv`:
   figure-ready seed-wise reward comparison for 10x12/top4 vs 20x16/top5.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_topk_diagnostics_2026-06-09.csv`:
   figure-ready post-hoc top-k diagnostics for failed Windows 50-state labels.
+- `paper10_geojepa_mpc/experiments/results/e0_dongxing_return_label_family_summary_2026-06-10.csv`:
+  Figure 4 source data for Dongxing pairwise-only, 20x16, and 50x16
+  return-label scaling.
+- `paper10_geojepa_mpc/experiments/results/e0_dongxing_low_label_budget_family_summary_2026-06-10.csv`:
+  Figure 5 source data for Dongxing low-label transfer stress testing.
 - `scripts/paper10/plot_frontier_random050_figures.py`:
   offline plotting script for the seed-wise reward and top-k diagnostic figures;
   writes generated figure files under ignored `reviewer_outputs/` by default.
+- `scripts/paper10/plot_integrated_dongxing_figures.py`:
+  offline plotting script for integrated Dongxing Figure 4 and Figure 5
+  previews from tracked CSV source data.
 - `scripts/paper10/preflight_submission_checks.py`:
   submission preflight checker for archive manifest required fields,
   included-path resolution, excluded/local Git-tracking guardrails,
   public-facing placeholder leakage, vague data-route wording, prohibited
   50-state wording, public-manuscript Paper9 placeholder leakage,
-  citation-key resolution, and reviewer smoke protocol/log cross-links.
+  citation-key resolution, reviewer smoke protocol/log cross-links, and
+  integrated Dongxing figure/source-data, Data Availability route, and
+  figure/table numbering-freeze, blocker-decision-packet, and integrated
+  target-venue conversion-checklist, citation/statistical-reporting policy, and
+  CEUS reviewer-improvement packet cross-links.
 - `references/paper10_verified_references_2026-06-09.bib`:
   verified BibTeX entries for the first Paper10 manuscript citation pass.
 - `references/paper10_local_sources_2026-06-09.bib`:

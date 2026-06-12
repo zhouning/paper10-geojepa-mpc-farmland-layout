@@ -8,6 +8,10 @@ DOIs, or bibliography entries. It separates local evidence already packaged in
 the repository from external literature that still needs to be searched and
 verified.
 
+Current integrated citation and statistical-reporting policy:
+`e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md`.
+Use that file for the with-Dongxing manuscript-conversion route.
+
 ## One-sentence argument
 
 Paper10 can currently make a bounded E0 claim: monitor-gated

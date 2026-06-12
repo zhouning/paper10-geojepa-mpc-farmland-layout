@@ -7,3 +7,4 @@ libpysal>=4.10
 shapely>=2.0
 pandas>=2.0
 onnxruntime>=1.17
+matplotlib>=3.8

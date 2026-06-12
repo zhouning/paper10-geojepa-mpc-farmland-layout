@@ -2,6 +2,12 @@
 
 Date: 2026-06-09
 
+Current integrated route: use
+`e0_integrated_target_venue_and_manuscript_conversion_checklist_with_dongxing_2026-06-12.md`
+for the with-Dongxing manuscript-conversion pass. This 2026-06-09 file remains
+the Bishan E0-only historical checklist and should not be used alone for the
+current integrated submission package.
+
 This checklist converts the current self-contained Paper10 E0 manuscript draft
 into a target-journal submission package. It does not select a journal, assign
 DOIs, add experimental evidence, change the positive claim, or resolve data

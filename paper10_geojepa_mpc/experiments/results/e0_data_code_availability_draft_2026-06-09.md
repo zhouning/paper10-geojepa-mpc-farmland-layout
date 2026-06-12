@@ -22,10 +22,14 @@ The machine-readable archive manifest is tracked in
 `paper10_geojepa_mpc/experiments/results/e0_archive_manifest_2026-06-09.csv`.
 The current figure, table, and claim-to-source-data mapping is tracked in
 `paper10_geojepa_mpc/experiments/results/e0_source_data_map_2026-06-09.md`.
+The integrated Dongxing/Neijiang figure and source-data mapping is tracked in
+`paper10_geojepa_mpc/experiments/results/e0_source_data_map_with_dongxing_2026-06-11.md`.
 The data-access and rights decision register is tracked in
 `paper10_geojepa_mpc/experiments/results/e0_data_access_and_rights_decision_register_2026-06-09.md`.
 The archive release and DOI or reviewer-link backfill checklist is tracked in
 `paper10_geojepa_mpc/experiments/results/e0_archive_release_and_doi_backfill_checklist_2026-06-09.md`.
+The current no-go submission blocker decision packet is tracked in
+`paper10_geojepa_mpc/experiments/results/e0_submission_blocker_decision_packet_2026-06-11.md`.
 
 ## Dataset inventory and access routes
 
@@ -36,9 +40,11 @@ The archive release and DOI or reviewer-link backfill checklist is tracked in
 | Paper10 E0 generated value labels | Monitor gates, value-head training, figure/table source evidence | `paper10_geojepa_mpc/experiments/results/*.npz`; JSON/Markdown monitor outputs | public code/data repository after archive/release | included in Git; record should describe each file family |
 | Paper10 E0 checkpoints | Reproducing packaged value-head rollouts | `paper10_geojepa_mpc/experiments/checkpoints/` | public code/data repository after archive/release | included in Git; record should include model/checkpoint metadata |
 | Paper10 E0 rollout summaries and manuscript source data | Reported 10x12/top4 and 20x16/top5 metrics, 50-state boundary diagnostics, figure source data | `paper10_geojepa_mpc/experiments/results/`; figure-ready CSV files | public code/data repository after archive/release | included in Git; source-data mapping is already documented in figure/table drafts |
+| Dongxing/Neijiang generated summaries and figure source data | Cross-region calibration tables, Figure 4 return-label scaling, and Figure 5 low-label transfer stress test | `paper10_geojepa_mpc/experiments/results/e0_dongxing_*_2026-06-10.*`; `e0_dongxing_return_label_family_summary_2026-06-10.csv`; `e0_dongxing_low_label_budget_family_summary_2026-06-10.csv` | public code/data repository after archive/release | included in Git as derived source data; needs repository DOI or release URL before submission |
 | Generated figure previews | Draft visual checks | ignored `reviewer_outputs/` | not part of submitted source data unless selected | generated locally; do not cite unless exported and deposited |
 | Full Bishan Tool2 data (`tool2/transitions.npz`, `tool2/pairwise.npz`) | Full-scale training and rollout reproduction | external to Git; placement documented in `DATA_AVAILABILITY.md` and `REPRODUCIBILITY.md` | public repository or controlled/justified request, depending on authors' rights | not yet deposited; needs DOI/access route before submission |
 | Full prepared Bishan geospatial inputs, including GPKG root | Real-environment rollouts and reproducible 20x16 label generation | external to Git; expected files documented in `DATA_AVAILABILITY.md`; GPKG root required for packaged 20x16 reproduction | likely restricted or controlled/justified request if raw cadastral data cannot be redistributed | access condition must be decided before submission |
+| Dongxing/Neijiang prepared environment, transitions, pairwise labels, and geospatial inputs | External-region real-environment rollouts, 3711-block action-space adaptation, return-label scaling, and low-label stress tests | external to Git; audited in `e0_dongxing_local_data_cross_region_audit_2026-06-10.md`; includes prepared block products, `trajectories_6k_neijiang.npz`, `pairwise_data_neijiang.npz`, and slope-enriched geospatial inputs | public deposit if redistribution rights exist; otherwise controlled-access record with public metadata and reviewer route | not yet deposited; needs Dongxing/Neijiang data DOI or controlled-access route before submission |
 | Paper9 local manuscript source | Task/reward provenance during internal drafting | local `D:/test/paper9_v6.tex`; status note in `references/paper10_paper9_local_source_status_2026-06-09.md` | not a dataset; local-only manuscript source | replace or formalize before submission |
 
 ## Draft Data Availability
@@ -54,6 +60,12 @@ CSV files
 `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_seedwise_rewards_2026-06-09.csv`
 and
 `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_topk_diagnostics_2026-06-09.csv`.
+For the integrated Dongxing/Neijiang figures, the tracked source-data files are
+`paper10_geojepa_mpc/experiments/results/e0_dongxing_return_label_family_summary_2026-06-10.csv`
+and
+`paper10_geojepa_mpc/experiments/results/e0_dongxing_low_label_budget_family_summary_2026-06-10.csv`.
+These files summarize derived model-evaluation outputs and do not by
+themselves provide the prepared Dongxing/Neijiang data needed for full reruns.
 
 The full Bishan Tool2 transition and pairwise datasets are not stored directly
 in the Git repository because the binary files are approximately 1.65 GB in
@@ -74,6 +86,19 @@ because of governance, licensing, or third-party restrictions, the final
 statement should name the responsible data owner or institutional access route,
 the eligibility conditions for qualified researchers, and any data-use
 agreement required for access [RESTRICTED-DATA ACCESS ROUTE TO BE ADDED].
+
+The Dongxing/Neijiang external-region evidence depends on prepared
+cross-region data and environment files outside the Git repository, including
+3711-block prepared features, 76,376 parcel assignments, transition
+trajectories, pairwise candidate labels, block products, and slope-enriched
+geospatial inputs. The tracked repository contains derived Dongxing summaries,
+tables, and figure source data, but full Dongxing/Neijiang training and rollout
+reproduction requires a separate data record. Before submission, the authors
+should either deposit the prepared Dongxing/Neijiang data in a durable
+repository with a DOI [DONGXING/NEIJIANG DATA DOI TO BE ADDED], or provide a
+controlled-access metadata record that names the responsible data owner,
+request route, eligibility criteria, review process, reviewer access route, and
+data-use or no-redistribution terms [DONGXING/NEIJIANG CONTROLLED-ACCESS RECORD TO BE ADDED].
 
 The repository also includes a small smoke dataset under
 `arcgis_toolbox_paper9/_scratch/tool1_smoke/prepared/tool2/`. This smoke data is
@@ -112,8 +137,9 @@ Generated preview figures and rerun outputs are written under ignored
   submission needs a public DOI before initial submission, an anonymous
   reviewer link, or a controlled-access data record.
 - If journal policy requires full data access during review, deposit the full
-  `tool2/` directory and prepared GPKG-root geospatial inputs before submission
-  or provide an anonymous controlled-access reviewer route.
+  `tool2/` directory, prepared GPKG-root geospatial inputs, and
+  Dongxing/Neijiang prepared data before submission, or provide an anonymous
+  controlled-access reviewer route.
 - Add a dataset README or repository landing-page description that maps each
   file family to the manuscript results it supports.
 - Fill the archive record and dataset README fields in
@@ -123,14 +149,20 @@ Generated preview figures and rerun outputs are written under ignored
   in the public code/evidence archive, which require external records, and
   which stay excluded.
 - Use `e0_source_data_map_2026-06-09.md` as the current source-data map for
-  final archive metadata, then update it after final figure/table numbering is
-  frozen.
+  Bishan-focused archive metadata and
+  `e0_source_data_map_with_dongxing_2026-06-11.md` for integrated
+  Dongxing/Neijiang source-data mapping, then update them after final
+  figure/table numbering is frozen.
 - Use `e0_data_access_and_rights_decision_register_2026-06-09.md` to close
   code licence, generated-data rights, optional GeoFM rights, full Tool2 access,
   and GPKG-root access decisions before final wording.
 - Use `e0_archive_release_and_doi_backfill_checklist_2026-06-09.md` after
   archive release to backfill the repository DOI, reviewer link, submission
   commit hash, licences, and full-data access route consistently.
+- Use `e0_submission_blocker_decision_packet_2026-06-11.md` before manuscript
+  conversion to confirm the target venue, DOI/reviewer-link route, licences,
+  data access routes, citation policy, and statistics policy are still
+  unresolved or have been explicitly closed.
 - Add licence metadata for the code and for any shareable data. Do not apply an
   open licence to third-party or restricted cadastral/geospatial data unless
   the authors have redistribution rights.
@@ -147,7 +179,8 @@ Generated preview figures and rerun outputs are written under ignored
 | Machine-readable archive manifest | A file-family archive manifest is tracked, but final repository identifiers and licences are not assigned. | Update `e0_archive_manifest_2026-06-09.csv` if archive membership changes after venue or licence decisions. |
 | File manifest | `MANIFEST.md`, `DATA_AVAILABILITY.md`, and `REPRODUCIBILITY.md` describe included and external assets. | Align final archive file list with these documents. |
 | Figure source data | Figure-ready CSV files are tracked for seed-wise rewards and top-k diagnostics. | Confirm final figure numbers and include source-data mapping in the archive metadata. |
-| Source-data map | A claim, figure, and table source-data map is now tracked, but final journal numbering is not frozen. | Update `e0_source_data_map_2026-06-09.md` after final figure/table selection. |
+| Dongxing/Neijiang source data | Derived Dongxing summary CSVs are tracked for return-label scaling and low-label transfer stress-test figures. | Deposit or control-access the prepared Dongxing/Neijiang data needed for full reruns; include the derived CSVs in the code/evidence archive. |
+| Source-data map | Claim, figure, and table source-data maps are tracked for Bishan and integrated Dongxing routes, but final journal numbering is not frozen. | Update `e0_source_data_map_2026-06-09.md` and `e0_source_data_map_with_dongxing_2026-06-11.md` after final figure/table selection. |
 | Full raw/processed data route | Full Tool2 and prepared geospatial data are external to Git. | Decide public deposit versus controlled/justified access. |
 | Restricted-data rationale | Raw cadastral/geospatial restriction is inferred from Paper9 local-source notes and repository policy, but the responsible access body is not named. | Add the data owner, responsible institution, request route, eligibility, and data-use conditions. |
 | Licence | Repository/data licence is not fixed in this statement. | Add code licence and data licence or restriction terms. |
@@ -160,6 +193,8 @@ Generated preview figures and rerun outputs are written under ignored
   may need adjustment after venue choice.
 - Full Bishan Tool2 files and prepared GPKG-root geospatial inputs are external
   to Git; the final access route must be selected before submission.
+- Dongxing/Neijiang prepared data are external to Git; the final public deposit
+  or controlled-access route must be selected before submission.
 - If the prepared cadastral/geospatial data are restricted, the final statement
   must name the responsible owner or institutional access route rather than
   saying only "available on request."

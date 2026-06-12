@@ -7,6 +7,13 @@ Dongxing/Neijiang real-environment experiments. It is a reviewer-risk and
 close-out ledger. It does not select a journal, create a final submission file,
 assign repository identifiers, resolve data rights, or add new experiments.
 
+The current no-go decision packet for turning this audit into author decisions
+is `e0_submission_blocker_decision_packet_2026-06-11.md`.
+The current with-Dongxing target-venue and manuscript-conversion checklist is
+`e0_integrated_target_venue_and_manuscript_conversion_checklist_with_dongxing_2026-06-12.md`.
+The current citation and statistical-reporting policy is
+`e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md`.
+
 ## Source Basis
 
 - `e0_paper10_integrated_manuscript_scaffold_with_dongxing_2026-06-10.md`
@@ -19,6 +26,9 @@ assign repository identifiers, resolve data rights, or add new experiments.
 - `e0_data_code_availability_draft_2026-06-09.md`
 - `e0_data_access_and_rights_decision_register_2026-06-09.md`
 - `e0_archive_release_and_doi_backfill_checklist_2026-06-09.md`
+- `e0_submission_blocker_decision_packet_2026-06-11.md`
+- `e0_integrated_target_venue_and_manuscript_conversion_checklist_with_dongxing_2026-06-12.md`
+- `e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md`
 
 ## Updated One-Sentence Argument Under Audit
 
@@ -51,8 +61,8 @@ and naive Bishan-to-Dongxing transfer are not robustly supported.
 | Dongxing/Neijiang data route is undecided. | The external-region evidence depends on `D:\test\neijiang_cross_region` data and environment wrapper files outside the Git-tracked package. | Decide whether Dongxing prepared data can be public; otherwise define a controlled-access route and metadata record. |
 | GPKG-root geospatial access route is undecided. | Bishan label reproduction depends on the GPKG-root convention, and the prepared geospatial inputs may be restricted. | Define public deposit or controlled-access metadata for GPKG-root inputs. |
 | Code and generated-data licences are not fixed. | Archive metadata and Data Availability cannot be final without rights terms. | Select code licence and generated-output rights; confirm optional external assets. |
-| Citation policy is unresolved. | The final manuscript still needs journal-appropriate citations and must avoid local-only public citations. | Finalize verified references, decide whether 2026 arXiv sources are acceptable, and remove or formalize local-only placeholders. |
-| Statistical reporting policy is not fixed. | Current results report descriptive means and standard deviations, not hypothesis tests. | Decide whether descriptive reporting is sufficient for the target venue or whether pre-declared statistical tests are required. |
+| Citation policy is unresolved. | The final manuscript still needs journal-appropriate citations and must avoid local-only public citations. | Use `e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md`, finalize verified references, decide whether 2026 arXiv sources are acceptable, and remove or formalize local-only placeholders. |
+| Statistical reporting policy is not fixed. | Current results report descriptive means and standard deviations, not hypothesis tests. | Use `e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md` and decide whether descriptive reporting is sufficient for the target venue or whether pre-declared statistical tests are required. |
 
 ## Reviewer Risks After Dongxing
 
@@ -101,7 +111,8 @@ and naive Bishan-to-Dongxing transfer are not robustly supported.
 5. Update Data and Code Availability for Dongxing/Neijiang data access.
 6. Decide repository DOI or reviewer-link route and archive platform.
 7. Create the final journal-specific manuscript file from the integrated
-   scaffold.
+   scaffold using
+   `e0_integrated_target_venue_and_manuscript_conversion_checklist_with_dongxing_2026-06-12.md`.
 8. Run final claim, citation, source-data, data-availability, and smoke-test
    checks from the exact submission commit.
 
