@@ -185,6 +185,10 @@ data needed for smoke verification.
   feasibility decisions, and no-overclaim locks for irregular parcels,
   contiguity topology, soft-training/hard-inference wording, and transfer
   claims.
+- `paper10_geojepa_mpc/experiments/results/e0_ceus_research_article_manuscript_draft_2026-06-12.md`:
+  CEUS Research Article candidate manuscript draft converted from the
+  integrated scaffold, tables, figure/table freeze, source-data map, citation
+  and statistics policy, and CEUS reviewer-improvement packet.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_seedwise_rewards_2026-06-09.csv`:
   figure-ready seed-wise reward comparison for 10x12/top4 vs 20x16/top5.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_topk_diagnostics_2026-06-09.csv`:
@@ -205,11 +209,12 @@ data needed for smoke verification.
   included-path resolution, excluded/local Git-tracking guardrails,
   public-facing placeholder leakage, vague data-route wording, prohibited
   50-state wording, public-manuscript Paper9 placeholder leakage,
-  citation-key resolution, reviewer smoke protocol/log cross-links, and
-  integrated Dongxing figure/source-data, Data Availability route, and
-  figure/table numbering-freeze, blocker-decision-packet, and integrated
-  target-venue conversion-checklist, citation/statistical-reporting policy, and
-  CEUS reviewer-improvement packet cross-links.
+  citation-key resolution, reviewer smoke protocol/log cross-links, integrated
+  Dongxing figure/source-data, Data Availability route, figure/table
+  numbering-freeze, blocker-decision-packet, integrated target-venue
+  conversion-checklist, citation/statistical-reporting policy, CEUS
+  reviewer-improvement packet cross-links, and CEUS manuscript draft
+  constraints.
 - `references/paper10_verified_references_2026-06-09.bib`:
   verified BibTeX entries for the first Paper10 manuscript citation pass.
 - `references/paper10_local_sources_2026-06-09.bib`:

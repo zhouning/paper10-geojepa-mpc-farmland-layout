@@ -66,6 +66,14 @@ no-copy/no-redistribution boundary for full geospatial payloads, see:
 paper10_geojepa_mpc/experiments/results/e0_ceus_reviewer_improvement_packet_2026-06-12.md
 ```
 
+For the current CEUS Research Article candidate manuscript draft, including
+the draft Data and Code Availability text that still requires DOI, licence,
+and controlled-access backfill, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_ceus_research_article_manuscript_draft_2026-06-12.md
+```
+
 For the data-access and rights decision register, including full Tool2,
 GPKG-root geospatial inputs, optional GeoFM rights, code licence, generated-data
 rights, Dongxing/Neijiang prepared-data access, and reviewer routes, see:

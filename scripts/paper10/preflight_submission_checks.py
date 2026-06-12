@@ -56,6 +56,9 @@ INTEGRATED_CITATION_STATISTICS_POLICY = (
 CEUS_REVIEWER_IMPROVEMENT_PACKET = (
     RESULTS / "e0_ceus_reviewer_improvement_packet_2026-06-12.md"
 )
+CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT = (
+    RESULTS / "e0_ceus_research_article_manuscript_draft_2026-06-12.md"
+)
 DONGXING_PLOT_SCRIPT = Path("scripts") / "paper10" / "plot_integrated_dongxing_figures.py"
 
 REQUIRED_PATHS = (
@@ -94,6 +97,7 @@ REQUIRED_PATHS = (
     INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST,
     INTEGRATED_CITATION_STATISTICS_POLICY,
     CEUS_REVIEWER_IMPROVEMENT_PACKET,
+    CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT,
     DONGXING_PLOT_SCRIPT,
     Path("references") / "paper10_verified_references_2026-06-09.bib",
     Path("references") / "paper10_local_sources_2026-06-09.bib",
@@ -120,6 +124,7 @@ PUBLIC_SUBMISSION_DOCS = (
     Path("DATA_AVAILABILITY.md"),
     INTEGRATED_MANUSCRIPT,
     SELF_CONTAINED_MANUSCRIPT,
+    CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT,
 )
 
 PUBLIC_VAGUE_DATA_ROUTE_PATTERN = re.compile(
@@ -468,6 +473,33 @@ def cited_keys(text: str) -> set[str]:
     return set(re.findall(r"@([A-Za-z0-9_:-]+)", text))
 
 
+def markdown_section(text: str, heading: str) -> str:
+    lines = text.splitlines()
+    start = None
+    heading_level = len(heading) - len(heading.lstrip("#"))
+    for index, line in enumerate(lines):
+        if line.strip() == heading:
+            start = index + 1
+            break
+    if start is None:
+        return ""
+
+    end = len(lines)
+    for index in range(start, len(lines)):
+        line = lines[index]
+        if not line.startswith("#"):
+            continue
+        level = len(line) - len(line.lstrip("#"))
+        if level <= heading_level:
+            end = index
+            break
+    return "\n".join(lines[start:end]).strip()
+
+
+def markdown_word_count(text: str) -> int:
+    return len(re.findall(r"[A-Za-z0-9]+(?:[-'][A-Za-z0-9]+)?", text))
+
+
 def check_citation_keys_resolve(root: Path) -> CheckResult:
     bib_paths = [
         root / "references" / "paper10_verified_references_2026-06-09.bib",
@@ -488,6 +520,7 @@ def check_citation_keys_resolve(root: Path) -> CheckResult:
         root
         / RESULTS
         / "e0_frontier_random050_integrated_manuscript_self_contained_methods_draft_2026-06-09.md",
+        root / CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT,
         root / "references" / "paper10_citation_map_2026-06-09.md",
         root / RESULTS / "e0_citation_and_claim_checklist_2026-06-09.md",
     ]
@@ -1011,6 +1044,7 @@ def check_integrated_citation_statistics_policy_current(root: Path) -> CheckResu
         SELF_CONTAINED_MANUSCRIPT,
         INTEGRATED_DONGXING_SCAFFOLD,
         INTEGRATED_DONGXING_TABLES,
+        CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT,
     ]
     for rel_path in inferential_docs:
         path = root / rel_path
@@ -1140,6 +1174,137 @@ def check_ceus_reviewer_improvement_packet_current(root: Path) -> CheckResult:
     )
 
 
+def check_ceus_research_article_manuscript_draft_current(root: Path) -> CheckResult:
+    required_files = [
+        CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT,
+        INTEGRATED_DONGXING_SCAFFOLD,
+        INTEGRATED_DONGXING_TABLES,
+        INTEGRATED_FIGURE_TABLE_NUMBERING_FREEZE,
+        INTEGRATED_DONGXING_SOURCE_DATA_MAP,
+        INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST,
+        INTEGRATED_CITATION_STATISTICS_POLICY,
+        CEUS_REVIEWER_IMPROVEMENT_PACKET,
+        SUBMISSION_BLOCKER_DECISION_PACKET,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "ceus_research_article_manuscript_draft_current",
+            False,
+            "missing CEUS manuscript draft files: " + ", ".join(missing),
+        )
+
+    path = root / CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT
+    text = read_text(path)
+    missing_tokens = []
+
+    required_tokens = [
+        "CEUS Research Article candidate",
+        "Paper9 has not been formally submitted",
+        "self-contained Paper10 Methods route",
+        INTEGRATED_DONGXING_SCAFFOLD.name,
+        INTEGRATED_DONGXING_TABLES.name,
+        INTEGRATED_FIGURE_TABLE_NUMBERING_FREEZE.name,
+        INTEGRATED_DONGXING_SOURCE_DATA_MAP.name,
+        INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST.name,
+        INTEGRATED_CITATION_STATISTICS_POLICY.name,
+        CEUS_REVIEWER_IMPROVEMENT_PACKET.name,
+        "Title",
+        "Highlights",
+        "Abstract",
+        "Keywords",
+        "Introduction",
+        "Methods",
+        "Results",
+        "Discussion",
+        "Conclusion",
+        "Data and Code Availability",
+        "Figure and Table List",
+        "Claim-Evidence and Unresolved Blockers",
+        "block-level planning-unit abstraction",
+        "area-tolerance matching",
+        "shared-perimeter-weighted contiguity",
+        "soft training and hard inference",
+        "Constrained MDP, CPO, or RCPO",
+        "candidate-value-weight=1.0",
+        "Main Figure 4",
+        "Supplementary Figure S1",
+        "Main Table 3",
+        "Do not claim robust Bishan-to-Dongxing transfer superiority",
+        "Do not claim direct 50-state Bishan scale-up success",
+    ]
+    for token in required_tokens:
+        if token not in text:
+            missing_tokens.append(f"{CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT}: {token}")
+
+    if "@zhou2026paper9_local" in text:
+        missing_tokens.append(
+            f"{CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT}: @zhou2026paper9_local"
+        )
+
+    forbidden_50_state = re.compile("|".join(FORBIDDEN_50_STATE_PATTERNS), re.IGNORECASE)
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if forbidden_50_state.search(line):
+            missing_tokens.append(
+                f"{CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT}:{line_no}: "
+                "positive 50-state wording"
+            )
+        match = UNSUPPORTED_INFERENTIAL_STATS_PATTERN.search(line)
+        if match:
+            missing_tokens.append(
+                f"{CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT}:{line_no}: "
+                f"unsupported inferential wording {match.group(0)}"
+            )
+
+    abstract = markdown_section(text, "## Abstract")
+    abstract_words = markdown_word_count(abstract)
+    if not abstract:
+        missing_tokens.append(
+            f"{CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT}: missing ## Abstract section"
+        )
+    elif abstract_words > 250:
+        missing_tokens.append(
+            f"{CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT}: abstract has "
+            f"{abstract_words} words"
+        )
+
+    highlights = [
+        line[2:].strip()
+        for line in markdown_section(text, "## Highlights").splitlines()
+        if line.startswith("- ")
+    ]
+    if not 3 <= len(highlights) <= 5:
+        missing_tokens.append(
+            f"{CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT}: "
+            f"{len(highlights)} highlight bullets"
+        )
+    long_highlights = [
+        item
+        for item in highlights
+        if len(item) > 85
+    ]
+    if long_highlights:
+        missing_tokens.append(
+            f"{CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT}: highlights over 85 chars: "
+            + " | ".join(long_highlights)
+        )
+
+    if missing_tokens:
+        return CheckResult(
+            "ceus_research_article_manuscript_draft_current",
+            False,
+            "CEUS manuscript draft gaps: " + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "ceus_research_article_manuscript_draft_current",
+        True,
+        (
+            "CEUS manuscript draft is current, abstract/highlights fit limits, "
+            "and claim boundaries are guarded"
+        ),
+    )
+
+
 CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_required_paths_exist,
     check_archive_manifest_required_fields,
@@ -1158,6 +1323,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_integrated_target_venue_conversion_checklist_current,
     check_integrated_citation_statistics_policy_current,
     check_ceus_reviewer_improvement_packet_current,
+    check_ceus_research_article_manuscript_draft_current,
 )
 
 

@@ -108,6 +108,13 @@ Discussion, Data Availability, or reviewer-response text:
 paper10_geojepa_mpc/experiments/results/e0_ceus_reviewer_improvement_packet_2026-06-12.md
 ```
 
+Use the current CEUS Research Article candidate manuscript draft after checking
+the blocker packet and CEUS reviewer-improvement packet:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_ceus_research_article_manuscript_draft_2026-06-12.md
+```
+
 ## Full Bishan Dataset Setup
 
 Place the full prepared data under the repository root:

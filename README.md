@@ -72,6 +72,7 @@ Paper-facing writing assets are tracked under
 - `e0_integrated_target_venue_and_manuscript_conversion_checklist_with_dongxing_2026-06-12.md`
 - `e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md`
 - `e0_ceus_reviewer_improvement_packet_2026-06-12.md`
+- `e0_ceus_research_article_manuscript_draft_2026-06-12.md`
 - `e0_data_code_availability_draft_2026-06-09.md` now includes the
   Dongxing/Neijiang prepared-data access route that must be closed before
   submission.
@@ -168,6 +169,12 @@ Use
 `paper10_geojepa_mpc/experiments/results/e0_ceus_reviewer_improvement_packet_2026-06-12.md`
 as the current CEUS reviewer-improvement packet before converting Methods,
 Discussion, Data Availability, or reviewer-response text.
+Use
+`paper10_geojepa_mpc/experiments/results/e0_ceus_research_article_manuscript_draft_2026-06-12.md`
+as the current CEUS Research Article candidate manuscript draft. It remains
+blocked for final submission until repository identifiers, licences, full-data
+routes, citation policy, statistical policy, and final figure exports are
+closed.
 
 ## Full Experiments
 
