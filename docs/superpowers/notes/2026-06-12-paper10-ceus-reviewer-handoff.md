@@ -70,22 +70,28 @@ git diff --check
 
 Results:
 
-- `133 passed in 66.27s`
+- `133 passed` in the final pre-commit verification
 - `Paper10 preflight: PASS`, 17 checks including
   `ceus_reviewer_improvement_packet_current`
 - `git diff --check` exit code 0; only LF/CRLF warnings were reported
 
 ## Current Git State
 
-There are many modified and untracked files from the broader Paper10 submission
-work. Do not revert them. The key new file from this session is:
+The CEUS/Dongxing submission-control work was committed and pushed to GitHub:
 
 ```text
-paper10_geojepa_mpc/experiments/results/e0_ceus_reviewer_improvement_packet_2026-06-12.md
+0281cef docs: add CEUS reviewer submission controls
+origin/main
 ```
 
-Previously created untracked integrated Dongxing/control files are still
-untracked and required by current preflight checks.
+After that push, `git status --short --branch` reported:
+
+```text
+## main...origin/main
+```
+
+This means the working tree was clean and local `main` was synchronized with
+`origin/main` before this handoff note update.
 
 ## Suggested Next Step
 
