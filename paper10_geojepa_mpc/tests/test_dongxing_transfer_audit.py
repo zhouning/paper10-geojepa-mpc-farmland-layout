@@ -62,9 +62,11 @@ def test_normalize_family_rows_accepts_compact_schema():
                 "episodes": "15",
                 "mean_reward": "48.5",
                 "reward_sd": "11.0",
-                "slope_pct_mean": "-0.25",
-                "cont_mean": "0.023",
-                "baimu_ha_mean": "210.0",
+                "mean_slope_change_pct": "-0.25",
+                "mean_contiguity_change": "0.023",
+                "mean_baimu_area_change_ha": "210.0",
+                "checkpoint_mean_reward_sd": "3.2",
+                "checkpoint_mean_rewards": "50.0;47.0",
             }
         ],
         source="compact.csv",
@@ -271,6 +273,45 @@ def test_audit_dongxing_transfer_rejects_conflicting_duplicates(tmp_path):
 
     with pytest.raises(ValueError, match="Conflicting duplicate rows.*return_50x16_h5.*transfer"):
         audit_dongxing_transfer([family_csv], [], out_csv, out_md)
+
+
+def test_build_comparisons_rejects_conflicting_duplicates_when_called_directly():
+    row = {
+        "source": "manual.csv",
+        "comparison_key": "return_50x16_h5",
+        "label_type": "return_50x16_h5",
+        "label_budget": "",
+        "family": "transfer",
+        "episodes": 15,
+        "reward_mean": 51.0,
+        "reward_sd": 18.0,
+        "slope_pct_mean": -0.29,
+        "cont_mean": 0.020,
+        "baimu_ha_mean": 107.0,
+    }
+    conflicting = row.copy()
+    conflicting["reward_mean"] = 52.0
+
+    with pytest.raises(ValueError, match="Conflicting duplicate rows.*return_50x16_h5.*transfer"):
+        build_comparisons(
+            [
+                row,
+                conflicting,
+                {
+                    "source": "manual.csv",
+                    "comparison_key": "return_50x16_h5",
+                    "label_type": "return_50x16_h5",
+                    "label_budget": "",
+                    "family": "scratch",
+                    "episodes": 15,
+                    "reward_mean": 55.0,
+                    "reward_sd": 20.0,
+                    "slope_pct_mean": -0.26,
+                    "cont_mean": 0.024,
+                    "baimu_ha_mean": 262.0,
+                },
+            ]
+        )
 
 
 def test_build_comparisons_orders_low_budgets_numerically():

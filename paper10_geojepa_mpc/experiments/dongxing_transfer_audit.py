@@ -26,6 +26,13 @@ def _duplicate_payload(row: dict) -> dict:
     return {key: value for key, value in row.items() if key != "source"}
 
 
+def _first_present(row: dict[str, str], keys: tuple[str, ...]) -> str:
+    for key in keys:
+        if key in row:
+            return key
+    return keys[0]
+
+
 def normalize_family_rows(rows: Iterable[dict[str, str]], source: str) -> list[dict]:
     normalized = []
     for row in rows:
@@ -40,9 +47,9 @@ def normalize_family_rows(rows: Iterable[dict[str, str]], source: str) -> list[d
             family_key = "family"
             episodes_key = "episodes"
             reward_mean_key = "mean_reward"
-            slope_key = "slope_pct_mean"
-            cont_key = "cont_mean"
-            baimu_key = "baimu_ha_mean"
+            slope_key = _first_present(row, ("mean_slope_change_pct", "slope_pct_mean"))
+            cont_key = _first_present(row, ("mean_contiguity_change", "cont_mean"))
+            baimu_key = _first_present(row, ("mean_baimu_area_change_ha", "baimu_ha_mean"))
         normalized.append(
             {
                 "source": source,
@@ -116,6 +123,7 @@ def _comparison_sort_key(key: str) -> tuple[int, int | str]:
 
 
 def build_comparisons(rows: list[dict]) -> list[dict]:
+    rows = _deduplicate(rows)
     by_key: dict[str, dict[str, dict]] = {}
     for row in rows:
         by_key.setdefault(row["comparison_key"], {})[row["family"]] = row
