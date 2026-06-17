@@ -1337,6 +1337,7 @@ ORIGINAL_VISION_NEGATIVE_GUARDRAIL = re.compile(
     r")\b",
     re.IGNORECASE,
 )
+ORIGINAL_VISION_CLAUSE_SPLIT_PATTERN = re.compile(r"[;.!?]+")
 ORIGINAL_VISION_PROHIBITED_CLAIM_TARGETS = (
     re.compile(
         r"\bdirect\b.{0,80}\b50[- ]state\b.{0,80}\bbishan\b.{0,80}\bsuccess\b"
@@ -1358,14 +1359,22 @@ ORIGINAL_VISION_PROHIBITED_CLAIM_TARGETS = (
 
 
 def is_original_vision_positive_claim(line: str) -> bool:
-    if ORIGINAL_VISION_NEGATIVE_GUARDRAIL.search(line):
-        return False
-    if not ORIGINAL_VISION_POSITIVE_CLAIM_CUE.search(line):
-        return False
-    return any(
-        target.search(line)
-        for target in ORIGINAL_VISION_PROHIBITED_CLAIM_TARGETS
-    )
+    for clause in (
+        clause.strip()
+        for clause in ORIGINAL_VISION_CLAUSE_SPLIT_PATTERN.split(line)
+    ):
+        if not clause:
+            continue
+        if ORIGINAL_VISION_NEGATIVE_GUARDRAIL.search(clause):
+            continue
+        if not ORIGINAL_VISION_POSITIVE_CLAIM_CUE.search(clause):
+            continue
+        if any(
+            target.search(clause)
+            for target in ORIGINAL_VISION_PROHIBITED_CLAIM_TARGETS
+        ):
+            return True
+    return False
 
 
 def check_original_vision_validation_registry_current(root: Path) -> CheckResult:

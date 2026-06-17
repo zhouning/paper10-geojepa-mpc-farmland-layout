@@ -153,6 +153,24 @@ def test_original_vision_validation_registry_allows_negative_guardrails(tmp_path
     )
 
 
+def test_original_vision_validation_registry_rejects_mixed_clause_claims(tmp_path):
+    write_original_vision_files(
+        tmp_path,
+        "Do not claim direct 50-state Bishan success; this experiment demonstrates direct 50-state Bishan success.",
+        "Current evidence is not sufficient to claim strong 50-state scale-up.",
+    )
+
+    result = check_original_vision_validation_registry_current(tmp_path)
+
+    assert result.name == "original_vision_validation_registry_current"
+    assert result.ok is False
+    assert "forbidden validation wording" in result.details
+    assert (
+        "Do not claim direct 50-state Bishan success; this experiment demonstrates direct 50-state Bishan success."
+        in result.details
+    )
+
+
 def test_submission_preflight_reports_missing_included_archive_manifest_path(tmp_path):
     fixture = tmp_path / "repo"
     manifest_dir = fixture / "paper10_geojepa_mpc" / "experiments" / "results"
