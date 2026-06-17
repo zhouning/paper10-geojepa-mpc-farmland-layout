@@ -60,6 +60,15 @@ CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT = (
     RESULTS / "e0_ceus_research_article_manuscript_draft_2026-06-12.md"
 )
 DONGXING_PLOT_SCRIPT = Path("scripts") / "paper10" / "plot_integrated_dongxing_figures.py"
+ORIGINAL_VISION_DESIGN = (
+    Path("docs")
+    / "superpowers"
+    / "specs"
+    / "2026-06-17-paper10-original-vision-validation-design.md"
+)
+ORIGINAL_VISION_REGISTRY = (
+    RESULTS / "e0_original_vision_validation_registry_2026-06-17.md"
+)
 
 REQUIRED_PATHS = (
     Path("README.md"),
@@ -1341,7 +1350,8 @@ ORIGINAL_VISION_CLAUSE_SPLIT_PATTERN = re.compile(r"[;.!?]+")
 ORIGINAL_VISION_PROHIBITED_CLAIM_TARGETS = (
     re.compile(
         r"\bdirect\b.{0,80}\b50[- ]state\b.{0,80}\bbishan\b.{0,80}\bsuccess\b"
-        r"|\b50[- ]state\b.{0,80}\bbishan\b.{0,80}\bsuccess\b",
+        r"|\b50[- ]state\b.{0,80}\bbishan\b.{0,80}\bsuccess\b"
+        r"|\bdirect\b.{0,80}\b50[- ]state\b.{0,80}\bsuccess\b",
         re.IGNORECASE,
     ),
     re.compile(
@@ -1379,16 +1389,8 @@ def is_original_vision_positive_claim(line: str) -> bool:
 
 def check_original_vision_validation_registry_current(root: Path) -> CheckResult:
     paths = [
-        root
-        / "docs"
-        / "superpowers"
-        / "specs"
-        / "2026-06-17-paper10-original-vision-validation-design.md",
-        root
-        / "paper10_geojepa_mpc"
-        / "experiments"
-        / "results"
-        / "e0_original_vision_validation_registry_2026-06-17.md",
+        root / ORIGINAL_VISION_DESIGN,
+        root / ORIGINAL_VISION_REGISTRY,
     ]
     missing = [path for path in paths if not path.exists()]
     if missing:
@@ -1410,6 +1412,21 @@ def check_original_vision_validation_registry_current(root: Path) -> CheckResult
             "original_vision_validation_registry_current",
             False,
             "forbidden validation wording: " + " | ".join(hits),
+        )
+
+    registry_text = read_text(root / ORIGINAL_VISION_REGISTRY)
+    required_reference = ORIGINAL_VISION_DESIGN.as_posix()
+    if required_reference not in registry_text:
+        return CheckResult(
+            "original_vision_validation_registry_current",
+            False,
+            "missing registry design-spec reference: " + required_reference,
+        )
+    if "## Claim Lock" not in registry_text:
+        return CheckResult(
+            "original_vision_validation_registry_current",
+            False,
+            "missing registry section: ## Claim Lock",
         )
 
     return CheckResult(

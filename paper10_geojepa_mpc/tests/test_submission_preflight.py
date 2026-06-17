@@ -1,4 +1,5 @@
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -30,7 +31,60 @@ def write_original_vision_files(root: Path, design: str, registry: str) -> None:
     design_path.parent.mkdir(parents=True)
     registry_path.parent.mkdir(parents=True)
     design_path.write_text(design, encoding="utf-8")
-    registry_path.write_text(registry, encoding="utf-8")
+    registry_path.write_text(
+        "\n".join(
+            [
+                registry,
+                "",
+                "## Design Spec",
+                "",
+                f"- `{ORIGINAL_VISION_DESIGN.as_posix()}`",
+                "",
+                "## Claim Lock",
+                "",
+                "Current evidence is not sufficient to claim strong 50-state scale-up.",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+
+def copy_tracked_repository(tmp_path: Path) -> Path:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    result = subprocess.run(
+        ["git", "ls-files", "-z"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+    )
+    for raw_path in result.stdout.split(b"\0"):
+        if not raw_path:
+            continue
+        rel_path = Path(raw_path.decode("utf-8"))
+        source = ROOT / rel_path
+        destination = repo / rel_path
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, destination)
+    return repo
+
+
+def run_submission_preflight_json(root: Path) -> tuple[subprocess.CompletedProcess, dict]:
+    result = subprocess.run(
+        [sys.executable, str(SCRIPT), "--root", str(root), "--json"],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    return result, json.loads(result.stdout)
+
+
+def check_details(payload: dict, name: str) -> str:
+    return {
+        item["name"]: item["details"]
+        for item in payload["checks"]
+    }[name]
 
 
 def test_submission_preflight_cli_passes_current_repository():
@@ -84,6 +138,39 @@ def test_submission_preflight_reports_missing_required_path(tmp_path):
     assert "required_paths_exist" in payload["failed_checks"]
 
 
+def test_submission_preflight_copied_repository_reports_missing_original_vision_registry(tmp_path):
+    fixture = copy_tracked_repository(tmp_path)
+    (fixture / ORIGINAL_VISION_REGISTRY).unlink()
+
+    result, payload = run_submission_preflight_json(fixture)
+
+    assert result.returncode == 1
+    assert payload["ok"] is False
+    assert "original_vision_validation_registry_current" in payload["failed_checks"]
+    details = check_details(payload, "original_vision_validation_registry_current")
+    assert "missing:" in details
+    assert str(ORIGINAL_VISION_REGISTRY) in details
+
+
+def test_submission_preflight_copied_repository_rejects_original_vision_registry_positive_claim(tmp_path):
+    fixture = copy_tracked_repository(tmp_path)
+    registry = fixture / ORIGINAL_VISION_REGISTRY
+    registry.write_text(
+        registry.read_text(encoding="utf-8")
+        + "\n\ndirect 50-state success is confirmed\n",
+        encoding="utf-8",
+    )
+
+    result, payload = run_submission_preflight_json(fixture)
+
+    assert result.returncode == 1
+    assert payload["ok"] is False
+    assert "original_vision_validation_registry_current" in payload["failed_checks"]
+    details = check_details(payload, "original_vision_validation_registry_current")
+    assert "forbidden validation wording" in details
+    assert "direct 50-state success is confirmed" in details
+
+
 def test_repository_docs_reference_submission_preflight_command():
     command = "scripts/paper10/preflight_submission_checks.py"
     docs = [
@@ -134,6 +221,40 @@ def test_original_vision_validation_registry_rejects_positive_claims(tmp_path):
         "Robust Bishan-to-Dongxing transfer superiority is supported."
         in result.details
     )
+
+
+def test_original_vision_validation_registry_requires_design_spec_reference(tmp_path):
+    design_path = tmp_path / ORIGINAL_VISION_DESIGN
+    registry_path = tmp_path / ORIGINAL_VISION_REGISTRY
+    design_path.parent.mkdir(parents=True)
+    registry_path.parent.mkdir(parents=True)
+    design_path.write_text("Current evidence is not sufficient.", encoding="utf-8")
+    registry_path.write_text("## Claim Lock\n", encoding="utf-8")
+
+    result = check_original_vision_validation_registry_current(tmp_path)
+
+    assert result.name == "original_vision_validation_registry_current"
+    assert result.ok is False
+    assert "missing registry design-spec reference" in result.details
+    assert ORIGINAL_VISION_DESIGN.as_posix() in result.details
+
+
+def test_original_vision_validation_registry_requires_claim_lock(tmp_path):
+    design_path = tmp_path / ORIGINAL_VISION_DESIGN
+    registry_path = tmp_path / ORIGINAL_VISION_REGISTRY
+    design_path.parent.mkdir(parents=True)
+    registry_path.parent.mkdir(parents=True)
+    design_path.write_text("Current evidence is not sufficient.", encoding="utf-8")
+    registry_path.write_text(
+        f"`{ORIGINAL_VISION_DESIGN.as_posix()}`\n",
+        encoding="utf-8",
+    )
+
+    result = check_original_vision_validation_registry_current(tmp_path)
+
+    assert result.name == "original_vision_validation_registry_current"
+    assert result.ok is False
+    assert "missing registry section: ## Claim Lock" in result.details
 
 
 def test_original_vision_validation_registry_allows_negative_guardrails(tmp_path):
