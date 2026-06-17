@@ -187,7 +187,7 @@ def summarize_ablation(
     summary_json = Path(summary_json)
     output_json = Path(output_json)
     output_md = Path(output_md)
-    source = json.loads(summary_json.read_text(encoding="utf-8"))
+    source = json.loads(summary_json.read_text(encoding="utf-8-sig"))
     rows = [classify_run(run) for run in source.get("runs", [])]
     payload = {
         "source_summary": str(summary_json),

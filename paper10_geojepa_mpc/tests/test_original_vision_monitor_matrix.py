@@ -175,3 +175,37 @@ def test_summarize_ablation_accepts_flat_runner_rows(tmp_path):
     assert payload["decision_counts"] == {"pass": 1, "near_pass": 0, "fail": 0}
     assert output_json.exists()
     assert output_md.exists()
+
+
+def test_summarize_ablation_accepts_utf8_bom_runner_summary(tmp_path):
+    summary_path = tmp_path / "summary.json"
+    output_json = tmp_path / "matrix.json"
+    output_md = tmp_path / "matrix.md"
+    summary_path.write_text(
+        json.dumps(
+            {
+                "run_root": str(tmp_path),
+                "gate_topks": [6],
+                "runs": [
+                    {
+                        "run_name": "frontier_random050_50x16_h5_seed47_f050",
+                        "n_states": 50,
+                        "candidate_actions": 16,
+                        "label_horizon": 5,
+                        "frontier_fraction": 0.5,
+                        "label_seed": 47,
+                        "monitors": [
+                            _flat_monitor(6, "continue", 0.20, 0.55, 0.30),
+                        ],
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8-sig",
+    )
+
+    payload = summarize_ablation(summary_path, output_json, output_md)
+
+    assert payload["decision_counts"] == {"pass": 1, "near_pass": 0, "fail": 0}
+    assert output_json.exists()
+    assert output_md.exists()
