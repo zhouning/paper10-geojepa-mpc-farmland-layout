@@ -1,27 +1,99 @@
 import json
-import shutil
 import subprocess
 import sys
 from pathlib import Path
 
 from scripts.paper10.preflight_submission_checks import (
+    ARCHIVE_MANIFEST,
+    CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT,
+    CEUS_REVIEWER_IMPROVEMENT_PACKET,
     check_original_vision_validation_registry_current,
+    DATA_ACCESS_RIGHTS_REGISTER,
+    DATA_CODE_AVAILABILITY,
+    DONGXING_PLOT_SCRIPT,
+    INTEGRATED_CITATION_STATISTICS_POLICY,
+    INTEGRATED_DONGXING_FIGURE_PLAN,
+    INTEGRATED_DONGXING_SCAFFOLD,
+    INTEGRATED_DONGXING_SOURCE_DATA_MAP,
+    INTEGRATED_DONGXING_TABLES,
+    INTEGRATED_FIGURE_TABLE_NUMBERING_FREEZE,
+    INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST,
+    ORIGINAL_VISION_DESIGN,
+    ORIGINAL_VISION_REGISTRY,
+    RESULTS,
+    SELF_CONTAINED_MANUSCRIPT,
+    SMOKE_LOG,
+    SMOKE_PROTOCOL,
+    SUBMISSION_BLOCKER_DECISION_PACKET,
 )
 
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts" / "paper10" / "preflight_submission_checks.py"
-ORIGINAL_VISION_DESIGN = (
-    Path("docs")
-    / "superpowers"
-    / "specs"
-    / "2026-06-17-paper10-original-vision-validation-design.md"
+MINIMAL_PREFLIGHT_FIXTURE_FILES = (
+    Path("README.md"),
+    Path("REPRODUCIBILITY.md"),
+    Path("MANIFEST.md"),
+    Path("DATA_AVAILABILITY.md"),
+    Path("requirements.txt"),
+    Path("county_env.py"),
+    ARCHIVE_MANIFEST,
+    DATA_CODE_AVAILABILITY,
+    DATA_ACCESS_RIGHTS_REGISTER,
+    SELF_CONTAINED_MANUSCRIPT,
+    RESULTS / "e0_frontier_random050_integrated_manuscript_draft_2026-06-09.md",
+    SMOKE_PROTOCOL,
+    SMOKE_LOG,
+    INTEGRATED_DONGXING_SCAFFOLD,
+    INTEGRATED_DONGXING_TABLES,
+    INTEGRATED_DONGXING_FIGURE_PLAN,
+    INTEGRATED_DONGXING_SOURCE_DATA_MAP,
+    INTEGRATED_FIGURE_TABLE_NUMBERING_FREEZE,
+    SUBMISSION_BLOCKER_DECISION_PACKET,
+    INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST,
+    INTEGRATED_CITATION_STATISTICS_POLICY,
+    CEUS_REVIEWER_IMPROVEMENT_PACKET,
+    CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT,
+    DONGXING_PLOT_SCRIPT,
+    ORIGINAL_VISION_DESIGN,
+    ORIGINAL_VISION_REGISTRY,
+    RESULTS / "e0_archive_release_and_doi_backfill_checklist_2026-06-09.md",
+    RESULTS / "e0_submission_readiness_checklist_2026-06-09.md",
+    RESULTS / "e0_dongxing_return_label_family_summary_2026-06-10.csv",
+    RESULTS / "e0_dongxing_low_label_budget_family_summary_2026-06-10.csv",
+    RESULTS / "e0_dongxing_local_data_cross_region_audit_2026-06-10.md",
+    RESULTS / "e0_post_dongxing_submission_gap_audit_2026-06-10.md",
+    RESULTS / "e0_target_venue_and_manuscript_conversion_checklist_2026-06-09.md",
+    RESULTS / "e0_citation_and_claim_checklist_2026-06-09.md",
+    Path("references") / "paper10_verified_references_2026-06-09.bib",
+    Path("references") / "paper10_local_sources_2026-06-09.bib",
+    Path("references") / "paper10_citation_map_2026-06-09.md",
+    Path("references") / "paper10_paper9_local_source_status_2026-06-09.md",
 )
-ORIGINAL_VISION_REGISTRY = (
-    Path("paper10_geojepa_mpc")
-    / "experiments"
-    / "results"
-    / "e0_original_vision_validation_registry_2026-06-17.md"
+
+MINIMAL_PREFLIGHT_FIXTURE_EMPTY_PATHS = (
+    Path("arcgis_toolbox_paper9") / "private_source" / ".keep",
+    Path("arcgis_toolbox_paper9")
+    / "_scratch"
+    / "tool1_smoke"
+    / "prepared"
+    / "tool2"
+    / "transitions.npz",
+    Path("arcgis_toolbox_paper9")
+    / "_scratch"
+    / "tool1_smoke"
+    / "prepared"
+    / "tool2"
+    / "pairwise.npz",
+    Path("notebooks") / "paper10_frontier_random050_50x24_h5_colab.ipynb",
+    Path("paper7") / "data" / "block_geofm_embeddings.npy",
+    Path("paper7") / "data" / "geofm_metadata.json",
+    Path("paper10_geojepa_mpc") / "__init__.py",
+    Path("paper10_geojepa_mpc") / "minimal_fixture.py",
+    RESULTS / "minimal_fixture.json",
+    RESULTS / "minimal_fixture.npz",
+    RESULTS / "minimal_fixture.log",
+    Path("paper10_geojepa_mpc") / "experiments" / "checkpoints" / ".keep",
 )
 
 
@@ -49,23 +121,24 @@ def write_original_vision_files(root: Path, design: str, registry: str) -> None:
     )
 
 
-def copy_tracked_repository(tmp_path: Path) -> Path:
+def copy_minimal_preflight_fixture(tmp_path: Path) -> Path:
     repo = tmp_path / "repo"
     repo.mkdir()
-    result = subprocess.run(
-        ["git", "ls-files", "-z"],
-        cwd=ROOT,
-        check=True,
-        capture_output=True,
-    )
-    for raw_path in result.stdout.split(b"\0"):
-        if not raw_path:
-            continue
-        rel_path = Path(raw_path.decode("utf-8"))
+    copied_paths = []
+    for rel_path in MINIMAL_PREFLIGHT_FIXTURE_FILES:
         source = ROOT / rel_path
         destination = repo / rel_path
         destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, destination)
+        destination.write_bytes(source.read_bytes())
+        copied_paths.append(rel_path.as_posix())
+    for rel_path in MINIMAL_PREFLIGHT_FIXTURE_EMPTY_PATHS:
+        destination = repo / rel_path
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(b"")
+        copied_paths.append(rel_path.as_posix())
+
+    subprocess.run(["git", "init"], cwd=repo, check=True, capture_output=True, text=True)
+    subprocess.run(["git", "add", *copied_paths], cwd=repo, check=True, capture_output=True, text=True)
     return repo
 
 
@@ -138,8 +211,8 @@ def test_submission_preflight_reports_missing_required_path(tmp_path):
     assert "required_paths_exist" in payload["failed_checks"]
 
 
-def test_submission_preflight_copied_repository_reports_missing_original_vision_registry(tmp_path):
-    fixture = copy_tracked_repository(tmp_path)
+def test_submission_preflight_minimal_fixture_reports_missing_original_vision_registry(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
     (fixture / ORIGINAL_VISION_REGISTRY).unlink()
 
     result, payload = run_submission_preflight_json(fixture)
@@ -152,8 +225,8 @@ def test_submission_preflight_copied_repository_reports_missing_original_vision_
     assert str(ORIGINAL_VISION_REGISTRY) in details
 
 
-def test_submission_preflight_copied_repository_rejects_original_vision_registry_positive_claim(tmp_path):
-    fixture = copy_tracked_repository(tmp_path)
+def test_submission_preflight_minimal_fixture_rejects_original_vision_registry_positive_claim(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
     registry = fixture / ORIGINAL_VISION_REGISTRY
     registry.write_text(
         registry.read_text(encoding="utf-8")
@@ -235,7 +308,34 @@ def test_original_vision_validation_registry_requires_design_spec_reference(tmp_
 
     assert result.name == "original_vision_validation_registry_current"
     assert result.ok is False
-    assert "missing registry design-spec reference" in result.details
+    assert "## Design Spec" in result.details
+    assert ORIGINAL_VISION_DESIGN.as_posix() in result.details
+
+
+def test_original_vision_validation_registry_requires_design_spec_section(tmp_path):
+    design_path = tmp_path / ORIGINAL_VISION_DESIGN
+    registry_path = tmp_path / ORIGINAL_VISION_REGISTRY
+    design_path.parent.mkdir(parents=True)
+    registry_path.parent.mkdir(parents=True)
+    design_path.write_text("Current evidence is not sufficient.", encoding="utf-8")
+    registry_path.write_text(
+        "\n".join(
+            [
+                "## Notes",
+                "",
+                f"See `{ORIGINAL_VISION_DESIGN.as_posix()}` for context.",
+                "",
+                "## Claim Lock",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    result = check_original_vision_validation_registry_current(tmp_path)
+
+    assert result.name == "original_vision_validation_registry_current"
+    assert result.ok is False
+    assert "## Design Spec" in result.details
     assert ORIGINAL_VISION_DESIGN.as_posix() in result.details
 
 
@@ -246,7 +346,13 @@ def test_original_vision_validation_registry_requires_claim_lock(tmp_path):
     registry_path.parent.mkdir(parents=True)
     design_path.write_text("Current evidence is not sufficient.", encoding="utf-8")
     registry_path.write_text(
-        f"`{ORIGINAL_VISION_DESIGN.as_posix()}`\n",
+        "\n".join(
+            [
+                "## Design Spec",
+                "",
+                f"`{ORIGINAL_VISION_DESIGN.as_posix()}`",
+            ]
+        ),
         encoding="utf-8",
     )
 
@@ -255,6 +361,36 @@ def test_original_vision_validation_registry_requires_claim_lock(tmp_path):
     assert result.name == "original_vision_validation_registry_current"
     assert result.ok is False
     assert "missing registry section: ## Claim Lock" in result.details
+
+
+def test_original_vision_validation_registry_requires_claim_lock_heading(tmp_path):
+    design_path = tmp_path / ORIGINAL_VISION_DESIGN
+    registry_path = tmp_path / ORIGINAL_VISION_REGISTRY
+    design_path.parent.mkdir(parents=True)
+    registry_path.parent.mkdir(parents=True)
+    design_path.write_text("Current evidence is not sufficient.", encoding="utf-8")
+    registry_path.write_text(
+        "\n".join(
+            [
+                "## Design Spec",
+                "",
+                f"- `{ORIGINAL_VISION_DESIGN.as_posix()}`",
+                "",
+                "The phrase ## Claim Lock appears here but is not a heading.",
+                "",
+                "```",
+                "## Claim Lock",
+                "```",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    result = check_original_vision_validation_registry_current(tmp_path)
+
+    assert result.name == "original_vision_validation_registry_current"
+    assert result.ok is False
+    assert "## Claim Lock" in result.details
 
 
 def test_original_vision_validation_registry_allows_negative_guardrails(tmp_path):

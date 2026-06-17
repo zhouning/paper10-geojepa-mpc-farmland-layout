@@ -505,6 +505,53 @@ def markdown_section(text: str, heading: str) -> str:
     return "\n".join(lines[start:end]).strip()
 
 
+def markdown_section_outside_code_fences(text: str, heading: str) -> str:
+    lines = text.splitlines()
+    start = None
+    heading_level = len(heading) - len(heading.lstrip("#"))
+    in_fence = False
+    for index, line in enumerate(lines):
+        stripped = line.strip()
+        if stripped.startswith("```") or stripped.startswith("~~~"):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+        if stripped == heading:
+            start = index + 1
+            break
+    if start is None:
+        return ""
+
+    end = len(lines)
+    in_fence = False
+    for index in range(start, len(lines)):
+        line = lines[index]
+        stripped = line.strip()
+        if stripped.startswith("```") or stripped.startswith("~~~"):
+            in_fence = not in_fence
+            continue
+        if in_fence or not stripped.startswith("#"):
+            continue
+        level = len(stripped) - len(stripped.lstrip("#"))
+        if level <= heading_level:
+            end = index
+            break
+    return "\n".join(lines[start:end]).strip()
+
+
+def has_markdown_heading_outside_code_fences(text: str, heading: str) -> bool:
+    in_fence = False
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("```") or stripped.startswith("~~~"):
+            in_fence = not in_fence
+            continue
+        if not in_fence and stripped == heading:
+            return True
+    return False
+
+
 def markdown_word_count(text: str) -> int:
     return len(re.findall(r"[A-Za-z0-9]+(?:[-'][A-Za-z0-9]+)?", text))
 
@@ -1416,13 +1463,14 @@ def check_original_vision_validation_registry_current(root: Path) -> CheckResult
 
     registry_text = read_text(root / ORIGINAL_VISION_REGISTRY)
     required_reference = ORIGINAL_VISION_DESIGN.as_posix()
-    if required_reference not in registry_text:
+    design_spec = markdown_section_outside_code_fences(registry_text, "## Design Spec")
+    if required_reference not in design_spec:
         return CheckResult(
             "original_vision_validation_registry_current",
             False,
-            "missing registry design-spec reference: " + required_reference,
+            "missing registry ## Design Spec reference: " + required_reference,
         )
-    if "## Claim Lock" not in registry_text:
+    if not has_markdown_heading_outside_code_fences(registry_text, "## Claim Lock"):
         return CheckResult(
             "original_vision_validation_registry_current",
             False,
