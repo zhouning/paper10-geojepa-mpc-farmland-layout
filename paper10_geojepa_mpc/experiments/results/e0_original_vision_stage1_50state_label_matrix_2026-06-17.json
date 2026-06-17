@@ -1,0 +1,471 @@
+{
+  "decision_counts": {
+    "fail": 3,
+    "near_pass": 1,
+    "pass": 2
+  },
+  "gate_topks": [
+    5,
+    6,
+    8,
+    10,
+    12
+  ],
+  "near_pass_margin": 0.2,
+  "runs": [
+    {
+      "best_candidate_topk_overlap": 0.805,
+      "best_candidate_topk_regret": 0.07106719017028809,
+      "best_one_step_topk_regret": 2.7525760996341706,
+      "candidate_actions": 16,
+      "frontier_fraction": 0.5,
+      "label_horizon": 5,
+      "label_seed": 47,
+      "monitors": [
+        {
+          "candidate_topk_overlap": 0.5880000000000001,
+          "candidate_topk_regret": 0.4203803277015686,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 2.7525760996341706,
+          "top_k": 5
+        },
+        {
+          "candidate_topk_overlap": 0.6299999999999999,
+          "candidate_topk_regret": 0.3399780821800232,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 1.1834070301055908,
+          "top_k": 6
+        },
+        {
+          "candidate_topk_overlap": 0.705,
+          "candidate_topk_regret": 0.272598934173584,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "one_step_topk_regret"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 0.22681126594543458,
+          "top_k": 8
+        },
+        {
+          "candidate_topk_overlap": 0.7420000000000002,
+          "candidate_topk_regret": 0.18437810897827148,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 0.18437810897827148,
+          "top_k": 10
+        },
+        {
+          "candidate_topk_overlap": 0.805,
+          "candidate_topk_regret": 0.07106719017028809,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 0.18437810897827148,
+          "top_k": 12
+        }
+      ],
+      "n_states": 50,
+      "near_pass_top_ks": [],
+      "pass_top_ks": [],
+      "row_decision": "fail",
+      "run_name": "frontier_random050_50x16_h5_seed47_f050",
+      "selected_top_k": null
+    },
+    {
+      "best_candidate_topk_overlap": 0.8066666666666665,
+      "best_candidate_topk_regret": 0.007958965301513672,
+      "best_one_step_topk_regret": 2.551508512496948,
+      "candidate_actions": 16,
+      "frontier_fraction": 0.5,
+      "label_horizon": 5,
+      "label_seed": 48,
+      "monitors": [
+        {
+          "candidate_topk_overlap": 0.5880000000000001,
+          "candidate_topk_regret": 0.2690488862991333,
+          "decision_class": "near_pass",
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 2.551508512496948,
+          "top_k": 5
+        },
+        {
+          "candidate_topk_overlap": 0.64,
+          "candidate_topk_regret": 0.2469981336593628,
+          "decision_class": "pass",
+          "failed_metrics": [],
+          "monitor_decision": "continue",
+          "one_step_topk_regret": 2.3227433919906617,
+          "top_k": 6
+        },
+        {
+          "candidate_topk_overlap": 0.7175,
+          "candidate_topk_regret": 0.16044301986694337,
+          "decision_class": "near_pass",
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 0.23175767421722412,
+          "top_k": 8
+        },
+        {
+          "candidate_topk_overlap": 0.76,
+          "candidate_topk_regret": 0.16044301986694337,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 0.16044301986694337,
+          "top_k": 10
+        },
+        {
+          "candidate_topk_overlap": 0.8066666666666665,
+          "candidate_topk_regret": 0.007958965301513672,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 0.10098428726196289,
+          "top_k": 12
+        }
+      ],
+      "n_states": 50,
+      "near_pass_top_ks": [
+        5,
+        8
+      ],
+      "pass_top_ks": [
+        6
+      ],
+      "row_decision": "pass",
+      "run_name": "frontier_random050_50x16_h5_seed48_f050",
+      "selected_top_k": 6
+    },
+    {
+      "best_candidate_topk_overlap": 0.7333333333333334,
+      "best_candidate_topk_regret": 0.08282930374145508,
+      "best_one_step_topk_regret": 2.879281826019287,
+      "candidate_actions": 20,
+      "frontier_fraction": 0.5,
+      "label_horizon": 5,
+      "label_seed": 47,
+      "monitors": [
+        {
+          "candidate_topk_overlap": 0.52,
+          "candidate_topk_regret": 0.47383216142654416,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 2.879281826019287,
+          "top_k": 5
+        },
+        {
+          "candidate_topk_overlap": 0.5599999999999999,
+          "candidate_topk_regret": 0.3927612900733948,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 1.8121560859680175,
+          "top_k": 6
+        },
+        {
+          "candidate_topk_overlap": 0.6125,
+          "candidate_topk_regret": 0.20538142442703247,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 0.16224599361419678,
+          "top_k": 8
+        },
+        {
+          "candidate_topk_overlap": 0.7,
+          "candidate_topk_regret": 0.08282930374145508,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 0.08282930374145508,
+          "top_k": 10
+        },
+        {
+          "candidate_topk_overlap": 0.7333333333333334,
+          "candidate_topk_regret": 0.08282930374145508,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 0.08205988883972168,
+          "top_k": 12
+        }
+      ],
+      "n_states": 50,
+      "near_pass_top_ks": [],
+      "pass_top_ks": [],
+      "row_decision": "fail",
+      "run_name": "frontier_random050_50x20_h5_seed47_f050",
+      "selected_top_k": null
+    },
+    {
+      "best_candidate_topk_overlap": 0.7516666666666667,
+      "best_candidate_topk_regret": 0.037111244201660155,
+      "best_one_step_topk_regret": 2.1545803785324096,
+      "candidate_actions": 20,
+      "frontier_fraction": 0.5,
+      "label_horizon": 5,
+      "label_seed": 48,
+      "monitors": [
+        {
+          "candidate_topk_overlap": 0.4760000000000001,
+          "candidate_topk_regret": 0.8057617402076721,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 2.1545803785324096,
+          "top_k": 5
+        },
+        {
+          "candidate_topk_overlap": 0.5333333333333333,
+          "candidate_topk_regret": 0.8013247036933899,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 0.5291804933547973,
+          "top_k": 6
+        },
+        {
+          "candidate_topk_overlap": 0.6,
+          "candidate_topk_regret": 0.7383690571784973,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "one_step_topk_regret"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 0.0479627513885498,
+          "top_k": 8
+        },
+        {
+          "candidate_topk_overlap": 0.7279999999999999,
+          "candidate_topk_regret": 0.037111244201660155,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 0.037111244201660155,
+          "top_k": 10
+        },
+        {
+          "candidate_topk_overlap": 0.7516666666666667,
+          "candidate_topk_regret": 0.037111244201660155,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 0.037111244201660155,
+          "top_k": 12
+        }
+      ],
+      "n_states": 50,
+      "near_pass_top_ks": [],
+      "pass_top_ks": [],
+      "row_decision": "fail",
+      "run_name": "frontier_random050_50x20_h5_seed48_f050",
+      "selected_top_k": null
+    },
+    {
+      "best_candidate_topk_overlap": 0.6466666666666666,
+      "best_candidate_topk_regret": 0.09792789220809936,
+      "best_one_step_topk_regret": 2.6213339626789094,
+      "candidate_actions": 24,
+      "frontier_fraction": 0.75,
+      "label_horizon": 5,
+      "label_seed": 47,
+      "monitors": [
+        {
+          "candidate_topk_overlap": 0.33599999999999997,
+          "candidate_topk_regret": 0.7521915316581727,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 2.6213339626789094,
+          "top_k": 5
+        },
+        {
+          "candidate_topk_overlap": 0.36333333333333334,
+          "candidate_topk_regret": 0.7521915316581727,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 2.5070266127586365,
+          "top_k": 6
+        },
+        {
+          "candidate_topk_overlap": 0.4325,
+          "candidate_topk_regret": 0.7439931201934814,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 2.406042363643646,
+          "top_k": 8
+        },
+        {
+          "candidate_topk_overlap": 0.55,
+          "candidate_topk_regret": 0.2895536994934082,
+          "decision_class": "near_pass",
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 0.47062824249267576,
+          "top_k": 10
+        },
+        {
+          "candidate_topk_overlap": 0.6466666666666666,
+          "candidate_topk_regret": 0.09792789220809936,
+          "decision_class": "pass",
+          "failed_metrics": [],
+          "monitor_decision": "continue",
+          "one_step_topk_regret": 0.4295042514801025,
+          "top_k": 12
+        }
+      ],
+      "n_states": 50,
+      "near_pass_top_ks": [
+        10
+      ],
+      "pass_top_ks": [
+        12
+      ],
+      "row_decision": "pass",
+      "run_name": "frontier_random050_50x24_h5_seed47_f075",
+      "selected_top_k": 12
+    },
+    {
+      "best_candidate_topk_overlap": 0.6566666666666667,
+      "best_candidate_topk_regret": 0.2836338520050049,
+      "best_one_step_topk_regret": 3.526983573436737,
+      "candidate_actions": 24,
+      "frontier_fraction": 0.75,
+      "label_horizon": 5,
+      "label_seed": 48,
+      "monitors": [
+        {
+          "candidate_topk_overlap": 0.2799999999999999,
+          "candidate_topk_regret": 1.4478332591056824,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 3.526983573436737,
+          "top_k": 5
+        },
+        {
+          "candidate_topk_overlap": 0.33666666666666667,
+          "candidate_topk_regret": 1.4478332591056824,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 3.490461485385895,
+          "top_k": 6
+        },
+        {
+          "candidate_topk_overlap": 0.44,
+          "candidate_topk_regret": 1.446487376689911,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 3.286637327671051,
+          "top_k": 8
+        },
+        {
+          "candidate_topk_overlap": 0.56,
+          "candidate_topk_regret": 0.7791562914848328,
+          "decision_class": "fail",
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 0.5917127132415771,
+          "top_k": 10
+        },
+        {
+          "candidate_topk_overlap": 0.6566666666666667,
+          "candidate_topk_regret": 0.2836338520050049,
+          "decision_class": "near_pass",
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "monitor_decision": "stop",
+          "one_step_topk_regret": 0.5611930751800537,
+          "top_k": 12
+        }
+      ],
+      "n_states": 50,
+      "near_pass_top_ks": [
+        12
+      ],
+      "pass_top_ks": [],
+      "row_decision": "near_pass",
+      "run_name": "frontier_random050_50x24_h5_seed48_f075",
+      "selected_top_k": null
+    }
+  ],
+  "source_summary": "D:\\test\\paper10_original_vision_validation\\stage1_label_only\\frontier_random050_ablation_summary.json",
+  "thresholds": {
+    "candidate_topk_overlap": 0.5,
+    "candidate_topk_regret": 0.25,
+    "one_step_topk_regret": 0.25
+  }
+}
