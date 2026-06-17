@@ -26,3 +26,6 @@ Thumbs.db
 
 # Local Windows experiment config copied from the tracked example.
 /scripts/windows/frontier_random050_ablation.env.ps1
+
+# Local isolated worktrees.
+/.worktrees/
