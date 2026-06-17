@@ -22,22 +22,40 @@ def _difference(left: float, right: float) -> float:
     return round(left - right, 10)
 
 
+def _duplicate_payload(row: dict) -> dict:
+    return {key: value for key, value in row.items() if key != "source"}
+
+
 def normalize_family_rows(rows: Iterable[dict[str, str]], source: str) -> list[dict]:
     normalized = []
     for row in rows:
+        if "mode" in row:
+            family_key = "mode"
+            episodes_key = "n_episodes"
+            reward_mean_key = "total_reward_mean"
+            slope_key = "slope_change_pct_mean"
+            cont_key = "cont_change_mean"
+            baimu_key = "baimu_area_change_ha_mean"
+        else:
+            family_key = "family"
+            episodes_key = "episodes"
+            reward_mean_key = "mean_reward"
+            slope_key = "slope_pct_mean"
+            cont_key = "cont_mean"
+            baimu_key = "baimu_ha_mean"
         normalized.append(
             {
                 "source": source,
                 "comparison_key": row["label_type"],
                 "label_type": row["label_type"],
                 "label_budget": "",
-                "family": row["mode"],
-                "episodes": _int(row, "n_episodes"),
-                "reward_mean": _float(row, "total_reward_mean"),
-                "reward_sd": _float(row, "total_reward_sd"),
-                "slope_pct_mean": _float(row, "slope_change_pct_mean"),
-                "cont_mean": _float(row, "cont_change_mean"),
-                "baimu_ha_mean": _float(row, "baimu_area_change_ha_mean"),
+                "family": row[family_key],
+                "episodes": _int(row, episodes_key),
+                "reward_mean": _float(row, reward_mean_key),
+                "reward_sd": _float(row, "reward_sd" if "reward_sd" in row else "total_reward_sd"),
+                "slope_pct_mean": _float(row, slope_key),
+                "cont_mean": _float(row, cont_key),
+                "baimu_ha_mean": _float(row, baimu_key),
             }
         )
     return normalized
@@ -66,13 +84,15 @@ def normalize_low_budget_rows(rows: Iterable[dict[str, str]], source: str) -> li
 
 
 def _deduplicate(rows: list[dict]) -> list[dict]:
-    seen = set()
+    seen: dict[tuple[str, str], dict] = {}
     unique = []
     for row in rows:
         key = (row["comparison_key"], row["family"])
         if key in seen:
+            if _duplicate_payload(row) != _duplicate_payload(seen[key]):
+                raise ValueError(f"Conflicting duplicate rows for {key[0]} / {key[1]}")
             continue
-        seen.add(key)
+        seen[key] = row
         unique.append(row)
     return unique
 
@@ -85,13 +105,23 @@ def _interpret(reward_effect: float) -> str:
     return "reward_tie"
 
 
+def _comparison_sort_key(key: str) -> tuple[int, int | str]:
+    prefix = "low_budget_"
+    if key.startswith(prefix):
+        try:
+            return (0, int(key[len(prefix) :]))
+        except ValueError:
+            return (0, key)
+    return (1, key)
+
+
 def build_comparisons(rows: list[dict]) -> list[dict]:
     by_key: dict[str, dict[str, dict]] = {}
     for row in rows:
         by_key.setdefault(row["comparison_key"], {})[row["family"]] = row
 
     comparisons = []
-    for key in sorted(by_key):
+    for key in sorted(by_key, key=_comparison_sort_key):
         families = by_key[key]
         if "transfer" not in families or "scratch" not in families:
             continue
@@ -232,7 +262,9 @@ def main() -> None:
     text = json.dumps(payload, indent=2, sort_keys=True)
     print(text)
     if args.output_json:
-        Path(args.output_json).write_text(text, encoding="utf-8")
+        output_json = Path(args.output_json)
+        output_json.parent.mkdir(parents=True, exist_ok=True)
+        output_json.write_text(text, encoding="utf-8")
 
 
 if __name__ == "__main__":
