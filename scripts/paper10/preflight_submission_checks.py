@@ -1305,6 +1305,69 @@ def check_ceus_research_article_manuscript_draft_current(root: Path) -> CheckRes
     )
 
 
+ORIGINAL_VISION_POSITIVE_CLAIM_CUE = re.compile(
+    r"\b("
+    r"claim(?:s|ed|ing)?"
+    r"|prove(?:s|d|n|ing)?"
+    r"|support(?:s|ed|ing)?"
+    r"|show(?:s|ed|ing)?"
+    r"|demonstrate(?:s|d|ing)?"
+    r"|validate(?:s|d|ing)?"
+    r"|establish(?:es|ed|ing)?"
+    r"|confirm(?:s|ed|ing)?"
+    r")\b",
+    re.IGNORECASE,
+)
+ORIGINAL_VISION_NEGATIVE_GUARDRAIL = re.compile(
+    r"\b("
+    r"do not"
+    r"|don't"
+    r"|must not"
+    r"|should not"
+    r"|may not"
+    r"|cannot"
+    r"|can't"
+    r"|not sufficient"
+    r"|insufficient"
+    r"|does not"
+    r"|do not support"
+    r"|not supported"
+    r"|unsupported"
+    r"|no new conclusion"
+    r")\b",
+    re.IGNORECASE,
+)
+ORIGINAL_VISION_PROHIBITED_CLAIM_TARGETS = (
+    re.compile(
+        r"\bdirect\b.{0,80}\b50[- ]state\b.{0,80}\bbishan\b.{0,80}\bsuccess\b"
+        r"|\b50[- ]state\b.{0,80}\bbishan\b.{0,80}\bsuccess\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b50[- ]state\b.{0,80}\bscale[- ]?up\b"
+        r"|\bscale[- ]?up\b.{0,80}\b50[- ]state\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\bbishan[- ]to[- ]dongxing\b.{0,120}\btransfer\b.{0,80}\bsuperiority\b"
+        r"|\bbishan[- ]to[- ]dongxing\b.{0,120}\bsuperiority\b"
+        r"|\btransfer\b.{0,80}\bsuperiority\b.{0,120}\bbishan[- ]to[- ]dongxing\b",
+        re.IGNORECASE,
+    ),
+)
+
+
+def is_original_vision_positive_claim(line: str) -> bool:
+    if ORIGINAL_VISION_NEGATIVE_GUARDRAIL.search(line):
+        return False
+    if not ORIGINAL_VISION_POSITIVE_CLAIM_CUE.search(line):
+        return False
+    return any(
+        target.search(line)
+        for target in ORIGINAL_VISION_PROHIBITED_CLAIM_TARGETS
+    )
+
+
 def check_original_vision_validation_registry_current(root: Path) -> CheckResult:
     paths = [
         root
@@ -1326,18 +1389,18 @@ def check_original_vision_validation_registry_current(root: Path) -> CheckResult
             "missing: " + ", ".join(str(path.relative_to(root)) for path in missing),
         )
 
-    combined = "\n".join(path.read_text(encoding="utf-8") for path in paths).lower()
-    forbidden = [
-        "direct 50-state bishan success is supported",
-        "robust bishan-to-dongxing transfer superiority is supported",
-        "proves 50-state scale-up",
-    ]
-    hits = [phrase for phrase in forbidden if phrase in combined]
+    hits = []
+    for path in paths:
+        rel_path = path.relative_to(root)
+        lines = path.read_text(encoding="utf-8").splitlines()
+        for line_no, line in enumerate(lines, start=1):
+            if is_original_vision_positive_claim(line):
+                hits.append(f"{rel_path}:{line_no}: {line.strip()}")
     if hits:
         return CheckResult(
             "original_vision_validation_registry_current",
             False,
-            "forbidden validation wording: " + ", ".join(hits),
+            "forbidden validation wording: " + " | ".join(hits),
         )
 
     return CheckResult(

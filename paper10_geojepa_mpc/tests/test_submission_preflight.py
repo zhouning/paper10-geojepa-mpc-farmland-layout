@@ -3,9 +3,34 @@ import subprocess
 import sys
 from pathlib import Path
 
+from scripts.paper10.preflight_submission_checks import (
+    check_original_vision_validation_registry_current,
+)
+
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts" / "paper10" / "preflight_submission_checks.py"
+ORIGINAL_VISION_DESIGN = (
+    Path("docs")
+    / "superpowers"
+    / "specs"
+    / "2026-06-17-paper10-original-vision-validation-design.md"
+)
+ORIGINAL_VISION_REGISTRY = (
+    Path("paper10_geojepa_mpc")
+    / "experiments"
+    / "results"
+    / "e0_original_vision_validation_registry_2026-06-17.md"
+)
+
+
+def write_original_vision_files(root: Path, design: str, registry: str) -> None:
+    design_path = root / ORIGINAL_VISION_DESIGN
+    registry_path = root / ORIGINAL_VISION_REGISTRY
+    design_path.parent.mkdir(parents=True)
+    registry_path.parent.mkdir(parents=True)
+    design_path.write_text(design, encoding="utf-8")
+    registry_path.write_text(registry, encoding="utf-8")
 
 
 def test_submission_preflight_cli_passes_current_repository():
@@ -74,6 +99,58 @@ def test_repository_docs_reference_submission_preflight_command():
 
     for path in docs:
         assert command in path.read_text(encoding="utf-8")
+
+
+def test_original_vision_validation_registry_reports_missing_files(tmp_path):
+    result = check_original_vision_validation_registry_current(tmp_path)
+
+    assert result.name == "original_vision_validation_registry_current"
+    assert result.ok is False
+    assert "missing:" in result.details
+    assert str(ORIGINAL_VISION_DESIGN) in result.details
+    assert str(ORIGINAL_VISION_REGISTRY) in result.details
+
+
+def test_original_vision_validation_registry_rejects_positive_claims(tmp_path):
+    write_original_vision_files(
+        tmp_path,
+        "\n".join(
+            [
+                "We claim direct 50-state Bishan success.",
+                "This proves 50-state scale-up.",
+            ]
+        ),
+        "Robust Bishan-to-Dongxing transfer superiority is supported.",
+    )
+
+    result = check_original_vision_validation_registry_current(tmp_path)
+
+    assert result.name == "original_vision_validation_registry_current"
+    assert result.ok is False
+    assert "forbidden validation wording" in result.details
+    assert "We claim direct 50-state Bishan success." in result.details
+    assert "This proves 50-state scale-up." in result.details
+    assert (
+        "Robust Bishan-to-Dongxing transfer superiority is supported."
+        in result.details
+    )
+
+
+def test_original_vision_validation_registry_allows_negative_guardrails(tmp_path):
+    write_original_vision_files(
+        tmp_path,
+        "Do not claim direct 50-state Bishan success.",
+        "Current evidence is not sufficient to claim strong 50-state scale-up.",
+    )
+
+    result = check_original_vision_validation_registry_current(tmp_path)
+
+    assert result.name == "original_vision_validation_registry_current"
+    assert result.ok is True
+    assert (
+        result.details
+        == "original-vision validation design and registry are current and guarded"
+    )
 
 
 def test_submission_preflight_reports_missing_included_archive_manifest_path(tmp_path):
