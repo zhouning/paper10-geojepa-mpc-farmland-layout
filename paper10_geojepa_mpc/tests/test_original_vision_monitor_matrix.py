@@ -20,6 +20,16 @@ def _monitor(top_k, decision, regret, overlap, one_step):
     }
 
 
+def _flat_monitor(top_k, decision, regret, overlap, one_step):
+    return {
+        "top_k": top_k,
+        "decision": decision,
+        "candidate_topk_regret": regret,
+        "candidate_topk_overlap": overlap,
+        "one_step_topk_regret": one_step,
+    }
+
+
 def test_classify_monitor_passes_only_continue_rows():
     result = classify_monitor(_monitor(5, "continue", 0.24, 0.51, 0.26))
 
@@ -125,3 +135,43 @@ def test_markdown_report_includes_no_positive_scale_claim():
 
     assert "positive 50-state" not in text.lower()
     assert "robust transfer" not in text.lower()
+
+
+def test_classify_monitor_accepts_flat_runner_rows():
+    result = classify_monitor(_flat_monitor(6, "continue", 0.20, 0.55, 0.30))
+
+    assert result["decision_class"] == "pass"
+
+
+def test_summarize_ablation_accepts_flat_runner_rows(tmp_path):
+    summary_path = tmp_path / "summary.json"
+    output_json = tmp_path / "matrix.json"
+    output_md = tmp_path / "matrix.md"
+    summary_path.write_text(
+        json.dumps(
+            {
+                "run_root": str(tmp_path),
+                "gate_topks": [6],
+                "runs": [
+                    {
+                        "run_name": "frontier_random050_50x16_h5_seed47_f050",
+                        "n_states": 50,
+                        "candidate_actions": 16,
+                        "label_horizon": 5,
+                        "frontier_fraction": 0.5,
+                        "label_seed": 47,
+                        "monitors": [
+                            _flat_monitor(6, "continue", 0.20, 0.55, 0.30),
+                        ],
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    payload = summarize_ablation(summary_path, output_json, output_md)
+
+    assert payload["decision_counts"] == {"pass": 1, "near_pass": 0, "fail": 0}
+    assert output_json.exists()
+    assert output_md.exists()

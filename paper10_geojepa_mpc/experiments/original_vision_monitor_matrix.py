@@ -19,6 +19,13 @@ def _as_float(value: Any) -> float:
     return float(value)
 
 
+def _monitor_metrics(monitor: dict[str, Any]) -> dict[str, Any]:
+    metrics = monitor.get("metrics")
+    if metrics is not None:
+        return metrics
+    return monitor
+
+
 def _failed_metrics(metrics: dict[str, Any]) -> list[str]:
     failed = []
     if _as_float(metrics.get("candidate_topk_regret")) > THRESHOLDS["candidate_topk_regret"]:
@@ -47,7 +54,7 @@ def _within_near_pass(metrics: dict[str, Any], failed: list[str]) -> bool:
 
 
 def classify_monitor(monitor: dict[str, Any]) -> dict[str, Any]:
-    metrics = monitor.get("metrics", {})
+    metrics = _monitor_metrics(monitor)
     failed = _failed_metrics(metrics)
     if monitor.get("decision") == "continue" and not failed:
         decision_class = "pass"
@@ -166,6 +173,7 @@ def markdown_report(payload: dict[str, Any]) -> str:
             "## Interpretation Lock",
             "",
             "A `pass` row authorizes matched training and rollout follow-up. A `near_pass` row authorizes diagnostic follow-up only. A `fail` row is evidence for that predefined row, not a general rejection of the original Paper10 vision.",
+            "A row-level pass is specific to the selected top-k; follow-up training or rollout must use selected_top_k and inspect full JSON diagnostics for other top-k outcomes.",
         ]
     )
     return "\n".join(lines) + "\n"
