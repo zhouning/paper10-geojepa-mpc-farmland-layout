@@ -115,6 +115,11 @@ the blocker packet and CEUS reviewer-improvement packet:
 paper10_geojepa_mpc/experiments/results/e0_ceus_research_article_manuscript_draft_2026-06-12.md
 ```
 
+- Original-vision validation design and registry:
+  `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
+  and
+  `paper10_geojepa_mpc/experiments/results/e0_original_vision_validation_registry_2026-06-17.md`.
+
 ## Full Bishan Dataset Setup
 
 Place the full prepared data under the repository root:

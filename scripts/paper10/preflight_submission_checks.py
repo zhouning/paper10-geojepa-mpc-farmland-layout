@@ -1305,6 +1305,48 @@ def check_ceus_research_article_manuscript_draft_current(root: Path) -> CheckRes
     )
 
 
+def check_original_vision_validation_registry_current(root: Path) -> CheckResult:
+    paths = [
+        root
+        / "docs"
+        / "superpowers"
+        / "specs"
+        / "2026-06-17-paper10-original-vision-validation-design.md",
+        root
+        / "paper10_geojepa_mpc"
+        / "experiments"
+        / "results"
+        / "e0_original_vision_validation_registry_2026-06-17.md",
+    ]
+    missing = [path for path in paths if not path.exists()]
+    if missing:
+        return CheckResult(
+            "original_vision_validation_registry_current",
+            False,
+            "missing: " + ", ".join(str(path.relative_to(root)) for path in missing),
+        )
+
+    combined = "\n".join(path.read_text(encoding="utf-8") for path in paths).lower()
+    forbidden = [
+        "direct 50-state bishan success is supported",
+        "robust bishan-to-dongxing transfer superiority is supported",
+        "proves 50-state scale-up",
+    ]
+    hits = [phrase for phrase in forbidden if phrase in combined]
+    if hits:
+        return CheckResult(
+            "original_vision_validation_registry_current",
+            False,
+            "forbidden validation wording: " + ", ".join(hits),
+        )
+
+    return CheckResult(
+        "original_vision_validation_registry_current",
+        True,
+        "original-vision validation design and registry are current and guarded",
+    )
+
+
 CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_required_paths_exist,
     check_archive_manifest_required_fields,
@@ -1324,6 +1366,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_integrated_citation_statistics_policy_current,
     check_ceus_reviewer_improvement_packet_current,
     check_ceus_research_article_manuscript_draft_current,
+    check_original_vision_validation_registry_current,
 )
 
 

@@ -38,6 +38,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "integrated_citation_statistics_policy_current" in payload["passed_checks"]
     assert "ceus_reviewer_improvement_packet_current" in payload["passed_checks"]
     assert "ceus_research_article_manuscript_draft_current" in payload["passed_checks"]
+    assert "original_vision_validation_registry_current" in payload["passed_checks"]
 
 
 def test_submission_preflight_reports_missing_required_path(tmp_path):

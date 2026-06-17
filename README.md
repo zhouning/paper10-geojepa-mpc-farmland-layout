@@ -175,6 +175,10 @@ as the current CEUS Research Article candidate manuscript draft. It remains
 blocked for final submission until repository identifiers, licences, full-data
 routes, citation policy, statistical policy, and final figure exports are
 closed.
+- Original-vision validation design and registry:
+  `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
+  and
+  `paper10_geojepa_mpc/experiments/results/e0_original_vision_validation_registry_2026-06-17.md`.
 
 ## Full Experiments
 

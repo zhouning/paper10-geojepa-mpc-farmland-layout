@@ -189,6 +189,10 @@ data needed for smoke verification.
   CEUS Research Article candidate manuscript draft converted from the
   integrated scaffold, tables, figure/table freeze, source-data map, citation
   and statistics policy, and CEUS reviewer-improvement packet.
+- Original-vision validation design and registry:
+  `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
+  and
+  `paper10_geojepa_mpc/experiments/results/e0_original_vision_validation_registry_2026-06-17.md`.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_seedwise_rewards_2026-06-09.csv`:
   figure-ready seed-wise reward comparison for 10x12/top4 vs 20x16/top5.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_topk_diagnostics_2026-06-09.csv`:
