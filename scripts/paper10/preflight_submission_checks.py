@@ -68,6 +68,9 @@ CEUS_STAGE3_MANUSCRIPT_DRAFT = (
 PROJECT_PROPOSAL_REPORT = (
     RESULTS / "e0_paper10_project_proposal_opening_report_2026-06-18.md"
 )
+AUTHOR_DECISION_MATRIX = (
+    RESULTS / "e0_paper10_author_decision_matrix_2026-06-18.md"
+)
 DONGXING_PLOT_SCRIPT = Path("scripts") / "paper10" / "plot_integrated_dongxing_figures.py"
 ORIGINAL_VISION_DESIGN = (
     Path("docs")
@@ -128,6 +131,7 @@ REQUIRED_PATHS = (
     CEUS_STAGE3_MANUSCRIPT_REFRAME,
     CEUS_STAGE3_MANUSCRIPT_DRAFT,
     PROJECT_PROPOSAL_REPORT,
+    AUTHOR_DECISION_MATRIX,
     DONGXING_PLOT_SCRIPT,
     ORIGINAL_VISION_STAGE1_STAGE2_DECISION_PACKET,
     ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD,
@@ -161,6 +165,7 @@ PUBLIC_SUBMISSION_DOCS = (
     CEUS_STAGE3_MANUSCRIPT_REFRAME,
     CEUS_STAGE3_MANUSCRIPT_DRAFT,
     PROJECT_PROPOSAL_REPORT,
+    AUTHOR_DECISION_MATRIX,
 )
 
 PUBLIC_VAGUE_DATA_ROUTE_PATTERN = re.compile(
@@ -1754,6 +1759,126 @@ def check_paper10_project_proposal_report_current(root: Path) -> CheckResult:
     )
 
 
+def check_paper10_author_decision_matrix_current(root: Path) -> CheckResult:
+    required_files = [
+        AUTHOR_DECISION_MATRIX,
+        PROJECT_PROPOSAL_REPORT,
+        CEUS_STAGE3_MANUSCRIPT_DRAFT,
+        CEUS_STAGE3_MANUSCRIPT_REFRAME,
+        SUBMISSION_BLOCKER_DECISION_PACKET,
+        INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST,
+        INTEGRATED_CITATION_STATISTICS_POLICY,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_author_decision_matrix_current",
+            False,
+            "missing Paper10 author decision matrix files: " + ", ".join(missing),
+        )
+
+    text = read_text(root / AUTHOR_DECISION_MATRIX)
+    missing_tokens = []
+    matrix_name = AUTHOR_DECISION_MATRIX.name
+    linked_docs = [
+        Path("README.md"),
+        Path("MANIFEST.md"),
+        Path("DATA_AVAILABILITY.md"),
+        Path("REPRODUCIBILITY.md"),
+    ]
+    for rel_path in linked_docs:
+        path = root / rel_path
+        if not path.exists():
+            missing_tokens.append(f"{rel_path}: missing file")
+            continue
+        if matrix_name not in read_text(path):
+            missing_tokens.append(f"{rel_path}: {matrix_name}")
+
+    required_tokens = [
+        "Paper10 author decision and formal-submission conversion matrix",
+        "author-decision control document",
+        "not a final manuscript",
+        PROJECT_PROPOSAL_REPORT.name,
+        CEUS_STAGE3_MANUSCRIPT_DRAFT.name,
+        CEUS_STAGE3_MANUSCRIPT_REFRAME.name,
+        SUBMISSION_BLOCKER_DECISION_PACKET.name,
+        INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST.name,
+        INTEGRATED_CITATION_STATISTICS_POLICY.name,
+        "One-sentence conversion argument",
+        "Decision matrix",
+        "Recommended decision order",
+        "Default manuscript route if no new author decision arrives",
+        "Claim-evidence locks for conversion",
+        "Completion checklist",
+        "Target venue and article type",
+        "Comparator and pairwise-only baseline policy",
+        "Repository DOI or reviewer link",
+        "Code licence",
+        "Generated-output and checkpoint rights",
+        "Full Bishan Tool2 access route",
+        "GPKG-root geospatial input route",
+        "Dongxing/Neijiang prepared-data route",
+        "Citation policy",
+        "Statistical reporting policy",
+        "Final figure/table export package",
+        "Claim boundary",
+        "matched Paper9 `rank_seed2028`",
+        "self-contained Paper10 Methods route",
+        "20x16/top5 mean reward `69.4705`",
+        "matched Paper9 baseline `67.5437`",
+        "`64.2960` and `66.2544`",
+        "`67.4913`",
+        "must not be pooled",
+        "Do not claim direct 50-state Bishan scale-up success",
+        "Do not claim robust Bishan-to-Dongxing transfer superiority",
+        "area-tolerance matching",
+        "shared-perimeter-weighted contiguity",
+        "Constrained MDP/CPO/RCPO",
+        "does not mean the paper is ready for final submission",
+    ]
+    for token in required_tokens:
+        if token not in text:
+            missing_tokens.append(f"{AUTHOR_DECISION_MATRIX}: {token}")
+
+    if "@zhou2026paper9_local" in text:
+        missing_tokens.append(f"{AUTHOR_DECISION_MATRIX}: @zhou2026paper9_local")
+
+    forbidden_50_state = re.compile("|".join(FORBIDDEN_50_STATE_PATTERNS), re.IGNORECASE)
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if forbidden_50_state.search(line):
+            missing_tokens.append(
+                f"{AUTHOR_DECISION_MATRIX}:{line_no}: positive 50-state wording"
+            )
+        match = UNSUPPORTED_INFERENTIAL_STATS_PATTERN.search(line)
+        if match:
+            missing_tokens.append(
+                f"{AUTHOR_DECISION_MATRIX}:{line_no}: "
+                f"unsupported inferential wording {match.group(0)}"
+            )
+
+    checklist_items = [
+        line
+        for line in markdown_section(text, "## Completion checklist").splitlines()
+        if line.startswith("- [ ]")
+    ]
+    if len(checklist_items) < 12:
+        missing_tokens.append(
+            f"{AUTHOR_DECISION_MATRIX}: {len(checklist_items)} checklist items"
+        )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_author_decision_matrix_current",
+            False,
+            "Paper10 author decision matrix gaps: " + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_author_decision_matrix_current",
+        True,
+        "Paper10 author decision matrix is current and claim-bounded",
+    )
+
+
 ORIGINAL_VISION_POSITIVE_CLAIM_CUE = re.compile(
     r"\b("
     r"claim(?:s|ed|ing)?"
@@ -1899,6 +2024,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_ceus_stage3_manuscript_reframe_current,
     check_ceus_stage3_manuscript_draft_current,
     check_paper10_project_proposal_report_current,
+    check_paper10_author_decision_matrix_current,
     check_original_vision_validation_registry_current,
 )
 

@@ -5,6 +5,7 @@ from pathlib import Path
 
 from scripts.paper10.preflight_submission_checks import (
     ARCHIVE_MANIFEST,
+    AUTHOR_DECISION_MATRIX,
     CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT,
     CEUS_REVIEWER_IMPROVEMENT_PACKET,
     CEUS_STAGE3_MANUSCRIPT_DRAFT,
@@ -44,6 +45,7 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     Path("requirements.txt"),
     Path("county_env.py"),
     ARCHIVE_MANIFEST,
+    AUTHOR_DECISION_MATRIX,
     DATA_CODE_AVAILABILITY,
     DATA_ACCESS_RIGHTS_REGISTER,
     SELF_CONTAINED_MANUSCRIPT,
@@ -205,6 +207,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "ceus_stage3_manuscript_reframe_current" in payload["passed_checks"]
     assert "ceus_stage3_manuscript_draft_current" in payload["passed_checks"]
     assert "paper10_project_proposal_report_current" in payload["passed_checks"]
+    assert "paper10_author_decision_matrix_current" in payload["passed_checks"]
     assert "original_vision_validation_registry_current" in payload["passed_checks"]
 
 
@@ -252,6 +255,20 @@ def test_submission_preflight_minimal_fixture_reports_missing_project_proposal(t
     details = check_details(payload, "paper10_project_proposal_report_current")
     assert "missing Paper10 project proposal report files" in details
     assert str(PROJECT_PROPOSAL_REPORT) in details
+
+
+def test_submission_preflight_minimal_fixture_reports_missing_author_decision_matrix(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    (fixture / AUTHOR_DECISION_MATRIX).unlink()
+
+    result, payload = run_submission_preflight_json(fixture)
+
+    assert result.returncode == 1
+    assert payload["ok"] is False
+    assert "paper10_author_decision_matrix_current" in payload["failed_checks"]
+    details = check_details(payload, "paper10_author_decision_matrix_current")
+    assert "missing Paper10 author decision matrix files" in details
+    assert str(AUTHOR_DECISION_MATRIX) in details
 
 
 def test_submission_preflight_minimal_fixture_rejects_original_vision_registry_positive_claim(tmp_path):

@@ -129,6 +129,13 @@ after applying the Stage 3 claim boundary:
 paper10_geojepa_mpc/experiments/results/e0_ceus_stage3_manuscript_draft_2026-06-18.md
 ```
 
+Use the current author-decision matrix before claiming the formal manuscript
+package is ready:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_author_decision_matrix_2026-06-18.md
+```
+
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and

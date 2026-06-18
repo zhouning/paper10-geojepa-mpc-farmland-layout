@@ -76,6 +76,7 @@ Paper-facing writing assets are tracked under
 - `e0_ceus_stage3_manuscript_reframe_2026-06-18.md`
 - `e0_ceus_stage3_manuscript_draft_2026-06-18.md`
 - `e0_paper10_project_proposal_opening_report_2026-06-18.md`
+- `e0_paper10_author_decision_matrix_2026-06-18.md`
 - `e0_data_code_availability_draft_2026-06-09.md` now includes the
   Dongxing/Neijiang prepared-data access route that must be closed before
   submission.
@@ -194,6 +195,9 @@ Use
 `paper10_geojepa_mpc/experiments/results/e0_paper10_project_proposal_opening_report_2026-06-18.md`
 as the current Chinese project-proposal/opening-report substitute for temporary
 topic approval before the formal Paper10 manuscript is ready.
+Use
+`paper10_geojepa_mpc/experiments/results/e0_paper10_author_decision_matrix_2026-06-18.md`
+as the current author-decision matrix before formal manuscript conversion.
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and

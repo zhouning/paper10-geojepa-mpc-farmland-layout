@@ -202,6 +202,10 @@ data needed for smoke verification.
   Chinese project-proposal/opening-report substitute for temporary topic
   approval before the formal Paper10 manuscript is ready, derived from the
   claim-bounded Stage 3 manuscript draft.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_author_decision_matrix_2026-06-18.md`:
+  author-decision and formal-submission conversion matrix that turns the
+  proposal/manuscript blockers into close-out choices, affected files, and
+  completion evidence.
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and
