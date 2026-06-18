@@ -1,98 +1,151 @@
-# Paper10 Original-Vision Validation Handoff
+# Paper10 Current Handoff
 
 Date: 2026-06-18
 
 Branch: `paper10-original-vision-validation`
 
-Current save point before handoff note:
-`d4403f5c5d43bf651cf5763f284c3564965e3d2b`
-(`docs: add original vision stage3 rollout plan`)
+Remote tracking branch: `origin/paper10-original-vision-validation`
 
-## Completed Work
+Current save point before this handoff update:
+`d10fff40889b7c37ff24e683cab952514282e335`
+(`docs: add paper10 project proposal report`)
 
-- Stage 0 registry added and guarded by preflight.
-- Stage 1 Windows label-only matrix completed with `TrainOnPass=0`.
-- Stage 2 Dongxing transfer audit generated from existing matched summaries.
-- Stage 1-2 stop/go decision packet generated.
-- Stage 3 Colab rollout implementation plan written but not executed.
+## Current Workspace
 
-## Key Evidence Files
+Worktree:
 
-- `paper10_geojepa_mpc/experiments/results/e0_original_vision_validation_registry_2026-06-17.md`
-- `paper10_geojepa_mpc/experiments/results/e0_original_vision_stage1_50state_label_matrix_2026-06-17.json`
-- `paper10_geojepa_mpc/experiments/results/e0_original_vision_stage1_50state_label_matrix_2026-06-17.md`
-- `paper10_geojepa_mpc/experiments/results/e0_original_vision_stage2_dongxing_transfer_audit_2026-06-17.csv`
-- `paper10_geojepa_mpc/experiments/results/e0_original_vision_stage2_dongxing_transfer_audit_2026-06-17.md`
-- `paper10_geojepa_mpc/experiments/results/e0_original_vision_stage1_stage2_decision_packet_2026-06-17.md`
-- `docs/superpowers/plans/2026-06-18-paper10-stage3-confirmatory-rollout-plan.md`
+```text
+D:\test\paper10-geojepa-mpc-farmland-layout\.worktrees\paper10-original-vision-validation
+```
 
-## Stage 1 Result
+GitHub repository:
 
-The Stage 1 monitor matrix used top-k `5, 6, 8, 10, 12` and produced:
+```text
+https://github.com/zhouning/paper10-geojepa-mpc-farmland-layout
+```
 
-| decision | count |
-|---|---:|
-| pass | 2 |
-| near_pass | 1 |
-| fail | 3 |
+Branch PR page:
 
-Authorized Stage 3 Bishan rows:
+```text
+https://github.com/zhouning/paper10-geojepa-mpc-farmland-layout/pull/new/paper10-original-vision-validation
+```
 
-- frozen anchor: `frontier_random050_20x16_h5_seed44_f050`, top-k `5`;
-- confirmatory pass: `frontier_random050_50x16_h5_seed48_f050`, top-k `6`;
-- confirmatory pass: `frontier_random050_50x24_h5_seed47_f075`, top-k `12`;
-- diagnostic near-pass: `frontier_random050_50x24_h5_seed48_f075`, top-k `12`.
+## Current Paper10 Position
 
-Excluded from Stage 3 in this pass:
+Paper10 should now be framed as a bounded, reproducible
+`monitor-gated value labels` / `value filtering` workflow for GeoJEPA-MPC
+farmland layout planning.
 
-- `frontier_random050_50x16_h5_seed47_f050`;
-- `frontier_random050_50x20_h5_seed47_f050`;
-- `frontier_random050_50x20_h5_seed48_f050`.
+Do not frame Paper10 as:
 
-## Stage 2 Result
+- direct 50-state Bishan scale-up success;
+- robust Bishan-to-Dongxing transfer superiority;
+- solved irregular cadastral parcel deployment;
+- a full Constrained MDP, CPO, or RCPO solver.
 
-The Dongxing audit contains six matched comparisons. The most relevant rows:
+The positive anchor remains Bishan `20x16/top5`:
 
-- `return_50x16_h5`: transfer minus scratch reward `-4.1141`,
-  interpretation `scratch_higher_reward`.
-- `low_budget_20`: transfer minus scratch reward `4.2484`,
-  interpretation `transfer_higher_reward`.
+- mean reward: `69.4705`;
+- matched Paper9 baseline: `67.5437`;
+- reward delta: `+1.9269`;
+- sample standard deviation: `1.0004` versus baseline `7.2246`.
 
-This supports only conditional follow-up, not a broad transfer-win conclusion.
+Stage 3 confirmatory 50-state rows completed rollout but did not beat the
+matched baseline:
 
-## Decision Packet
+- `frontier_random050_50x16_h5_seed48_f050`, top-k 6, mean reward `64.2960`,
+  delta `-3.2477`;
+- `frontier_random050_50x24_h5_seed47_f075`, top-k 12, mean reward `66.2544`,
+  delta `-1.2893`.
 
-Decision:
-`proceed_to_stage3_confirmatory_rollouts`
+Diagnostic near-pass:
 
-Meaning: Stage 3 may train and roll out only the authorized passing rows, with
-matched baselines. Diagnostic near-pass rows must stay diagnostic.
+- `frontier_random050_50x24_h5_seed48_f075`, top-k 12, mean reward `67.4913`,
+  delta `-0.0524`;
+- must not be pooled with confirmatory rows.
+
+Dongxing/Neijiang supports calibration and stress-test evidence, not robust
+transfer superiority.
+
+## Current User-Facing Outputs
+
+Temporary project-proposal/opening-report substitute:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_project_proposal_opening_report_2026-06-18.md
+```
+
+Current CEUS Stage 3 manuscript draft:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_ceus_stage3_manuscript_draft_2026-06-18.md
+```
+
+Current Stage 3 manuscript reframe/control layer:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_ceus_stage3_manuscript_reframe_2026-06-18.md
+```
+
+Stage 3 rollout summary:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.md
+paper10_geojepa_mpc/experiments/results/e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json
+```
+
+## Work Completed Since Original Stage 3 Plan
+
+- Stage 3 confirmatory rollout summary was added and pushed.
+- Stage 3 manuscript reframe was added and pushed.
+- Full CEUS Stage 3 manuscript draft was added and pushed.
+- Chinese Paper10 project-proposal/opening-report substitute was added and
+  pushed for temporary topic approval before the formal paper is ready.
+- `README.md` and `MANIFEST.md` now index the project-proposal report.
+- Preflight now guards the CEUS Stage 3 manuscript draft.
+
+## Remaining Blockers Before Formal Submission
+
+- Pairwise-only baseline policy remains unresolved unless the author accepts
+  matched Paper9 `rank_seed2028` as the comparator.
+- Repository DOI or anonymous reviewer link is still needed.
+- Software licence, generated-output rights, and model/checkpoint rights terms
+  are still needed.
+- Full Bishan Tool2, GPKG-root geospatial inputs, and Dongxing/Neijiang
+  prepared data need public or controlled-access routes.
+- Citation policy remains bounded by the fact that Paper9 has not been formally
+  submitted.
+- Formal inferential statistical language requires a predefined statistical
+  plan; current evidence is descriptive.
+- Final figure exports and source-data package remain to be closed.
 
 ## Last Verification
 
 Run from:
-`D:\test\paper10-geojepa-mpc-farmland-layout\.worktrees\paper10-original-vision-validation`
+
+```text
+D:\test\paper10-geojepa-mpc-farmland-layout\.worktrees\paper10-original-vision-validation
+```
 
 Commands passed:
 
 ```powershell
-D:\adk\.venv\Scripts\python.exe -m pytest paper10_geojepa_mpc\tests\test_original_vision_monitor_matrix.py paper10_geojepa_mpc\tests\test_dongxing_transfer_audit.py paper10_geojepa_mpc\tests\test_original_vision_decision_packet.py paper10_geojepa_mpc\tests\test_submission_preflight.py -q -p no:cacheprovider
+D:\adk\.venv\Scripts\python.exe -m pytest paper10_geojepa_mpc\tests\test_submission_preflight.py paper10_geojepa_mpc\tests\test_original_vision_monitor_matrix.py paper10_geojepa_mpc\tests\test_original_vision_decision_packet.py paper10_geojepa_mpc\tests\test_dongxing_transfer_audit.py -q -p no:cacheprovider
 D:\adk\.venv\Scripts\python.exe scripts\paper10\preflight_submission_checks.py
-$pattern = "direct 50-state " + "success|robust transfer " + "superiority|proves " + "scale-up"
-rg -n $pattern docs\superpowers\plans\2026-06-18-paper10-stage3-confirmatory-rollout-plan.md paper10_geojepa_mpc\experiments\results\e0_original_vision_stage1_50state_label_matrix_2026-06-17.md paper10_geojepa_mpc\experiments\results\e0_original_vision_stage1_stage2_decision_packet_2026-06-17.md
 ```
 
 Observed results:
 
 - `42 passed`
 - `Paper10 preflight: PASS`
-- claim-boundary grep returned no matches
-- working tree was clean at `d4403f5`
 
-## Next Step
+## Resume Instructions
 
-Execute the Stage 3 plan in:
-`docs/superpowers/plans/2026-06-18-paper10-stage3-confirmatory-rollout-plan.md`
-
-Do not claim final 50-state rollout success or a broad transfer-win conclusion
-before matched Stage 3 rollout evidence exists and is summarized.
+1. Open the worktree above.
+2. Run `git status --short --branch`.
+3. Confirm the branch is `paper10-original-vision-validation`.
+4. Start from the proposal report if the user asks for立项/开题材料.
+5. Start from the CEUS Stage 3 manuscript draft if the user asks for paper
+   drafting.
+6. Preserve the claim boundaries above unless new verified evidence changes
+   them.
