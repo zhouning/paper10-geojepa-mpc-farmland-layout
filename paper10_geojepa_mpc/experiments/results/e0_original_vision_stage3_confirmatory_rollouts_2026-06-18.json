@@ -1,0 +1,638 @@
+{
+  "branch": "paper10-original-vision-validation",
+  "claim_boundary": "Stage 3 value-filter rows do not authorize a broad 50-state deployment or scale claim in the current matched paper9-baseline comparison.",
+  "code_commit": "6c3535755a20d3ba1dcd2d59d566bb76b3feecdd",
+  "date": "2026-06-18",
+  "incomplete_items": [
+    "Pairwise-only matched baseline is not separately identified beyond the paper9/rank_seed2028 baseline in this summary.",
+    "No manuscript claim should be strengthened until final baseline policy is frozen and all matched baselines are reported."
+  ],
+  "paper9_baseline": {
+    "aggregate": {
+      "baimu_area_change_ha_mean": -211.85442303743721,
+      "cont_change_mean": 0.019498054771530972,
+      "n_episodes": 5,
+      "negative_zero_swap_steps_sum": 0,
+      "slope_change_pct_mean": -1.26449443430059,
+      "total_reward_max": 78.09246266817792,
+      "total_reward_mean": 67.5436698503176,
+      "total_reward_min": 60.76247356686642,
+      "total_reward_std_sample": 7.22455439874099,
+      "zero_swap_steps_sum": 0
+    },
+    "checkpoint": "paper10_geojepa_mpc/experiments/checkpoints/e0_bishan_rank_seed2028/rank_seed2028.pt",
+    "rollout_path": "D:\\test\\paper10_original_vision_validation\\stage3_colab_handoff\\baseline_paper9_rank_seed2028_h5_k50_seeds0-4_100step.json",
+    "seed_level_rewards": [
+      70.95434469700466,
+      66.61146840551982,
+      61.297599914019195,
+      60.76247356686642,
+      78.09246266817792
+    ],
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "rows": [
+    {
+      "aggregate": {
+        "baimu_area_change_ha_mean": -207.263937322613,
+        "cont_change_mean": 0.019233605411040598,
+        "elapsed_sec_mean": 279.6767912999843,
+        "n_episodes": 5,
+        "negative_zero_swap_steps_sum": 0,
+        "slope_change_pct_mean": -1.2507267926554344,
+        "total_reward_max": 70.2252087804031,
+        "total_reward_mean": 69.47054604253474,
+        "total_reward_min": 67.7134969354234,
+        "total_reward_std_sample": 1.0003610285842477,
+        "zero_swap_steps_sum": 0
+      },
+      "candidate_actions": 16,
+      "checkpoint_path": "D:\\test\\paper10-geojepa-mpc-farmland-layout\\.worktrees\\paper10-original-vision-validation\\paper10_geojepa_mpc\\experiments\\checkpoints\\e0_frontier_random050_value_head_20x16_h5_seed44_top5\\value_head_seed3044.pt",
+      "confirmatory_status": "anchor_reproduction_from_tracked_evidence",
+      "frontier_fraction": 0.5,
+      "label_seed": 44,
+      "matched_paper9_baseline_delta": {
+        "baimu_area_change_ha_mean": 4.5904857148242115,
+        "cont_change_mean": -0.0002644493604903736,
+        "slope_change_pct_mean": 0.013767641645155537,
+        "total_reward_mean": 1.9268761922171365
+      },
+      "n_states": 20,
+      "role": "frozen_anchor",
+      "rollout_complete": true,
+      "rollout_path": "D:\\test\\paper10-geojepa-mpc-farmland-layout\\.worktrees\\paper10-original-vision-validation\\paper10_geojepa_mpc\\experiments\\results\\e0_frontier_random050_value_head_20x16_h5_seed44_top5_rollout_summary.json",
+      "run_name": "frontier_random050_20x16_h5_seed44_f050",
+      "seed_level_paper9_deltas": [
+        {
+          "seed": 0,
+          "value_minus_paper9_reward": -3.2408477615812643
+        },
+        {
+          "seed": 1,
+          "value_minus_paper9_reward": 3.613740374883278
+        },
+        {
+          "seed": 2,
+          "value_minus_paper9_reward": 8.424238053365706
+        },
+        {
+          "seed": 3,
+          "value_minus_paper9_reward": 9.062029496163603
+        },
+        {
+          "seed": 4,
+          "value_minus_paper9_reward": -8.224779201745605
+        }
+      ],
+      "seed_level_rewards": [
+        67.7134969354234,
+        70.2252087804031,
+        69.7218379673849,
+        69.82450306303002,
+        69.86768346643231
+      ],
+      "seed_summaries": [
+        {
+          "baimu_area_change_ha": -204.76889053727984,
+          "cont_change": 0.022020494825437886,
+          "seed": 0,
+          "slope_change_pct": -1.2858170878072237,
+          "total_reward": 67.7134969354234
+        },
+        {
+          "baimu_area_change_ha": -195.7612509440005,
+          "cont_change": 0.01754519795560272,
+          "seed": 1,
+          "slope_change_pct": -1.2078240943877006,
+          "total_reward": 70.2252087804031
+        },
+        {
+          "baimu_area_change_ha": -217.57383621649743,
+          "cont_change": 0.017596053601851125,
+          "seed": 2,
+          "slope_change_pct": -1.228753579409333,
+          "total_reward": 69.7218379673849
+        },
+        {
+          "baimu_area_change_ha": -206.9790116117954,
+          "cont_change": 0.016833218908129055,
+          "seed": 3,
+          "slope_change_pct": -1.2147233880498347,
+          "total_reward": 69.82450306303002
+        },
+        {
+          "baimu_area_change_ha": -211.23669730349184,
+          "cont_change": 0.02217306176418221,
+          "seed": 4,
+          "slope_change_pct": -1.31651581362308,
+          "total_reward": 69.86768346643231
+        }
+      ],
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "selected_top_k": 5,
+      "training_metrics": {
+        "best_checkpoint_epoch": 2,
+        "best_checkpoint_metric": "candidate_top5_regret",
+        "best_checkpoint_value": 0.18767197132110597,
+        "candidate_actions": 16,
+        "candidate_states": 20,
+        "candidate_top1_hit_rate": 0.75,
+        "candidate_top1_regret": 0.5390448331832886,
+        "candidate_top5_hit_rate": 0.9,
+        "candidate_top5_regret": 0.18767197132110597,
+        "candidate_top_k": 5,
+        "checkpoint_mode": "min",
+        "checkpoint_path": "paper10_geojepa_mpc\\experiments\\checkpoints\\e0_frontier_random050_value_head_20x16_h5_seed44_top5\\value_head_seed3044.pt",
+        "device": "cpu",
+        "elapsed_sec": 55.688407099980395,
+        "epochs": 3,
+        "eval_seed": 12345,
+        "final_loss": 0.13101713359355927,
+        "final_mse": 0.0,
+        "final_rank_loss": 0.13101713359355927,
+        "final_sig_loss": 0.0,
+        "init_checkpoint_path": "paper10_geojepa_mpc\\experiments\\checkpoints\\e0_bishan_rank_seed2028\\rank_seed2028.pt",
+        "lambda_rank": 1.0,
+        "lambda_sig": 0.0,
+        "n_pairwise_states": 20,
+        "n_trainable_parameters": 8321,
+        "n_transition_samples": 6000,
+        "pairwise_label_key": "returns",
+        "rank_score_mode": "value",
+        "rank_value_weight": 0.5,
+        "ranking_acc": 0.6381579041481018,
+        "train_ranking_acc": 0.6428571343421936,
+        "trainable_scope": "value_head",
+        "transition_loss_enabled": false,
+        "value_head_train_entry": "run_e0_value_head_train"
+      },
+      "training_metrics_path": "D:\\test\\paper10-geojepa-mpc-farmland-layout\\.worktrees\\paper10-original-vision-validation\\paper10_geojepa_mpc\\experiments\\results\\e0_frontier_random050_value_head_20x16_h5_seed44_top5.json"
+    },
+    {
+      "aggregate": {
+        "baimu_area_change_ha_mean": -215.86834721439124,
+        "cont_change_mean": 0.02009815139725868,
+        "n_episodes": 5,
+        "negative_zero_swap_steps_sum": 0,
+        "slope_change_pct_mean": -1.2659617286225984,
+        "total_reward_max": 71.08897495404584,
+        "total_reward_mean": 64.29600411367917,
+        "total_reward_min": 60.859553034171704,
+        "total_reward_std_sample": 4.250272391392385,
+        "zero_swap_steps_sum": 0
+      },
+      "candidate_actions": 16,
+      "checkpoint_path": "D:\\test\\paper10_original_vision_validation\\stage3_colab_handoff\\frontier_random050_50x16_h5_seed48_f050\\value_head_top6_seed3048.pt",
+      "confirmatory_status": "stage3_value_filter_complete",
+      "frontier_fraction": 0.5,
+      "label_seed": 48,
+      "matched_paper9_baseline_delta": {
+        "baimu_area_change_ha_mean": -4.013924176954021,
+        "cont_change_mean": 0.0006000966257277071,
+        "slope_change_pct_mean": -0.0014672943220084278,
+        "total_reward_mean": -3.2476657366384245
+      },
+      "n_states": 50,
+      "role": "confirmatory_pass",
+      "rollout_complete": true,
+      "rollout_path": "D:\\test\\paper10_original_vision_validation\\stage3_colab_handoff\\frontier_random050_50x16_h5_seed48_f050\\value_filter_blend010_h5_k50_seeds0-4_100step.json",
+      "run_name": "frontier_random050_50x16_h5_seed48_f050",
+      "seed_level_paper9_deltas": [
+        {
+          "seed": 0,
+          "value_minus_paper9_reward": -9.615414586566146
+        },
+        {
+          "seed": 1,
+          "value_minus_paper9_reward": -5.751915371348112
+        },
+        {
+          "seed": 2,
+          "value_minus_paper9_reward": 9.791375040026644
+        },
+        {
+          "seed": 3,
+          "value_minus_paper9_reward": 1.6782794098743778
+        },
+        {
+          "seed": 4,
+          "value_minus_paper9_reward": -12.340653175178886
+        }
+      ],
+      "seed_level_rewards": [
+        61.33893011043851,
+        60.859553034171704,
+        71.08897495404584,
+        62.4407529767408,
+        65.75180949299903
+      ],
+      "seed_summaries": [
+        {
+          "baimu_area_change_ha": -248.39611234357358,
+          "cont_change": 0.01947771251303143,
+          "seed": 0,
+          "slope_change_pct": -1.3226945123979543,
+          "total_reward": 61.33893011043851
+        },
+        {
+          "baimu_area_change_ha": -192.6244915588796,
+          "cont_change": 0.020698248022986476,
+          "seed": 1,
+          "slope_change_pct": -1.2203550103792644,
+          "total_reward": 60.859553034171704
+        },
+        {
+          "baimu_area_change_ha": -234.17168813097476,
+          "cont_change": 0.01881658911180617,
+          "seed": 2,
+          "slope_change_pct": -1.2894202595768682,
+          "total_reward": 71.08897495404584
+        },
+        {
+          "baimu_area_change_ha": -216.7250873990059,
+          "cont_change": 0.02003712462176077,
+          "seed": 3,
+          "slope_change_pct": -1.288662798606626,
+          "total_reward": 62.4407529767408
+        },
+        {
+          "baimu_area_change_ha": -187.4243566395223,
+          "cont_change": 0.021461082716708546,
+          "seed": 4,
+          "slope_change_pct": -1.2086760621522787,
+          "total_reward": 65.75180949299903
+        }
+      ],
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "selected_top_k": 6,
+      "training_metrics": {
+        "allow_init_action_emb_mismatch": false,
+        "best_checkpoint_epoch": 1,
+        "best_checkpoint_metric": "candidate_top6_regret",
+        "best_checkpoint_value": 0.2684469795227051,
+        "candidate_actions": 16,
+        "candidate_states": 50,
+        "candidate_top1_hit_rate": 0.76,
+        "candidate_top1_regret": 0.6946268939971924,
+        "candidate_top6_hit_rate": 0.88,
+        "candidate_top6_regret": 0.27730493545532225,
+        "candidate_top_k": 6,
+        "checkpoint_mode": "min",
+        "checkpoint_path": "D:\\test\\paper10_original_vision_validation\\stage3_colab_handoff\\frontier_random050_50x16_h5_seed48_f050\\value_head_top6_seed3048.pt",
+        "device": "cpu",
+        "disable_transition_loss": true,
+        "elapsed_sec": 3.5389384999998583,
+        "epochs": 3,
+        "eval_seed": 12345,
+        "final_loss": 0.11155129224061966,
+        "final_mse": 0.0,
+        "final_rank_loss": 0.11155129224061966,
+        "final_sig_loss": 0.0,
+        "init_checkpoint_path": "paper10_geojepa_mpc\\experiments\\checkpoints\\e0_bishan_rank_seed2028\\rank_seed2028.pt",
+        "init_copied_state_key_count": null,
+        "init_skipped_state_keys": [],
+        "lambda_rank": 1.0,
+        "lambda_sig": 0.0,
+        "n_pairwise_states": 50,
+        "n_trainable_parameters": 8321,
+        "n_transition_samples": 6000,
+        "pairwise_label_key": "returns",
+        "rank_score_mode": "value",
+        "rank_value_weight": 0.5,
+        "ranking_acc": 0.7238605618476868,
+        "train_ranking_acc": 0.7857142686843872,
+        "trainable_scope": "value_head",
+        "transition_loss_enabled": false,
+        "value_head_train_entry": "run_e0_value_head_train"
+      },
+      "training_metrics_path": "D:\\test\\paper10_original_vision_validation\\stage3_colab_handoff\\frontier_random050_50x16_h5_seed48_f050\\value_head_top6_seed3048_metrics.json"
+    },
+    {
+      "aggregate": {
+        "baimu_area_change_ha_mean": -213.9300207558918,
+        "cont_change_mean": 0.02003712462176086,
+        "n_episodes": 5,
+        "negative_zero_swap_steps_sum": 0,
+        "slope_change_pct_mean": -1.2538243105998461,
+        "total_reward_max": 71.8560413691371,
+        "total_reward_mean": 66.25436421527586,
+        "total_reward_min": 61.04861730104221,
+        "total_reward_std_sample": 4.856463222714678,
+        "zero_swap_steps_sum": 0
+      },
+      "candidate_actions": 24,
+      "checkpoint_path": "D:\\test\\paper10_original_vision_validation\\stage3_colab_handoff\\frontier_random050_50x24_h5_seed47_f075\\value_head_top12_seed3047.pt",
+      "confirmatory_status": "stage3_value_filter_complete",
+      "frontier_fraction": 0.75,
+      "label_seed": 47,
+      "matched_paper9_baseline_delta": {
+        "baimu_area_change_ha_mean": -2.0755977184545884,
+        "cont_change_mean": 0.0005390698502298896,
+        "slope_change_pct_mean": 0.010670123700743828,
+        "total_reward_mean": -1.2893056350417424
+      },
+      "n_states": 50,
+      "role": "confirmatory_pass",
+      "rollout_complete": true,
+      "rollout_path": "D:\\test\\paper10_original_vision_validation\\stage3_colab_handoff\\frontier_random050_50x24_h5_seed47_f075\\value_filter_blend010_h5_k50_seeds0-4_100step.json",
+      "run_name": "frontier_random050_50x24_h5_seed47_f075",
+      "seed_level_paper9_deltas": [
+        {
+          "seed": 0,
+          "value_minus_paper9_reward": -5.583185556752511
+        },
+        {
+          "seed": 1,
+          "value_minus_paper9_reward": -4.2945899874263205
+        },
+        {
+          "seed": 2,
+          "value_minus_paper9_reward": -0.248982612976981
+        },
+        {
+          "seed": 3,
+          "value_minus_paper9_reward": 9.91665128098792
+        },
+        {
+          "seed": 4,
+          "value_minus_paper9_reward": -6.236421299040813
+        }
+      ],
+      "seed_level_rewards": [
+        65.37115914025215,
+        62.316878418093495,
+        61.04861730104221,
+        70.67912484785434,
+        71.8560413691371
+      ],
+      "seed_summaries": [
+        {
+          "baimu_area_change_ha": -246.51322339809536,
+          "cont_change": 0.01973199074427212,
+          "seed": 0,
+          "slope_change_pct": -1.2927315602936504,
+          "total_reward": 65.37115914025215
+        },
+        {
+          "baimu_area_change_ha": -181.0234662537396,
+          "cont_change": 0.021257660131715816,
+          "seed": 1,
+          "slope_change_pct": -1.2240765771930595,
+          "total_reward": 62.316878418093495
+        },
+        {
+          "baimu_area_change_ha": -230.50300732998252,
+          "cont_change": 0.02110509319297149,
+          "seed": 2,
+          "slope_change_pct": -1.2837364926044308,
+          "total_reward": 61.04861730104221
+        },
+        {
+          "baimu_area_change_ha": -178.8224776814461,
+          "cont_change": 0.017392631016858395,
+          "seed": 3,
+          "slope_change_pct": -1.1913061688929887,
+          "total_reward": 70.67912484785434
+        },
+        {
+          "baimu_area_change_ha": -232.78792911619544,
+          "cont_change": 0.020698248022986476,
+          "seed": 4,
+          "slope_change_pct": -1.2772707540151007,
+          "total_reward": 71.8560413691371
+        }
+      ],
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "selected_top_k": 12,
+      "training_metrics": {
+        "allow_init_action_emb_mismatch": false,
+        "best_checkpoint_epoch": 2,
+        "best_checkpoint_metric": "candidate_top12_regret",
+        "best_checkpoint_value": 0.03514968872070313,
+        "candidate_actions": 24,
+        "candidate_states": 50,
+        "candidate_top12_hit_rate": 0.92,
+        "candidate_top12_regret": 0.03514968872070313,
+        "candidate_top1_hit_rate": 0.28,
+        "candidate_top1_regret": 1.4004703211784362,
+        "candidate_top_k": 12,
+        "checkpoint_mode": "min",
+        "checkpoint_path": "D:\\test\\paper10_original_vision_validation\\stage3_colab_handoff\\frontier_random050_50x24_h5_seed47_f075\\value_head_top12_seed3047.pt",
+        "device": "cpu",
+        "disable_transition_loss": true,
+        "elapsed_sec": 2.7655638999995062,
+        "epochs": 3,
+        "eval_seed": 12345,
+        "final_loss": 0.04105053469538689,
+        "final_mse": 0.0,
+        "final_rank_loss": 0.04105053469538689,
+        "final_sig_loss": 0.0,
+        "init_checkpoint_path": "paper10_geojepa_mpc\\experiments\\checkpoints\\e0_bishan_rank_seed2028\\rank_seed2028.pt",
+        "init_copied_state_key_count": null,
+        "init_skipped_state_keys": [],
+        "lambda_rank": 1.0,
+        "lambda_sig": 0.0,
+        "n_pairwise_states": 50,
+        "n_trainable_parameters": 8321,
+        "n_transition_samples": 6000,
+        "pairwise_label_key": "returns",
+        "rank_score_mode": "value",
+        "rank_value_weight": 0.5,
+        "ranking_acc": 0.7120419144630432,
+        "train_ranking_acc": 0.8571428656578064,
+        "trainable_scope": "value_head",
+        "transition_loss_enabled": false,
+        "value_head_train_entry": "run_e0_value_head_train"
+      },
+      "training_metrics_path": "D:\\test\\paper10_original_vision_validation\\stage3_colab_handoff\\frontier_random050_50x24_h5_seed47_f075\\value_head_top12_seed3047_metrics.json"
+    },
+    {
+      "aggregate": {
+        "baimu_area_change_ha_mean": -211.09304431764244,
+        "cont_change_mean": 0.02074910366923479,
+        "n_episodes": 5,
+        "negative_zero_swap_steps_sum": 0,
+        "slope_change_pct_mean": -1.2665097102615412,
+        "total_reward_max": 72.77318589599608,
+        "total_reward_mean": 67.49131359932167,
+        "total_reward_min": 61.62143505653115,
+        "total_reward_std_sample": 4.571073257111943,
+        "zero_swap_steps_sum": 0
+      },
+      "candidate_actions": 24,
+      "checkpoint_path": "D:\\test\\paper10_original_vision_validation\\stage3_colab_handoff\\frontier_random050_50x24_h5_seed48_f075\\value_head_top12_seed3048.pt",
+      "confirmatory_status": "diagnostic_value_filter_complete",
+      "frontier_fraction": 0.75,
+      "label_seed": 48,
+      "matched_paper9_baseline_delta": {
+        "baimu_area_change_ha_mean": 0.7613787197947772,
+        "cont_change_mean": 0.0012510488977038187,
+        "slope_change_pct_mean": -0.0020152759609513016,
+        "total_reward_mean": -0.05235625099592767
+      },
+      "n_states": 50,
+      "role": "diagnostic_near_pass",
+      "rollout_complete": true,
+      "rollout_path": "D:\\test\\paper10_original_vision_validation\\stage3_colab_handoff\\frontier_random050_50x24_h5_seed48_f075\\value_filter_blend010_h5_k50_seeds0-4_100step.json",
+      "run_name": "frontier_random050_50x24_h5_seed48_f075",
+      "seed_level_paper9_deltas": [
+        {
+          "seed": 0,
+          "value_minus_paper9_reward": -9.33290964047351
+        },
+        {
+          "seed": 1,
+          "value_minus_paper9_reward": 0.2405162889142929
+        },
+        {
+          "seed": 2,
+          "value_minus_paper9_reward": 11.475585981976884
+        },
+        {
+          "seed": 3,
+          "value_minus_paper9_reward": 4.175231444833869
+        },
+        {
+          "seed": 4,
+          "value_minus_paper9_reward": -6.820205330231147
+        }
+      ],
+      "seed_level_rewards": [
+        61.62143505653115,
+        66.85198469443411,
+        72.77318589599608,
+        64.93770501170029,
+        71.27225733794677
+      ],
+      "seed_summaries": [
+        {
+          "baimu_area_change_ha": -193.30334229006172,
+          "cont_change": 0.02110509319297149,
+          "seed": 0,
+          "slope_change_pct": -1.2317080603697521,
+          "total_reward": 61.62143505653115
+        },
+        {
+          "baimu_area_change_ha": -221.9262740455568,
+          "cont_change": 0.020596536730490556,
+          "seed": 1,
+          "slope_change_pct": -1.2911351226174022,
+          "total_reward": 66.85198469443411
+        },
+        {
+          "baimu_area_change_ha": -223.94601612748502,
+          "cont_change": 0.02074910366923488,
+          "seed": 2,
+          "slope_change_pct": -1.3080418949851897,
+          "total_reward": 72.77318589599608
+        },
+        {
+          "baimu_area_change_ha": -181.64963671267628,
+          "cont_change": 0.02079995931548284,
+          "seed": 3,
+          "slope_change_pct": -1.1974694957533805,
+          "total_reward": 64.93770501170029
+        },
+        {
+          "baimu_area_change_ha": -234.63995241243242,
+          "cont_change": 0.02049482543799419,
+          "seed": 4,
+          "slope_change_pct": -1.3041939775819815,
+          "total_reward": 71.27225733794677
+        }
+      ],
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "selected_top_k": 12,
+      "training_metrics": {
+        "allow_init_action_emb_mismatch": false,
+        "best_checkpoint_epoch": 2,
+        "best_checkpoint_metric": "candidate_top12_regret",
+        "best_checkpoint_value": 0.18245284080505372,
+        "candidate_actions": 24,
+        "candidate_states": 50,
+        "candidate_top12_hit_rate": 0.86,
+        "candidate_top12_regret": 0.18245284080505372,
+        "candidate_top1_hit_rate": 0.2,
+        "candidate_top1_regret": 1.3905896377563476,
+        "candidate_top_k": 12,
+        "checkpoint_mode": "min",
+        "checkpoint_path": "D:\\test\\paper10_original_vision_validation\\stage3_colab_handoff\\frontier_random050_50x24_h5_seed48_f075\\value_head_top12_seed3048.pt",
+        "device": "cpu",
+        "disable_transition_loss": true,
+        "elapsed_sec": 2.7309975999996823,
+        "epochs": 3,
+        "eval_seed": 12345,
+        "final_loss": 0.0848984345793724,
+        "final_mse": 0.0,
+        "final_rank_loss": 0.0848984345793724,
+        "final_sig_loss": 0.0,
+        "init_checkpoint_path": "paper10_geojepa_mpc\\experiments\\checkpoints\\e0_bishan_rank_seed2028\\rank_seed2028.pt",
+        "init_copied_state_key_count": null,
+        "init_skipped_state_keys": [],
+        "lambda_rank": 1.0,
+        "lambda_sig": 0.0,
+        "n_pairwise_states": 50,
+        "n_trainable_parameters": 8321,
+        "n_transition_samples": 6000,
+        "pairwise_label_key": "returns",
+        "rank_score_mode": "value",
+        "rank_value_weight": 0.5,
+        "ranking_acc": 0.7198953032493591,
+        "train_ranking_acc": 0.75,
+        "trainable_scope": "value_head",
+        "transition_loss_enabled": false,
+        "value_head_train_entry": "run_e0_value_head_train"
+      },
+      "training_metrics_path": "D:\\test\\paper10_original_vision_validation\\stage3_colab_handoff\\frontier_random050_50x24_h5_seed48_f075\\value_head_top12_seed3048_metrics.json"
+    }
+  ],
+  "run_root": "D:\\test\\paper10_original_vision_validation\\stage3_colab_handoff",
+  "settings": {
+    "candidate_score_mode": "blend",
+    "candidate_value_weight": 0.1,
+    "horizon": 5,
+    "mask_mode": "executable",
+    "paper9_baseline_selector": "paper9",
+    "rollout_seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "rollout_steps": 100,
+    "top_k": 50,
+    "value_head_selector": "value_filter"
+  },
+  "status": "stage3_value_filter_rollouts_complete_paper9_baseline_complete_pairwise_only_baseline_pending"
+}
