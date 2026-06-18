@@ -25,6 +25,7 @@ from scripts.paper10.preflight_submission_checks import (
     ORIGINAL_VISION_STAGE1_STAGE2_DECISION_PACKET,
     ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_JSON,
     ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD,
+    PROJECT_PROPOSAL_REPORT,
     RESULTS,
     SELF_CONTAINED_MANUSCRIPT,
     SMOKE_LOG,
@@ -61,6 +62,7 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT,
     CEUS_STAGE3_MANUSCRIPT_REFRAME,
     CEUS_STAGE3_MANUSCRIPT_DRAFT,
+    PROJECT_PROPOSAL_REPORT,
     DONGXING_PLOT_SCRIPT,
     ORIGINAL_VISION_DESIGN,
     ORIGINAL_VISION_REGISTRY,
@@ -202,6 +204,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "ceus_research_article_manuscript_draft_current" in payload["passed_checks"]
     assert "ceus_stage3_manuscript_reframe_current" in payload["passed_checks"]
     assert "ceus_stage3_manuscript_draft_current" in payload["passed_checks"]
+    assert "paper10_project_proposal_report_current" in payload["passed_checks"]
     assert "original_vision_validation_registry_current" in payload["passed_checks"]
 
 
@@ -235,6 +238,20 @@ def test_submission_preflight_minimal_fixture_reports_missing_original_vision_re
     details = check_details(payload, "original_vision_validation_registry_current")
     assert "missing:" in details
     assert str(ORIGINAL_VISION_REGISTRY) in details
+
+
+def test_submission_preflight_minimal_fixture_reports_missing_project_proposal(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    (fixture / PROJECT_PROPOSAL_REPORT).unlink()
+
+    result, payload = run_submission_preflight_json(fixture)
+
+    assert result.returncode == 1
+    assert payload["ok"] is False
+    assert "paper10_project_proposal_report_current" in payload["failed_checks"]
+    details = check_details(payload, "paper10_project_proposal_report_current")
+    assert "missing Paper10 project proposal report files" in details
+    assert str(PROJECT_PROPOSAL_REPORT) in details
 
 
 def test_submission_preflight_minimal_fixture_rejects_original_vision_registry_positive_claim(tmp_path):

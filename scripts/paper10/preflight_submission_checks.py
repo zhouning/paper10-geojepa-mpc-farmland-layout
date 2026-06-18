@@ -65,6 +65,9 @@ CEUS_STAGE3_MANUSCRIPT_REFRAME = (
 CEUS_STAGE3_MANUSCRIPT_DRAFT = (
     RESULTS / "e0_ceus_stage3_manuscript_draft_2026-06-18.md"
 )
+PROJECT_PROPOSAL_REPORT = (
+    RESULTS / "e0_paper10_project_proposal_opening_report_2026-06-18.md"
+)
 DONGXING_PLOT_SCRIPT = Path("scripts") / "paper10" / "plot_integrated_dongxing_figures.py"
 ORIGINAL_VISION_DESIGN = (
     Path("docs")
@@ -124,6 +127,7 @@ REQUIRED_PATHS = (
     CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT,
     CEUS_STAGE3_MANUSCRIPT_REFRAME,
     CEUS_STAGE3_MANUSCRIPT_DRAFT,
+    PROJECT_PROPOSAL_REPORT,
     DONGXING_PLOT_SCRIPT,
     ORIGINAL_VISION_STAGE1_STAGE2_DECISION_PACKET,
     ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD,
@@ -156,6 +160,7 @@ PUBLIC_SUBMISSION_DOCS = (
     CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT,
     CEUS_STAGE3_MANUSCRIPT_REFRAME,
     CEUS_STAGE3_MANUSCRIPT_DRAFT,
+    PROJECT_PROPOSAL_REPORT,
 )
 
 PUBLIC_VAGUE_DATA_ROUTE_PATTERN = re.compile(
@@ -1642,6 +1647,113 @@ def check_ceus_stage3_manuscript_draft_current(root: Path) -> CheckResult:
     )
 
 
+def check_paper10_project_proposal_report_current(root: Path) -> CheckResult:
+    required_files = [
+        PROJECT_PROPOSAL_REPORT,
+        CEUS_STAGE3_MANUSCRIPT_DRAFT,
+        CEUS_STAGE3_MANUSCRIPT_REFRAME,
+        ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD,
+        ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_JSON,
+        SUBMISSION_BLOCKER_DECISION_PACKET,
+        INTEGRATED_CITATION_STATISTICS_POLICY,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_project_proposal_report_current",
+            False,
+            "missing Paper10 project proposal report files: " + ", ".join(missing),
+        )
+
+    text = read_text(root / PROJECT_PROPOSAL_REPORT)
+    missing_tokens = []
+    report_name = PROJECT_PROPOSAL_REPORT.name
+    linked_docs = [Path("README.md"), Path("MANIFEST.md")]
+    for rel_path in linked_docs:
+        path = root / rel_path
+        if not path.exists():
+            missing_tokens.append(f"{rel_path}: missing file")
+            continue
+        if report_name not in read_text(path):
+            missing_tokens.append(f"{rel_path}: {report_name}")
+
+    required_tokens = [
+        "Paper10 课题立项/开题报告替代稿",
+        "课题立项临时材料",
+        "不是正式投稿论文",
+        CEUS_STAGE3_MANUSCRIPT_DRAFT.name,
+        CEUS_STAGE3_MANUSCRIPT_REFRAME.name,
+        ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD.name,
+        ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_JSON.name,
+        SUBMISSION_BLOCKER_DECISION_PACKET.name,
+        INTEGRATED_CITATION_STATISTICS_POLICY.name,
+        "基于 monitor-gated value labels 的 GeoJEPA-MPC 农田布局规划方法研究",
+        "拟解决的核心问题",
+        "研究目标",
+        "研究内容与技术路线",
+        "已有工作基础与阶段性结果",
+        "初步结论",
+        "创新点",
+        "可行性基础",
+        "后续研究计划",
+        "预期成果",
+        "风险、边界与待决事项",
+        "Bishan 20x16/top5",
+        "69.4705",
+        "67.5437",
+        "1.9269",
+        "64.2960",
+        "66.2544",
+        "67.4913",
+        "must not be pooled",
+        "direct 50-state Bishan scale-up success",
+        "robust Bishan-to-Dongxing transfer superiority",
+        "block-level planning-unit abstraction",
+        "area-tolerance matching",
+        "shared-perimeter-weighted contiguity",
+        "pairwise-only baseline policy",
+        "repository DOI",
+        "statistical reporting policy",
+    ]
+    for token in required_tokens:
+        if token not in text:
+            missing_tokens.append(f"{PROJECT_PROPOSAL_REPORT}: {token}")
+
+    if "@zhou2026paper9_local" in text:
+        missing_tokens.append(f"{PROJECT_PROPOSAL_REPORT}: @zhou2026paper9_local")
+
+    forbidden_50_state = re.compile("|".join(FORBIDDEN_50_STATE_PATTERNS), re.IGNORECASE)
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if forbidden_50_state.search(line):
+            missing_tokens.append(
+                f"{PROJECT_PROPOSAL_REPORT}:{line_no}: positive 50-state wording"
+            )
+        match = UNSUPPORTED_INFERENTIAL_STATS_PATTERN.search(line)
+        if match:
+            missing_tokens.append(
+                f"{PROJECT_PROPOSAL_REPORT}:{line_no}: "
+                f"unsupported inferential wording {match.group(0)}"
+            )
+
+    section_count = sum(1 for line in text.splitlines() if line.startswith("## "))
+    if section_count < 10:
+        missing_tokens.append(
+            f"{PROJECT_PROPOSAL_REPORT}: only {section_count} level-2 sections"
+        )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_project_proposal_report_current",
+            False,
+            "Paper10 project proposal report gaps: " + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_project_proposal_report_current",
+        True,
+        "Paper10 project proposal report is current and claim-bounded",
+    )
+
+
 ORIGINAL_VISION_POSITIVE_CLAIM_CUE = re.compile(
     r"\b("
     r"claim(?:s|ed|ing)?"
@@ -1786,6 +1898,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_ceus_research_article_manuscript_draft_current,
     check_ceus_stage3_manuscript_reframe_current,
     check_ceus_stage3_manuscript_draft_current,
+    check_paper10_project_proposal_report_current,
     check_original_vision_validation_registry_current,
 )
 
