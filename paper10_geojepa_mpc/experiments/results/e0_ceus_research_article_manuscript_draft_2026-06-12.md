@@ -8,6 +8,14 @@ repository DOI, licence, full-data access, citation-policy, statistical-policy,
 and final figure-export blockers tracked in
 `e0_submission_blocker_decision_packet_2026-06-11.md`.
 
+Stage 3 update: use
+`e0_ceus_stage3_manuscript_reframe_2026-06-18.md` as the current
+manuscript-facing claim boundary before editing this draft. The 2026-06-18
+Stage 3 confirmatory rollouts showed that the tested confirmatory 50-state
+rows did not beat the matched Paper9 baseline, so this older 2026-06-12 draft
+must not be converted into a final manuscript without the Stage 3 replacement
+title, abstract, Results, Discussion and Conclusion.
+
 Source controls used for this conversion:
 
 - `e0_paper10_integrated_manuscript_scaffold_with_dongxing_2026-06-10.md`

@@ -189,6 +189,11 @@ data needed for smoke verification.
   CEUS Research Article candidate manuscript draft converted from the
   integrated scaffold, tables, figure/table freeze, source-data map, citation
   and statistics policy, and CEUS reviewer-improvement packet.
+- `paper10_geojepa_mpc/experiments/results/e0_ceus_stage3_manuscript_reframe_2026-06-18.md`:
+  current Stage 3 manuscript-facing reframe for the CEUS route, including the
+  replacement title, abstract, Results, Discussion, Conclusion, and
+  claim-evidence map after confirmatory 50-state rows failed to beat the
+  matched Paper9 baseline.
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and
@@ -217,8 +222,8 @@ data needed for smoke verification.
   Dongxing figure/source-data, Data Availability route, figure/table
   numbering-freeze, blocker-decision-packet, integrated target-venue
   conversion-checklist, citation/statistical-reporting policy, CEUS
-  reviewer-improvement packet cross-links, and CEUS manuscript draft
-  constraints.
+  reviewer-improvement packet cross-links, CEUS manuscript draft constraints,
+  and the Stage 3 manuscript reframe claim boundary.
 - `references/paper10_verified_references_2026-06-09.bib`:
   verified BibTeX entries for the first Paper10 manuscript citation pass.
 - `references/paper10_local_sources_2026-06-09.bib`:

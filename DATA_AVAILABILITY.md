@@ -74,6 +74,14 @@ and controlled-access backfill, see:
 paper10_geojepa_mpc/experiments/results/e0_ceus_research_article_manuscript_draft_2026-06-12.md
 ```
 
+For the Stage 3 manuscript-facing reframe that must be applied before final
+CEUS conversion, including the replacement title, abstract, Results,
+Discussion, Conclusion, and claim-evidence map, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_ceus_stage3_manuscript_reframe_2026-06-18.md
+```
+
 For the data-access and rights decision register, including full Tool2,
 GPKG-root geospatial inputs, optional GeoFM rights, code licence, generated-data
 rights, Dongxing/Neijiang prepared-data access, and reviewer routes, see:

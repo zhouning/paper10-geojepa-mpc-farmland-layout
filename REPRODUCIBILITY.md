@@ -115,6 +115,13 @@ the blocker packet and CEUS reviewer-improvement packet:
 paper10_geojepa_mpc/experiments/results/e0_ceus_research_article_manuscript_draft_2026-06-12.md
 ```
 
+Use the Stage 3 manuscript reframe before editing the CEUS draft title,
+abstract, Results, Discussion, Conclusion, captions, or claim-evidence map:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_ceus_stage3_manuscript_reframe_2026-06-18.md
+```
+
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and

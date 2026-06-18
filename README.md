@@ -73,6 +73,7 @@ Paper-facing writing assets are tracked under
 - `e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md`
 - `e0_ceus_reviewer_improvement_packet_2026-06-12.md`
 - `e0_ceus_research_article_manuscript_draft_2026-06-12.md`
+- `e0_ceus_stage3_manuscript_reframe_2026-06-18.md`
 - `e0_data_code_availability_draft_2026-06-09.md` now includes the
   Dongxing/Neijiang prepared-data access route that must be closed before
   submission.
@@ -175,6 +176,12 @@ as the current CEUS Research Article candidate manuscript draft. It remains
 blocked for final submission until repository identifiers, licences, full-data
 routes, citation policy, statistical policy, and final figure exports are
 closed.
+Use
+`paper10_geojepa_mpc/experiments/results/e0_ceus_stage3_manuscript_reframe_2026-06-18.md`
+as the current Stage 3 claim-boundary layer before editing the CEUS draft. The
+Stage 3 confirmatory 50-state rows did not beat the matched Paper9 baseline,
+so final manuscript conversion must use the 2026-06-18 replacement title,
+abstract, Results, Discussion, and Conclusion.
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and

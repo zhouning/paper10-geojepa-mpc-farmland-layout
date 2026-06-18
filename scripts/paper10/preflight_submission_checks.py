@@ -59,6 +59,9 @@ CEUS_REVIEWER_IMPROVEMENT_PACKET = (
 CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT = (
     RESULTS / "e0_ceus_research_article_manuscript_draft_2026-06-12.md"
 )
+CEUS_STAGE3_MANUSCRIPT_REFRAME = (
+    RESULTS / "e0_ceus_stage3_manuscript_reframe_2026-06-18.md"
+)
 DONGXING_PLOT_SCRIPT = Path("scripts") / "paper10" / "plot_integrated_dongxing_figures.py"
 ORIGINAL_VISION_DESIGN = (
     Path("docs")
@@ -68,6 +71,15 @@ ORIGINAL_VISION_DESIGN = (
 )
 ORIGINAL_VISION_REGISTRY = (
     RESULTS / "e0_original_vision_validation_registry_2026-06-17.md"
+)
+ORIGINAL_VISION_STAGE1_STAGE2_DECISION_PACKET = (
+    RESULTS / "e0_original_vision_stage1_stage2_decision_packet_2026-06-17.md"
+)
+ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD = (
+    RESULTS / "e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.md"
+)
+ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_JSON = (
+    RESULTS / "e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json"
 )
 
 REQUIRED_PATHS = (
@@ -107,7 +119,11 @@ REQUIRED_PATHS = (
     INTEGRATED_CITATION_STATISTICS_POLICY,
     CEUS_REVIEWER_IMPROVEMENT_PACKET,
     CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT,
+    CEUS_STAGE3_MANUSCRIPT_REFRAME,
     DONGXING_PLOT_SCRIPT,
+    ORIGINAL_VISION_STAGE1_STAGE2_DECISION_PACKET,
+    ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD,
+    ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_JSON,
     Path("references") / "paper10_verified_references_2026-06-09.bib",
     Path("references") / "paper10_local_sources_2026-06-09.bib",
     Path("references") / "paper10_citation_map_2026-06-09.md",
@@ -134,6 +150,7 @@ PUBLIC_SUBMISSION_DOCS = (
     INTEGRATED_MANUSCRIPT,
     SELF_CONTAINED_MANUSCRIPT,
     CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT,
+    CEUS_STAGE3_MANUSCRIPT_REFRAME,
 )
 
 PUBLIC_VAGUE_DATA_ROUTE_PATTERN = re.compile(
@@ -1361,6 +1378,117 @@ def check_ceus_research_article_manuscript_draft_current(root: Path) -> CheckRes
     )
 
 
+def check_ceus_stage3_manuscript_reframe_current(root: Path) -> CheckResult:
+    required_files = [
+        CEUS_STAGE3_MANUSCRIPT_REFRAME,
+        CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT,
+        ORIGINAL_VISION_STAGE1_STAGE2_DECISION_PACKET,
+        ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD,
+        ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_JSON,
+        INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST,
+        SUBMISSION_BLOCKER_DECISION_PACKET,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "ceus_stage3_manuscript_reframe_current",
+            False,
+            "missing CEUS Stage 3 manuscript reframe files: " + ", ".join(missing),
+        )
+
+    text = read_text(root / CEUS_STAGE3_MANUSCRIPT_REFRAME)
+    missing_tokens = []
+    reframe_name = CEUS_STAGE3_MANUSCRIPT_REFRAME.name
+    linked_docs = [
+        Path("README.md"),
+        Path("MANIFEST.md"),
+        Path("DATA_AVAILABILITY.md"),
+        Path("REPRODUCIBILITY.md"),
+        CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT,
+    ]
+    for rel_path in linked_docs:
+        path = root / rel_path
+        if not path.exists():
+            missing_tokens.append(f"{rel_path}: missing file")
+            continue
+        if reframe_name not in read_text(path):
+            missing_tokens.append(f"{rel_path}: {reframe_name}")
+
+    required_tokens = [
+        "CEUS Stage 3 manuscript reframe",
+        "e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.md",
+        "e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json",
+        "e0_original_vision_stage1_stage2_decision_packet_2026-06-17.md",
+        CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT.name,
+        INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST.name,
+        SUBMISSION_BLOCKER_DECISION_PACKET.name,
+        "Paper10 now solves",
+        "monitor-gated value labels",
+        "Bishan 20x16/top5",
+        "69.4705",
+        "matched Paper9 baseline",
+        "67.5437",
+        "Stage 3 confirmatory 50-state rows did not beat the matched Paper9 baseline",
+        "frontier_random050_50x16_h5_seed48_f050",
+        "64.2960",
+        "frontier_random050_50x24_h5_seed47_f075",
+        "66.2544",
+        "diagnostic_near_pass",
+        "67.4913",
+        "must not be pooled",
+        "Do not claim robust Bishan-to-Dongxing transfer superiority",
+        "Do not claim direct 50-state Bishan scale-up success",
+        "Title replacement",
+        "Abstract replacement",
+        "Results replacement",
+        "Discussion replacement",
+        "Conclusion replacement",
+        "Claim-evidence map",
+        "Current blockers before final submission",
+    ]
+    for token in required_tokens:
+        if token not in text:
+            missing_tokens.append(f"{CEUS_STAGE3_MANUSCRIPT_REFRAME}: {token}")
+
+    forbidden_50_state = re.compile("|".join(FORBIDDEN_50_STATE_PATTERNS), re.IGNORECASE)
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if forbidden_50_state.search(line):
+            missing_tokens.append(
+                f"{CEUS_STAGE3_MANUSCRIPT_REFRAME}:{line_no}: "
+                "positive 50-state wording"
+            )
+        match = UNSUPPORTED_INFERENTIAL_STATS_PATTERN.search(line)
+        if match:
+            missing_tokens.append(
+                f"{CEUS_STAGE3_MANUSCRIPT_REFRAME}:{line_no}: "
+                f"unsupported inferential wording {match.group(0)}"
+            )
+
+    abstract = markdown_section(text, "## Abstract replacement")
+    abstract_words = markdown_word_count(abstract)
+    if not abstract:
+        missing_tokens.append(
+            f"{CEUS_STAGE3_MANUSCRIPT_REFRAME}: missing ## Abstract replacement section"
+        )
+    elif abstract_words > 250:
+        missing_tokens.append(
+            f"{CEUS_STAGE3_MANUSCRIPT_REFRAME}: abstract replacement has "
+            f"{abstract_words} words"
+        )
+
+    if missing_tokens:
+        return CheckResult(
+            "ceus_stage3_manuscript_reframe_current",
+            False,
+            "CEUS Stage 3 manuscript reframe gaps: " + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "ceus_stage3_manuscript_reframe_current",
+        True,
+        "CEUS Stage 3 manuscript reframe is current and claim-bounded",
+    )
+
+
 ORIGINAL_VISION_POSITIVE_CLAIM_CUE = re.compile(
     r"\b("
     r"claim(?:s|ed|ing)?"
@@ -1503,6 +1631,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_integrated_citation_statistics_policy_current,
     check_ceus_reviewer_improvement_packet_current,
     check_ceus_research_article_manuscript_draft_current,
+    check_ceus_stage3_manuscript_reframe_current,
     check_original_vision_validation_registry_current,
 )
 

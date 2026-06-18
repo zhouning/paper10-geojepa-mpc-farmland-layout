@@ -7,6 +7,7 @@ from scripts.paper10.preflight_submission_checks import (
     ARCHIVE_MANIFEST,
     CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT,
     CEUS_REVIEWER_IMPROVEMENT_PACKET,
+    CEUS_STAGE3_MANUSCRIPT_REFRAME,
     check_original_vision_validation_registry_current,
     DATA_ACCESS_RIGHTS_REGISTER,
     DATA_CODE_AVAILABILITY,
@@ -20,6 +21,9 @@ from scripts.paper10.preflight_submission_checks import (
     INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST,
     ORIGINAL_VISION_DESIGN,
     ORIGINAL_VISION_REGISTRY,
+    ORIGINAL_VISION_STAGE1_STAGE2_DECISION_PACKET,
+    ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_JSON,
+    ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD,
     RESULTS,
     SELF_CONTAINED_MANUSCRIPT,
     SMOKE_LOG,
@@ -54,9 +58,13 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     INTEGRATED_CITATION_STATISTICS_POLICY,
     CEUS_REVIEWER_IMPROVEMENT_PACKET,
     CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT,
+    CEUS_STAGE3_MANUSCRIPT_REFRAME,
     DONGXING_PLOT_SCRIPT,
     ORIGINAL_VISION_DESIGN,
     ORIGINAL_VISION_REGISTRY,
+    ORIGINAL_VISION_STAGE1_STAGE2_DECISION_PACKET,
+    ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD,
+    ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_JSON,
     RESULTS / "e0_archive_release_and_doi_backfill_checklist_2026-06-09.md",
     RESULTS / "e0_submission_readiness_checklist_2026-06-09.md",
     RESULTS / "e0_dongxing_return_label_family_summary_2026-06-10.csv",
@@ -190,6 +198,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "integrated_citation_statistics_policy_current" in payload["passed_checks"]
     assert "ceus_reviewer_improvement_packet_current" in payload["passed_checks"]
     assert "ceus_research_article_manuscript_draft_current" in payload["passed_checks"]
+    assert "ceus_stage3_manuscript_reframe_current" in payload["passed_checks"]
     assert "original_vision_validation_registry_current" in payload["passed_checks"]
 
 
