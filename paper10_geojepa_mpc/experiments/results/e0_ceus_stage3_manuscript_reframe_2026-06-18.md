@@ -8,6 +8,8 @@ confirmatory rollouts. It is not a final submission manuscript and does not
 close the repository DOI, licence, full-data access, citation-policy,
 statistical-policy, or figure-export blockers.
 
+Current manuscript draft: `e0_ceus_stage3_manuscript_draft_2026-06-18.md`.
+
 Source controls used for this reframe:
 
 - `e0_ceus_research_article_manuscript_draft_2026-06-12.md`

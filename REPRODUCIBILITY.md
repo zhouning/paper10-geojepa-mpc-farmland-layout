@@ -122,6 +122,13 @@ abstract, Results, Discussion, Conclusion, captions, or claim-evidence map:
 paper10_geojepa_mpc/experiments/results/e0_ceus_stage3_manuscript_reframe_2026-06-18.md
 ```
 
+Use the current CEUS Stage 3 manuscript draft as the manuscript-facing output
+after applying the Stage 3 claim boundary:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_ceus_stage3_manuscript_draft_2026-06-18.md
+```
+
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and

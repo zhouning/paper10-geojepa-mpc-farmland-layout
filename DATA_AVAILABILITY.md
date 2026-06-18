@@ -82,6 +82,14 @@ Discussion, Conclusion, and claim-evidence map, see:
 paper10_geojepa_mpc/experiments/results/e0_ceus_stage3_manuscript_reframe_2026-06-18.md
 ```
 
+For the current CEUS Stage 3 manuscript draft, including the draft Data and Code
+Availability text that still requires DOI, licence, and controlled-access
+backfill, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_ceus_stage3_manuscript_draft_2026-06-18.md
+```
+
 For the data-access and rights decision register, including full Tool2,
 GPKG-root geospatial inputs, optional GeoFM rights, code licence, generated-data
 rights, Dongxing/Neijiang prepared-data access, and reviewer routes, see:
