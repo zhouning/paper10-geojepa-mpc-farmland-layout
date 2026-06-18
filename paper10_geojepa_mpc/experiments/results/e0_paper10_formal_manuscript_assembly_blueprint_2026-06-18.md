@@ -18,6 +18,7 @@ Source basis:
 - `e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md`
 - `e0_integrated_figure_table_numbering_freeze_2026-06-11.md`
 - `e0_source_data_map_with_dongxing_2026-06-11.md`
+- `e0_paper10_claim_source_consistency_audit_2026-06-18.md`
 
 ## one-sentence argument
 
@@ -64,7 +65,9 @@ first.
 The next manuscript editing pass should use this order:
 
 1. Convert the Results section into claim-first subsections with one evidence
-   table or figure reference per claim.
+   table or figure reference per claim, using
+   `e0_paper10_claim_source_consistency_audit_2026-06-18.md` as the current
+   source-derived claim-status check.
 2. Convert Methods into a reproducibility route that names inputs, outputs,
    masks, seeds, top-k, horizons, candidate-value weights and blocked
    dependencies.

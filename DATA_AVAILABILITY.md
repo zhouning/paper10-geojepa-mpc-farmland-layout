@@ -105,6 +105,13 @@ into section, figure, table and Data/Code Availability editing order, see:
 paper10_geojepa_mpc/experiments/results/e0_paper10_formal_manuscript_assembly_blueprint_2026-06-18.md
 ```
 
+For the current source-derived claim audit that recomputes Bishan, Stage 3, and
+Dongxing/Neijiang claim statuses from tracked JSON/CSV evidence, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_claim_source_consistency_audit_2026-06-18.md
+```
+
 For the data-access and rights decision register, including full Tool2,
 GPKG-root geospatial inputs, optional GeoFM rights, code licence, generated-data
 rights, Dongxing/Neijiang prepared-data access, and reviewer routes, see:

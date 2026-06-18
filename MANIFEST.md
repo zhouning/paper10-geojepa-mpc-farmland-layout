@@ -210,6 +210,11 @@ data needed for smoke verification.
   formal-manuscript assembly blueprint that maps the Stage 3 draft into
   section-level editing order, evidence locks, figure/table assembly and
   author-decision blockers before a journal-specific manuscript is produced.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_claim_source_consistency_audit_2026-06-18.md`:
+  source-derived consistency audit that recomputes the current Bishan, Stage 3
+  and Dongxing/Neijiang claim statuses from tracked JSON/CSV evidence.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_claim_source_consistency_audit_2026-06-18.json`:
+  machine-readable output for the claim-source consistency audit.
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and
@@ -240,7 +245,8 @@ data needed for smoke verification.
   conversion-checklist, citation/statistical-reporting policy, CEUS
   reviewer-improvement packet cross-links, CEUS manuscript draft constraints,
   the Stage 3 manuscript reframe claim boundary, and the CEUS Stage 3
-  manuscript draft claim boundary.
+  manuscript draft claim boundary, formal-manuscript blueprint and
+  source-derived claim audit.
 - `references/paper10_verified_references_2026-06-09.bib`:
   verified BibTeX entries for the first Paper10 manuscript citation pass.
 - `references/paper10_local_sources_2026-06-09.bib`:

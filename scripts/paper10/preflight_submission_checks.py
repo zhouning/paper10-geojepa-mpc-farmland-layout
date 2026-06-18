@@ -74,6 +74,12 @@ AUTHOR_DECISION_MATRIX = (
 FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT = (
     RESULTS / "e0_paper10_formal_manuscript_assembly_blueprint_2026-06-18.md"
 )
+PAPER10_CLAIM_SOURCE_AUDIT_MD = (
+    RESULTS / "e0_paper10_claim_source_consistency_audit_2026-06-18.md"
+)
+PAPER10_CLAIM_SOURCE_AUDIT_JSON = (
+    RESULTS / "e0_paper10_claim_source_consistency_audit_2026-06-18.json"
+)
 DONGXING_PLOT_SCRIPT = Path("scripts") / "paper10" / "plot_integrated_dongxing_figures.py"
 ORIGINAL_VISION_DESIGN = (
     Path("docs")
@@ -136,6 +142,8 @@ REQUIRED_PATHS = (
     PROJECT_PROPOSAL_REPORT,
     AUTHOR_DECISION_MATRIX,
     FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+    PAPER10_CLAIM_SOURCE_AUDIT_MD,
+    PAPER10_CLAIM_SOURCE_AUDIT_JSON,
     DONGXING_PLOT_SCRIPT,
     ORIGINAL_VISION_STAGE1_STAGE2_DECISION_PACKET,
     ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD,
@@ -171,6 +179,7 @@ PUBLIC_SUBMISSION_DOCS = (
     PROJECT_PROPOSAL_REPORT,
     AUTHOR_DECISION_MATRIX,
     FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+    PAPER10_CLAIM_SOURCE_AUDIT_MD,
 )
 
 PUBLIC_VAGUE_DATA_ROUTE_PATTERN = re.compile(
@@ -2014,6 +2023,127 @@ def check_paper10_formal_manuscript_blueprint_current(root: Path) -> CheckResult
     )
 
 
+def check_paper10_claim_source_audit_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_CLAIM_SOURCE_AUDIT_MD,
+        PAPER10_CLAIM_SOURCE_AUDIT_JSON,
+        ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_JSON,
+        RESULTS / "e0_dongxing_return_label_family_summary_2026-06-10.csv",
+        RESULTS / "e0_dongxing_low_label_budget_family_summary_2026-06-10.csv",
+        CEUS_STAGE3_MANUSCRIPT_DRAFT,
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_claim_source_audit_current",
+            False,
+            "missing Paper10 claim-source audit files: " + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_CLAIM_SOURCE_AUDIT_MD)
+    try:
+        payload = json.loads(read_text(root / PAPER10_CLAIM_SOURCE_AUDIT_JSON))
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_claim_source_audit_current",
+            False,
+            f"{PAPER10_CLAIM_SOURCE_AUDIT_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    audit_name = PAPER10_CLAIM_SOURCE_AUDIT_MD.name
+    linked_docs = [
+        Path("README.md"),
+        Path("MANIFEST.md"),
+        Path("DATA_AVAILABILITY.md"),
+        Path("REPRODUCIBILITY.md"),
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+    ]
+    for rel_path in linked_docs:
+        path = root / rel_path
+        if not path.exists():
+            missing_tokens.append(f"{rel_path}: missing file")
+            continue
+        if audit_name not in read_text(path):
+            missing_tokens.append(f"{rel_path}: {audit_name}")
+
+    required_tokens = [
+        "Paper10 claim-source consistency audit",
+        "source-derived audit",
+        ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_JSON.name,
+        "e0_dongxing_return_label_family_summary_2026-06-10.csv",
+        "e0_dongxing_low_label_budget_family_summary_2026-06-10.csv",
+        "Bishan 20x16/top5 anchor improves reward and stability",
+        "69.4705",
+        "67.5437",
+        "1.0004",
+        "7.2246",
+        "frontier_random050_50x16_h5_seed48_f050 delta -3.2477",
+        "frontier_random050_50x24_h5_seed47_f075 delta -1.2893",
+        "frontier_random050_50x24_h5_seed48_f075 mean 67.4913",
+        "must not be pooled",
+        "Return-label scaling improves transfer family",
+        "gain versus pairwise 13.7289",
+        "Return-label scaling improves scratch family",
+        "gain versus pairwise 15.5214",
+        "Robust Bishan-to-Dongxing transfer superiority",
+        "50x16 transfer minus scratch -4.1141",
+        "budget 5: -8.7274",
+        "budget 10: -3.4588",
+        "budget 20: 4.2484",
+        "Not supported: broad confirmatory 50-state baseline beating.",
+        "Not supported: robust Bishan-to-Dongxing transfer superiority.",
+        "Not supported: direct positive scale-up under the 50-state confirmatory protocol",
+        "paper10_geojepa_mpc.experiments.paper10_claim_source_audit",
+    ]
+    for token in required_tokens:
+        if token not in text:
+            missing_tokens.append(f"{PAPER10_CLAIM_SOURCE_AUDIT_MD}: {token}")
+
+    expected_flags = {
+        ("stage3", "claims", "bishan_anchor_improves_reward_and_stability", "supported"): True,
+        ("stage3", "claims", "confirmatory_50state_rows_beat_baseline", "supported"): False,
+        ("stage3", "claims", "diagnostic_near_pass_strengthens_confirmatory_claim", "supported"): False,
+        ("dongxing", "claims", "return_label_scaling_improves_transfer_family", "supported"): True,
+        ("dongxing", "claims", "return_label_scaling_improves_scratch_family", "supported"): True,
+        ("dongxing", "claims", "robust_transfer_superiority", "supported"): False,
+    }
+    for path_keys, expected in expected_flags.items():
+        value = payload
+        for key in path_keys:
+            value = value[key]
+        if value is not expected:
+            missing_tokens.append(
+                f"{PAPER10_CLAIM_SOURCE_AUDIT_JSON}: {'.'.join(path_keys)}={value}"
+            )
+
+    forbidden_50_state = re.compile("|".join(FORBIDDEN_50_STATE_PATTERNS), re.IGNORECASE)
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if forbidden_50_state.search(line):
+            missing_tokens.append(
+                f"{PAPER10_CLAIM_SOURCE_AUDIT_MD}:{line_no}: positive 50-state wording"
+            )
+        match = UNSUPPORTED_INFERENTIAL_STATS_PATTERN.search(line)
+        if match:
+            missing_tokens.append(
+                f"{PAPER10_CLAIM_SOURCE_AUDIT_MD}:{line_no}: "
+                f"unsupported inferential wording {match.group(0)}"
+            )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_claim_source_audit_current",
+            False,
+            "Paper10 claim-source audit gaps: " + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_claim_source_audit_current",
+        True,
+        "Paper10 claim-source audit is source-derived and claim-bounded",
+    )
+
+
 ORIGINAL_VISION_POSITIVE_CLAIM_CUE = re.compile(
     r"\b("
     r"claim(?:s|ed|ing)?"
@@ -2161,6 +2291,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_project_proposal_report_current,
     check_paper10_author_decision_matrix_current,
     check_paper10_formal_manuscript_blueprint_current,
+    check_paper10_claim_source_audit_current,
     check_original_vision_validation_registry_current,
 )
 

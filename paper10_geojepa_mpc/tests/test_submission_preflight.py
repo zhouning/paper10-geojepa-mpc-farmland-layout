@@ -27,6 +27,8 @@ from scripts.paper10.preflight_submission_checks import (
     ORIGINAL_VISION_STAGE1_STAGE2_DECISION_PACKET,
     ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_JSON,
     ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD,
+    PAPER10_CLAIM_SOURCE_AUDIT_JSON,
+    PAPER10_CLAIM_SOURCE_AUDIT_MD,
     PROJECT_PROPOSAL_REPORT,
     RESULTS,
     SELF_CONTAINED_MANUSCRIPT,
@@ -73,6 +75,8 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     ORIGINAL_VISION_STAGE1_STAGE2_DECISION_PACKET,
     ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD,
     ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_JSON,
+    PAPER10_CLAIM_SOURCE_AUDIT_MD,
+    PAPER10_CLAIM_SOURCE_AUDIT_JSON,
     RESULTS / "e0_archive_release_and_doi_backfill_checklist_2026-06-09.md",
     RESULTS / "e0_submission_readiness_checklist_2026-06-09.md",
     RESULTS / "e0_dongxing_return_label_family_summary_2026-06-10.csv",
@@ -211,6 +215,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "paper10_project_proposal_report_current" in payload["passed_checks"]
     assert "paper10_author_decision_matrix_current" in payload["passed_checks"]
     assert "paper10_formal_manuscript_blueprint_current" in payload["passed_checks"]
+    assert "paper10_claim_source_audit_current" in payload["passed_checks"]
     assert "original_vision_validation_registry_current" in payload["passed_checks"]
 
 
@@ -286,6 +291,20 @@ def test_submission_preflight_minimal_fixture_reports_missing_formal_manuscript_
     details = check_details(payload, "paper10_formal_manuscript_blueprint_current")
     assert "missing Paper10 formal manuscript blueprint files" in details
     assert str(FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT) in details
+
+
+def test_submission_preflight_minimal_fixture_reports_missing_claim_source_audit(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    (fixture / PAPER10_CLAIM_SOURCE_AUDIT_MD).unlink()
+
+    result, payload = run_submission_preflight_json(fixture)
+
+    assert result.returncode == 1
+    assert payload["ok"] is False
+    assert "paper10_claim_source_audit_current" in payload["failed_checks"]
+    details = check_details(payload, "paper10_claim_source_audit_current")
+    assert "missing Paper10 claim-source audit files" in details
+    assert str(PAPER10_CLAIM_SOURCE_AUDIT_MD) in details
 
 
 def test_submission_preflight_minimal_fixture_rejects_original_vision_registry_positive_claim(tmp_path):

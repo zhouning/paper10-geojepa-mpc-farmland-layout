@@ -1,0 +1,96 @@
+{
+  "date": "2026-06-18",
+  "dongxing": {
+    "claims": {
+      "return_label_scaling_improves_scratch_family": {
+        "basis": "return_50x16_h5 scratch mean reward exceeds pairwise scratch",
+        "supported": true
+      },
+      "return_label_scaling_improves_transfer_family": {
+        "basis": "return_50x16_h5 transfer mean reward exceeds pairwise transfer",
+        "supported": true
+      },
+      "robust_transfer_superiority": {
+        "basis": "transfer would need to exceed scratch at 50x16 and all low-label budgets",
+        "supported": false
+      }
+    },
+    "low_budget_comparisons": {
+      "10": {
+        "reward_effect_transfer_minus_scratch": -3.4588,
+        "scratch_reward_mean": 47.797,
+        "transfer_higher": false,
+        "transfer_reward_mean": 44.3382
+      },
+      "20": {
+        "reward_effect_transfer_minus_scratch": 4.2484,
+        "scratch_reward_mean": 40.4596,
+        "transfer_higher": true,
+        "transfer_reward_mean": 44.708
+      },
+      "5": {
+        "reward_effect_transfer_minus_scratch": -8.7274,
+        "scratch_reward_mean": 50.3654,
+        "transfer_higher": false,
+        "transfer_reward_mean": 41.638
+      }
+    },
+    "return_50x16": {
+      "scratch_gain_vs_pairwise": 15.5213578224,
+      "scratch_reward_mean": 55.7324381574268,
+      "transfer_gain_vs_pairwise": 13.7288965768,
+      "transfer_minus_scratch": -4.114148989,
+      "transfer_reward_mean": 51.6182891684444
+    }
+  },
+  "source_files": {
+    "dongxing_low_budget_csv": "paper10_geojepa_mpc\\experiments\\results\\e0_dongxing_low_label_budget_family_summary_2026-06-10.csv",
+    "dongxing_return_label_csv": "paper10_geojepa_mpc\\experiments\\results\\e0_dongxing_return_label_family_summary_2026-06-10.csv",
+    "stage3_json": "paper10_geojepa_mpc\\experiments\\results\\e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json"
+  },
+  "stage3": {
+    "anchor": {
+      "mean_reward": 69.47054604253474,
+      "reward_delta_vs_baseline": 1.9268761922171365,
+      "run_name": "frontier_random050_20x16_h5_seed44_f050",
+      "std_delta_vs_baseline": -6.2241933702,
+      "std_sample": 1.0003610285842477
+    },
+    "baseline_reward_mean": 67.5436698503176,
+    "baseline_reward_std_sample": 7.22455439874099,
+    "claims": {
+      "bishan_anchor_improves_reward_and_stability": {
+        "basis": "anchor reward delta is positive and anchor sample standard deviation is below baseline",
+        "supported": true
+      },
+      "confirmatory_50state_rows_beat_baseline": {
+        "basis": "all confirmatory rows would need positive reward deltas versus baseline",
+        "supported": false
+      },
+      "diagnostic_near_pass_strengthens_confirmatory_claim": {
+        "basis": "diagnostic row is not pooled with confirmatory rows",
+        "supported": false
+      }
+    },
+    "confirmatory_rows": [
+      {
+        "beats_baseline": false,
+        "mean_reward": 64.29600411367917,
+        "reward_delta_vs_baseline": -3.2476657366384245,
+        "run_name": "frontier_random050_50x16_h5_seed48_f050"
+      },
+      {
+        "beats_baseline": false,
+        "mean_reward": 66.25436421527586,
+        "reward_delta_vs_baseline": -1.2893056350417424,
+        "run_name": "frontier_random050_50x24_h5_seed47_f075"
+      }
+    ],
+    "diagnostic_near_pass": {
+      "mean_reward": 67.49131359932167,
+      "pooled_with_confirmatory": false,
+      "reward_delta_vs_baseline": -0.05235625099592767,
+      "run_name": "frontier_random050_50x24_h5_seed48_f075"
+    }
+  }
+}

@@ -143,6 +143,13 @@ Use the current formal-manuscript assembly blueprint before replacing the Stage
 paper10_geojepa_mpc/experiments/results/e0_paper10_formal_manuscript_assembly_blueprint_2026-06-18.md
 ```
 
+Use the source-derived claim audit before editing Results, Discussion, or
+Conclusion claim language:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_claim_source_consistency_audit_2026-06-18.md
+```
+
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and
