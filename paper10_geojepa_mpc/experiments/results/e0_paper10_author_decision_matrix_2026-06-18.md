@@ -17,6 +17,7 @@ Source basis:
 - `e0_submission_blocker_decision_packet_2026-06-11.md`
 - `e0_integrated_target_venue_and_manuscript_conversion_checklist_with_dongxing_2026-06-12.md`
 - `e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md`
+- `e0_paper10_real_data_availability_audit_2026-06-18.md`
 
 ## One-sentence conversion argument
 
@@ -72,7 +73,9 @@ writing route is:
 - keep reporting descriptive means and sample standard deviations only;
 - keep Paper9 out of public manuscript citations and use the self-contained Paper10 Methods route;
 - keep full Bishan, GPKG-root, and Dongxing/Neijiang data access as unresolved
-  blockers rather than implying they are already deposited;
+  blockers rather than implying they are already deposited; use
+  `e0_paper10_real_data_availability_audit_2026-06-18.md` to separate local
+  path availability from rights and repository-access decisions;
 - keep the proposal report as temporary立项/开题 material, not a submission file.
 
 This route supports continued drafting but does not authorize final

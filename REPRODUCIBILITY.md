@@ -150,6 +150,13 @@ Conclusion claim language:
 paper10_geojepa_mpc/experiments/results/e0_paper10_claim_source_consistency_audit_2026-06-18.md
 ```
 
+Use the real-data availability audit before starting full-data reruns or
+backfilling Data and Code Availability:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_real_data_availability_audit_2026-06-18.md
+```
+
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and

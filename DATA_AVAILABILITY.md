@@ -112,6 +112,14 @@ Dongxing/Neijiang claim statuses from tracked JSON/CSV evidence, see:
 paper10_geojepa_mpc/experiments/results/e0_paper10_claim_source_consistency_audit_2026-06-18.md
 ```
 
+For the current real-data availability audit that records local full Bishan,
+GPKG-root, block/township, and Dongxing/Neijiang external-dependency path
+status without copying raw data into Git, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_real_data_availability_audit_2026-06-18.md
+```
+
 For the data-access and rights decision register, including full Tool2,
 GPKG-root geospatial inputs, optional GeoFM rights, code licence, generated-data
 rights, Dongxing/Neijiang prepared-data access, and reviewer routes, see:

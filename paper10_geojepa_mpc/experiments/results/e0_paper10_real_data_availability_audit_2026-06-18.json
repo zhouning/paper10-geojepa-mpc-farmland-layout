@@ -1,0 +1,150 @@
+{
+  "date": "2026-06-18",
+  "families": [
+    {
+      "bytes_present": 1650030930,
+      "claim_dependency": "Bishan full-data training and rollout reruns",
+      "external_to_git": true,
+      "family_id": "bishan_tool2_full",
+      "file_count_present": 2,
+      "label": "Full Bishan Tool2 arrays",
+      "manuscript_blocker": "Full Bishan Tool2 access route",
+      "missing_required_paths": [],
+      "optional_missing_paths": [],
+      "optional_present_paths": [],
+      "present_required_count": 2,
+      "present_required_paths": [
+        "D:\\test\\tool2\\transitions.npz",
+        "D:\\test\\tool2\\pairwise.npz"
+      ],
+      "required_count": 2,
+      "required_paths": [
+        "D:\\test\\tool2\\transitions.npz",
+        "D:\\test\\tool2\\pairwise.npz"
+      ],
+      "status": "available"
+    },
+    {
+      "bytes_present": 160534528,
+      "claim_dependency": "Executable-mask real-environment rollouts",
+      "external_to_git": true,
+      "family_id": "bishan_gpkg_root",
+      "file_count_present": 1,
+      "label": "Bishan slope-enriched geospatial root",
+      "manuscript_blocker": "GPKG-root geospatial input route",
+      "missing_required_paths": [],
+      "optional_missing_paths": [
+        "D:\\test\\dem_slope_analysis\\output\\DLTB_with_slope.shp",
+        "D:\\test\\dem_slope_analysis\\output\\DLTB_with_slope.dbf",
+        "D:\\test\\dem_slope_analysis\\output\\DLTB_with_slope.shx",
+        "D:\\test\\dem_slope_analysis\\output\\DLTB_with_slope.prj"
+      ],
+      "optional_present_paths": [],
+      "present_required_count": 1,
+      "present_required_paths": [
+        "D:\\test\\dem_slope_analysis\\output\\DLTB_with_slope.gpkg"
+      ],
+      "required_count": 1,
+      "required_paths": [
+        "D:\\test\\dem_slope_analysis\\output\\DLTB_with_slope.gpkg"
+      ],
+      "status": "available"
+    },
+    {
+      "bytes_present": 19284679,
+      "claim_dependency": "Full Bishan rollout reproduction",
+      "external_to_git": true,
+      "family_id": "bishan_rollout_inputs",
+      "file_count_present": 63,
+      "label": "Bishan prepared block and township inputs",
+      "manuscript_blocker": "GPKG-root geospatial input route",
+      "missing_required_paths": [],
+      "optional_missing_paths": [],
+      "optional_present_paths": [],
+      "present_required_count": 2,
+      "present_required_paths": [
+        "D:\\test\\results_real\\blocks",
+        "D:\\test\\townships.json"
+      ],
+      "required_count": 2,
+      "required_paths": [
+        "D:\\test\\results_real\\blocks",
+        "D:\\test\\townships.json"
+      ],
+      "status": "available"
+    },
+    {
+      "bytes_present": 9505170,
+      "claim_dependency": "External-region full reruns and timing audit",
+      "external_to_git": true,
+      "family_id": "dongxing_cloud_primary",
+      "file_count_present": 6,
+      "label": "Dongxing/Neijiang primary prepared-results directory",
+      "manuscript_blocker": "Dongxing/Neijiang prepared-data route",
+      "missing_required_paths": [],
+      "optional_missing_paths": [
+        "G:\\\u6211\u7684\u4e91\u7aef\u786c\u76d8\\paper4_results\\dongxing\\colab_timing.json",
+        "G:\\\u6211\u7684\u4e91\u7aef\u786c\u76d8\\paper4_results\\dongxing\\marl_eval_seed0.json",
+        "G:\\\u6211\u7684\u4e91\u7aef\u786c\u76d8\\paper4_results\\dongxing\\county_eval_seed0.json"
+      ],
+      "optional_present_paths": [],
+      "present_required_count": 1,
+      "present_required_paths": [
+        "G:\\\u6211\u7684\u4e91\u7aef\u786c\u76d8\\paper4_results\\dongxing"
+      ],
+      "required_count": 1,
+      "required_paths": [
+        "G:\\\u6211\u7684\u4e91\u7aef\u786c\u76d8\\paper4_results\\dongxing"
+      ],
+      "status": "available"
+    },
+    {
+      "bytes_present": 5715859,
+      "claim_dependency": "External-region path fallback",
+      "external_to_git": true,
+      "family_id": "dongxing_cloud_alternate",
+      "file_count_present": 9,
+      "label": "Dongxing/Neijiang alternate prepared-results directory",
+      "manuscript_blocker": "Dongxing/Neijiang prepared-data route",
+      "missing_required_paths": [],
+      "optional_missing_paths": [],
+      "optional_present_paths": [],
+      "present_required_count": 1,
+      "present_required_paths": [
+        "G:\\\u6211\u7684\u4e91\u7aef\u786c\u76d8\\paper4_results\\dongxing1"
+      ],
+      "required_count": 1,
+      "required_paths": [
+        "G:\\\u6211\u7684\u4e91\u7aef\u786c\u76d8\\paper4_results\\dongxing1"
+      ],
+      "status": "available"
+    },
+    {
+      "bytes_present": 0,
+      "claim_dependency": "External-region local rerun fallback",
+      "external_to_git": true,
+      "family_id": "dongxing_local_candidate",
+      "file_count_present": 0,
+      "label": "Dongxing/Neijiang local prepared-results directory",
+      "manuscript_blocker": "Dongxing/Neijiang prepared-data route",
+      "missing_required_paths": [
+        "D:\\test\\dongxing"
+      ],
+      "optional_missing_paths": [],
+      "optional_present_paths": [],
+      "present_required_count": 0,
+      "present_required_paths": [],
+      "required_count": 1,
+      "required_paths": [
+        "D:\\test\\dongxing"
+      ],
+      "status": "missing"
+    }
+  ],
+  "root": "D:\\test",
+  "summary": {
+    "available": 5,
+    "missing": 1,
+    "partial": 0
+  }
+}

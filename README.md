@@ -79,6 +79,7 @@ Paper-facing writing assets are tracked under
 - `e0_paper10_author_decision_matrix_2026-06-18.md`
 - `e0_paper10_formal_manuscript_assembly_blueprint_2026-06-18.md`
 - `e0_paper10_claim_source_consistency_audit_2026-06-18.md`
+- `e0_paper10_real_data_availability_audit_2026-06-18.md`
 - `e0_data_code_availability_draft_2026-06-09.md` now includes the
   Dongxing/Neijiang prepared-data access route that must be closed before
   submission.
@@ -208,6 +209,11 @@ Use
 `paper10_geojepa_mpc/experiments/results/e0_paper10_claim_source_consistency_audit_2026-06-18.md`
 as the current source-derived consistency audit for Bishan, Stage 3, and
 Dongxing/Neijiang claim boundaries.
+Use
+`paper10_geojepa_mpc/experiments/results/e0_paper10_real_data_availability_audit_2026-06-18.md`
+as the current real-data availability audit for full Bishan, GPKG-root, block
+input, and Dongxing/Neijiang external-dependency routing before final Data and
+Code Availability wording.
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and

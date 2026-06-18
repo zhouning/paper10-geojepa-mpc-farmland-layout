@@ -14,6 +14,10 @@ from typing import Callable
 
 RESULTS = Path("paper10_geojepa_mpc") / "experiments" / "results"
 
+README = Path("README.md")
+REPRODUCIBILITY = Path("REPRODUCIBILITY.md")
+MANIFEST = Path("MANIFEST.md")
+DATA_AVAILABILITY = Path("DATA_AVAILABILITY.md")
 ARCHIVE_MANIFEST = RESULTS / "e0_archive_manifest_2026-06-09.csv"
 SELF_CONTAINED_MANUSCRIPT = (
     RESULTS
@@ -80,6 +84,12 @@ PAPER10_CLAIM_SOURCE_AUDIT_MD = (
 PAPER10_CLAIM_SOURCE_AUDIT_JSON = (
     RESULTS / "e0_paper10_claim_source_consistency_audit_2026-06-18.json"
 )
+PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD = (
+    RESULTS / "e0_paper10_real_data_availability_audit_2026-06-18.md"
+)
+PAPER10_REAL_DATA_AVAILABILITY_AUDIT_JSON = (
+    RESULTS / "e0_paper10_real_data_availability_audit_2026-06-18.json"
+)
 DONGXING_PLOT_SCRIPT = Path("scripts") / "paper10" / "plot_integrated_dongxing_figures.py"
 ORIGINAL_VISION_DESIGN = (
     Path("docs")
@@ -144,6 +154,8 @@ REQUIRED_PATHS = (
     FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
     PAPER10_CLAIM_SOURCE_AUDIT_MD,
     PAPER10_CLAIM_SOURCE_AUDIT_JSON,
+    PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
+    PAPER10_REAL_DATA_AVAILABILITY_AUDIT_JSON,
     DONGXING_PLOT_SCRIPT,
     ORIGINAL_VISION_STAGE1_STAGE2_DECISION_PACKET,
     ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD,
@@ -180,6 +192,7 @@ PUBLIC_SUBMISSION_DOCS = (
     AUTHOR_DECISION_MATRIX,
     FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
     PAPER10_CLAIM_SOURCE_AUDIT_MD,
+    PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
 )
 
 PUBLIC_VAGUE_DATA_ROUTE_PATTERN = re.compile(
@@ -2144,6 +2157,162 @@ def check_paper10_claim_source_audit_current(root: Path) -> CheckResult:
     )
 
 
+def check_paper10_real_data_availability_audit_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
+        PAPER10_REAL_DATA_AVAILABILITY_AUDIT_JSON,
+        DATA_AVAILABILITY,
+        REPRODUCIBILITY,
+        MANIFEST,
+        Path("README.md"),
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+        AUTHOR_DECISION_MATRIX,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_real_data_availability_audit_current",
+            False,
+            "missing Paper10 real-data availability audit files: "
+            + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD)
+    try:
+        payload = json.loads(read_text(root / PAPER10_REAL_DATA_AVAILABILITY_AUDIT_JSON))
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_real_data_availability_audit_current",
+            False,
+            f"{PAPER10_REAL_DATA_AVAILABILITY_AUDIT_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    audit_name = PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD.name
+    linked_docs = [
+        Path("README.md"),
+        Path("MANIFEST.md"),
+        Path("DATA_AVAILABILITY.md"),
+        Path("REPRODUCIBILITY.md"),
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+        AUTHOR_DECISION_MATRIX,
+    ]
+    for rel_path in linked_docs:
+        path = root / rel_path
+        if not path.exists():
+            missing_tokens.append(f"{rel_path}: missing file")
+            continue
+        if audit_name not in read_text(path):
+            missing_tokens.append(f"{rel_path}: {audit_name}")
+
+    required_tokens = [
+        "Paper10 real-data availability audit",
+        "external-dependency audit",
+        "not a data-rights approval",
+        "raw geospatial data are not copied into Git",
+        "Full Bishan Tool2 arrays",
+        "Bishan slope-enriched geospatial root",
+        "Bishan prepared block and township inputs",
+        "Dongxing/Neijiang primary prepared-results directory",
+        "Dongxing/Neijiang alternate prepared-results directory",
+        "Dongxing/Neijiang local prepared-results directory",
+        "Full Bishan Tool2 access route",
+        "GPKG-root geospatial input route",
+        "Dongxing/Neijiang prepared-data route",
+        "paper10_geojepa_mpc.experiments.real_data_availability_audit",
+    ]
+    for token in required_tokens:
+        if token not in text:
+            missing_tokens.append(
+                f"{PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD}: {token}"
+            )
+
+    expected_family_ids = {
+        "bishan_tool2_full",
+        "bishan_gpkg_root",
+        "bishan_rollout_inputs",
+        "dongxing_cloud_primary",
+        "dongxing_cloud_alternate",
+        "dongxing_local_candidate",
+    }
+    families = payload.get("families")
+    if not isinstance(families, list):
+        missing_tokens.append(f"{PAPER10_REAL_DATA_AVAILABILITY_AUDIT_JSON}: families")
+        families = []
+    observed_ids = {row.get("family_id") for row in families if isinstance(row, dict)}
+    for family_id in sorted(expected_family_ids - observed_ids):
+        missing_tokens.append(
+            f"{PAPER10_REAL_DATA_AVAILABILITY_AUDIT_JSON}: {family_id}"
+        )
+
+    summary = payload.get("summary", {})
+    for key in ("available", "partial", "missing"):
+        if key not in summary:
+            missing_tokens.append(
+                f"{PAPER10_REAL_DATA_AVAILABILITY_AUDIT_JSON}: summary.{key}"
+            )
+
+    for row in families:
+        if not isinstance(row, dict):
+            missing_tokens.append(
+                f"{PAPER10_REAL_DATA_AVAILABILITY_AUDIT_JSON}: non-dict family row"
+            )
+            continue
+        for key in (
+            "status",
+            "required_count",
+            "present_required_count",
+            "file_count_present",
+            "bytes_present",
+            "missing_required_paths",
+            "claim_dependency",
+            "manuscript_blocker",
+            "external_to_git",
+        ):
+            if key not in row:
+                missing_tokens.append(
+                    f"{PAPER10_REAL_DATA_AVAILABILITY_AUDIT_JSON}: "
+                    f"{row.get('family_id', '<unknown>')}.{key}"
+                )
+        if row.get("status") not in {"available", "partial", "missing"}:
+            missing_tokens.append(
+                f"{PAPER10_REAL_DATA_AVAILABILITY_AUDIT_JSON}: "
+                f"{row.get('family_id', '<unknown>')}.status={row.get('status')}"
+            )
+        if row.get("external_to_git") is not True:
+            missing_tokens.append(
+                f"{PAPER10_REAL_DATA_AVAILABILITY_AUDIT_JSON}: "
+                f"{row.get('family_id', '<unknown>')}.external_to_git"
+            )
+
+    forbidden_50_state = re.compile("|".join(FORBIDDEN_50_STATE_PATTERNS), re.IGNORECASE)
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if forbidden_50_state.search(line):
+            missing_tokens.append(
+                f"{PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD}:{line_no}: "
+                "positive 50-state wording"
+            )
+        match = UNSUPPORTED_INFERENTIAL_STATS_PATTERN.search(line)
+        if match:
+            missing_tokens.append(
+                f"{PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD}:{line_no}: "
+                f"unsupported inferential wording {match.group(0)}"
+            )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_real_data_availability_audit_current",
+            False,
+            "Paper10 real-data availability audit gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_real_data_availability_audit_current",
+        True,
+        "Paper10 real-data availability audit is current and bounded",
+    )
+
+
 ORIGINAL_VISION_POSITIVE_CLAIM_CUE = re.compile(
     r"\b("
     r"claim(?:s|ed|ing)?"
@@ -2292,6 +2461,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_author_decision_matrix_current,
     check_paper10_formal_manuscript_blueprint_current,
     check_paper10_claim_source_audit_current,
+    check_paper10_real_data_availability_audit_current,
     check_original_vision_validation_registry_current,
 )
 

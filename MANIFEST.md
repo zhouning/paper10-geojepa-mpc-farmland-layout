@@ -215,6 +215,12 @@ data needed for smoke verification.
   and Dongxing/Neijiang claim statuses from tracked JSON/CSV evidence.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_claim_source_consistency_audit_2026-06-18.json`:
   machine-readable output for the claim-source consistency audit.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_real_data_availability_audit_2026-06-18.md`:
+  real-data availability audit that records local full Bishan, GPKG-root,
+  block/township, and Dongxing/Neijiang external-dependency path status without
+  copying raw data into Git.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_real_data_availability_audit_2026-06-18.json`:
+  machine-readable output for the real-data availability audit.
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and
@@ -246,7 +252,7 @@ data needed for smoke verification.
   reviewer-improvement packet cross-links, CEUS manuscript draft constraints,
   the Stage 3 manuscript reframe claim boundary, and the CEUS Stage 3
   manuscript draft claim boundary, formal-manuscript blueprint and
-  source-derived claim audit.
+  source-derived claim audit, and real-data availability audit.
 - `references/paper10_verified_references_2026-06-09.bib`:
   verified BibTeX entries for the first Paper10 manuscript citation pass.
 - `references/paper10_local_sources_2026-06-09.bib`:

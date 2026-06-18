@@ -19,6 +19,7 @@ Source basis:
 - `e0_integrated_figure_table_numbering_freeze_2026-06-11.md`
 - `e0_source_data_map_with_dongxing_2026-06-11.md`
 - `e0_paper10_claim_source_consistency_audit_2026-06-18.md`
+- `e0_paper10_real_data_availability_audit_2026-06-18.md`
 
 ## one-sentence argument
 
@@ -184,6 +185,11 @@ The formal manuscript cannot finalize Data and Code Availability until author
 decisions close the repository DOI or reviewer link, code licence,
 generated-output rights, full Bishan Tool2 route, GPKG-root route and
 Dongxing/Neijiang prepared data route.
+
+Use `e0_paper10_real_data_availability_audit_2026-06-18.md` as the current
+path-level evidence when drafting this section. It records local availability
+and missing paths only; it does not replace data-rights approval or an archive
+access route.
 
 Current safe wording route:
 
