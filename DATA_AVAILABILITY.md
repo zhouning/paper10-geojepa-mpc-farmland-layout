@@ -120,6 +120,14 @@ status without copying raw data into Git, see:
 paper10_geojepa_mpc/experiments/results/e0_paper10_real_data_availability_audit_2026-06-18.md
 ```
 
+For the current metadata-only integrity smoke that reads NPZ headers,
+GeoPackage metadata, directory summaries, and JSON top-level keys without
+exporting raw rows or geometries, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_real_data_integrity_smoke_2026-06-18.md
+```
+
 For the data-access and rights decision register, including full Tool2,
 GPKG-root geospatial inputs, optional GeoFM rights, code licence, generated-data
 rights, Dongxing/Neijiang prepared-data access, and reviewer routes, see:

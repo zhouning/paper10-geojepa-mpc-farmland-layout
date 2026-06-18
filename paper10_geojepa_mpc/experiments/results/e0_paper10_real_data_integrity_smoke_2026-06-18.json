@@ -1,0 +1,276 @@
+{
+  "date": "2026-06-18",
+  "directories": [
+    {
+      "bytes": 19284272,
+      "exists": true,
+      "extension_counts": {
+        ".0": 3,
+        ".csv": 13,
+        ".json": 32,
+        ".png": 13,
+        ".zip": 1
+      },
+      "file_count": 62,
+      "kind": "directory",
+      "path": "D:\\test\\results_real\\blocks",
+      "sample_files": [
+        "county\\baselines_county.json",
+        "county\\tb_county_logs\\MaskablePPO_1\\events.out.tfevents.1773128787.zhouning1.129736.0",
+        "county_summary.json",
+        "township_500227001\\block_compositions.json",
+        "township_500227001\\block_features.json",
+        "township_500227001\\block_map.png",
+        "township_500227001\\parcel_block_mapping.csv",
+        "township_500227002\\block_compositions.json",
+        "township_500227002\\block_features.json",
+        "township_500227002\\block_map.png",
+        "township_500227002\\parcel_block_mapping.csv",
+        "township_500227100\\block_compositions.json"
+      ],
+      "status": "readable"
+    },
+    {
+      "bytes": 9505170,
+      "exists": true,
+      "extension_counts": {
+        ".json": 3,
+        ".zip": 3
+      },
+      "file_count": 6,
+      "kind": "directory",
+      "path": "G:\\\u6211\u7684\u4e91\u7aef\u786c\u76d8\\paper4_results\\dongxing",
+      "sample_files": [
+        "county_model_seed0.zip",
+        "county_model_seed1.zip",
+        "county_model_seed2.zip",
+        "county_training_log_seed0.json",
+        "county_training_log_seed1.json",
+        "county_training_log_seed2.json"
+      ],
+      "status": "readable"
+    },
+    {
+      "bytes": 5715859,
+      "exists": true,
+      "extension_counts": {
+        ".json": 6,
+        ".zip": 3
+      },
+      "file_count": 9,
+      "kind": "directory",
+      "path": "G:\\\u6211\u7684\u4e91\u7aef\u786c\u76d8\\paper4_results\\dongxing1",
+      "sample_files": [
+        "colab_timing.json",
+        "county_eval_seed0.json",
+        "county_model_seed0.zip",
+        "county_model_seed1.zip",
+        "county_training_log_seed0.json",
+        "county_training_log_seed1.json",
+        "marl_eval_seed0.json",
+        "marl_model_seed0.zip",
+        "marl_training_log_seed0.json"
+      ],
+      "status": "readable"
+    }
+  ],
+  "geopackage": [
+    {
+      "bytes": 160534528,
+      "contents": [
+        {
+          "data_type": "features",
+          "identifier": "DLTB",
+          "table_name": "DLTB"
+        }
+      ],
+      "exists": true,
+      "geometry_columns": [
+        {
+          "column_name": "geom",
+          "geometry_type_name": "MULTIPOLYGON",
+          "table_name": "DLTB"
+        }
+      ],
+      "kind": "geopackage",
+      "path": "D:\\test\\dem_slope_analysis\\output\\DLTB_with_slope.gpkg",
+      "status": "readable",
+      "table_names": [
+        "DLTB",
+        "gpkg_contents",
+        "gpkg_extensions",
+        "gpkg_geometry_columns",
+        "gpkg_ogr_contents",
+        "gpkg_spatial_ref_sys",
+        "gpkg_tile_matrix",
+        "gpkg_tile_matrix_set",
+        "rtree_DLTB_geom",
+        "rtree_DLTB_geom_node",
+        "rtree_DLTB_geom_parent",
+        "rtree_DLTB_geom_rowid",
+        "sqlite_sequence"
+      ]
+    }
+  ],
+  "json": [
+    {
+      "bytes": 407,
+      "exists": true,
+      "item_count": 13,
+      "kind": "json",
+      "path": "D:\\test\\townships.json",
+      "status": "readable",
+      "top_level_keys": [
+        "500227001",
+        "500227002",
+        "500227100",
+        "500227101",
+        "500227102",
+        "500227103",
+        "500227104",
+        "500227105",
+        "500227106",
+        "500227107",
+        "500227108",
+        "500227109",
+        "500227200"
+      ],
+      "top_level_type": "dict"
+    },
+    {
+      "bytes": 0,
+      "exists": false,
+      "kind": "json",
+      "path": "G:\\\u6211\u7684\u4e91\u7aef\u786c\u76d8\\paper4_results\\dongxing\\colab_timing.json",
+      "status": "missing",
+      "top_level_keys": [],
+      "top_level_type": null
+    },
+    {
+      "bytes": 0,
+      "exists": false,
+      "kind": "json",
+      "path": "G:\\\u6211\u7684\u4e91\u7aef\u786c\u76d8\\paper4_results\\dongxing\\marl_eval_seed0.json",
+      "status": "missing",
+      "top_level_keys": [],
+      "top_level_type": null
+    },
+    {
+      "bytes": 0,
+      "exists": false,
+      "kind": "json",
+      "path": "G:\\\u6211\u7684\u4e91\u7aef\u786c\u76d8\\paper4_results\\dongxing\\county_eval_seed0.json",
+      "status": "missing",
+      "top_level_keys": [],
+      "top_level_type": null
+    }
+  ],
+  "npz": [
+    {
+      "arrays": {
+        "actions": {
+          "dtype": "int64",
+          "fortran_order": false,
+          "shape": [
+            6000
+          ]
+        },
+        "block_features": {
+          "dtype": "float32",
+          "fortran_order": false,
+          "shape": [
+            6000,
+            2600,
+            17
+          ]
+        },
+        "global_features": {
+          "dtype": "float32",
+          "fortran_order": false,
+          "shape": [
+            6000,
+            12
+          ]
+        },
+        "next_block_features": {
+          "dtype": "float32",
+          "fortran_order": false,
+          "shape": [
+            6000,
+            2600,
+            17
+          ]
+        },
+        "next_global_features": {
+          "dtype": "float32",
+          "fortran_order": false,
+          "shape": [
+            6000,
+            12
+          ]
+        },
+        "rewards": {
+          "dtype": "float32",
+          "fortran_order": false,
+          "shape": [
+            6000
+          ]
+        }
+      },
+      "bytes": 1522832889,
+      "exists": true,
+      "file_count": 6,
+      "kind": "npz",
+      "path": "D:\\test\\tool2\\transitions.npz",
+      "status": "readable"
+    },
+    {
+      "arrays": {
+        "actions": {
+          "dtype": "int64",
+          "fortran_order": false,
+          "shape": [
+            1000,
+            50
+          ]
+        },
+        "rewards": {
+          "dtype": "float32",
+          "fortran_order": false,
+          "shape": [
+            1000,
+            50
+          ]
+        },
+        "states_bf": {
+          "dtype": "float32",
+          "fortran_order": false,
+          "shape": [
+            1000,
+            2600,
+            17
+          ]
+        },
+        "states_gf": {
+          "dtype": "float32",
+          "fortran_order": false,
+          "shape": [
+            1000,
+            12
+          ]
+        }
+      },
+      "bytes": 127198041,
+      "exists": true,
+      "file_count": 4,
+      "kind": "npz",
+      "path": "D:\\test\\tool2\\pairwise.npz",
+      "status": "readable"
+    }
+  ],
+  "root": "D:\\test",
+  "summary": {
+    "missing": 3,
+    "readable": 7
+  }
+}

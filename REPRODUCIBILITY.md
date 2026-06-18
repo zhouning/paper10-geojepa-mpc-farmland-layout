@@ -157,6 +157,14 @@ backfilling Data and Code Availability:
 paper10_geojepa_mpc/experiments/results/e0_paper10_real_data_availability_audit_2026-06-18.md
 ```
 
+Use the real-data integrity smoke before long full-data experiments to confirm
+metadata-level readability of the external NPZ, GeoPackage, directory, and JSON
+inputs:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_real_data_integrity_smoke_2026-06-18.md
+```
+
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and

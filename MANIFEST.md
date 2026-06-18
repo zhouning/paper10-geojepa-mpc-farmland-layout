@@ -221,6 +221,12 @@ data needed for smoke verification.
   copying raw data into Git.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_real_data_availability_audit_2026-06-18.json`:
   machine-readable output for the real-data availability audit.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_real_data_integrity_smoke_2026-06-18.md`:
+  metadata-only real-data integrity smoke that records NPZ array headers,
+  GeoPackage metadata, directory summaries, and JSON top-level keys without
+  exporting raw rows or geometries.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_real_data_integrity_smoke_2026-06-18.json`:
+  machine-readable output for the real-data integrity smoke.
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and
@@ -252,7 +258,8 @@ data needed for smoke verification.
   reviewer-improvement packet cross-links, CEUS manuscript draft constraints,
   the Stage 3 manuscript reframe claim boundary, and the CEUS Stage 3
   manuscript draft claim boundary, formal-manuscript blueprint and
-  source-derived claim audit, and real-data availability audit.
+  source-derived claim audit, real-data availability audit, and real-data
+  integrity smoke.
 - `references/paper10_verified_references_2026-06-09.bib`:
   verified BibTeX entries for the first Paper10 manuscript citation pass.
 - `references/paper10_local_sources_2026-06-09.bib`:

@@ -90,6 +90,12 @@ PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD = (
 PAPER10_REAL_DATA_AVAILABILITY_AUDIT_JSON = (
     RESULTS / "e0_paper10_real_data_availability_audit_2026-06-18.json"
 )
+PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD = (
+    RESULTS / "e0_paper10_real_data_integrity_smoke_2026-06-18.md"
+)
+PAPER10_REAL_DATA_INTEGRITY_SMOKE_JSON = (
+    RESULTS / "e0_paper10_real_data_integrity_smoke_2026-06-18.json"
+)
 DONGXING_PLOT_SCRIPT = Path("scripts") / "paper10" / "plot_integrated_dongxing_figures.py"
 ORIGINAL_VISION_DESIGN = (
     Path("docs")
@@ -156,6 +162,8 @@ REQUIRED_PATHS = (
     PAPER10_CLAIM_SOURCE_AUDIT_JSON,
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_JSON,
+    PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD,
+    PAPER10_REAL_DATA_INTEGRITY_SMOKE_JSON,
     DONGXING_PLOT_SCRIPT,
     ORIGINAL_VISION_STAGE1_STAGE2_DECISION_PACKET,
     ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD,
@@ -193,6 +201,7 @@ PUBLIC_SUBMISSION_DOCS = (
     FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
     PAPER10_CLAIM_SOURCE_AUDIT_MD,
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
+    PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD,
 )
 
 PUBLIC_VAGUE_DATA_ROUTE_PATTERN = re.compile(
@@ -2313,6 +2322,171 @@ def check_paper10_real_data_availability_audit_current(root: Path) -> CheckResul
     )
 
 
+def check_paper10_real_data_integrity_smoke_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD,
+        PAPER10_REAL_DATA_INTEGRITY_SMOKE_JSON,
+        PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
+        PAPER10_REAL_DATA_AVAILABILITY_AUDIT_JSON,
+        DATA_AVAILABILITY,
+        REPRODUCIBILITY,
+        MANIFEST,
+        Path("README.md"),
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+        AUTHOR_DECISION_MATRIX,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_real_data_integrity_smoke_current",
+            False,
+            "missing Paper10 real-data integrity smoke files: "
+            + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD)
+    try:
+        payload = json.loads(read_text(root / PAPER10_REAL_DATA_INTEGRITY_SMOKE_JSON))
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_real_data_integrity_smoke_current",
+            False,
+            f"{PAPER10_REAL_DATA_INTEGRITY_SMOKE_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    smoke_name = PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD.name
+    linked_docs = [
+        Path("README.md"),
+        Path("MANIFEST.md"),
+        Path("DATA_AVAILABILITY.md"),
+        Path("REPRODUCIBILITY.md"),
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+        AUTHOR_DECISION_MATRIX,
+    ]
+    for rel_path in linked_docs:
+        path = root / rel_path
+        if not path.exists():
+            missing_tokens.append(f"{rel_path}: missing file")
+            continue
+        if smoke_name not in read_text(path):
+            missing_tokens.append(f"{rel_path}: {smoke_name}")
+
+    required_tokens = [
+        "Paper10 real-data integrity smoke",
+        "metadata-only smoke audit",
+        "NPZ header smoke",
+        "GeoPackage metadata smoke",
+        "Directory smoke",
+        "JSON schema smoke",
+        "raw row values are not exported",
+        "D:\\test\\tool2\\transitions.npz",
+        "D:\\test\\tool2\\pairwise.npz",
+        "D:\\test\\dem_slope_analysis\\output\\DLTB_with_slope.gpkg",
+        "D:\\test\\results_real\\blocks",
+        "D:\\test\\townships.json",
+        "paper10_geojepa_mpc.experiments.real_data_integrity_smoke",
+    ]
+    for token in required_tokens:
+        if token not in text:
+            missing_tokens.append(f"{PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD}: {token}")
+
+    for group in ("npz", "geopackage", "directories", "json"):
+        rows = payload.get(group)
+        if not isinstance(rows, list):
+            missing_tokens.append(f"{PAPER10_REAL_DATA_INTEGRITY_SMOKE_JSON}: {group}")
+            continue
+        if not rows:
+            missing_tokens.append(f"{PAPER10_REAL_DATA_INTEGRITY_SMOKE_JSON}: empty {group}")
+
+    expected_npz = {
+        "D:\\test\\tool2\\transitions.npz": {
+            "block_features",
+            "global_features",
+            "actions",
+            "rewards",
+            "next_block_features",
+            "next_global_features",
+        },
+        "D:\\test\\tool2\\pairwise.npz": {
+            "states_bf",
+            "states_gf",
+            "actions",
+            "rewards",
+        },
+    }
+    npz_by_path = {
+        row.get("path"): row
+        for row in payload.get("npz", [])
+        if isinstance(row, dict)
+    }
+    for path, expected_arrays in expected_npz.items():
+        row = npz_by_path.get(path)
+        if row is None:
+            missing_tokens.append(f"{PAPER10_REAL_DATA_INTEGRITY_SMOKE_JSON}: {path}")
+            continue
+        if row.get("status") != "readable":
+            missing_tokens.append(
+                f"{PAPER10_REAL_DATA_INTEGRITY_SMOKE_JSON}: {path}.status"
+            )
+        observed_arrays = set((row.get("arrays") or {}).keys())
+        for array_name in sorted(expected_arrays - observed_arrays):
+            missing_tokens.append(
+                f"{PAPER10_REAL_DATA_INTEGRITY_SMOKE_JSON}: {path}.{array_name}"
+            )
+
+    gpkg_rows = payload.get("geopackage", [])
+    if gpkg_rows:
+        gpkg = gpkg_rows[0]
+        if gpkg.get("status") != "readable":
+            missing_tokens.append(
+                f"{PAPER10_REAL_DATA_INTEGRITY_SMOKE_JSON}: geopackage status"
+            )
+        contents = gpkg.get("contents", [])
+        if not any(row.get("table_name") == "DLTB" for row in contents):
+            missing_tokens.append(
+                f"{PAPER10_REAL_DATA_INTEGRITY_SMOKE_JSON}: DLTB contents"
+            )
+        geometry = gpkg.get("geometry_columns", [])
+        if not any(row.get("geometry_type_name") == "MULTIPOLYGON" for row in geometry):
+            missing_tokens.append(
+                f"{PAPER10_REAL_DATA_INTEGRITY_SMOKE_JSON}: MULTIPOLYGON geometry"
+            )
+
+    summary = payload.get("summary", {})
+    if int(summary.get("readable", 0)) < 4:
+        missing_tokens.append(
+            f"{PAPER10_REAL_DATA_INTEGRITY_SMOKE_JSON}: summary.readable"
+        )
+
+    forbidden_50_state = re.compile("|".join(FORBIDDEN_50_STATE_PATTERNS), re.IGNORECASE)
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if forbidden_50_state.search(line):
+            missing_tokens.append(
+                f"{PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD}:{line_no}: "
+                "positive 50-state wording"
+            )
+        match = UNSUPPORTED_INFERENTIAL_STATS_PATTERN.search(line)
+        if match:
+            missing_tokens.append(
+                f"{PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD}:{line_no}: "
+                f"unsupported inferential wording {match.group(0)}"
+            )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_real_data_integrity_smoke_current",
+            False,
+            "Paper10 real-data integrity smoke gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_real_data_integrity_smoke_current",
+        True,
+        "Paper10 real-data integrity smoke is current and metadata-only",
+    )
+
+
 ORIGINAL_VISION_POSITIVE_CLAIM_CUE = re.compile(
     r"\b("
     r"claim(?:s|ed|ing)?"
@@ -2462,6 +2636,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_formal_manuscript_blueprint_current,
     check_paper10_claim_source_audit_current,
     check_paper10_real_data_availability_audit_current,
+    check_paper10_real_data_integrity_smoke_current,
     check_original_vision_validation_registry_current,
 )
 

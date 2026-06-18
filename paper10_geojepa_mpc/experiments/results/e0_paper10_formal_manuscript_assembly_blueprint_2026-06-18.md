@@ -20,6 +20,7 @@ Source basis:
 - `e0_source_data_map_with_dongxing_2026-06-11.md`
 - `e0_paper10_claim_source_consistency_audit_2026-06-18.md`
 - `e0_paper10_real_data_availability_audit_2026-06-18.md`
+- `e0_paper10_real_data_integrity_smoke_2026-06-18.md`
 
 ## one-sentence argument
 
@@ -190,6 +191,11 @@ Use `e0_paper10_real_data_availability_audit_2026-06-18.md` as the current
 path-level evidence when drafting this section. It records local availability
 and missing paths only; it does not replace data-rights approval or an archive
 access route.
+
+Use `e0_paper10_real_data_integrity_smoke_2026-06-18.md` as the current
+metadata-level readability evidence for external inputs. It verifies NPZ
+headers, GeoPackage metadata, directory summaries, and JSON top-level keys
+without exporting restricted rows or geometries.
 
 Current safe wording route:
 

@@ -18,6 +18,7 @@ Source basis:
 - `e0_integrated_target_venue_and_manuscript_conversion_checklist_with_dongxing_2026-06-12.md`
 - `e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md`
 - `e0_paper10_real_data_availability_audit_2026-06-18.md`
+- `e0_paper10_real_data_integrity_smoke_2026-06-18.md`
 
 ## One-sentence conversion argument
 
@@ -75,7 +76,9 @@ writing route is:
 - keep full Bishan, GPKG-root, and Dongxing/Neijiang data access as unresolved
   blockers rather than implying they are already deposited; use
   `e0_paper10_real_data_availability_audit_2026-06-18.md` to separate local
-  path availability from rights and repository-access decisions;
+  path availability from rights and repository-access decisions, and use
+  `e0_paper10_real_data_integrity_smoke_2026-06-18.md` to separate
+  metadata-level readability from full rerun completion;
 - keep the proposal report as temporary立项/开题 material, not a submission file.
 
 This route supports continued drafting but does not authorize final
