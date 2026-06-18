@@ -98,6 +98,13 @@ outputs, full Bishan, GPKG-root, and Dongxing/Neijiang access routes, see:
 paper10_geojepa_mpc/experiments/results/e0_paper10_author_decision_matrix_2026-06-18.md
 ```
 
+For the current formal-manuscript assembly blueprint that maps those decisions
+into section, figure, table and Data/Code Availability editing order, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_formal_manuscript_assembly_blueprint_2026-06-18.md
+```
+
 For the data-access and rights decision register, including full Tool2,
 GPKG-root geospatial inputs, optional GeoFM rights, code licence, generated-data
 rights, Dongxing/Neijiang prepared-data access, and reviewer routes, see:

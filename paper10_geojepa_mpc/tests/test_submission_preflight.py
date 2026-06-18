@@ -14,6 +14,7 @@ from scripts.paper10.preflight_submission_checks import (
     DATA_ACCESS_RIGHTS_REGISTER,
     DATA_CODE_AVAILABILITY,
     DONGXING_PLOT_SCRIPT,
+    FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
     INTEGRATED_CITATION_STATISTICS_POLICY,
     INTEGRATED_DONGXING_FIGURE_PLAN,
     INTEGRATED_DONGXING_SCAFFOLD,
@@ -64,6 +65,7 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT,
     CEUS_STAGE3_MANUSCRIPT_REFRAME,
     CEUS_STAGE3_MANUSCRIPT_DRAFT,
+    FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
     PROJECT_PROPOSAL_REPORT,
     DONGXING_PLOT_SCRIPT,
     ORIGINAL_VISION_DESIGN,
@@ -208,6 +210,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "ceus_stage3_manuscript_draft_current" in payload["passed_checks"]
     assert "paper10_project_proposal_report_current" in payload["passed_checks"]
     assert "paper10_author_decision_matrix_current" in payload["passed_checks"]
+    assert "paper10_formal_manuscript_blueprint_current" in payload["passed_checks"]
     assert "original_vision_validation_registry_current" in payload["passed_checks"]
 
 
@@ -269,6 +272,20 @@ def test_submission_preflight_minimal_fixture_reports_missing_author_decision_ma
     details = check_details(payload, "paper10_author_decision_matrix_current")
     assert "missing Paper10 author decision matrix files" in details
     assert str(AUTHOR_DECISION_MATRIX) in details
+
+
+def test_submission_preflight_minimal_fixture_reports_missing_formal_manuscript_blueprint(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    (fixture / FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT).unlink()
+
+    result, payload = run_submission_preflight_json(fixture)
+
+    assert result.returncode == 1
+    assert payload["ok"] is False
+    assert "paper10_formal_manuscript_blueprint_current" in payload["failed_checks"]
+    details = check_details(payload, "paper10_formal_manuscript_blueprint_current")
+    assert "missing Paper10 formal manuscript blueprint files" in details
+    assert str(FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT) in details
 
 
 def test_submission_preflight_minimal_fixture_rejects_original_vision_registry_positive_claim(tmp_path):

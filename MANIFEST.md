@@ -206,6 +206,10 @@ data needed for smoke verification.
   author-decision and formal-submission conversion matrix that turns the
   proposal/manuscript blockers into close-out choices, affected files, and
   completion evidence.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_formal_manuscript_assembly_blueprint_2026-06-18.md`:
+  formal-manuscript assembly blueprint that maps the Stage 3 draft into
+  section-level editing order, evidence locks, figure/table assembly and
+  author-decision blockers before a journal-specific manuscript is produced.
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and

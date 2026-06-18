@@ -71,6 +71,9 @@ PROJECT_PROPOSAL_REPORT = (
 AUTHOR_DECISION_MATRIX = (
     RESULTS / "e0_paper10_author_decision_matrix_2026-06-18.md"
 )
+FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT = (
+    RESULTS / "e0_paper10_formal_manuscript_assembly_blueprint_2026-06-18.md"
+)
 DONGXING_PLOT_SCRIPT = Path("scripts") / "paper10" / "plot_integrated_dongxing_figures.py"
 ORIGINAL_VISION_DESIGN = (
     Path("docs")
@@ -132,6 +135,7 @@ REQUIRED_PATHS = (
     CEUS_STAGE3_MANUSCRIPT_DRAFT,
     PROJECT_PROPOSAL_REPORT,
     AUTHOR_DECISION_MATRIX,
+    FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
     DONGXING_PLOT_SCRIPT,
     ORIGINAL_VISION_STAGE1_STAGE2_DECISION_PACKET,
     ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD,
@@ -166,6 +170,7 @@ PUBLIC_SUBMISSION_DOCS = (
     CEUS_STAGE3_MANUSCRIPT_DRAFT,
     PROJECT_PROPOSAL_REPORT,
     AUTHOR_DECISION_MATRIX,
+    FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
 )
 
 PUBLIC_VAGUE_DATA_ROUTE_PATTERN = re.compile(
@@ -1879,6 +1884,136 @@ def check_paper10_author_decision_matrix_current(root: Path) -> CheckResult:
     )
 
 
+def check_paper10_formal_manuscript_blueprint_current(root: Path) -> CheckResult:
+    required_files = [
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+        AUTHOR_DECISION_MATRIX,
+        PROJECT_PROPOSAL_REPORT,
+        CEUS_STAGE3_MANUSCRIPT_DRAFT,
+        CEUS_STAGE3_MANUSCRIPT_REFRAME,
+        SUBMISSION_BLOCKER_DECISION_PACKET,
+        INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST,
+        INTEGRATED_CITATION_STATISTICS_POLICY,
+        INTEGRATED_FIGURE_TABLE_NUMBERING_FREEZE,
+        INTEGRATED_DONGXING_SOURCE_DATA_MAP,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_formal_manuscript_blueprint_current",
+            False,
+            "missing Paper10 formal manuscript blueprint files: " + ", ".join(missing),
+        )
+
+    text = read_text(root / FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT)
+    missing_tokens = []
+    blueprint_name = FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT.name
+    linked_docs = [
+        Path("README.md"),
+        Path("MANIFEST.md"),
+        Path("DATA_AVAILABILITY.md"),
+        Path("REPRODUCIBILITY.md"),
+    ]
+    for rel_path in linked_docs:
+        path = root / rel_path
+        if not path.exists():
+            missing_tokens.append(f"{rel_path}: missing file")
+            continue
+        if blueprint_name not in read_text(path):
+            missing_tokens.append(f"{rel_path}: {blueprint_name}")
+
+    required_tokens = [
+        "Paper10 formal manuscript assembly blueprint",
+        "not a final manuscript",
+        "one-sentence argument",
+        "Terminology ledger",
+        "Section assembly plan",
+        "Evidence-first drafting order",
+        "Title and abstract",
+        "Introduction",
+        "Methods",
+        "Results",
+        "Discussion",
+        "Conclusion",
+        "Data and Code Availability",
+        "Figure and table assembly map",
+        "Claim-evidence map",
+        "Author-decision blockers",
+        "Next manuscript-editing sequence",
+        AUTHOR_DECISION_MATRIX.name,
+        PROJECT_PROPOSAL_REPORT.name,
+        CEUS_STAGE3_MANUSCRIPT_DRAFT.name,
+        CEUS_STAGE3_MANUSCRIPT_REFRAME.name,
+        SUBMISSION_BLOCKER_DECISION_PACKET.name,
+        INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST.name,
+        INTEGRATED_CITATION_STATISTICS_POLICY.name,
+        INTEGRATED_FIGURE_TABLE_NUMBERING_FREEZE.name,
+        INTEGRATED_DONGXING_SOURCE_DATA_MAP.name,
+        "Bishan 20x16/top5",
+        "69.4705",
+        "67.5437",
+        "1.0004",
+        "7.2246",
+        "64.2960",
+        "66.2544",
+        "67.4913",
+        "must not be pooled",
+        "matched Paper9 `rank_seed2028`",
+        "self-contained Paper10 Methods route",
+        "pairwise-only baseline policy",
+        "repository DOI or reviewer link",
+        "full Bishan Tool2",
+        "GPKG-root",
+        "Dongxing/Neijiang prepared data",
+        "area-tolerance matching",
+        "shared-perimeter-weighted contiguity",
+        "Constrained MDP/CPO/RCPO",
+        "Do not claim direct 50-state Bishan scale-up success",
+        "Do not claim robust Bishan-to-Dongxing transfer superiority",
+    ]
+    for token in required_tokens:
+        if token not in text:
+            missing_tokens.append(f"{FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT}: {token}")
+
+    if "@zhou2026paper9_local" in text:
+        missing_tokens.append(
+            f"{FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT}: @zhou2026paper9_local"
+        )
+
+    forbidden_50_state = re.compile("|".join(FORBIDDEN_50_STATE_PATTERNS), re.IGNORECASE)
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if forbidden_50_state.search(line):
+            missing_tokens.append(
+                f"{FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT}:{line_no}: "
+                "positive 50-state wording"
+            )
+        match = UNSUPPORTED_INFERENTIAL_STATS_PATTERN.search(line)
+        if match:
+            missing_tokens.append(
+                f"{FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT}:{line_no}: "
+                f"unsupported inferential wording {match.group(0)}"
+            )
+
+    section_count = sum(1 for line in text.splitlines() if line.startswith("## "))
+    if section_count < 9:
+        missing_tokens.append(
+            f"{FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT}: only {section_count} "
+            "level-2 sections"
+        )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_formal_manuscript_blueprint_current",
+            False,
+            "Paper10 formal manuscript blueprint gaps: " + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_formal_manuscript_blueprint_current",
+        True,
+        "Paper10 formal manuscript blueprint is current and claim-bounded",
+    )
+
+
 ORIGINAL_VISION_POSITIVE_CLAIM_CUE = re.compile(
     r"\b("
     r"claim(?:s|ed|ing)?"
@@ -2025,6 +2160,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_ceus_stage3_manuscript_draft_current,
     check_paper10_project_proposal_report_current,
     check_paper10_author_decision_matrix_current,
+    check_paper10_formal_manuscript_blueprint_current,
     check_original_vision_validation_registry_current,
 )
 
