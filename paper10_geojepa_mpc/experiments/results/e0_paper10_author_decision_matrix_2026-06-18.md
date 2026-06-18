@@ -19,6 +19,7 @@ Source basis:
 - `e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md`
 - `e0_paper10_real_data_availability_audit_2026-06-18.md`
 - `e0_paper10_real_data_integrity_smoke_2026-06-18.md`
+- `e0_paper10_real_env_smoke_5step_h3_k20_seed0_2026-06-18.md`
 
 ## One-sentence conversion argument
 
@@ -79,6 +80,10 @@ writing route is:
   path availability from rights and repository-access decisions, and use
   `e0_paper10_real_data_integrity_smoke_2026-06-18.md` to separate
   metadata-level readability from full rerun completion;
+- use `e0_paper10_real_env_smoke_5step_h3_k20_seed0_2026-06-18.md` only as a
+  five-step execution-chain smoke for the Paper10 checkpoint, Paper9 adapter,
+  MPC selector, executable mask, and `CountyLevelEnv.step`, not as
+  planning-quality evidence;
 - keep the proposal report as temporary立项/开题 material, not a submission file.
 
 This route supports continued drafting but does not authorize final

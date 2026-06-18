@@ -165,6 +165,15 @@ inputs:
 paper10_geojepa_mpc/experiments/results/e0_paper10_real_data_integrity_smoke_2026-06-18.md
 ```
 
+Use the five-step full-Bishan real-environment smoke after metadata checks when
+you need to confirm the execution chain from a Paper10 checkpoint through the
+Paper9 adapter, MPC selector, executable mask, and `CountyLevelEnv.step`. This
+smoke is not a planning-quality result:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_smoke_5step_h3_k20_seed0_2026-06-18.md
+```
+
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and

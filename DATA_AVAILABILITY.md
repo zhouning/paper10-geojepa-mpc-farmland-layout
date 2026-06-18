@@ -128,6 +128,15 @@ exporting raw rows or geometries, see:
 paper10_geojepa_mpc/experiments/results/e0_paper10_real_data_integrity_smoke_2026-06-18.md
 ```
 
+For the current five-step full-Bishan real-environment execution-chain smoke,
+which records the Paper10 checkpoint to Paper9 adapter, MPC selector,
+executable mask, and `CountyLevelEnv.step` route without exporting raw
+geospatial rows or geometries, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_smoke_5step_h3_k20_seed0_2026-06-18.md
+```
+
 For the data-access and rights decision register, including full Tool2,
 GPKG-root geospatial inputs, optional GeoFM rights, code licence, generated-data
 rights, Dongxing/Neijiang prepared-data access, and reviewer routes, see:
