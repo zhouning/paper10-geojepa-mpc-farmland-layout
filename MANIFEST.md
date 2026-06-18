@@ -198,6 +198,10 @@ data needed for smoke verification.
   current CEUS Stage 3 manuscript draft applying the Stage 3 reframe to the
   earlier CEUS Research Article candidate draft, with bounded Bishan, Stage 3,
   and Dongxing claims plus unresolved submission blockers.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_project_proposal_opening_report_2026-06-18.md`:
+  Chinese project-proposal/opening-report substitute for temporary topic
+  approval before the formal Paper10 manuscript is ready, derived from the
+  claim-bounded Stage 3 manuscript draft.
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and
