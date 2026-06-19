@@ -122,6 +122,12 @@ PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD = (
 PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON = (
     RESULTS / "e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.json"
 )
+PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD = (
+    RESULTS / "e0_paper10_manuscript_result_tables_freeze_2026-06-19.md"
+)
+PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON = (
+    RESULTS / "e0_paper10_manuscript_result_tables_freeze_2026-06-19.json"
+)
 DONGXING_PLOT_SCRIPT = Path("scripts") / "paper10" / "plot_integrated_dongxing_figures.py"
 ORIGINAL_VISION_DESIGN = (
     Path("docs")
@@ -198,6 +204,8 @@ REQUIRED_PATHS = (
     PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_JSON,
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD,
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON,
+    PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD,
+    PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON,
     DONGXING_PLOT_SCRIPT,
     ORIGINAL_VISION_STAGE1_STAGE2_DECISION_PACKET,
     ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD,
@@ -240,6 +248,7 @@ PUBLIC_SUBMISSION_DOCS = (
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
     PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_MD,
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD,
+    PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD,
 )
 
 PUBLIC_VAGUE_DATA_ROUTE_PATTERN = re.compile(
@@ -3348,6 +3357,264 @@ def check_paper10_anchor_raw_rollout_consistency_audit_current(root: Path) -> Ch
     )
 
 
+def check_paper10_manuscript_result_tables_freeze_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD,
+        PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON,
+        ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_JSON,
+        PAPER10_CLAIM_SOURCE_AUDIT_JSON,
+        PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON,
+        DATA_AVAILABILITY,
+        REPRODUCIBILITY,
+        MANIFEST,
+        Path("README.md"),
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+        AUTHOR_DECISION_MATRIX,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_manuscript_result_tables_freeze_current",
+            False,
+            "missing Paper10 manuscript result tables freeze files: "
+            + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD)
+    try:
+        payload = json.loads(read_text(root / PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON))
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_manuscript_result_tables_freeze_current",
+            False,
+            f"{PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    freeze_name = PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD.name
+    linked_docs = [
+        Path("README.md"),
+        Path("MANIFEST.md"),
+        Path("DATA_AVAILABILITY.md"),
+        Path("REPRODUCIBILITY.md"),
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+        AUTHOR_DECISION_MATRIX,
+    ]
+    for rel_path in linked_docs:
+        path = root / rel_path
+        if not path.exists():
+            missing_tokens.append(f"{rel_path}: missing file")
+            continue
+        if freeze_name not in read_text(path):
+            missing_tokens.append(f"{rel_path}: {freeze_name}")
+
+    required_tokens = [
+        "Paper10 manuscript result tables freeze",
+        "source-derived table freeze",
+        "does not add a new experimental claim",
+        "No rollout was rerun",
+        "raw-rollout consistency: PASS",
+        "Table 1. Bishan anchor versus matched baseline",
+        "Table 2. Stage 3 boundary rows",
+        "Table 3. Claim status for manuscript conversion",
+        ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_JSON.name,
+        PAPER10_CLAIM_SOURCE_AUDIT_JSON.name,
+        PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON.name,
+        "matched_paper9_rank_seed2028_baseline | 67.5437 | 7.2246",
+        "bishan_20x16_top5_frozen_anchor | 69.4705 | 1.0004 | 1.9269 | PASS",
+        "frontier_random050_50x16_h5_seed48_f050 | confirmatory_pass | 50 | 16 | 6 | 64.2960",
+        "frontier_random050_50x24_h5_seed47_f075 | confirmatory_pass | 50 | 24 | 12 | 66.2544",
+        "frontier_random050_50x24_h5_seed48_f075 | diagnostic_near_pass | 50 | 24 | 12 | 67.4913",
+        "boundary evidence; below matched baseline",
+        "diagnostic near-pass only; must not be pooled",
+        "Bishan 20x16/top5 reward and stability anchor | supported",
+        "Stage 3 confirmatory 50-state rows beat the matched baseline | not supported",
+        "Dongxing/Neijiang return-label scaling | supported descriptively",
+        "robust transfer superiority | not supported",
+        "paper10_geojepa_mpc.experiments.manuscript_result_tables_freeze",
+    ]
+    for token in required_tokens:
+        if token not in text:
+            missing_tokens.append(
+                f"{PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD}: {token}"
+            )
+
+    expected_values = {
+        ("date",): "2026-06-19",
+        ("status",): "source-derived table freeze",
+        ("source_boundary", "new_experimental_claim"): False,
+        ("source_boundary", "reran_rollouts"): False,
+        ("raw_rollout_consistency", "overall_consistency_pass"): True,
+        ("raw_rollout_consistency", "summary_matches_raw"): True,
+        ("raw_rollout_consistency", "stage3_anchor_matches_raw"): True,
+    }
+    for path_keys, expected in expected_values.items():
+        value = payload
+        for key in path_keys:
+            if not isinstance(value, dict) or key not in value:
+                missing_tokens.append(
+                    f"{PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON}: "
+                    f"{'.'.join(path_keys)}"
+                )
+                value = None
+                break
+            value = value[key]
+        if value != expected:
+            missing_tokens.append(
+                f"{PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON}: "
+                f"{'.'.join(path_keys)}={value}"
+            )
+
+    tables = payload.get("tables", {})
+    anchor_table = tables.get("table_bishan_anchor_vs_matched_baseline")
+    if not isinstance(anchor_table, list) or len(anchor_table) != 2:
+        missing_tokens.append(
+            f"{PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON}: "
+            "table_bishan_anchor_vs_matched_baseline"
+        )
+        anchor_table = []
+    expected_anchor_rows = [
+        {
+            "row_id": "matched_paper9_rank_seed2028_baseline",
+            "mean_reward": 67.5436698503176,
+            "std_sample": 7.22455439874099,
+            "delta_vs_baseline": 0.0,
+        },
+        {
+            "row_id": "bishan_20x16_top5_frozen_anchor",
+            "mean_reward": 69.47054604253474,
+            "std_sample": 1.0003610285842477,
+            "delta_vs_baseline": 1.9268761922171365,
+            "raw_rollout_consistency_pass": True,
+        },
+    ]
+    for index, expected_row in enumerate(expected_anchor_rows):
+        if index >= len(anchor_table):
+            continue
+        row = anchor_table[index]
+        for key, expected in expected_row.items():
+            value = row.get(key)
+            if isinstance(expected, float):
+                if not isinstance(value, (int, float)) or abs(float(value) - expected) > 1e-8:
+                    missing_tokens.append(
+                        f"{PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON}: "
+                        f"anchor[{index}].{key}={value}"
+                    )
+            elif value != expected:
+                missing_tokens.append(
+                    f"{PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON}: "
+                    f"anchor[{index}].{key}={value}"
+                )
+
+    stage3_table = tables.get("table_stage3_boundary")
+    if not isinstance(stage3_table, list) or len(stage3_table) != 3:
+        missing_tokens.append(
+            f"{PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON}: table_stage3_boundary"
+        )
+        stage3_table = []
+    expected_stage3_rows = [
+        {
+            "run_name": "frontier_random050_50x16_h5_seed48_f050",
+            "role": "confirmatory_pass",
+            "states": 50,
+            "candidates": 16,
+            "selected_top_k": 6,
+            "mean_reward": 64.29600411367917,
+            "delta_vs_baseline": -3.2476657366384245,
+            "interpretation": "boundary evidence; below matched baseline",
+        },
+        {
+            "run_name": "frontier_random050_50x24_h5_seed47_f075",
+            "role": "confirmatory_pass",
+            "states": 50,
+            "candidates": 24,
+            "selected_top_k": 12,
+            "mean_reward": 66.25436421527586,
+            "delta_vs_baseline": -1.2893056350417424,
+            "interpretation": "boundary evidence; below matched baseline",
+        },
+        {
+            "run_name": "frontier_random050_50x24_h5_seed48_f075",
+            "role": "diagnostic_near_pass",
+            "states": 50,
+            "candidates": 24,
+            "selected_top_k": 12,
+            "mean_reward": 67.49131359932167,
+            "delta_vs_baseline": -0.05235625099592767,
+            "interpretation": "diagnostic near-pass only; must not be pooled",
+        },
+    ]
+    for index, expected_row in enumerate(expected_stage3_rows):
+        if index >= len(stage3_table):
+            continue
+        row = stage3_table[index]
+        for key, expected in expected_row.items():
+            value = row.get(key)
+            if isinstance(expected, float):
+                if not isinstance(value, (int, float)) or abs(float(value) - expected) > 1e-8:
+                    missing_tokens.append(
+                        f"{PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON}: "
+                        f"stage3[{index}].{key}={value}"
+                    )
+            elif value != expected:
+                missing_tokens.append(
+                    f"{PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON}: "
+                    f"stage3[{index}].{key}={value}"
+                )
+
+    claim_table = tables.get("table_claim_status")
+    if not isinstance(claim_table, list) or len(claim_table) != 5:
+        missing_tokens.append(
+            f"{PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON}: table_claim_status"
+        )
+        claim_table = []
+    claim_status = {
+        row.get("claim_id"): row.get("status")
+        for row in claim_table
+        if isinstance(row, dict)
+    }
+    expected_claim_status = {
+        "bishan_anchor": "supported",
+        "stage3_confirmatory_50state": "not supported",
+        "diagnostic_near_pass": "not pooled",
+        "dongxing_return_label_scaling": "supported descriptively",
+        "robust_transfer_superiority": "not supported",
+    }
+    for claim_id, expected in expected_claim_status.items():
+        if claim_status.get(claim_id) != expected:
+            missing_tokens.append(
+                f"{PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON}: "
+                f"{claim_id}={claim_status.get(claim_id)}"
+            )
+
+    forbidden_50_state = re.compile("|".join(FORBIDDEN_50_STATE_PATTERNS), re.IGNORECASE)
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if forbidden_50_state.search(line):
+            missing_tokens.append(
+                f"{PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD}:{line_no}: "
+                "positive 50-state wording"
+            )
+        match = UNSUPPORTED_INFERENTIAL_STATS_PATTERN.search(line)
+        if match:
+            missing_tokens.append(
+                f"{PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD}:{line_no}: "
+                f"unsupported inferential wording {match.group(0)}"
+            )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_manuscript_result_tables_freeze_current",
+            False,
+            "Paper10 manuscript result tables freeze gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_manuscript_result_tables_freeze_current",
+        True,
+        "Paper10 manuscript result tables freeze is current and claim-bounded",
+    )
+
+
 ORIGINAL_VISION_POSITIVE_CLAIM_CUE = re.compile(
     r"\b("
     r"claim(?:s|ed|ing)?"
@@ -3496,6 +3763,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_author_decision_matrix_current,
     check_paper10_formal_manuscript_blueprint_current,
     check_paper10_claim_source_audit_current,
+    check_paper10_manuscript_result_tables_freeze_current,
     check_paper10_real_data_availability_audit_current,
     check_paper10_real_data_integrity_smoke_current,
     check_paper10_real_env_smoke_current,

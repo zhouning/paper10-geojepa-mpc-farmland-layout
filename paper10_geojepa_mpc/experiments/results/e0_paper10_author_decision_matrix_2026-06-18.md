@@ -23,6 +23,7 @@ Source basis:
 - `e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.md`
 - `e0_paper10_real_env_smoke_boundary_audit_2026-06-19.md`
 - `e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md`
+- `e0_paper10_manuscript_result_tables_freeze_2026-06-19.md`
 
 ## One-sentence conversion argument
 
@@ -99,6 +100,11 @@ writing route is:
   editing the Bishan 20x16/top5 anchor result; it recomputes the five seed
   rewards from tracked raw step records and checks the packaged rollout summary
   and Stage 3 frozen-anchor row without adding a new experimental claim;
+- use `e0_paper10_manuscript_result_tables_freeze_2026-06-19.md` before
+  editing central Results tables, captions, or claim-evidence maps; it freezes
+  the Bishan anchor, Stage 3 boundary rows, and claim-status table from tracked
+  Stage 3, claim-source, and raw-rollout audit JSON evidence without adding a
+  new experimental claim;
 - keep the proposal report as temporary立项/开题 material, not a submission file.
 
 This route supports continued drafting but does not authorize final

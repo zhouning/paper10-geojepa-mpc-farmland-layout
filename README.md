@@ -85,6 +85,7 @@ Paper-facing writing assets are tracked under
 - `e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.md`
 - `e0_paper10_real_env_smoke_boundary_audit_2026-06-19.md`
 - `e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md`
+- `e0_paper10_manuscript_result_tables_freeze_2026-06-19.md`
 - `e0_data_code_availability_draft_2026-06-09.md` now includes the
   Dongxing/Neijiang prepared-data access route that must be closed before
   submission.
@@ -246,6 +247,12 @@ as the current source-derived raw-rollout consistency audit for the Bishan
 20x16/top5 frozen anchor. It recomputes the five seed rewards from tracked raw
 step records and checks them against the packaged rollout summary and Stage 3
 frozen-anchor row without rerunning rollouts or adding a new experimental claim.
+Use
+`paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_result_tables_freeze_2026-06-19.md`
+as the current manuscript result-table freeze before editing Results, captions,
+or claim-evidence maps. It derives the Bishan anchor, Stage 3 boundary rows,
+and claim-status table from tracked Stage 3, claim-source, and raw-rollout
+audit JSON files without adding a new experimental claim.
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and

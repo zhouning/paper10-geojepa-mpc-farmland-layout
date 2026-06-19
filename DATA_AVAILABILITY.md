@@ -161,6 +161,13 @@ the packaged rollout summary and Stage 3 frozen-anchor row, see:
 paper10_geojepa_mpc/experiments/results/e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md
 ```
 
+For the current manuscript result-table freeze derived from the tracked Stage
+3, claim-source, and raw-rollout audit JSON evidence, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_result_tables_freeze_2026-06-19.md
+```
+
 For the data-access and rights decision register, including full Tool2,
 GPKG-root geospatial inputs, optional GeoFM rights, code licence, generated-data
 rights, Dongxing/Neijiang prepared-data access, and reviewer routes, see:

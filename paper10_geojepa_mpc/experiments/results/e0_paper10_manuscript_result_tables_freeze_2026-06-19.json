@@ -1,0 +1,119 @@
+{
+  "date": "2026-06-19",
+  "raw_rollout_consistency": {
+    "overall_consistency_pass": true,
+    "stage3_anchor_matches_raw": true,
+    "summary_matches_raw": true
+  },
+  "source_boundary": {
+    "interpretation": "This file freezes manuscript-facing result tables from tracked Stage 3, claim-audit, and raw-rollout consistency evidence.",
+    "new_experimental_claim": false,
+    "reran_rollouts": false
+  },
+  "source_files": {
+    "anchor_raw_audit_json": "paper10_geojepa_mpc\\experiments\\results\\e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.json",
+    "claim_audit_json": "paper10_geojepa_mpc\\experiments\\results\\e0_paper10_claim_source_consistency_audit_2026-06-18.json",
+    "stage3_json": "paper10_geojepa_mpc\\experiments\\results\\e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json"
+  },
+  "status": "source-derived table freeze",
+  "tables": {
+    "table_bishan_anchor_vs_matched_baseline": [
+      {
+        "candidates": null,
+        "delta_vs_baseline": 0.0,
+        "interpretation": "matched comparator for the Stage 3 rollout protocol",
+        "mean_reward": 67.5436698503176,
+        "raw_rollout_consistency_pass": null,
+        "row_id": "matched_paper9_rank_seed2028_baseline",
+        "run_name": "matched_paper9_rank_seed2028",
+        "selected_top_k": null,
+        "states": null,
+        "std_sample": 7.22455439874099
+      },
+      {
+        "candidates": 16,
+        "delta_vs_baseline": 1.9268761922171365,
+        "interpretation": "positive anchor under the matched rollout protocol",
+        "mean_reward": 69.47054604253474,
+        "raw_rollout_consistency_pass": true,
+        "row_id": "bishan_20x16_top5_frozen_anchor",
+        "run_name": "frontier_random050_20x16_h5_seed44_f050",
+        "selected_top_k": 5,
+        "states": 20,
+        "std_sample": 1.0003610285842477
+      }
+    ],
+    "table_claim_status": [
+      {
+        "claim": "Bishan 20x16/top5 reward and stability anchor",
+        "claim_id": "bishan_anchor",
+        "manuscript_boundary": "Use as the positive Bishan anchor only.",
+        "source_derived_basis": "mean 69.4705 versus baseline 67.5437; sample std 1.0004 versus 7.2246",
+        "status": "supported"
+      },
+      {
+        "claim": "Stage 3 confirmatory 50-state rows beat the matched baseline",
+        "claim_id": "stage3_confirmatory_50state",
+        "manuscript_boundary": "Use as Stage 3 boundary evidence.",
+        "source_derived_basis": "frontier_random050_50x16_h5_seed48_f050 delta -3.2477; frontier_random050_50x24_h5_seed47_f075 delta -1.2893",
+        "status": "not supported"
+      },
+      {
+        "claim": "Diagnostic near-pass row",
+        "claim_id": "diagnostic_near_pass",
+        "manuscript_boundary": "Report separately; must not be pooled.",
+        "source_derived_basis": "frontier_random050_50x24_h5_seed48_f075 mean 67.4913, delta -0.0524",
+        "status": "not pooled"
+      },
+      {
+        "claim": "Dongxing/Neijiang return-label scaling",
+        "claim_id": "dongxing_return_label_scaling",
+        "manuscript_boundary": "Use as calibration or stress-test evidence.",
+        "source_derived_basis": "transfer gain 13.7289; scratch gain 15.5214",
+        "status": "supported descriptively"
+      },
+      {
+        "claim": "robust transfer superiority",
+        "claim_id": "robust_transfer_superiority",
+        "manuscript_boundary": "Do not use as a positive transfer claim.",
+        "source_derived_basis": "50x16 transfer minus scratch -4.1141",
+        "status": "not supported"
+      }
+    ],
+    "table_stage3_boundary": [
+      {
+        "candidates": 16,
+        "delta_vs_baseline": -3.2476657366384245,
+        "interpretation": "boundary evidence; below matched baseline",
+        "mean_reward": 64.29600411367917,
+        "role": "confirmatory_pass",
+        "run_name": "frontier_random050_50x16_h5_seed48_f050",
+        "selected_top_k": 6,
+        "states": 50,
+        "std_sample": 4.250272391392385
+      },
+      {
+        "candidates": 24,
+        "delta_vs_baseline": -1.2893056350417424,
+        "interpretation": "boundary evidence; below matched baseline",
+        "mean_reward": 66.25436421527586,
+        "role": "confirmatory_pass",
+        "run_name": "frontier_random050_50x24_h5_seed47_f075",
+        "selected_top_k": 12,
+        "states": 50,
+        "std_sample": 4.856463222714678
+      },
+      {
+        "candidates": 24,
+        "delta_vs_baseline": -0.05235625099592767,
+        "interpretation": "diagnostic near-pass only; must not be pooled",
+        "mean_reward": 67.49131359932167,
+        "role": "diagnostic_near_pass",
+        "run_name": "frontier_random050_50x24_h5_seed48_f075",
+        "selected_top_k": 12,
+        "states": 50,
+        "std_sample": 4.571073257111943
+      }
+    ]
+  }
+}

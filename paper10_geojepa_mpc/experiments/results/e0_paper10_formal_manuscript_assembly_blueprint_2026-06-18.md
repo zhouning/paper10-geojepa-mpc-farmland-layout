@@ -25,6 +25,7 @@ Source basis:
 - `e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.md`
 - `e0_paper10_real_env_smoke_boundary_audit_2026-06-19.md`
 - `e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md`
+- `e0_paper10_manuscript_result_tables_freeze_2026-06-19.md`
 
 ## one-sentence argument
 
@@ -74,6 +75,9 @@ The next manuscript editing pass should use this order:
    table or figure reference per claim, using
    `e0_paper10_claim_source_consistency_audit_2026-06-18.md` as the current
    source-derived claim-status check.
+   Use `e0_paper10_manuscript_result_tables_freeze_2026-06-19.md` as the
+   current source-derived freeze for the central Bishan, Stage 3, and
+   claim-status result tables.
 2. Convert Methods into a reproducibility route that names inputs, outputs,
    masks, seeds, top-k, horizons, candidate-value weights and blocked
    dependencies.
@@ -223,6 +227,12 @@ editing the Bishan 20x16/top5 anchor result. It recomputes the five seed
 rewards from tracked raw step records and checks the packaged rollout summary
 and Stage 3 frozen-anchor row without adding a new experimental claim.
 
+Use `e0_paper10_manuscript_result_tables_freeze_2026-06-19.md` before editing
+Results tables, captions, or claim-evidence maps. It freezes the Bishan anchor,
+Stage 3 boundary rows, and claim-status table from tracked Stage 3,
+claim-source, and raw-rollout audit JSON evidence without adding a new
+experimental claim.
+
 Current safe wording route:
 
 - code and tracked derived evidence can be described through the repository
@@ -245,7 +255,7 @@ Current safe wording route:
 | Main Figure 4 | Show Dongxing return-label scaling. | `e0_dongxing_return_label_family_summary_2026-06-10.csv`; `e0_source_data_map_with_dongxing_2026-06-11.md`. |
 | Supplementary Figure S1 | Show Dongxing low-label stress test. | `e0_dongxing_low_label_budget_family_summary_2026-06-10.csv`; `e0_source_data_map_with_dongxing_2026-06-11.md`. |
 | Main Table 1 | Summarize monitor-selected Bishan gates. | Monitor JSON/Markdown files and table package. |
-| Main Table 2 | Summarize matched-baseline rollout comparison. | Stage 3 rollout Markdown/JSON. |
+| Main Table 2 | Summarize matched-baseline rollout comparison. | `e0_paper10_manuscript_result_tables_freeze_2026-06-19.md`; Stage 3 rollout Markdown/JSON. |
 | Main Table 3 | Summarize Dongxing return-label scaling. | Dongxing family summary CSV and integrated table package. |
 
 The numbering must stay aligned with

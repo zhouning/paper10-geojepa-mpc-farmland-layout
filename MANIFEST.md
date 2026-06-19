@@ -6,8 +6,8 @@ data needed for smoke verification.
 
 ## Included
 
-- `paper10_geojepa_mpc/`: 332 tracked non-cache files in the active Paper10
-  workspace, including 73 Python files, 110 JSON files, 103 Markdown files,
+- `paper10_geojepa_mpc/`: 340 tracked non-cache files in the active Paper10
+  workspace, including 77 Python files, 112 JSON files, 105 Markdown files,
   11 CSV files,
   9 NPZ files, 10 PyTorch checkpoint files, and 16 log files.
 - `arcgis_toolbox_paper9/private_source/`: 10 Paper9 compatibility source files
@@ -251,6 +251,12 @@ data needed for smoke verification.
   and checks the packaged rollout summary and Stage 3 frozen-anchor row.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.json`:
   machine-readable output for the anchor raw-rollout consistency audit.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_result_tables_freeze_2026-06-19.md`:
+  source-derived manuscript result-table freeze for the Bishan anchor, Stage 3
+  boundary rows, and claim-status table, derived from tracked audit JSON
+  evidence without adding a new experimental claim.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_result_tables_freeze_2026-06-19.json`:
+  machine-readable output for the manuscript result-table freeze.
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and

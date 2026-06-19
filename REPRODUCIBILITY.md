@@ -201,6 +201,15 @@ row without rerunning rollouts:
 paper10_geojepa_mpc/experiments/results/e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md
 ```
 
+Use the manuscript result-table freeze before editing Results tables, captions,
+or claim-evidence maps. It derives the Bishan anchor, Stage 3 boundary rows, and
+claim-status table from tracked Stage 3, claim-source, and raw-rollout audit
+JSON files without adding a new experimental claim:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_result_tables_freeze_2026-06-19.md
+```
+
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and
