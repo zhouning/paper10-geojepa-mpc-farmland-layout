@@ -90,6 +90,12 @@ PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD = (
 PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON = (
     RESULTS / "e0_paper10_figure_table_source_coverage_audit_2026-06-19.json"
 )
+PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD = (
+    RESULTS / "e0_paper10_figure_table_caption_claim_packet_2026-06-19.md"
+)
+PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON = (
+    RESULTS / "e0_paper10_figure_table_caption_claim_packet_2026-06-19.json"
+)
 PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD = (
     RESULTS / "e0_paper10_real_data_availability_audit_2026-06-18.md"
 )
@@ -206,6 +212,8 @@ REQUIRED_PATHS = (
     PAPER10_CLAIM_SOURCE_AUDIT_JSON,
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON,
+    PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD,
+    PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON,
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_JSON,
     PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD,
@@ -259,6 +267,7 @@ PUBLIC_SUBMISSION_DOCS = (
     FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
     PAPER10_CLAIM_SOURCE_AUDIT_MD,
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
+    PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD,
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
     PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD,
     PAPER10_REAL_ENV_SMOKE_MD,
@@ -2482,6 +2491,270 @@ def check_paper10_figure_table_source_coverage_audit_current(root: Path) -> Chec
     )
 
 
+def check_paper10_figure_table_caption_claim_packet_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD,
+        PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON,
+        PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON,
+        PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON,
+        Path("README.md"),
+        MANIFEST,
+        DATA_AVAILABILITY,
+        REPRODUCIBILITY,
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_figure_table_caption_claim_packet_current",
+            False,
+            "missing Paper10 figure/table caption-claim packet files: "
+            + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD)
+    try:
+        payload = json.loads(
+            read_text(root / PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON)
+        )
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_figure_table_caption_claim_packet_current",
+            False,
+            f"{PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    packet_name = PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD.name
+    for rel_path in [
+        Path("README.md"),
+        MANIFEST,
+        DATA_AVAILABILITY,
+        REPRODUCIBILITY,
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+    ]:
+        path = root / rel_path
+        if packet_name not in read_text(path):
+            missing_tokens.append(f"{rel_path}: {packet_name}")
+
+    required_text_tokens = [
+        "Paper10 figure/table caption-claim packet",
+        "source-derived figure/table caption-claim packet",
+        "journal-neutral draft captions",
+        "does not add a new experimental claim",
+        "No rollout was rerun",
+        "caption-claim packet: PASS",
+        "submission-ready figure/table package: NO",
+        "Main Figure 1",
+        "Main Figure 2",
+        "Main Figure 3",
+        "Main Figure 4",
+        "Supplementary Figure S1",
+        "Main Table 1",
+        "Main Table 2",
+        "Main Table 3",
+        "target-journal caption length",
+        "direct 50-state Bishan scale-up success",
+        "robust Bishan-to-Dongxing transfer superiority",
+        "diagnostic near-pass must not be pooled",
+        "paper10_geojepa_mpc.experiments.figure_table_caption_claim_packet",
+    ]
+    for token in required_text_tokens:
+        if token not in text:
+            missing_tokens.append(
+                f"{PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD}: {token}"
+            )
+
+    expected_values = {
+        ("date",): "2026-06-19",
+        ("status",): "source-derived figure/table caption-claim packet",
+        ("caption_claim_packet_pass",): True,
+        ("submission_ready",): False,
+        ("source_boundary", "new_experimental_claim"): False,
+        ("source_boundary", "reran_rollouts"): False,
+        (
+            "source_files",
+            "source_coverage_audit_json",
+        ): PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON.as_posix(),
+        (
+            "source_files",
+            "result_tables_freeze_json",
+        ): PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON.as_posix(),
+    }
+    for path_keys, expected in expected_values.items():
+        value = payload
+        for key in path_keys:
+            if not isinstance(value, dict) or key not in value:
+                missing_tokens.append(
+                    f"{PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON}: "
+                    f"{'.'.join(path_keys)}"
+                )
+                value = None
+                break
+            value = value[key]
+        if value != expected:
+            missing_tokens.append(
+                f"{PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON}: "
+                f"{'.'.join(path_keys)}={value}"
+            )
+
+    expected_items = [
+        "Main Figure 1",
+        "Main Figure 2",
+        "Main Figure 3",
+        "Main Figure 4",
+        "Supplementary Figure S1",
+        "Main Table 1",
+        "Main Table 2",
+        "Main Table 3",
+    ]
+    items = payload.get("items")
+    if not isinstance(items, list) or len(items) != len(expected_items):
+        missing_tokens.append(
+            f"{PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON}: items"
+        )
+        items = []
+    observed_items = [row.get("item") for row in items if isinstance(row, dict)]
+    if observed_items != expected_items:
+        missing_tokens.append(
+            f"{PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON}: "
+            f"items={observed_items}"
+        )
+
+    by_item = {row.get("item"): row for row in items if isinstance(row, dict)}
+    expected_artwork = {
+        "Main Figure 1": "pending",
+        "Main Figure 2": "preview_available",
+        "Main Figure 3": "preview_available",
+        "Main Figure 4": "preview_available",
+        "Supplementary Figure S1": "preview_available",
+        "Main Table 1": "preview_available",
+        "Main Table 2": "preview_available",
+        "Main Table 3": "preview_available",
+    }
+    required_item_tokens = {
+        "Main Figure 1": ["workflow schematic only", "final schematic artwork"],
+        "Main Figure 2": ["69.4705", "67.5437", "Bishan 20x16/top5"],
+        "Main Figure 3": [
+            "direct 50-state Bishan scale-up success",
+            "diagnostic near-pass must not be pooled",
+        ],
+        "Main Figure 4": [
+            "calibration",
+            "robust Bishan-to-Dongxing transfer superiority",
+        ],
+        "Main Table 2": [
+            "Table 1 is the only positive Bishan performance anchor",
+            "Stage 3 rows are boundary evidence",
+        ],
+        "Main Table 3": [
+            "return-label scaling is descriptive calibration evidence",
+            "robust Bishan-to-Dongxing transfer superiority",
+        ],
+    }
+    for item_name in expected_items:
+        row = by_item.get(item_name)
+        if not isinstance(row, dict):
+            continue
+        if row.get("source_coverage_pass") is not True:
+            missing_tokens.append(
+                f"{PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON}: "
+                f"{item_name}.source_coverage_pass={row.get('source_coverage_pass')}"
+            )
+        if row.get("final_artwork_status") != expected_artwork[item_name]:
+            missing_tokens.append(
+                f"{PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON}: "
+                f"{item_name}.final_artwork_status={row.get('final_artwork_status')}"
+            )
+        for key in (
+            "draft_caption",
+            "allowed_claims",
+            "forbidden_claims",
+            "unresolved_manuscript_fields",
+            "source_files",
+        ):
+            value = row.get(key)
+            if value == "" or value == [] or value is None:
+                missing_tokens.append(
+                    f"{PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON}: "
+                    f"{item_name}.{key}"
+                )
+        unresolved = row.get("unresolved_manuscript_fields", [])
+        if isinstance(unresolved, list) and len(unresolved) != len(set(unresolved)):
+            missing_tokens.append(
+                f"{PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON}: "
+                f"{item_name}.duplicate_unresolved_fields"
+            )
+        combined = " ".join(
+            [
+                str(row.get("draft_caption", "")),
+                " ".join(row.get("allowed_claims", [])),
+                " ".join(row.get("forbidden_claims", [])),
+                " ".join(row.get("unresolved_manuscript_fields", [])),
+            ]
+        )
+        for token in required_item_tokens.get(item_name, []):
+            if token not in combined:
+                missing_tokens.append(
+                    f"{PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON}: "
+                    f"{item_name}.{token}"
+                )
+
+    blockers = payload.get("submission_blockers")
+    if not isinstance(blockers, list) or len(blockers) < 4:
+        missing_tokens.append(
+            f"{PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON}: submission_blockers"
+        )
+    else:
+        for token in (
+            "target-journal caption length",
+            "final figure/table export package",
+            "final schematic artwork for Main Figure 1",
+            "final main-versus-supplementary placement",
+        ):
+            if token not in blockers:
+                missing_tokens.append(
+                    f"{PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON}: "
+                    f"submission_blockers.{token}"
+                )
+
+    forbidden_50_state = re.compile("|".join(FORBIDDEN_50_STATE_PATTERNS), re.IGNORECASE)
+    allowed_negative_context = (
+        "do not",
+        "must not",
+        "not supported",
+        "did not support",
+        "boundary",
+    )
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        lowered = line.lower()
+        if forbidden_50_state.search(line):
+            if not any(token in lowered for token in allowed_negative_context):
+                missing_tokens.append(
+                    f"{PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD}:{line_no}: "
+                    "positive 50-state wording"
+                )
+        match = UNSUPPORTED_INFERENTIAL_STATS_PATTERN.search(line)
+        if match:
+            missing_tokens.append(
+                f"{PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD}:{line_no}: "
+                f"unsupported inferential wording {match.group(0)}"
+            )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_figure_table_caption_claim_packet_current",
+            False,
+            "Paper10 figure/table caption-claim packet gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_figure_table_caption_claim_packet_current",
+        True,
+        "Paper10 figure/table caption-claim packet is current and bounded",
+    )
+
+
 def check_paper10_real_data_availability_audit_current(root: Path) -> CheckResult:
     required_files = [
         PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
@@ -4240,6 +4513,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_formal_manuscript_blueprint_current,
     check_paper10_claim_source_audit_current,
     check_paper10_figure_table_source_coverage_audit_current,
+    check_paper10_figure_table_caption_claim_packet_current,
     check_paper10_manuscript_result_tables_freeze_current,
     check_paper10_manuscript_text_table_consistency_audit_current,
     check_paper10_real_data_availability_audit_current,

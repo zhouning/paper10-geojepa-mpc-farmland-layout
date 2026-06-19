@@ -228,6 +228,15 @@ formats open:
 paper10_geojepa_mpc/experiments/results/e0_paper10_figure_table_source_coverage_audit_2026-06-19.md
 ```
 
+Use the figure/table caption-claim packet before drafting figure/table captions
+or claim-evidence text. It provides journal-neutral draft captions, allowed
+claims, forbidden claims, and unresolved manuscript fields without rerunning
+rollouts:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_figure_table_caption_claim_packet_2026-06-19.md
+```
+
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and

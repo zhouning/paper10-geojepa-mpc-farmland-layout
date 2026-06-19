@@ -6,8 +6,8 @@ data needed for smoke verification.
 
 ## Included
 
-- `paper10_geojepa_mpc/`: 348 tracked non-cache files in the active Paper10
-  workspace, including 81 Python files, 114 JSON files, 107 Markdown files,
+- `paper10_geojepa_mpc/`: 352 tracked non-cache files in the active Paper10
+  workspace, including 83 Python files, 115 JSON files, 108 Markdown files,
   11 CSV files,
   9 NPZ files, 10 PyTorch checkpoint files, and 16 log files.
 - `arcgis_toolbox_paper9/private_source/`: 10 Paper9 compatibility source files
@@ -269,6 +269,12 @@ data needed for smoke verification.
   unresolved export fields, and claim boundaries without rerunning rollouts.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_figure_table_source_coverage_audit_2026-06-19.json`:
   machine-readable output for the figure/table source coverage audit.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_figure_table_caption_claim_packet_2026-06-19.md`:
+  source-derived figure/table caption-claim packet that provides
+  journal-neutral draft captions, allowed claims, forbidden claims, and
+  unresolved manuscript fields without rerunning rollouts.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_figure_table_caption_claim_packet_2026-06-19.json`:
+  machine-readable output for the figure/table caption-claim packet.
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and
@@ -303,7 +309,8 @@ data needed for smoke verification.
   source-derived claim audit, real-data availability audit, real-data integrity
   smoke, five-step real-environment execution-chain smokes, their boundary
   audit, manuscript result-table freeze, manuscript text/table consistency
-  audit, and figure/table source coverage audit.
+  audit, figure/table source coverage audit, and figure/table caption-claim
+  packet.
 - `references/paper10_verified_references_2026-06-09.bib`:
   verified BibTeX entries for the first Paper10 manuscript citation pass.
 - `references/paper10_local_sources_2026-06-09.bib`:

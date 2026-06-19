@@ -28,6 +28,7 @@ Source basis:
 - `e0_paper10_manuscript_result_tables_freeze_2026-06-19.md`
 - `e0_paper10_manuscript_text_table_consistency_audit_2026-06-19.md`
 - `e0_paper10_figure_table_source_coverage_audit_2026-06-19.md`
+- `e0_paper10_figure_table_caption_claim_packet_2026-06-19.md`
 
 ## one-sentence argument
 
@@ -247,6 +248,12 @@ Use `e0_paper10_figure_table_source_coverage_audit_2026-06-19.md` before
 treating the formal manuscript figure/table assembly map as source-covered. It
 checks tracked source files and scripts, but final artwork, dimensions,
 placement, captions and export formats remain blockers.
+
+Use `e0_paper10_figure_table_caption_claim_packet_2026-06-19.md` before
+drafting figure/table captions or claim-evidence text. It provides
+journal-neutral draft captions, allowed claims, forbidden claims, and unresolved
+manuscript fields without rerunning rollouts or adding a new experimental
+claim.
 
 Current safe wording route:
 

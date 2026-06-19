@@ -1,0 +1,253 @@
+{
+  "caption_claim_packet_pass": true,
+  "date": "2026-06-19",
+  "items": [
+    {
+      "allowed_claims": [
+        "workflow schematic only; no new quantitative result",
+        "monitor gates control escalation before value-filter training"
+      ],
+      "draft_caption": "Journal-neutral draft caption: monitor-gated value labels pass through label generation, monitor checks, value-filter training, candidate filtering, and masked MPC rollout before manuscript claims are accepted.",
+      "final_artwork_status": "pending",
+      "forbidden_claims": [
+        "Do not describe the workflow schematic as experimental evidence.",
+        "Do not claim irregular cadastral deployment is solved."
+      ],
+      "generation_scripts": [],
+      "generation_status": "blocked_pending_artwork",
+      "item": "Main Figure 1",
+      "placement": "main",
+      "source_coverage_pass": true,
+      "source_files": [
+        "paper10_geojepa_mpc/experiments/value_label_generation.py",
+        "paper10_geojepa_mpc/experiments/value_label_monitor.py",
+        "paper10_geojepa_mpc/experiments/run_e0_value_head_train.py",
+        "paper10_geojepa_mpc/experiments/run_e0_env_rollout_smoke.py",
+        "paper10_geojepa_mpc/experiments/results/e0_frontier_random050_figure_plan_2026-06-09.md",
+        "paper10_geojepa_mpc/experiments/results/e0_integrated_dongxing_figure_plan_2026-06-11.md"
+      ],
+      "unresolved_manuscript_fields": [
+        "final schematic artwork",
+        "journal figure dimensions",
+        "target-journal caption length"
+      ]
+    },
+    {
+      "allowed_claims": [
+        "Bishan 20x16/top5 is the positive anchor only under the tested rollout protocol",
+        "Use as the positive Bishan anchor only."
+      ],
+      "draft_caption": "Journal-neutral draft caption: Bishan 20x16/top5 is the positive anchor under the tested matched rollout protocol, with mean reward 69.4705 versus 67.5437 for the matched comparator and sample standard deviation 1.0004 versus 7.2246.",
+      "final_artwork_status": "preview_available",
+      "forbidden_claims": [
+        "Do not generalize this panel to direct 50-state Bishan scale-up success.",
+        "Do not describe the difference with inferential testing language."
+      ],
+      "generation_scripts": [
+        "scripts/paper10/plot_frontier_random050_figures.py"
+      ],
+      "generation_status": "scripted_preview_available",
+      "item": "Main Figure 2",
+      "placement": "main",
+      "source_coverage_pass": true,
+      "source_files": [
+        "paper10_geojepa_mpc/experiments/results/e0_frontier_random050_seedwise_rewards_2026-06-09.csv",
+        "paper10_geojepa_mpc/experiments/results/e0_frontier_random050_value_head_10x12_h5_seed43_top4_rollout_summary.json",
+        "paper10_geojepa_mpc/experiments/results/e0_frontier_random050_value_head_20x16_h5_seed44_top5_rollout_summary.json"
+      ],
+      "unresolved_manuscript_fields": [
+        "final figure number",
+        "inset decision",
+        "target-journal caption length"
+      ]
+    },
+    {
+      "allowed_claims": [
+        "Use as Stage 3 boundary evidence.",
+        "Report separately; must not be pooled.",
+        "diagnostic near-pass must not be pooled"
+      ],
+      "draft_caption": "Journal-neutral draft caption: Stage 3 completed 50-state boundary rows but did not support a direct positive scale-up claim under the matched comparator (frontier_random050_50x16_h5_seed48_f050 mean 64.2960 delta -3.2477; frontier_random050_50x24_h5_seed47_f075 mean 66.2544 delta -1.2893; frontier_random050_50x24_h5_seed48_f075 mean 67.4913 delta -0.0524). The diagnostic near-pass must not be pooled with confirmatory rows.",
+      "final_artwork_status": "preview_available",
+      "forbidden_claims": [
+        "direct 50-state Bishan scale-up success",
+        "Do not pool the diagnostic near-pass with confirmatory rows."
+      ],
+      "generation_scripts": [
+        "scripts/paper10/plot_frontier_random050_figures.py"
+      ],
+      "generation_status": "scripted_preview_available",
+      "item": "Main Figure 3",
+      "placement": "main_or_supplement_pending_journal_limit",
+      "source_coverage_pass": true,
+      "source_files": [
+        "paper10_geojepa_mpc/experiments/results/e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.md",
+        "paper10_geojepa_mpc/experiments/results/e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json",
+        "paper10_geojepa_mpc/experiments/results/e0_frontier_random050_topk_diagnostics_2026-06-09.csv",
+        "paper10_geojepa_mpc/experiments/results/e0_windows_frontier_random050_ablation_findings_2026-06-09.md",
+        "paper10_geojepa_mpc/experiments/results/e0_macos_gpkg_reproduction_findings_2026-06-09.md"
+      ],
+      "unresolved_manuscript_fields": [
+        "final main-versus-supplementary placement",
+        "target-journal caption length"
+      ]
+    },
+    {
+      "allowed_claims": [
+        "Use as calibration or stress-test evidence.",
+        "Dongxing/Neijiang supports calibration and stress-test value"
+      ],
+      "draft_caption": "Journal-neutral draft caption: Dongxing/Neijiang return-label scaling provides calibration and stress-test evidence; the 50x16 transfer-minus-scratch value is -4.1141, so this panel must not be written as robust transfer superiority.",
+      "final_artwork_status": "preview_available",
+      "forbidden_claims": [
+        "robust Bishan-to-Dongxing transfer superiority",
+        "Do not use as a positive transfer claim."
+      ],
+      "generation_scripts": [
+        "scripts/paper10/plot_integrated_dongxing_figures.py"
+      ],
+      "generation_status": "scripted_preview_available",
+      "item": "Main Figure 4",
+      "placement": "main",
+      "source_coverage_pass": true,
+      "source_files": [
+        "paper10_geojepa_mpc/experiments/results/e0_dongxing_return_label_family_summary_2026-06-10.csv",
+        "paper10_geojepa_mpc/experiments/results/e0_dongxing_return_label_50x16_family_2026-06-10.md",
+        "paper10_geojepa_mpc/experiments/results/e0_paper10_integrated_manuscript_tables_with_dongxing_2026-06-10.md",
+        "paper10_geojepa_mpc/experiments/results/e0_source_data_map_with_dongxing_2026-06-11.md"
+      ],
+      "unresolved_manuscript_fields": [
+        "final figure number",
+        "metric panel placement",
+        "target-journal caption length"
+      ]
+    },
+    {
+      "allowed_claims": [
+        "low-label transfer behavior is mixed",
+        "use as supplementary stress-test context unless journal limits require another placement"
+      ],
+      "draft_caption": "Journal-neutral draft caption: Dongxing low-label stress-test results show mixed transfer behavior and should be used as boundary context rather than a robust superiority claim.",
+      "final_artwork_status": "preview_available",
+      "forbidden_claims": [
+        "Do not claim low-label transfer superiority is robust.",
+        "Do not convert this supplementary stress test into a main positive result without updating the source map."
+      ],
+      "generation_scripts": [
+        "scripts/paper10/plot_integrated_dongxing_figures.py"
+      ],
+      "generation_status": "scripted_preview_available",
+      "item": "Supplementary Figure S1",
+      "placement": "supplementary_pending_journal_limit",
+      "source_coverage_pass": true,
+      "source_files": [
+        "paper10_geojepa_mpc/experiments/results/e0_dongxing_low_label_budget_family_summary_2026-06-10.csv",
+        "paper10_geojepa_mpc/experiments/results/e0_dongxing_low_label_budget_family_2026-06-10.md",
+        "paper10_geojepa_mpc/experiments/results/e0_paper10_integrated_manuscript_tables_with_dongxing_2026-06-10.md",
+        "paper10_geojepa_mpc/experiments/results/e0_source_data_map_with_dongxing_2026-06-11.md"
+      ],
+      "unresolved_manuscript_fields": [
+        "final main-versus-supplementary placement",
+        "target-journal caption length"
+      ]
+    },
+    {
+      "allowed_claims": [
+        "monitor gates authorize escalation; they do not prove general scale-up",
+        "use gate status as evidence-control context"
+      ],
+      "draft_caption": "Journal-neutral draft caption: monitor-selected Bishan gates summarize which label settings were allowed to advance to manuscript-facing value-filter testing.",
+      "final_artwork_status": "preview_available",
+      "forbidden_claims": [
+        "Do not claim monitor acceptance proves deployment readiness.",
+        "Do not treat gate selection as an independent performance experiment."
+      ],
+      "generation_scripts": [],
+      "generation_status": "table_source_available",
+      "item": "Main Table 1",
+      "placement": "main",
+      "source_coverage_pass": true,
+      "source_files": [
+        "paper10_geojepa_mpc/experiments/results/e0_value_label_monitor_frontier_random050_10x12_h5_seed43_top4.json",
+        "paper10_geojepa_mpc/experiments/results/e0_value_label_monitor_frontier_random050_20x16_h5_seed44_top5.json",
+        "paper10_geojepa_mpc/experiments/results/e0_paper10_integrated_manuscript_tables_with_dongxing_2026-06-10.md"
+      ],
+      "unresolved_manuscript_fields": [
+        "final table number",
+        "target-journal caption length"
+      ]
+    },
+    {
+      "allowed_claims": [
+        "Table 1 is the only positive Bishan performance anchor",
+        "Stage 3 rows are boundary evidence",
+        "diagnostic near-pass must not be pooled"
+      ],
+      "draft_caption": "Journal-neutral draft caption: frozen matched-baseline table reports the positive Bishan anchor and Stage 3 boundary rows using tracked Stage 3 and raw-rollout consistency evidence.",
+      "final_artwork_status": "preview_available",
+      "forbidden_claims": [
+        "Do not rewrite Stage 3 boundary rows as direct 50-state Bishan scale-up success.",
+        "Do not add unsupported comparison-testing wording to the frozen table."
+      ],
+      "generation_scripts": [],
+      "generation_status": "frozen_table_available",
+      "item": "Main Table 2",
+      "placement": "main",
+      "source_coverage_pass": true,
+      "source_files": [
+        "paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_result_tables_freeze_2026-06-19.md",
+        "paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_result_tables_freeze_2026-06-19.json",
+        "paper10_geojepa_mpc/experiments/results/e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.md",
+        "paper10_geojepa_mpc/experiments/results/e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json"
+      ],
+      "unresolved_manuscript_fields": [
+        "rounding",
+        "main-text placement",
+        "target-journal caption length"
+      ]
+    },
+    {
+      "allowed_claims": [
+        "return-label scaling is descriptive calibration evidence",
+        "Use as calibration or stress-test evidence."
+      ],
+      "draft_caption": "Journal-neutral draft caption: Dongxing return-label scaling summarizes descriptive calibration evidence and keeps robust transfer superiority unsupported.",
+      "final_artwork_status": "preview_available",
+      "forbidden_claims": [
+        "robust Bishan-to-Dongxing transfer superiority",
+        "Do not treat descriptive Dongxing scaling as a confirmatory transfer test."
+      ],
+      "generation_scripts": [],
+      "generation_status": "table_source_available",
+      "item": "Main Table 3",
+      "placement": "main_or_supplement_pending_journal_limit",
+      "source_coverage_pass": true,
+      "source_files": [
+        "paper10_geojepa_mpc/experiments/results/e0_dongxing_return_label_family_summary_2026-06-10.csv",
+        "paper10_geojepa_mpc/experiments/results/e0_dongxing_return_label_50x16_family_2026-06-10.md",
+        "paper10_geojepa_mpc/experiments/results/e0_paper10_integrated_manuscript_tables_with_dongxing_2026-06-10.md"
+      ],
+      "unresolved_manuscript_fields": [
+        "whether full metric table is main text",
+        "target-journal caption length"
+      ]
+    }
+  ],
+  "source_boundary": {
+    "interpretation": "This packet converts source-covered figure/table items into journal-neutral draft captions and claim boundaries. It does not select a target journal or create final figure exports.",
+    "new_experimental_claim": false,
+    "reran_rollouts": false
+  },
+  "source_files": {
+    "result_tables_freeze_json": "paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_result_tables_freeze_2026-06-19.json",
+    "source_coverage_audit_json": "paper10_geojepa_mpc/experiments/results/e0_paper10_figure_table_source_coverage_audit_2026-06-19.json"
+  },
+  "status": "source-derived figure/table caption-claim packet",
+  "submission_blockers": [
+    "target-journal caption length",
+    "final figure/table export package",
+    "final schematic artwork for Main Figure 1",
+    "final main-versus-supplementary placement"
+  ],
+  "submission_ready": false
+}

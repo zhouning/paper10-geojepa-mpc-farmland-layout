@@ -31,6 +31,8 @@ from scripts.paper10.preflight_submission_checks import (
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD,
     PAPER10_CLAIM_SOURCE_AUDIT_JSON,
     PAPER10_CLAIM_SOURCE_AUDIT_MD,
+    PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON,
+    PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD,
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON,
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
     PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON,
@@ -97,6 +99,8 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON,
     PAPER10_CLAIM_SOURCE_AUDIT_MD,
     PAPER10_CLAIM_SOURCE_AUDIT_JSON,
+    PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD,
+    PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON,
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON,
     PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD,
@@ -252,6 +256,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "paper10_author_decision_matrix_current" in payload["passed_checks"]
     assert "paper10_formal_manuscript_blueprint_current" in payload["passed_checks"]
     assert "paper10_claim_source_audit_current" in payload["passed_checks"]
+    assert "paper10_figure_table_caption_claim_packet_current" in payload["passed_checks"]
     assert "paper10_figure_table_source_coverage_audit_current" in payload["passed_checks"]
     assert "paper10_manuscript_result_tables_freeze_current" in payload["passed_checks"]
     assert "paper10_manuscript_text_table_consistency_audit_current" in payload["passed_checks"]
@@ -364,6 +369,20 @@ def test_submission_preflight_minimal_fixture_reports_missing_figure_table_sourc
     details = check_details(payload, "paper10_figure_table_source_coverage_audit_current")
     assert "missing Paper10 figure/table source coverage audit files" in details
     assert str(PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD) in details
+
+
+def test_submission_preflight_minimal_fixture_reports_missing_figure_table_caption_claim_packet(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    (fixture / PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD).unlink()
+
+    result, payload = run_submission_preflight_json(fixture)
+
+    assert result.returncode == 1
+    assert payload["ok"] is False
+    assert "paper10_figure_table_caption_claim_packet_current" in payload["failed_checks"]
+    details = check_details(payload, "paper10_figure_table_caption_claim_packet_current")
+    assert "missing Paper10 figure/table caption-claim packet files" in details
+    assert str(PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD) in details
 
 
 def test_submission_preflight_minimal_fixture_reports_missing_manuscript_result_tables_freeze(tmp_path):
