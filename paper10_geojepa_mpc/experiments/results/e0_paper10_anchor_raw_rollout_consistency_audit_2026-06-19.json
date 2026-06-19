@@ -1,0 +1,282 @@
+{
+  "date": "2026-06-19",
+  "overall_consistency_pass": true,
+  "raw_aggregate": {
+    "baimu_area_change_ha_mean": -207.263937322613,
+    "cont_change_mean": 0.019233605411040598,
+    "elapsed_sec_mean": 279.6767912999843,
+    "n_episodes": 5,
+    "negative_zero_swap_steps_sum": 0,
+    "slope_change_pct_mean": -1.2507267926554344,
+    "total_reward_max": 70.22520878040307,
+    "total_reward_mean": 69.47054604253472,
+    "total_reward_min": 67.71349693542334,
+    "total_reward_std_sample": 1.0003610285842657,
+    "zero_swap_steps_sum": 0
+  },
+  "raw_seed_summaries": [
+    {
+      "abs_reported_minus_steps": 5.684341886080802e-14,
+      "elapsed_sec": 290.2433281999547,
+      "final_metrics_from_steps": {
+        "baimu_area_change_ha": -204.76889053727984,
+        "cont_change": 0.022020494825437886,
+        "slope_change_pct": -1.2858170878072237
+      },
+      "horizon": 5,
+      "negative_reward_steps": 6,
+      "negative_zero_swap_steps": 0,
+      "positive_reward_steps": 94,
+      "reported_steps_run": 100,
+      "reported_total_reward": 67.7134969354234,
+      "seed": 0,
+      "source_file": "paper10_geojepa_mpc\\experiments\\results\\e0_env_rollout_frontier_random050_value_head_20x16_h5_seed44_top5_blend010_h5_k50_seed0_100step.json",
+      "steps_run": 100,
+      "top_k": 50,
+      "total_reward_from_steps": 67.71349693542334,
+      "zero_reward_steps": 0,
+      "zero_swap_steps": 0
+    },
+    {
+      "abs_reported_minus_steps": 2.842170943040401e-14,
+      "elapsed_sec": 269.5105966999545,
+      "final_metrics_from_steps": {
+        "baimu_area_change_ha": -195.7612509440005,
+        "cont_change": 0.01754519795560272,
+        "slope_change_pct": -1.2078240943877006
+      },
+      "horizon": 5,
+      "negative_reward_steps": 7,
+      "negative_zero_swap_steps": 0,
+      "positive_reward_steps": 93,
+      "reported_steps_run": 100,
+      "reported_total_reward": 70.2252087804031,
+      "seed": 1,
+      "source_file": "paper10_geojepa_mpc\\experiments\\results\\e0_env_rollout_frontier_random050_value_head_20x16_h5_seed44_top5_blend010_h5_k50_seeds1-4_100step.json",
+      "steps_run": 100,
+      "top_k": 50,
+      "total_reward_from_steps": 70.22520878040307,
+      "zero_reward_steps": 0,
+      "zero_swap_steps": 0
+    },
+    {
+      "abs_reported_minus_steps": 0.0,
+      "elapsed_sec": 266.1078252000152,
+      "final_metrics_from_steps": {
+        "baimu_area_change_ha": -217.57383621649743,
+        "cont_change": 0.017596053601851125,
+        "slope_change_pct": -1.228753579409333
+      },
+      "horizon": 5,
+      "negative_reward_steps": 11,
+      "negative_zero_swap_steps": 0,
+      "positive_reward_steps": 89,
+      "reported_steps_run": 100,
+      "reported_total_reward": 69.7218379673849,
+      "seed": 2,
+      "source_file": "paper10_geojepa_mpc\\experiments\\results\\e0_env_rollout_frontier_random050_value_head_20x16_h5_seed44_top5_blend010_h5_k50_seeds1-4_100step.json",
+      "steps_run": 100,
+      "top_k": 50,
+      "total_reward_from_steps": 69.7218379673849,
+      "zero_reward_steps": 0,
+      "zero_swap_steps": 0
+    },
+    {
+      "abs_reported_minus_steps": 1.4210854715202004e-14,
+      "elapsed_sec": 283.7183537000092,
+      "final_metrics_from_steps": {
+        "baimu_area_change_ha": -206.9790116117954,
+        "cont_change": 0.016833218908129055,
+        "slope_change_pct": -1.2147233880498347
+      },
+      "horizon": 5,
+      "negative_reward_steps": 8,
+      "negative_zero_swap_steps": 0,
+      "positive_reward_steps": 92,
+      "reported_steps_run": 100,
+      "reported_total_reward": 69.82450306303002,
+      "seed": 3,
+      "source_file": "paper10_geojepa_mpc\\experiments\\results\\e0_env_rollout_frontier_random050_value_head_20x16_h5_seed44_top5_blend010_h5_k50_seeds1-4_100step.json",
+      "steps_run": 100,
+      "top_k": 50,
+      "total_reward_from_steps": 69.82450306303004,
+      "zero_reward_steps": 0,
+      "zero_swap_steps": 0
+    },
+    {
+      "abs_reported_minus_steps": 2.842170943040401e-14,
+      "elapsed_sec": 288.80385269998806,
+      "final_metrics_from_steps": {
+        "baimu_area_change_ha": -211.23669730349184,
+        "cont_change": 0.02217306176418221,
+        "slope_change_pct": -1.31651581362308
+      },
+      "horizon": 5,
+      "negative_reward_steps": 9,
+      "negative_zero_swap_steps": 0,
+      "positive_reward_steps": 91,
+      "reported_steps_run": 100,
+      "reported_total_reward": 69.86768346643231,
+      "seed": 4,
+      "source_file": "paper10_geojepa_mpc\\experiments\\results\\e0_env_rollout_frontier_random050_value_head_20x16_h5_seed44_top5_blend010_h5_k50_seeds1-4_100step.json",
+      "steps_run": 100,
+      "top_k": 50,
+      "total_reward_from_steps": 69.86768346643228,
+      "zero_reward_steps": 0,
+      "zero_swap_steps": 0
+    }
+  ],
+  "source_boundary": {
+    "interpretation": "This audit recomputes the Bishan 20x16/top5 anchor from tracked raw rollout step records and checks consistency with the packaged rollout summary and Stage 3 frozen-anchor row.",
+    "new_experimental_claim": false,
+    "reran_rollouts": false
+  },
+  "sources": {
+    "raw_rollouts": [
+      "paper10_geojepa_mpc\\experiments\\results\\e0_env_rollout_frontier_random050_value_head_20x16_h5_seed44_top5_blend010_h5_k50_seed0_100step.json",
+      "paper10_geojepa_mpc\\experiments\\results\\e0_env_rollout_frontier_random050_value_head_20x16_h5_seed44_top5_blend010_h5_k50_seeds1-4_100step.json"
+    ],
+    "stage3_json": "paper10_geojepa_mpc\\experiments\\results\\e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json",
+    "summary_json": "paper10_geojepa_mpc\\experiments\\results\\e0_frontier_random050_value_head_20x16_h5_seed44_top5_rollout_summary.json"
+  },
+  "stage3_consistency": {
+    "aggregate": {
+      "baimu_area_change_ha_mean": -207.263937322613,
+      "cont_change_mean": 0.019233605411040598,
+      "elapsed_sec_mean": 279.6767912999843,
+      "n_episodes": 5,
+      "negative_zero_swap_steps_sum": 0,
+      "slope_change_pct_mean": -1.2507267926554344,
+      "total_reward_max": 70.2252087804031,
+      "total_reward_mean": 69.47054604253474,
+      "total_reward_min": 67.7134969354234,
+      "total_reward_std_sample": 1.0003610285842477,
+      "zero_swap_steps_sum": 0
+    },
+    "aggregate_deltas": {
+      "baimu_area_change_ha_mean": 0.0,
+      "cont_change_mean": 0.0,
+      "elapsed_sec_mean": 0.0,
+      "n_episodes": 0.0,
+      "negative_zero_swap_steps_sum": 0.0,
+      "slope_change_pct_mean": 0.0,
+      "total_reward_max": 2.842170943040401e-14,
+      "total_reward_mean": 1.4210854715202004e-14,
+      "total_reward_min": 5.684341886080802e-14,
+      "total_reward_std_sample": 1.7985612998927536e-14,
+      "zero_swap_steps_sum": 0.0
+    },
+    "anchor_role": "frozen_anchor",
+    "anchor_run_name": "frontier_random050_20x16_h5_seed44_f050",
+    "matches_raw": true,
+    "seed_deltas": [
+      {
+        "abs_delta": 5.684341886080802e-14,
+        "raw_total_reward": 67.71349693542334,
+        "seed": 0,
+        "source_total_reward": 67.7134969354234
+      },
+      {
+        "abs_delta": 2.842170943040401e-14,
+        "raw_total_reward": 70.22520878040307,
+        "seed": 1,
+        "source_total_reward": 70.2252087804031
+      },
+      {
+        "abs_delta": 0.0,
+        "raw_total_reward": 69.7218379673849,
+        "seed": 2,
+        "source_total_reward": 69.7218379673849
+      },
+      {
+        "abs_delta": 1.4210854715202004e-14,
+        "raw_total_reward": 69.82450306303004,
+        "seed": 3,
+        "source_total_reward": 69.82450306303002
+      },
+      {
+        "abs_delta": 2.842170943040401e-14,
+        "raw_total_reward": 69.86768346643228,
+        "seed": 4,
+        "source_total_reward": 69.86768346643231
+      }
+    ],
+    "seed_rewards": [
+      67.7134969354234,
+      70.2252087804031,
+      69.7218379673849,
+      69.82450306303002,
+      69.86768346643231
+    ]
+  },
+  "status": "source-derived consistency audit",
+  "summary_consistency": {
+    "aggregate": {
+      "baimu_area_change_ha_mean": -207.263937322613,
+      "cont_change_mean": 0.019233605411040598,
+      "elapsed_sec_mean": 279.6767912999843,
+      "n_episodes": 5,
+      "negative_zero_swap_steps_sum": 0,
+      "slope_change_pct_mean": -1.2507267926554344,
+      "total_reward_max": 70.2252087804031,
+      "total_reward_mean": 69.47054604253474,
+      "total_reward_min": 67.7134969354234,
+      "total_reward_std_sample": 1.0003610285842477,
+      "zero_swap_steps_sum": 0
+    },
+    "aggregate_deltas": {
+      "baimu_area_change_ha_mean": 0.0,
+      "cont_change_mean": 0.0,
+      "elapsed_sec_mean": 0.0,
+      "n_episodes": 0.0,
+      "negative_zero_swap_steps_sum": 0.0,
+      "slope_change_pct_mean": 0.0,
+      "total_reward_max": 2.842170943040401e-14,
+      "total_reward_mean": 1.4210854715202004e-14,
+      "total_reward_min": 5.684341886080802e-14,
+      "total_reward_std_sample": 1.7985612998927536e-14,
+      "zero_swap_steps_sum": 0.0
+    },
+    "matches_raw": true,
+    "seed_deltas": [
+      {
+        "abs_delta": 5.684341886080802e-14,
+        "raw_total_reward": 67.71349693542334,
+        "seed": 0,
+        "source_total_reward": 67.7134969354234
+      },
+      {
+        "abs_delta": 2.842170943040401e-14,
+        "raw_total_reward": 70.22520878040307,
+        "seed": 1,
+        "source_total_reward": 70.2252087804031
+      },
+      {
+        "abs_delta": 0.0,
+        "raw_total_reward": 69.7218379673849,
+        "seed": 2,
+        "source_total_reward": 69.7218379673849
+      },
+      {
+        "abs_delta": 1.4210854715202004e-14,
+        "raw_total_reward": 69.82450306303004,
+        "seed": 3,
+        "source_total_reward": 69.82450306303002
+      },
+      {
+        "abs_delta": 2.842170943040401e-14,
+        "raw_total_reward": 69.86768346643228,
+        "seed": 4,
+        "source_total_reward": 69.86768346643231
+      }
+    ],
+    "seed_rewards": [
+      67.7134969354234,
+      70.2252087804031,
+      69.7218379673849,
+      69.82450306303002,
+      69.86768346643231
+    ]
+  },
+  "tolerance": 1e-08
+}

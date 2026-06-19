@@ -153,6 +153,14 @@ selector, horizon, and top_k settings, see:
 paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_smoke_boundary_audit_2026-06-19.md
 ```
 
+For the current source-derived raw-rollout consistency audit for the Bishan
+20x16/top5 frozen anchor, including the raw step-record recomputation against
+the packaged rollout summary and Stage 3 frozen-anchor row, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md
+```
+
 For the data-access and rights decision register, including full Tool2,
 GPKG-root geospatial inputs, optional GeoFM rights, code licence, generated-data
 rights, Dongxing/Neijiang prepared-data access, and reviewer routes, see:

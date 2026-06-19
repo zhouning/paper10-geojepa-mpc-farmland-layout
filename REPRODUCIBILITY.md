@@ -192,6 +192,15 @@ short-horizon performance-comparison use:
 paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_smoke_boundary_audit_2026-06-19.md
 ```
 
+Use the anchor raw-rollout consistency audit before editing the Bishan
+20x16/top5 anchor result. It recomputes the five seed rewards from tracked raw
+step records and checks the packaged rollout summary and Stage 3 frozen-anchor
+row without rerunning rollouts:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md
+```
+
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and

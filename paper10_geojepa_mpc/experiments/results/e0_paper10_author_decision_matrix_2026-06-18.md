@@ -22,6 +22,7 @@ Source basis:
 - `e0_paper10_real_env_smoke_5step_h3_k20_seed0_2026-06-18.md`
 - `e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.md`
 - `e0_paper10_real_env_smoke_boundary_audit_2026-06-19.md`
+- `e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md`
 
 ## One-sentence conversion argument
 
@@ -94,6 +95,10 @@ writing route is:
   discussing the two real-environment smoke reports together; it records the
   different checkpoint, selector, horizon, and top_k settings and blocks
   performance-comparison interpretation;
+- use `e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md` before
+  editing the Bishan 20x16/top5 anchor result; it recomputes the five seed
+  rewards from tracked raw step records and checks the packaged rollout summary
+  and Stage 3 frozen-anchor row without adding a new experimental claim;
 - keep the proposal report as temporary立项/开题 material, not a submission file.
 
 This route supports continued drafting but does not authorize final

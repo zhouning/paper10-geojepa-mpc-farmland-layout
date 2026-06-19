@@ -116,6 +116,12 @@ PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_MD = (
 PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_JSON = (
     RESULTS / "e0_paper10_real_env_smoke_boundary_audit_2026-06-19.json"
 )
+PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD = (
+    RESULTS / "e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md"
+)
+PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON = (
+    RESULTS / "e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.json"
+)
 DONGXING_PLOT_SCRIPT = Path("scripts") / "paper10" / "plot_integrated_dongxing_figures.py"
 ORIGINAL_VISION_DESIGN = (
     Path("docs")
@@ -190,6 +196,8 @@ REQUIRED_PATHS = (
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON,
     PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_MD,
     PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_JSON,
+    PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD,
+    PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON,
     DONGXING_PLOT_SCRIPT,
     ORIGINAL_VISION_STAGE1_STAGE2_DECISION_PACKET,
     ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD,
@@ -231,6 +239,7 @@ PUBLIC_SUBMISSION_DOCS = (
     PAPER10_REAL_ENV_SMOKE_MD,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
     PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_MD,
+    PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD,
 )
 
 PUBLIC_VAGUE_DATA_ROUTE_PATTERN = re.compile(
@@ -3119,6 +3128,226 @@ def check_paper10_real_env_smoke_boundary_audit_current(root: Path) -> CheckResu
     )
 
 
+def check_paper10_anchor_raw_rollout_consistency_audit_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD,
+        PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON,
+        ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_JSON,
+        ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD,
+        DATA_AVAILABILITY,
+        REPRODUCIBILITY,
+        MANIFEST,
+        Path("README.md"),
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+        AUTHOR_DECISION_MATRIX,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_anchor_raw_rollout_consistency_audit_current",
+            False,
+            "missing Paper10 anchor raw-rollout consistency audit files: "
+            + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD)
+    try:
+        payload = json.loads(
+            read_text(root / PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON)
+        )
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_anchor_raw_rollout_consistency_audit_current",
+            False,
+            f"{PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    audit_name = PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD.name
+    linked_docs = [
+        Path("README.md"),
+        Path("MANIFEST.md"),
+        Path("DATA_AVAILABILITY.md"),
+        Path("REPRODUCIBILITY.md"),
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+        AUTHOR_DECISION_MATRIX,
+    ]
+    for rel_path in linked_docs:
+        path = root / rel_path
+        if not path.exists():
+            missing_tokens.append(f"{rel_path}: missing file")
+            continue
+        if audit_name not in read_text(path):
+            missing_tokens.append(f"{rel_path}: {audit_name}")
+
+    required_tokens = [
+        "Paper10 anchor raw-rollout consistency audit",
+        "source-derived consistency audit",
+        "does not add a new experimental claim",
+        "No rollout was rerun",
+        "Summary match: PASS",
+        "Stage 3 frozen-anchor match: PASS",
+        "| total_reward_mean | 69.4705 |",
+        "| total_reward_std_sample | 1.0004 |",
+        "| 0 | 100 | 67.7135 | 67.7135 | 0.0000 |",
+        "e0_env_rollout_frontier_random050_value_head_20x16_h5_seed44_top5_blend010_h5_k50_seed0_100step.json",
+        "e0_env_rollout_frontier_random050_value_head_20x16_h5_seed44_top5_blend010_h5_k50_seeds1-4_100step.json",
+        "e0_frontier_random050_value_head_20x16_h5_seed44_top5_rollout_summary.json",
+        ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_JSON.name,
+        "paper10_geojepa_mpc.experiments.anchor_raw_rollout_consistency_audit",
+    ]
+    for token in required_tokens:
+        if token not in text:
+            missing_tokens.append(
+                f"{PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD}: {token}"
+            )
+
+    expected_values = {
+        ("date",): "2026-06-19",
+        ("status",): "source-derived consistency audit",
+        ("overall_consistency_pass",): True,
+        ("source_boundary", "new_experimental_claim"): False,
+        ("source_boundary", "reran_rollouts"): False,
+        ("summary_consistency", "matches_raw"): True,
+        ("stage3_consistency", "matches_raw"): True,
+        ("stage3_consistency", "anchor_role"): "frozen_anchor",
+    }
+    for path_keys, expected in expected_values.items():
+        value = payload
+        for key in path_keys:
+            if not isinstance(value, dict) or key not in value:
+                missing_tokens.append(
+                    f"{PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON}: "
+                    f"{'.'.join(path_keys)}"
+                )
+                value = None
+                break
+            value = value[key]
+        if value != expected:
+            missing_tokens.append(
+                f"{PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON}: "
+                f"{'.'.join(path_keys)}={value}"
+            )
+
+    raw_seed_summaries = payload.get("raw_seed_summaries")
+    if not isinstance(raw_seed_summaries, list) or len(raw_seed_summaries) != 5:
+        missing_tokens.append(
+            f"{PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON}: "
+            f"len(raw_seed_summaries)="
+            f"{len(raw_seed_summaries) if isinstance(raw_seed_summaries, list) else 'non-list'}"
+        )
+        raw_seed_summaries = []
+    expected_rewards = [
+        67.7134969354234,
+        70.2252087804031,
+        69.7218379673849,
+        69.82450306303002,
+        69.86768346643231,
+    ]
+    if [row.get("seed") for row in raw_seed_summaries] != [0, 1, 2, 3, 4]:
+        missing_tokens.append(
+            f"{PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON}: raw seed order"
+        )
+    for index, expected_reward in enumerate(expected_rewards):
+        if index >= len(raw_seed_summaries):
+            continue
+        row = raw_seed_summaries[index]
+        if row.get("steps_run") != 100 or row.get("reported_steps_run") != 100:
+            missing_tokens.append(
+                f"{PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON}: "
+                f"seed {index} steps"
+            )
+        for key in ("total_reward_from_steps", "reported_total_reward"):
+            value = row.get(key)
+            if not isinstance(value, (int, float)) or abs(
+                float(value) - expected_reward
+            ) > 1e-8:
+                missing_tokens.append(
+                    f"{PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON}: "
+                    f"seed {index} {key}={value}"
+                )
+        delta = row.get("abs_reported_minus_steps")
+        if not isinstance(delta, (int, float)) or float(delta) > 1e-8:
+            missing_tokens.append(
+                f"{PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON}: "
+                f"seed {index} abs_reported_minus_steps={delta}"
+            )
+
+    expected_aggregate = {
+        "n_episodes": 5,
+        "total_reward_mean": 69.47054604253474,
+        "total_reward_std_sample": 1.0003610285842477,
+        "total_reward_min": 67.7134969354234,
+        "total_reward_max": 70.2252087804031,
+        "slope_change_pct_mean": -1.2507267926554344,
+        "cont_change_mean": 0.019233605411040598,
+        "baimu_area_change_ha_mean": -207.263937322613,
+        "elapsed_sec_mean": 279.6767912999843,
+        "zero_swap_steps_sum": 0,
+        "negative_zero_swap_steps_sum": 0,
+    }
+    raw_aggregate = payload.get("raw_aggregate", {})
+    for key, expected in expected_aggregate.items():
+        value = raw_aggregate.get(key)
+        if not isinstance(value, (int, float)) or abs(float(value) - expected) > 1e-8:
+            missing_tokens.append(
+                f"{PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON}: "
+                f"raw_aggregate.{key}={value}"
+            )
+
+    for section_name in ("summary_consistency", "stage3_consistency"):
+        section = payload.get(section_name, {})
+        seed_rewards = section.get("seed_rewards")
+        if not isinstance(seed_rewards, list) or len(seed_rewards) != 5:
+            missing_tokens.append(
+                f"{PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON}: "
+                f"{section_name}.seed_rewards"
+            )
+            continue
+        for index, expected_reward in enumerate(expected_rewards):
+            value = seed_rewards[index]
+            if not isinstance(value, (int, float)) or abs(float(value) - expected_reward) > 1e-8:
+                missing_tokens.append(
+                    f"{PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON}: "
+                    f"{section_name}.seed_rewards[{index}]={value}"
+                )
+        aggregate_deltas = section.get("aggregate_deltas", {})
+        for key in expected_aggregate:
+            value = aggregate_deltas.get(key)
+            if not isinstance(value, (int, float)) or abs(float(value)) > 1e-8:
+                missing_tokens.append(
+                    f"{PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON}: "
+                    f"{section_name}.aggregate_deltas.{key}={value}"
+                )
+
+    forbidden_50_state = re.compile("|".join(FORBIDDEN_50_STATE_PATTERNS), re.IGNORECASE)
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if forbidden_50_state.search(line):
+            missing_tokens.append(
+                f"{PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD}:{line_no}: "
+                "positive 50-state wording"
+            )
+        match = UNSUPPORTED_INFERENTIAL_STATS_PATTERN.search(line)
+        if match:
+            missing_tokens.append(
+                f"{PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD}:{line_no}: "
+                f"unsupported inferential wording {match.group(0)}"
+            )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_anchor_raw_rollout_consistency_audit_current",
+            False,
+            "Paper10 anchor raw-rollout consistency audit gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_anchor_raw_rollout_consistency_audit_current",
+        True,
+        "Paper10 anchor raw-rollout consistency audit is current and claim-bounded",
+    )
+
+
 ORIGINAL_VISION_POSITIVE_CLAIM_CUE = re.compile(
     r"\b("
     r"claim(?:s|ed|ing)?"
@@ -3272,6 +3501,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_real_env_smoke_current,
     check_paper10_real_env_value_filter_smoke_current,
     check_paper10_real_env_smoke_boundary_audit_current,
+    check_paper10_anchor_raw_rollout_consistency_audit_current,
     check_original_vision_validation_registry_current,
 )
 

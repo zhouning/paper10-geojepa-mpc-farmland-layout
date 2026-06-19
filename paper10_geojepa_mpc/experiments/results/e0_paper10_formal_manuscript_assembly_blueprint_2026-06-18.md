@@ -24,6 +24,7 @@ Source basis:
 - `e0_paper10_real_env_smoke_5step_h3_k20_seed0_2026-06-18.md`
 - `e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.md`
 - `e0_paper10_real_env_smoke_boundary_audit_2026-06-19.md`
+- `e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md`
 
 ## one-sentence argument
 
@@ -216,6 +217,11 @@ Use `e0_paper10_real_env_smoke_boundary_audit_2026-06-19.md` before jointly
 mentioning the two real-environment smoke reports. It records the different
 checkpoint, selector, horizon, and top_k settings and keeps them out of
 short-horizon performance-comparison use.
+
+Use `e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md` before
+editing the Bishan 20x16/top5 anchor result. It recomputes the five seed
+rewards from tracked raw step records and checks the packaged rollout summary
+and Stage 3 frozen-anchor row without adding a new experimental claim.
 
 Current safe wording route:
 
