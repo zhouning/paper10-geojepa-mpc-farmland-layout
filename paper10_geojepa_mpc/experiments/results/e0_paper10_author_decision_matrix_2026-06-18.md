@@ -24,6 +24,7 @@ Source basis:
 - `e0_paper10_real_env_smoke_boundary_audit_2026-06-19.md`
 - `e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md`
 - `e0_paper10_manuscript_result_tables_freeze_2026-06-19.md`
+- `e0_paper10_manuscript_text_table_consistency_audit_2026-06-19.md`
 
 ## One-sentence conversion argument
 
@@ -105,6 +106,10 @@ writing route is:
   the Bishan anchor, Stage 3 boundary rows, and claim-status table from tracked
   Stage 3, claim-source, and raw-rollout audit JSON evidence without adding a
   new experimental claim;
+- use `e0_paper10_manuscript_text_table_consistency_audit_2026-06-19.md`
+  before treating manuscript-facing text as synchronized with those frozen
+  tables; it checks the Stage 3 draft, proposal report, author matrix, and
+  assembly blueprint without rerunning rollouts;
 - keep the proposal report as temporary立项/开题 material, not a submission file.
 
 This route supports continued drafting but does not authorize final

@@ -1,0 +1,149 @@
+{
+  "date": "2026-06-19",
+  "documents": [
+    {
+      "consistent_with_table_freeze": true,
+      "document": "paper10_geojepa_mpc\\experiments\\results\\e0_ceus_stage3_manuscript_draft_2026-06-18.md",
+      "forbidden_positive_claim_hits": [],
+      "matched_boundary_tokens": [
+        "must not be pooled",
+        "direct 50-state Bishan scale-up success",
+        "robust Bishan-to-Dongxing transfer superiority"
+      ],
+      "missing_boundary_tokens": [],
+      "missing_required_tokens": [],
+      "required_numeric_tokens": [
+        "69.4705",
+        "67.5437",
+        "1.0004",
+        "7.2246",
+        "64.2960",
+        "66.2544",
+        "67.4913"
+      ],
+      "unsupported_inferential_hits": []
+    },
+    {
+      "consistent_with_table_freeze": true,
+      "document": "paper10_geojepa_mpc\\experiments\\results\\e0_ceus_stage3_manuscript_reframe_2026-06-18.md",
+      "forbidden_positive_claim_hits": [],
+      "matched_boundary_tokens": [
+        "must not be pooled",
+        "direct 50-state Bishan scale-up success",
+        "robust Bishan-to-Dongxing transfer superiority"
+      ],
+      "missing_boundary_tokens": [],
+      "missing_required_tokens": [],
+      "required_numeric_tokens": [
+        "69.4705",
+        "67.5437",
+        "1.0004",
+        "7.2246",
+        "64.2960",
+        "66.2544",
+        "67.4913"
+      ],
+      "unsupported_inferential_hits": []
+    },
+    {
+      "consistent_with_table_freeze": true,
+      "document": "paper10_geojepa_mpc\\experiments\\results\\e0_paper10_project_proposal_opening_report_2026-06-18.md",
+      "forbidden_positive_claim_hits": [],
+      "matched_boundary_tokens": [
+        "must not be pooled",
+        "direct 50-state Bishan scale-up success",
+        "robust Bishan-to-Dongxing transfer superiority"
+      ],
+      "missing_boundary_tokens": [],
+      "missing_required_tokens": [],
+      "required_numeric_tokens": [
+        "69.4705",
+        "67.5437",
+        "1.0004",
+        "7.2246",
+        "64.2960",
+        "66.2544",
+        "67.4913"
+      ],
+      "unsupported_inferential_hits": []
+    },
+    {
+      "consistent_with_table_freeze": true,
+      "document": "paper10_geojepa_mpc\\experiments\\results\\e0_paper10_author_decision_matrix_2026-06-18.md",
+      "forbidden_positive_claim_hits": [],
+      "matched_boundary_tokens": [
+        "must not be pooled",
+        "direct 50-state Bishan scale-up success",
+        "robust Bishan-to-Dongxing transfer superiority"
+      ],
+      "missing_boundary_tokens": [],
+      "missing_required_tokens": [],
+      "required_numeric_tokens": [
+        "69.4705",
+        "67.5437",
+        "1.0004",
+        "7.2246",
+        "64.2960",
+        "66.2544",
+        "67.4913"
+      ],
+      "unsupported_inferential_hits": []
+    },
+    {
+      "consistent_with_table_freeze": true,
+      "document": "paper10_geojepa_mpc\\experiments\\results\\e0_paper10_formal_manuscript_assembly_blueprint_2026-06-18.md",
+      "forbidden_positive_claim_hits": [],
+      "matched_boundary_tokens": [
+        "must not be pooled",
+        "direct 50-state Bishan scale-up success",
+        "robust Bishan-to-Dongxing transfer superiority"
+      ],
+      "missing_boundary_tokens": [],
+      "missing_required_tokens": [],
+      "required_numeric_tokens": [
+        "69.4705",
+        "67.5437",
+        "1.0004",
+        "7.2246",
+        "64.2960",
+        "66.2544",
+        "67.4913"
+      ],
+      "unsupported_inferential_hits": []
+    }
+  ],
+  "expected_tokens": {
+    "anchor_delta": "1.9269",
+    "anchor_mean": "69.4705",
+    "anchor_std": "1.0004",
+    "baseline_mean": "67.5437",
+    "baseline_std": "7.2246",
+    "diagnostic_near_pass_delta": "0.0524",
+    "diagnostic_near_pass_mean": "67.4913",
+    "stage3_confirmatory_deltas": [
+      "3.2477",
+      "1.2893"
+    ],
+    "stage3_confirmatory_means": [
+      "64.2960",
+      "66.2544"
+    ]
+  },
+  "overall_consistency_pass": true,
+  "source_boundary": {
+    "interpretation": "This audit checks manuscript/proposal text against the frozen source-derived result tables. It reports consistency only.",
+    "new_experimental_claim": false,
+    "reran_rollouts": false
+  },
+  "source_files": {
+    "documents": [
+      "paper10_geojepa_mpc\\experiments\\results\\e0_ceus_stage3_manuscript_draft_2026-06-18.md",
+      "paper10_geojepa_mpc\\experiments\\results\\e0_ceus_stage3_manuscript_reframe_2026-06-18.md",
+      "paper10_geojepa_mpc\\experiments\\results\\e0_paper10_project_proposal_opening_report_2026-06-18.md",
+      "paper10_geojepa_mpc\\experiments\\results\\e0_paper10_author_decision_matrix_2026-06-18.md",
+      "paper10_geojepa_mpc\\experiments\\results\\e0_paper10_formal_manuscript_assembly_blueprint_2026-06-18.md"
+    ],
+    "table_freeze_json": "paper10_geojepa_mpc\\experiments\\results\\e0_paper10_manuscript_result_tables_freeze_2026-06-19.json"
+  },
+  "status": "source-derived manuscript text/table consistency audit"
+}

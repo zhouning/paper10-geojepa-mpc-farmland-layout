@@ -26,6 +26,7 @@ Source basis:
 - `e0_paper10_real_env_smoke_boundary_audit_2026-06-19.md`
 - `e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md`
 - `e0_paper10_manuscript_result_tables_freeze_2026-06-19.md`
+- `e0_paper10_manuscript_text_table_consistency_audit_2026-06-19.md`
 
 ## one-sentence argument
 
@@ -78,6 +79,9 @@ The next manuscript editing pass should use this order:
    Use `e0_paper10_manuscript_result_tables_freeze_2026-06-19.md` as the
    current source-derived freeze for the central Bishan, Stage 3, and
    claim-status result tables.
+   Use `e0_paper10_manuscript_text_table_consistency_audit_2026-06-19.md` as
+   the current source-derived check that manuscript-facing text remains
+   synchronized with those frozen tables.
 2. Convert Methods into a reproducibility route that names inputs, outputs,
    masks, seeds, top-k, horizons, candidate-value weights and blocked
    dependencies.
@@ -232,6 +236,11 @@ Results tables, captions, or claim-evidence maps. It freezes the Bishan anchor,
 Stage 3 boundary rows, and claim-status table from tracked Stage 3,
 claim-source, and raw-rollout audit JSON evidence without adding a new
 experimental claim.
+
+Use `e0_paper10_manuscript_text_table_consistency_audit_2026-06-19.md` before
+treating the Stage 3 manuscript draft, proposal report, author matrix, or
+assembly blueprint as synchronized with the frozen result tables. It does not
+rerun rollouts or add a new experimental claim.
 
 Current safe wording route:
 

@@ -168,6 +168,14 @@ For the current manuscript result-table freeze derived from the tracked Stage
 paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_result_tables_freeze_2026-06-19.md
 ```
 
+For the current manuscript text/table consistency audit that checks
+manuscript-facing text against the frozen result tables without rerunning
+rollouts, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_text_table_consistency_audit_2026-06-19.md
+```
+
 For the data-access and rights decision register, including full Tool2,
 GPKG-root geospatial inputs, optional GeoFM rights, code licence, generated-data
 rights, Dongxing/Neijiang prepared-data access, and reviewer routes, see:

@@ -6,8 +6,8 @@ data needed for smoke verification.
 
 ## Included
 
-- `paper10_geojepa_mpc/`: 340 tracked non-cache files in the active Paper10
-  workspace, including 77 Python files, 112 JSON files, 105 Markdown files,
+- `paper10_geojepa_mpc/`: 344 tracked non-cache files in the active Paper10
+  workspace, including 79 Python files, 113 JSON files, 106 Markdown files,
   11 CSV files,
   9 NPZ files, 10 PyTorch checkpoint files, and 16 log files.
 - `arcgis_toolbox_paper9/private_source/`: 10 Paper9 compatibility source files
@@ -257,6 +257,12 @@ data needed for smoke verification.
   evidence without adding a new experimental claim.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_result_tables_freeze_2026-06-19.json`:
   machine-readable output for the manuscript result-table freeze.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_text_table_consistency_audit_2026-06-19.md`:
+  source-derived manuscript text/table consistency audit that checks the
+  current manuscript-facing text against the frozen result tables without
+  rerunning rollouts.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_text_table_consistency_audit_2026-06-19.json`:
+  machine-readable output for the manuscript text/table consistency audit.
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and
@@ -288,9 +294,10 @@ data needed for smoke verification.
   reviewer-improvement packet cross-links, CEUS manuscript draft constraints,
   the Stage 3 manuscript reframe claim boundary, and the CEUS Stage 3
   manuscript draft claim boundary, formal-manuscript blueprint and
-  source-derived claim audit, real-data availability audit, and real-data
-  integrity smoke, plus the five-step real-environment execution-chain smokes
-  and their boundary audit.
+  source-derived claim audit, real-data availability audit, real-data integrity
+  smoke, five-step real-environment execution-chain smokes, their boundary
+  audit, manuscript result-table freeze, and manuscript text/table consistency
+  audit.
 - `references/paper10_verified_references_2026-06-09.bib`:
   verified BibTeX entries for the first Paper10 manuscript citation pass.
 - `references/paper10_local_sources_2026-06-09.bib`:

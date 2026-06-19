@@ -210,6 +210,15 @@ JSON files without adding a new experimental claim:
 paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_result_tables_freeze_2026-06-19.md
 ```
 
+Use the manuscript text/table consistency audit before treating
+manuscript-facing text as synchronized with the frozen result tables. It checks
+the Stage 3 manuscript draft, proposal report, author matrix, and assembly
+blueprint without rerunning rollouts:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_text_table_consistency_audit_2026-06-19.md
+```
+
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and

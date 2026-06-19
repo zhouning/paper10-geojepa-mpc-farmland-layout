@@ -128,6 +128,12 @@ PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD = (
 PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON = (
     RESULTS / "e0_paper10_manuscript_result_tables_freeze_2026-06-19.json"
 )
+PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_MD = (
+    RESULTS / "e0_paper10_manuscript_text_table_consistency_audit_2026-06-19.md"
+)
+PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_JSON = (
+    RESULTS / "e0_paper10_manuscript_text_table_consistency_audit_2026-06-19.json"
+)
 DONGXING_PLOT_SCRIPT = Path("scripts") / "paper10" / "plot_integrated_dongxing_figures.py"
 ORIGINAL_VISION_DESIGN = (
     Path("docs")
@@ -206,6 +212,8 @@ REQUIRED_PATHS = (
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON,
     PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD,
     PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON,
+    PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_MD,
+    PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_JSON,
     DONGXING_PLOT_SCRIPT,
     ORIGINAL_VISION_STAGE1_STAGE2_DECISION_PACKET,
     ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD,
@@ -249,6 +257,7 @@ PUBLIC_SUBMISSION_DOCS = (
     PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_MD,
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD,
     PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD,
+    PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_MD,
 )
 
 PUBLIC_VAGUE_DATA_ROUTE_PATTERN = re.compile(
@@ -3615,6 +3624,213 @@ def check_paper10_manuscript_result_tables_freeze_current(root: Path) -> CheckRe
     )
 
 
+def check_paper10_manuscript_text_table_consistency_audit_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_MD,
+        PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_JSON,
+        PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON,
+        CEUS_STAGE3_MANUSCRIPT_DRAFT,
+        CEUS_STAGE3_MANUSCRIPT_REFRAME,
+        PROJECT_PROPOSAL_REPORT,
+        AUTHOR_DECISION_MATRIX,
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+        DATA_AVAILABILITY,
+        REPRODUCIBILITY,
+        MANIFEST,
+        Path("README.md"),
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_manuscript_text_table_consistency_audit_current",
+            False,
+            "missing Paper10 manuscript text/table consistency audit files: "
+            + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_MD)
+    try:
+        payload = json.loads(
+            read_text(root / PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_JSON)
+        )
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_manuscript_text_table_consistency_audit_current",
+            False,
+            f"{PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    audit_name = PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_MD.name
+    linked_docs = [
+        Path("README.md"),
+        Path("MANIFEST.md"),
+        Path("DATA_AVAILABILITY.md"),
+        Path("REPRODUCIBILITY.md"),
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+        AUTHOR_DECISION_MATRIX,
+    ]
+    for rel_path in linked_docs:
+        path = root / rel_path
+        if not path.exists():
+            missing_tokens.append(f"{rel_path}: missing file")
+            continue
+        if audit_name not in read_text(path):
+            missing_tokens.append(f"{rel_path}: {audit_name}")
+
+    required_tokens = [
+        "Paper10 manuscript text/table consistency audit",
+        "source-derived manuscript text/table consistency audit",
+        "does not add a new experimental claim",
+        "No rollout was rerun",
+        "overall consistency: PASS",
+        PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON.name,
+        CEUS_STAGE3_MANUSCRIPT_DRAFT.name,
+        CEUS_STAGE3_MANUSCRIPT_REFRAME.name,
+        PROJECT_PROPOSAL_REPORT.name,
+        AUTHOR_DECISION_MATRIX.name,
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT.name,
+        "69.4705",
+        "67.5437",
+        "1.0004",
+        "7.2246",
+        "64.2960, 66.2544",
+        "67.4913",
+        "must not be pooled",
+        "direct 50-state Bishan scale-up success",
+        "robust Bishan-to-Dongxing transfer superiority",
+        "PASS does not mean the formal manuscript is ready for submission",
+        "paper10_geojepa_mpc.experiments.manuscript_text_table_consistency_audit",
+    ]
+    for token in required_tokens:
+        if token not in text:
+            missing_tokens.append(
+                f"{PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_MD}: {token}"
+            )
+
+    expected_values = {
+        ("date",): "2026-06-19",
+        ("status",): "source-derived manuscript text/table consistency audit",
+        ("overall_consistency_pass",): True,
+        ("source_boundary", "new_experimental_claim"): False,
+        ("source_boundary", "reran_rollouts"): False,
+        ("expected_tokens", "anchor_mean"): "69.4705",
+        ("expected_tokens", "baseline_mean"): "67.5437",
+        ("expected_tokens", "anchor_std"): "1.0004",
+        ("expected_tokens", "baseline_std"): "7.2246",
+        ("expected_tokens", "diagnostic_near_pass_mean"): "67.4913",
+    }
+    for path_keys, expected in expected_values.items():
+        value = payload
+        for key in path_keys:
+            if not isinstance(value, dict) or key not in value:
+                missing_tokens.append(
+                    f"{PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_JSON}: "
+                    f"{'.'.join(path_keys)}"
+                )
+                value = None
+                break
+            value = value[key]
+        if value != expected:
+            missing_tokens.append(
+                f"{PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_JSON}: "
+                f"{'.'.join(path_keys)}={value}"
+            )
+
+    expected_confirmatory = ["64.2960", "66.2544"]
+    confirmatory = (
+        payload.get("expected_tokens", {}).get("stage3_confirmatory_means")
+    )
+    if confirmatory != expected_confirmatory:
+        missing_tokens.append(
+            f"{PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_JSON}: "
+            f"expected_tokens.stage3_confirmatory_means={confirmatory}"
+        )
+
+    expected_documents = [
+        str(CEUS_STAGE3_MANUSCRIPT_DRAFT),
+        str(CEUS_STAGE3_MANUSCRIPT_REFRAME),
+        str(PROJECT_PROPOSAL_REPORT),
+        str(AUTHOR_DECISION_MATRIX),
+        str(FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT),
+    ]
+    documents = payload.get("documents")
+    if not isinstance(documents, list) or len(documents) != len(expected_documents):
+        missing_tokens.append(
+            f"{PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_JSON}: documents"
+        )
+        documents = []
+    observed_documents = [row.get("document") for row in documents if isinstance(row, dict)]
+    if observed_documents != expected_documents:
+        missing_tokens.append(
+            f"{PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_JSON}: "
+            f"documents={observed_documents}"
+        )
+
+    for row in documents:
+        if not isinstance(row, dict):
+            missing_tokens.append(
+                f"{PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_JSON}: non-dict document row"
+            )
+            continue
+        document = row.get("document")
+        if row.get("consistent_with_table_freeze") is not True:
+            missing_tokens.append(
+                f"{PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_JSON}: "
+                f"{document}.consistent_with_table_freeze={row.get('consistent_with_table_freeze')}"
+            )
+        for key in (
+            "missing_required_tokens",
+            "missing_boundary_tokens",
+            "forbidden_positive_claim_hits",
+            "unsupported_inferential_hits",
+        ):
+            value = row.get(key)
+            if value != []:
+                missing_tokens.append(
+                    f"{PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_JSON}: "
+                    f"{document}.{key}={value}"
+                )
+        matched_boundary_tokens = set(row.get("matched_boundary_tokens", []))
+        for token in (
+            "must not be pooled",
+            "direct 50-state Bishan scale-up success",
+            "robust Bishan-to-Dongxing transfer superiority",
+        ):
+            if token not in matched_boundary_tokens:
+                missing_tokens.append(
+                    f"{PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_JSON}: "
+                    f"{document}.matched_boundary_tokens.{token}"
+                )
+
+    forbidden_50_state = re.compile("|".join(FORBIDDEN_50_STATE_PATTERNS), re.IGNORECASE)
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if forbidden_50_state.search(line):
+            missing_tokens.append(
+                f"{PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_MD}:{line_no}: "
+                "positive 50-state wording"
+            )
+        match = UNSUPPORTED_INFERENTIAL_STATS_PATTERN.search(line)
+        if match:
+            missing_tokens.append(
+                f"{PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_MD}:{line_no}: "
+                f"unsupported inferential wording {match.group(0)}"
+            )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_manuscript_text_table_consistency_audit_current",
+            False,
+            "Paper10 manuscript text/table consistency audit gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_manuscript_text_table_consistency_audit_current",
+        True,
+        "Paper10 manuscript text/table consistency audit is current and claim-bounded",
+    )
+
+
 ORIGINAL_VISION_POSITIVE_CLAIM_CUE = re.compile(
     r"\b("
     r"claim(?:s|ed|ing)?"
@@ -3764,6 +3980,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_formal_manuscript_blueprint_current,
     check_paper10_claim_source_audit_current,
     check_paper10_manuscript_result_tables_freeze_current,
+    check_paper10_manuscript_text_table_consistency_audit_current,
     check_paper10_real_data_availability_audit_current,
     check_paper10_real_data_integrity_smoke_current,
     check_paper10_real_env_smoke_current,

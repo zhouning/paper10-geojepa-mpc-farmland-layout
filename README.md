@@ -86,6 +86,7 @@ Paper-facing writing assets are tracked under
 - `e0_paper10_real_env_smoke_boundary_audit_2026-06-19.md`
 - `e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md`
 - `e0_paper10_manuscript_result_tables_freeze_2026-06-19.md`
+- `e0_paper10_manuscript_text_table_consistency_audit_2026-06-19.md`
 - `e0_data_code_availability_draft_2026-06-09.md` now includes the
   Dongxing/Neijiang prepared-data access route that must be closed before
   submission.
@@ -253,6 +254,11 @@ as the current manuscript result-table freeze before editing Results, captions,
 or claim-evidence maps. It derives the Bishan anchor, Stage 3 boundary rows,
 and claim-status table from tracked Stage 3, claim-source, and raw-rollout
 audit JSON files without adding a new experimental claim.
+Use
+`paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_text_table_consistency_audit_2026-06-19.md`
+as the current manuscript text/table consistency audit before treating the
+Stage 3 manuscript draft, proposal report, author matrix, or assembly blueprint
+as synchronized with the frozen result tables.
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and
