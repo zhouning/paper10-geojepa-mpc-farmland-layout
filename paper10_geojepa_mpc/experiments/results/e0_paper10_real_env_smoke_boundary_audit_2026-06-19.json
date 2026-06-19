@@ -1,0 +1,91 @@
+{
+  "comparability": {
+    "different_fields": [
+      "checkpoint",
+      "selector",
+      "horizon",
+      "top_k",
+      "candidate_score_mode",
+      "candidate_value_weight"
+    ],
+    "performance_comparison_valid": false,
+    "planning_quality_result": false,
+    "reasons": [
+      "different checkpoint, selector, horizon, and top_k settings",
+      "single seed and five executed steps",
+      "value-filter run includes one negative reward step"
+    ],
+    "short_horizon_performance_comparison": false
+  },
+  "date": "2026-06-19",
+  "interpretation_boundary": "These smoke reports confirm execution-chain reachability only. They are not a planning-quality result, not a short-horizon performance comparison, and not support for a new scale-up claim.",
+  "smokes": [
+    {
+      "candidate_score_mode": null,
+      "candidate_value_weight": null,
+      "checkpoint": "paper10_geojepa_mpc\\experiments\\checkpoints\\e0_bishan_rank_seed2028\\rank_seed2028.pt",
+      "command": "D:\\adk\\.venv\\Scripts\\python.exe -m paper10_geojepa_mpc.experiments.run_e0_env_rollout_smoke --checkpoint paper10_geojepa_mpc\\experiments\\checkpoints\\e0_bishan_rank_seed2028\\rank_seed2028.pt --prepared-dir D:\\test --rollout-steps 5 --horizon 3 --top-k 20 --seed 0 --device cpu --mask-mode executable --output reviewer_outputs\\paper10_real_env_smoke_5step_h3_k20_seed0.json",
+      "date": "2026-06-18",
+      "env_source": "paper9",
+      "final_metrics": {
+        "baimu_area_change_ha": -7.826418488866091,
+        "cont_change": 0.0016273806799396162,
+        "slope_change_pct": -0.07470047209533646
+      },
+      "horizon": 3,
+      "mask_mode": "executable",
+      "min_base_valid": 2381,
+      "min_executable_valid": 2313,
+      "name": "paper9_selector",
+      "negative_reward_steps": 0,
+      "positive_reward_steps": 5,
+      "prepared_dir": "D:\\test",
+      "random_continuation_mode": null,
+      "raw_output": "reviewer_outputs\\paper10_real_env_smoke_5step_h3_k20_seed0.json",
+      "rollout_steps": 5,
+      "seed": 0,
+      "selector": "paper9",
+      "source_report": "paper10_geojepa_mpc\\experiments\\results\\e0_paper10_real_env_smoke_5step_h3_k20_seed0_2026-06-18.json",
+      "stable_candidate_order": null,
+      "steps_run": 5,
+      "terminated": false,
+      "top_k": 20,
+      "total_reward": 7.646638186195446,
+      "truncated": false
+    },
+    {
+      "candidate_score_mode": "blend",
+      "candidate_value_weight": 0.1,
+      "checkpoint": "paper10_geojepa_mpc\\experiments\\checkpoints\\e0_frontier_random050_value_head_20x16_h5_seed44_top5\\value_head_seed3044.pt",
+      "command": "D:\\adk\\.venv\\Scripts\\python.exe -m paper10_geojepa_mpc.experiments.run_e0_env_rollout_smoke --checkpoint paper10_geojepa_mpc\\experiments\\checkpoints\\e0_frontier_random050_value_head_20x16_h5_seed44_top5\\value_head_seed3044.pt --prepared-dir D:\\test --rollout-steps 5 --horizon 5 --top-k 50 --seed 0 --device cpu --mask-mode executable --selector value_filter --candidate-score-mode blend --candidate-value-weight 0.1 --output reviewer_outputs\\paper10_real_env_value_filter_smoke_5step_h5_k50_seed0.json",
+      "date": "2026-06-19",
+      "env_source": "paper9",
+      "final_metrics": {
+        "baimu_area_change_ha": -24.969707818043233,
+        "cont_change": 0.0007628346937216257,
+        "slope_change_pct": -0.10330620803581785
+      },
+      "horizon": 5,
+      "mask_mode": "executable",
+      "min_base_valid": 2381,
+      "min_executable_valid": 2312,
+      "name": "value_filter_selector",
+      "negative_reward_steps": 1,
+      "positive_reward_steps": 4,
+      "prepared_dir": "D:\\test",
+      "random_continuation_mode": "independent",
+      "raw_output": "reviewer_outputs\\paper10_real_env_value_filter_smoke_5step_h5_k50_seed0.json",
+      "rollout_steps": 5,
+      "seed": 0,
+      "selector": "value_filter",
+      "source_report": "paper10_geojepa_mpc\\experiments\\results\\e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.json",
+      "stable_candidate_order": false,
+      "steps_run": 5,
+      "terminated": false,
+      "top_k": 50,
+      "total_reward": 2.4253884392585983,
+      "truncated": false
+    }
+  ],
+  "status": "execution-chain boundary audit"
+}

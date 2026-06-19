@@ -183,6 +183,15 @@ short-horizon performance evidence:
 paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.md
 ```
 
+Use the real-environment smoke boundary audit before interpreting the two
+tracked full-Bishan smoke reports together. The audit records the different
+checkpoint, selector, horizon, and top_k settings and keeps the two runs out of
+short-horizon performance-comparison use:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_smoke_boundary_audit_2026-06-19.md
+```
+
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and

@@ -110,6 +110,12 @@ PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON = (
     RESULTS
     / "e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.json"
 )
+PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_MD = (
+    RESULTS / "e0_paper10_real_env_smoke_boundary_audit_2026-06-19.md"
+)
+PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_JSON = (
+    RESULTS / "e0_paper10_real_env_smoke_boundary_audit_2026-06-19.json"
+)
 DONGXING_PLOT_SCRIPT = Path("scripts") / "paper10" / "plot_integrated_dongxing_figures.py"
 ORIGINAL_VISION_DESIGN = (
     Path("docs")
@@ -182,6 +188,8 @@ REQUIRED_PATHS = (
     PAPER10_REAL_ENV_SMOKE_JSON,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON,
+    PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_MD,
+    PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_JSON,
     DONGXING_PLOT_SCRIPT,
     ORIGINAL_VISION_STAGE1_STAGE2_DECISION_PACKET,
     ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD,
@@ -222,6 +230,7 @@ PUBLIC_SUBMISSION_DOCS = (
     PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD,
     PAPER10_REAL_ENV_SMOKE_MD,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
+    PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_MD,
 )
 
 PUBLIC_VAGUE_DATA_ROUTE_PATTERN = re.compile(
@@ -2900,6 +2909,216 @@ def check_paper10_real_env_value_filter_smoke_current(root: Path) -> CheckResult
     )
 
 
+def check_paper10_real_env_smoke_boundary_audit_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_MD,
+        PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_JSON,
+        PAPER10_REAL_ENV_SMOKE_MD,
+        PAPER10_REAL_ENV_SMOKE_JSON,
+        PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
+        PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON,
+        DATA_AVAILABILITY,
+        REPRODUCIBILITY,
+        MANIFEST,
+        Path("README.md"),
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+        AUTHOR_DECISION_MATRIX,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_real_env_smoke_boundary_audit_current",
+            False,
+            "missing Paper10 real-environment smoke boundary audit files: "
+            + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_MD)
+    try:
+        payload = json.loads(
+            read_text(root / PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_JSON)
+        )
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_real_env_smoke_boundary_audit_current",
+            False,
+            f"{PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    audit_name = PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_MD.name
+    linked_docs = [
+        Path("README.md"),
+        Path("MANIFEST.md"),
+        Path("DATA_AVAILABILITY.md"),
+        Path("REPRODUCIBILITY.md"),
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+        AUTHOR_DECISION_MATRIX,
+    ]
+    for rel_path in linked_docs:
+        path = root / rel_path
+        if not path.exists():
+            missing_tokens.append(f"{rel_path}: missing file")
+            continue
+        if audit_name not in read_text(path):
+            missing_tokens.append(f"{rel_path}: {audit_name}")
+
+    required_tokens = [
+        "Paper10 real-environment smoke boundary audit",
+        "not a planning-quality result",
+        "not a short-horizon performance comparison",
+        "different checkpoint, selector, horizon, and top_k settings",
+        "value-filter run includes one negative reward step",
+        "| paper9_selector | `paper9` | 3 | 20 | 5 | 7.6466 | 5 | 0 | 2313 |",
+        "| value_filter_selector | `value_filter` | 5 | 50 | 5 | 2.4254 | 4 | 1 | 2312 |",
+        PAPER10_REAL_ENV_SMOKE_JSON.name,
+        PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON.name,
+    ]
+    for token in required_tokens:
+        if token not in text:
+            missing_tokens.append(
+                f"{PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_MD}: {token}"
+            )
+
+    expected_values = {
+        ("date",): "2026-06-19",
+        ("status",): "execution-chain boundary audit",
+        ("comparability", "performance_comparison_valid"): False,
+        ("comparability", "planning_quality_result"): False,
+        ("comparability", "short_horizon_performance_comparison"): False,
+    }
+    for path_keys, expected in expected_values.items():
+        value = payload
+        for key in path_keys:
+            if not isinstance(value, dict) or key not in value:
+                missing_tokens.append(
+                    f"{PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_JSON}: "
+                    f"{'.'.join(path_keys)}"
+                )
+                value = None
+                break
+            value = value[key]
+        if value != expected:
+            missing_tokens.append(
+                f"{PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_JSON}: "
+                f"{'.'.join(path_keys)}={value}"
+            )
+
+    comparability = payload.get("comparability", {})
+    different_fields = comparability.get("different_fields", [])
+    for field in (
+        "checkpoint",
+        "selector",
+        "horizon",
+        "top_k",
+        "candidate_score_mode",
+        "candidate_value_weight",
+    ):
+        if field not in different_fields:
+            missing_tokens.append(
+                f"{PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_JSON}: "
+                f"comparability.different_fields missing {field}"
+            )
+
+    reasons = comparability.get("reasons", [])
+    for reason in (
+        "different checkpoint, selector, horizon, and top_k settings",
+        "single seed and five executed steps",
+        "value-filter run includes one negative reward step",
+    ):
+        if reason not in reasons:
+            missing_tokens.append(
+                f"{PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_JSON}: "
+                f"comparability.reasons missing {reason}"
+            )
+
+    smokes = payload.get("smokes")
+    if not isinstance(smokes, list) or len(smokes) != 2:
+        missing_tokens.append(
+            f"{PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_JSON}: "
+            f"len(smokes)={len(smokes) if isinstance(smokes, list) else 'non-list'}"
+        )
+        smokes = []
+    by_name = {
+        smoke.get("name"): smoke
+        for smoke in smokes
+        if isinstance(smoke, dict) and smoke.get("name")
+    }
+    expected_smokes = {
+        "paper9_selector": {
+            "selector": "paper9",
+            "horizon": 3,
+            "top_k": 20,
+            "steps_run": 5,
+            "positive_reward_steps": 5,
+            "negative_reward_steps": 0,
+            "min_executable_valid": 2313,
+            "total_reward": 7.646638186195446,
+            "source_report": str(PAPER10_REAL_ENV_SMOKE_JSON),
+        },
+        "value_filter_selector": {
+            "selector": "value_filter",
+            "horizon": 5,
+            "top_k": 50,
+            "steps_run": 5,
+            "positive_reward_steps": 4,
+            "negative_reward_steps": 1,
+            "min_executable_valid": 2312,
+            "total_reward": 2.4253884392585983,
+            "source_report": str(PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON),
+        },
+    }
+    for name, expectations in expected_smokes.items():
+        smoke = by_name.get(name)
+        if smoke is None:
+            missing_tokens.append(
+                f"{PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_JSON}: smokes.{name}"
+            )
+            continue
+        for key, expected in expectations.items():
+            value = smoke.get(key)
+            if isinstance(expected, float):
+                if not isinstance(value, (int, float)) or abs(
+                    float(value) - expected
+                ) > 1e-9:
+                    missing_tokens.append(
+                        f"{PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_JSON}: "
+                        f"smokes.{name}.{key}={value}"
+                    )
+            elif value != expected:
+                missing_tokens.append(
+                    f"{PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_JSON}: "
+                    f"smokes.{name}.{key}={value}"
+                )
+
+    forbidden_50_state = re.compile("|".join(FORBIDDEN_50_STATE_PATTERNS), re.IGNORECASE)
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if forbidden_50_state.search(line):
+            missing_tokens.append(
+                f"{PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_MD}:{line_no}: "
+                "positive 50-state wording"
+            )
+        match = UNSUPPORTED_INFERENTIAL_STATS_PATTERN.search(line)
+        if match:
+            missing_tokens.append(
+                f"{PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_MD}:{line_no}: "
+                f"unsupported inferential wording {match.group(0)}"
+            )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_real_env_smoke_boundary_audit_current",
+            False,
+            "Paper10 real-environment smoke boundary audit gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_real_env_smoke_boundary_audit_current",
+        True,
+        "Paper10 real-environment smoke boundary audit is current and claim-bounded",
+    )
+
+
 ORIGINAL_VISION_POSITIVE_CLAIM_CUE = re.compile(
     r"\b("
     r"claim(?:s|ed|ing)?"
@@ -3052,6 +3271,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_real_data_integrity_smoke_current,
     check_paper10_real_env_smoke_current,
     check_paper10_real_env_value_filter_smoke_current,
+    check_paper10_real_env_smoke_boundary_audit_current,
     check_original_vision_validation_registry_current,
 )
 

@@ -6,9 +6,9 @@ data needed for smoke verification.
 
 ## Included
 
-- `paper10_geojepa_mpc/`: 288 non-cache files copied from the active Paper10
-  workspace, including 57 Python files, 101 JSON files, 85 Markdown files,
-  10 CSV files,
+- `paper10_geojepa_mpc/`: 332 tracked non-cache files in the active Paper10
+  workspace, including 73 Python files, 110 JSON files, 103 Markdown files,
+  11 CSV files,
   9 NPZ files, 10 PyTorch checkpoint files, and 16 log files.
 - `arcgis_toolbox_paper9/private_source/`: 10 Paper9 compatibility source files
   used by Paper10's real-environment rollout and value-label workflows.
@@ -239,6 +239,12 @@ data needed for smoke verification.
   performance evidence.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.json`:
   machine-readable output for the value-filter execution-chain smoke.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_smoke_boundary_audit_2026-06-19.md`:
+  boundary audit across the two tracked real-environment smoke reports,
+  recording that different checkpoint, selector, horizon, and top-k settings
+  prevent short-horizon performance-comparison use.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_smoke_boundary_audit_2026-06-19.json`:
+  machine-readable output for the real-environment smoke boundary audit.
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and
@@ -271,7 +277,8 @@ data needed for smoke verification.
   the Stage 3 manuscript reframe claim boundary, and the CEUS Stage 3
   manuscript draft claim boundary, formal-manuscript blueprint and
   source-derived claim audit, real-data availability audit, and real-data
-  integrity smoke, plus the five-step real-environment execution-chain smokes.
+  integrity smoke, plus the five-step real-environment execution-chain smokes
+  and their boundary audit.
 - `references/paper10_verified_references_2026-06-09.bib`:
   verified BibTeX entries for the first Paper10 manuscript citation pass.
 - `references/paper10_local_sources_2026-06-09.bib`:

@@ -23,6 +23,7 @@ Source basis:
 - `e0_paper10_real_data_integrity_smoke_2026-06-18.md`
 - `e0_paper10_real_env_smoke_5step_h3_k20_seed0_2026-06-18.md`
 - `e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.md`
+- `e0_paper10_real_env_smoke_boundary_audit_2026-06-19.md`
 
 ## one-sentence argument
 
@@ -210,6 +211,11 @@ as the current execution-chain evidence that the 20x16/top5 checkpoint can run
 through the value-filter selector and full Bishan `CountyLevelEnv.step`. It
 includes one negative reward step and must not be used as short-horizon
 performance evidence.
+
+Use `e0_paper10_real_env_smoke_boundary_audit_2026-06-19.md` before jointly
+mentioning the two real-environment smoke reports. It records the different
+checkpoint, selector, horizon, and top_k settings and keeps them out of
+short-horizon performance-comparison use.
 
 Current safe wording route:
 
