@@ -2,6 +2,7 @@ import json
 
 from paper10_geojepa_mpc.experiments.real_env_smoke_report import (
     build_smoke_report,
+    parse_args,
     markdown_report,
     write_smoke_report,
 )
@@ -111,3 +112,66 @@ def test_write_smoke_report_writes_json_and_markdown(tmp_path):
 
     assert payload == json.loads(output_json.read_text(encoding="utf-8"))
     assert output_md.read_text(encoding="utf-8") == markdown_report(payload)
+
+
+def test_value_filter_report_records_selector_configuration_and_negative_boundary():
+    rollout = _rollout_payload()
+    rollout.update(
+        {
+            "checkpoint": "value_head.pt",
+            "horizon": 5,
+            "top_k": 50,
+            "n_rollouts": 1,
+            "selector": "value_filter",
+            "candidate_score_mode": "blend",
+            "candidate_value_weight": 0.1,
+            "random_continuation_mode": "independent",
+            "stable_candidate_order": False,
+            "steps_run": 2,
+            "total_reward": -0.25,
+        }
+    )
+    rollout["steps"][1]["reward"] = -0.75
+
+    report = build_smoke_report(
+        rollout,
+        command="python -m value-filter-smoke",
+        raw_output="reviewer_outputs/value_filter.json",
+        date="2026-06-19",
+    )
+    text = markdown_report(report)
+
+    assert report["configuration"]["selector"] == "value_filter"
+    assert report["configuration"]["candidate_score_mode"] == "blend"
+    assert report["configuration"]["candidate_value_weight"] == 0.1
+    assert report["configuration"]["n_rollouts"] == 1
+    assert report["configuration"]["random_continuation_mode"] == "independent"
+    assert report["configuration"]["stable_candidate_order"] is False
+    assert report["outcome"]["negative_reward_steps"] == 1
+    assert "| candidate_score_mode | `blend` |" in text
+    assert "| candidate_value_weight | `0.1` |" in text
+    assert "negative reward step" in text
+    assert "not short-horizon performance evidence" in text
+
+
+def test_cli_accepts_explicit_report_date(monkeypatch):
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "real_env_smoke_report",
+            "--raw-rollout-json",
+            "raw.json",
+            "--output-json",
+            "summary.json",
+            "--output-md",
+            "summary.md",
+            "--command",
+            "python -m smoke",
+            "--date",
+            "2026-06-19",
+        ],
+    )
+
+    args = parse_args()
+
+    assert args.date == "2026-06-19"

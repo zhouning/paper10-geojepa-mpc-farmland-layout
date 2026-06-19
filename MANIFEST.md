@@ -233,6 +233,12 @@ data needed for smoke verification.
   `CountyLevelEnv.step`; it is not a planning-quality result.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_smoke_5step_h3_k20_seed0_2026-06-18.json`:
   machine-readable output for the real-environment execution-chain smoke.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.md`:
+  five-step full-Bishan value-filter execution-chain smoke for the 20x16/top5
+  checkpoint; it records one negative reward step and is not short-horizon
+  performance evidence.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.json`:
+  machine-readable output for the value-filter execution-chain smoke.
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and
@@ -265,7 +271,7 @@ data needed for smoke verification.
   the Stage 3 manuscript reframe claim boundary, and the CEUS Stage 3
   manuscript draft claim boundary, formal-manuscript blueprint and
   source-derived claim audit, real-data availability audit, and real-data
-  integrity smoke, plus the five-step real-environment execution-chain smoke.
+  integrity smoke, plus the five-step real-environment execution-chain smokes.
 - `references/paper10_verified_references_2026-06-09.bib`:
   verified BibTeX entries for the first Paper10 manuscript citation pass.
 - `references/paper10_local_sources_2026-06-09.bib`:

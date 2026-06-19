@@ -82,6 +82,7 @@ Paper-facing writing assets are tracked under
 - `e0_paper10_real_data_availability_audit_2026-06-18.md`
 - `e0_paper10_real_data_integrity_smoke_2026-06-18.md`
 - `e0_paper10_real_env_smoke_5step_h3_k20_seed0_2026-06-18.md`
+- `e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.md`
 - `e0_data_code_availability_draft_2026-06-09.md` now includes the
   Dongxing/Neijiang prepared-data access route that must be closed before
   submission.
@@ -227,6 +228,11 @@ as the current five-step full-Bishan real-environment execution-chain smoke
 for the Paper10 checkpoint, Paper9 adapter, MPC selector, executable mask, and
 `CountyLevelEnv.step`. It is not a planning-quality result and does not change
 manuscript performance claims.
+Use
+`paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.md`
+as the current five-step full-Bishan value-filter execution-chain smoke for
+the 20x16/top5 checkpoint. It includes one negative reward step and is not
+short-horizon performance evidence for the selector.
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and

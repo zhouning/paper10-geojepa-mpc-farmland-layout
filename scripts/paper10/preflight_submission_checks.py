@@ -102,6 +102,14 @@ PAPER10_REAL_ENV_SMOKE_MD = (
 PAPER10_REAL_ENV_SMOKE_JSON = (
     RESULTS / "e0_paper10_real_env_smoke_5step_h3_k20_seed0_2026-06-18.json"
 )
+PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD = (
+    RESULTS
+    / "e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.md"
+)
+PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON = (
+    RESULTS
+    / "e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.json"
+)
 DONGXING_PLOT_SCRIPT = Path("scripts") / "paper10" / "plot_integrated_dongxing_figures.py"
 ORIGINAL_VISION_DESIGN = (
     Path("docs")
@@ -172,6 +180,8 @@ REQUIRED_PATHS = (
     PAPER10_REAL_DATA_INTEGRITY_SMOKE_JSON,
     PAPER10_REAL_ENV_SMOKE_MD,
     PAPER10_REAL_ENV_SMOKE_JSON,
+    PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
+    PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON,
     DONGXING_PLOT_SCRIPT,
     ORIGINAL_VISION_STAGE1_STAGE2_DECISION_PACKET,
     ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD,
@@ -211,6 +221,7 @@ PUBLIC_SUBMISSION_DOCS = (
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
     PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD,
     PAPER10_REAL_ENV_SMOKE_MD,
+    PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
 )
 
 PUBLIC_VAGUE_DATA_ROUTE_PATTERN = re.compile(
@@ -2678,6 +2689,217 @@ def check_paper10_real_env_smoke_current(root: Path) -> CheckResult:
     )
 
 
+def check_paper10_real_env_value_filter_smoke_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
+        PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON,
+        PAPER10_REAL_ENV_SMOKE_MD,
+        PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
+        PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD,
+        DATA_AVAILABILITY,
+        REPRODUCIBILITY,
+        MANIFEST,
+        Path("README.md"),
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+        AUTHOR_DECISION_MATRIX,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_real_env_value_filter_smoke_current",
+            False,
+            "missing Paper10 real-environment value-filter smoke files: "
+            + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD)
+    try:
+        payload = json.loads(read_text(root / PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON))
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_real_env_value_filter_smoke_current",
+            False,
+            f"{PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    smoke_name = PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD.name
+    linked_docs = [
+        Path("README.md"),
+        Path("MANIFEST.md"),
+        Path("DATA_AVAILABILITY.md"),
+        Path("REPRODUCIBILITY.md"),
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+        AUTHOR_DECISION_MATRIX,
+    ]
+    for rel_path in linked_docs:
+        path = root / rel_path
+        if not path.exists():
+            missing_tokens.append(f"{rel_path}: missing file")
+            continue
+        if smoke_name not in read_text(path):
+            missing_tokens.append(f"{rel_path}: {smoke_name}")
+
+    required_tokens = [
+        "Paper10 real-environment rollout smoke",
+        "not a planning-quality result",
+        "not evidence for a new planning-quality or scale-up claim",
+        "not short-horizon performance evidence",
+        "negative reward step",
+        "CountyLevelEnv.step",
+        "reviewer_outputs\\paper10_real_env_value_filter_smoke_5step_h5_k50_seed0.json",
+        "paper10_geojepa_mpc.experiments.run_e0_env_rollout_smoke",
+        "| selector | `value_filter` |",
+        "| candidate_score_mode | `blend` |",
+        "| candidate_value_weight | `0.1` |",
+        "| total reward | 2.4254 |",
+        "| min executable-valid actions | 2312 |",
+        "| positive reward steps | 4 |",
+        "| negative reward steps | 1 |",
+    ]
+    for token in required_tokens:
+        if token not in text:
+            missing_tokens.append(
+                f"{PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD}: {token}"
+            )
+
+    expected_values = {
+        ("date",): "2026-06-19",
+        ("configuration", "prepared_dir"): "D:\\test",
+        ("configuration", "mask_mode"): "executable",
+        ("configuration", "env_source"): "paper9",
+        ("configuration", "horizon"): 5,
+        ("configuration", "top_k"): 50,
+        ("configuration", "n_rollouts"): 1,
+        ("configuration", "rollout_steps"): 5,
+        ("configuration", "selector"): "value_filter",
+        ("configuration", "candidate_score_mode"): "blend",
+        ("configuration", "candidate_value_weight"): 0.1,
+        ("configuration", "random_continuation_mode"): "independent",
+        ("configuration", "stable_candidate_order"): False,
+        ("outcome", "steps_run"): 5,
+        ("outcome", "min_base_valid"): 2381,
+        ("outcome", "min_executable_valid"): 2312,
+        ("outcome", "positive_reward_steps"): 4,
+        ("outcome", "negative_reward_steps"): 1,
+        ("outcome", "terminated"): False,
+        ("outcome", "truncated"): False,
+        ("raw_output",): "reviewer_outputs\\paper10_real_env_value_filter_smoke_5step_h5_k50_seed0.json",
+    }
+    for path_keys, expected in expected_values.items():
+        value = payload
+        for key in path_keys:
+            if not isinstance(value, dict) or key not in value:
+                missing_tokens.append(
+                    f"{PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON}: "
+                    f"{'.'.join(path_keys)}"
+                )
+                value = None
+                break
+            value = value[key]
+        if value != expected:
+            missing_tokens.append(
+                f"{PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON}: "
+                f"{'.'.join(path_keys)}={value}"
+            )
+
+    outcome = payload.get("outcome", {})
+    total_reward = outcome.get("total_reward")
+    if not isinstance(total_reward, (int, float)) or abs(
+        float(total_reward) - 2.4253884392585983
+    ) > 1e-9:
+        missing_tokens.append(
+            f"{PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON}: "
+            f"outcome.total_reward={total_reward}"
+        )
+
+    final_metrics = payload.get("final_metrics", {})
+    expected_final_metrics = {
+        "slope_change_pct": -0.10330620803581785,
+        "cont_change": 0.0007628346937216257,
+        "baimu_area_change_ha": -24.969707818043233,
+    }
+    for key, expected in expected_final_metrics.items():
+        value = final_metrics.get(key)
+        if not isinstance(value, (int, float)) or abs(float(value) - expected) > 1e-12:
+            missing_tokens.append(
+                f"{PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON}: "
+                f"final_metrics.{key}={value}"
+            )
+
+    steps = payload.get("steps")
+    if not isinstance(steps, list):
+        missing_tokens.append(f"{PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON}: steps")
+        steps = []
+    if len(steps) != 5:
+        missing_tokens.append(
+            f"{PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON}: len(steps)={len(steps)}"
+        )
+    if steps:
+        rewards = [
+            step.get("reward")
+            for step in steps
+            if isinstance(step, dict) and isinstance(step.get("reward"), (int, float))
+        ]
+        if not any(float(reward) < 0.0 for reward in rewards):
+            missing_tokens.append(
+                f"{PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON}: negative step reward"
+            )
+    for index, step in enumerate(steps, start=1):
+        if not isinstance(step, dict):
+            missing_tokens.append(
+                f"{PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON}: step {index} non-dict"
+            )
+            continue
+        if step.get("step") != index:
+            missing_tokens.append(
+                f"{PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON}: step {index} index"
+            )
+        for key in (
+            "action",
+            "reward",
+            "n_base_valid",
+            "n_executable_valid",
+            "n_candidates",
+            "completed_swaps",
+            "select_time_sec",
+            "slope_change_pct",
+            "cont_change",
+            "baimu_area_change_ha",
+        ):
+            if key not in step:
+                missing_tokens.append(
+                    f"{PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON}: step {index}.{key}"
+                )
+
+    forbidden_50_state = re.compile("|".join(FORBIDDEN_50_STATE_PATTERNS), re.IGNORECASE)
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if forbidden_50_state.search(line):
+            missing_tokens.append(
+                f"{PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD}:{line_no}: "
+                "positive 50-state wording"
+            )
+        match = UNSUPPORTED_INFERENTIAL_STATS_PATTERN.search(line)
+        if match:
+            missing_tokens.append(
+                f"{PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD}:{line_no}: "
+                f"unsupported inferential wording {match.group(0)}"
+            )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_real_env_value_filter_smoke_current",
+            False,
+            "Paper10 real-environment value-filter smoke gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_real_env_value_filter_smoke_current",
+        True,
+        "Paper10 real-environment value-filter smoke is current and claim-bounded",
+    )
+
+
 ORIGINAL_VISION_POSITIVE_CLAIM_CUE = re.compile(
     r"\b("
     r"claim(?:s|ed|ing)?"
@@ -2829,6 +3051,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_real_data_availability_audit_current,
     check_paper10_real_data_integrity_smoke_current,
     check_paper10_real_env_smoke_current,
+    check_paper10_real_env_value_filter_smoke_current,
     check_original_vision_validation_registry_current,
 )
 

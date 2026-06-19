@@ -174,6 +174,15 @@ smoke is not a planning-quality result:
 paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_smoke_5step_h3_k20_seed0_2026-06-18.md
 ```
 
+Use the five-step full-Bishan value-filter smoke to confirm that the 20x16/top5
+checkpoint can run through the value-filter selector and full Bishan
+`CountyLevelEnv.step`. This smoke records one negative reward step and is not
+short-horizon performance evidence:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.md
+```
+
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and

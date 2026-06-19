@@ -1,0 +1,106 @@
+{
+  "command": "D:\\adk\\.venv\\Scripts\\python.exe -m paper10_geojepa_mpc.experiments.run_e0_env_rollout_smoke --checkpoint paper10_geojepa_mpc\\experiments\\checkpoints\\e0_frontier_random050_value_head_20x16_h5_seed44_top5\\value_head_seed3044.pt --prepared-dir D:\\test --rollout-steps 5 --horizon 5 --top-k 50 --seed 0 --device cpu --mask-mode executable --selector value_filter --candidate-score-mode blend --candidate-value-weight 0.1 --output reviewer_outputs\\paper10_real_env_value_filter_smoke_5step_h5_k50_seed0.json",
+  "configuration": {
+    "candidate_score_mode": "blend",
+    "candidate_value_weight": 0.1,
+    "checkpoint": "paper10_geojepa_mpc\\experiments\\checkpoints\\e0_frontier_random050_value_head_20x16_h5_seed44_top5\\value_head_seed3044.pt",
+    "env_source": "paper9",
+    "horizon": 5,
+    "mask_mode": "executable",
+    "n_rollouts": 1,
+    "prepared_dir": "D:\\test",
+    "random_continuation_mode": "independent",
+    "rollout_steps": 5,
+    "scoring": "reward",
+    "seed": 0,
+    "selector": "value_filter",
+    "stable_candidate_order": false,
+    "top_k": 50
+  },
+  "date": "2026-06-19",
+  "final_metrics": {
+    "baimu_area_change_ha": -24.969707818043233,
+    "cont_change": 0.0007628346937216257,
+    "slope_change_pct": -0.10330620803581785
+  },
+  "outcome": {
+    "elapsed_sec": 1.8729009999951813,
+    "mean_select_time_sec": 0.06302409999771044,
+    "min_base_valid": 2381,
+    "min_executable_valid": 2312,
+    "negative_reward_steps": 1,
+    "positive_reward_steps": 4,
+    "steps_run": 5,
+    "terminated": false,
+    "total_reward": 2.4253884392585983,
+    "truncated": false
+  },
+  "raw_output": "reviewer_outputs\\paper10_real_env_value_filter_smoke_5step_h5_k50_seed0.json",
+  "steps": [
+    {
+      "action": 1434,
+      "baimu_area_change_ha": 0.0,
+      "completed_swaps": 3,
+      "cont_change": 0.00015256693874432514,
+      "n_base_valid": 2381,
+      "n_candidates": 50,
+      "n_executable_valid": 2316,
+      "reward": 0.6849771970413511,
+      "select_time_sec": 0.0548352000041632,
+      "slope_change_pct": -0.016592499943688294,
+      "step": 1
+    },
+    {
+      "action": 2580,
+      "baimu_area_change_ha": 0.0,
+      "completed_swaps": 3,
+      "cont_change": 0.0004577008162329754,
+      "n_base_valid": 2381,
+      "n_candidates": 50,
+      "n_executable_valid": 2315,
+      "reward": 0.5800924793647089,
+      "select_time_sec": 0.06144309999945108,
+      "slope_change_pct": -0.03003095196311505,
+      "step": 2
+    },
+    {
+      "action": 2414,
+      "baimu_area_change_ha": 0.0,
+      "completed_swaps": 2,
+      "cont_change": 0.0001017112924959207,
+      "n_base_valid": 2381,
+      "n_candidates": 50,
+      "n_executable_valid": 2314,
+      "reward": 1.2982687044375658,
+      "select_time_sec": 0.06748779999907129,
+      "slope_change_pct": -0.06372883953286135,
+      "step": 3
+    },
+    {
+      "action": 2197,
+      "baimu_area_change_ha": 0.0,
+      "completed_swaps": 5,
+      "cont_change": 0.0003051338774886503,
+      "n_base_valid": 2381,
+      "n_candidates": 50,
+      "n_executable_valid": 2313,
+      "reward": 0.4960320279117508,
+      "select_time_sec": 0.06413889999384992,
+      "slope_change_pct": -0.07542040025419344,
+      "step": 4
+    },
+    {
+      "action": 2379,
+      "baimu_area_change_ha": -24.969707818043233,
+      "completed_swaps": 5,
+      "cont_change": 0.0007628346937216257,
+      "n_base_valid": 2381,
+      "n_candidates": 50,
+      "n_executable_valid": 2312,
+      "reward": -0.6339819694967783,
+      "select_time_sec": 0.0672154999920167,
+      "slope_change_pct": -0.10330620803581785,
+      "step": 5
+    }
+  ]
+}

@@ -137,6 +137,14 @@ geospatial rows or geometries, see:
 paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_smoke_5step_h3_k20_seed0_2026-06-18.md
 ```
 
+For the current five-step full-Bishan value-filter execution-chain smoke using
+the 20x16/top5 checkpoint, including the negative-step boundary that prevents
+using it as short-horizon performance evidence, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.md
+```
+
 For the data-access and rights decision register, including full Tool2,
 GPKG-root geospatial inputs, optional GeoFM rights, code licence, generated-data
 rights, Dongxing/Neijiang prepared-data access, and reviewer routes, see:

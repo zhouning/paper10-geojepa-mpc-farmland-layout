@@ -22,6 +22,7 @@ Source basis:
 - `e0_paper10_real_data_availability_audit_2026-06-18.md`
 - `e0_paper10_real_data_integrity_smoke_2026-06-18.md`
 - `e0_paper10_real_env_smoke_5step_h3_k20_seed0_2026-06-18.md`
+- `e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.md`
 
 ## one-sentence argument
 
@@ -203,6 +204,12 @@ current execution-chain evidence that a Paper10 checkpoint can pass through the
 Paper9 adapter, MPC selector, executable mask, and full Bishan
 `CountyLevelEnv.step`. It is a five-step engineering smoke and must not be used
 as a planning-quality result.
+
+Use `e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.md`
+as the current execution-chain evidence that the 20x16/top5 checkpoint can run
+through the value-filter selector and full Bishan `CountyLevelEnv.step`. It
+includes one negative reward step and must not be used as short-horizon
+performance evidence.
 
 Current safe wording route:
 

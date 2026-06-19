@@ -40,10 +40,17 @@ def build_smoke_report(
             "seed": int(rollout_payload.get("seed", 0)),
             "horizon": int(rollout_payload.get("horizon", 0)),
             "top_k": int(rollout_payload.get("top_k", 0)),
+            "n_rollouts": int(rollout_payload.get("n_rollouts", 1)),
             "rollout_steps": int(rollout_payload.get("rollout_steps", len(steps))),
             "mask_mode": rollout_payload.get("mask_mode"),
             "selector": rollout_payload.get("selector"),
             "scoring": rollout_payload.get("scoring"),
+            "candidate_score_mode": rollout_payload.get("candidate_score_mode"),
+            "candidate_value_weight": rollout_payload.get("candidate_value_weight"),
+            "random_continuation_mode": rollout_payload.get(
+                "random_continuation_mode"
+            ),
+            "stable_candidate_order": rollout_payload.get("stable_candidate_order"),
         },
         "outcome": {
             "steps_run": int(rollout_payload.get("steps_run", len(steps))),
@@ -114,12 +121,19 @@ def markdown_report(payload: dict) -> str:
         "seed",
         "horizon",
         "top_k",
+        "n_rollouts",
         "rollout_steps",
         "mask_mode",
         "selector",
         "scoring",
+        "candidate_score_mode",
+        "candidate_value_weight",
+        "random_continuation_mode",
+        "stable_candidate_order",
     ):
-        lines.append(f"| {key} | `{config.get(key)}` |")
+        value = config.get(key)
+        if value is not None:
+            lines.append(f"| {key} | `{value}` |")
 
     lines.extend(
         [
@@ -170,6 +184,13 @@ def markdown_report(payload: dict) -> str:
             "This smoke confirms the execution chain from a Paper10 checkpoint through the Paper9 adapter, MPC selector, executable mask, and full Bishan `CountyLevelEnv.step`. It is a five-step engineering check, not evidence for a new planning-quality or scale-up claim.",
         ]
     )
+    if outcome["negative_reward_steps"]:
+        lines.extend(
+            [
+                "",
+                "The trace includes a negative reward step, so this run is not short-horizon performance evidence for the selector.",
+            ]
+        )
     return "\n".join(lines) + "\n"
 
 
@@ -209,6 +230,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-json", required=True)
     parser.add_argument("--output-md", required=True)
     parser.add_argument("--command", required=True)
+    parser.add_argument("--date", default=DATE)
     return parser.parse_args()
 
 
@@ -219,6 +241,7 @@ def main() -> None:
         args.output_json,
         args.output_md,
         command=args.command,
+        date=args.date,
     )
     print(json.dumps(payload, indent=2, sort_keys=True))
 

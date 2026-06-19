@@ -33,6 +33,8 @@ from scripts.paper10.preflight_submission_checks import (
     PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD,
     PAPER10_REAL_ENV_SMOKE_JSON,
     PAPER10_REAL_ENV_SMOKE_MD,
+    PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON,
+    PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_JSON,
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
     PROJECT_PROPOSAL_REPORT,
@@ -89,6 +91,8 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     PAPER10_REAL_DATA_INTEGRITY_SMOKE_JSON,
     PAPER10_REAL_ENV_SMOKE_MD,
     PAPER10_REAL_ENV_SMOKE_JSON,
+    PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
+    PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON,
     RESULTS / "e0_archive_release_and_doi_backfill_checklist_2026-06-09.md",
     RESULTS / "e0_submission_readiness_checklist_2026-06-09.md",
     RESULTS / "e0_dongxing_return_label_family_summary_2026-06-10.csv",
@@ -231,6 +235,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "paper10_real_data_availability_audit_current" in payload["passed_checks"]
     assert "paper10_real_data_integrity_smoke_current" in payload["passed_checks"]
     assert "paper10_real_env_smoke_current" in payload["passed_checks"]
+    assert "paper10_real_env_value_filter_smoke_current" in payload["passed_checks"]
     assert "original_vision_validation_registry_current" in payload["passed_checks"]
 
 
@@ -362,6 +367,20 @@ def test_submission_preflight_minimal_fixture_reports_missing_real_env_smoke(tmp
     details = check_details(payload, "paper10_real_env_smoke_current")
     assert "missing Paper10 real-environment smoke files" in details
     assert str(PAPER10_REAL_ENV_SMOKE_MD) in details
+
+
+def test_submission_preflight_minimal_fixture_reports_missing_real_env_value_filter_smoke(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    (fixture / PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD).unlink()
+
+    result, payload = run_submission_preflight_json(fixture)
+
+    assert result.returncode == 1
+    assert payload["ok"] is False
+    assert "paper10_real_env_value_filter_smoke_current" in payload["failed_checks"]
+    details = check_details(payload, "paper10_real_env_value_filter_smoke_current")
+    assert "missing Paper10 real-environment value-filter smoke files" in details
+    assert str(PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD) in details
 
 
 def test_submission_preflight_minimal_fixture_rejects_original_vision_registry_positive_claim(tmp_path):

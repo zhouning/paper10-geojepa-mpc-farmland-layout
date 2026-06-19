@@ -20,6 +20,7 @@ Source basis:
 - `e0_paper10_real_data_availability_audit_2026-06-18.md`
 - `e0_paper10_real_data_integrity_smoke_2026-06-18.md`
 - `e0_paper10_real_env_smoke_5step_h3_k20_seed0_2026-06-18.md`
+- `e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.md`
 
 ## One-sentence conversion argument
 
@@ -84,6 +85,10 @@ writing route is:
   five-step execution-chain smoke for the Paper10 checkpoint, Paper9 adapter,
   MPC selector, executable mask, and `CountyLevelEnv.step`, not as
   planning-quality evidence;
+- use `e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.md`
+  only as a five-step run through the value-filter selector for the 20x16/top5
+  checkpoint; because it contains a negative reward step, do not interpret this
+  run as short-horizon performance evidence;
 - keep the proposal report as temporary立项/开题 material, not a submission file.
 
 This route supports continued drafting but does not authorize final
