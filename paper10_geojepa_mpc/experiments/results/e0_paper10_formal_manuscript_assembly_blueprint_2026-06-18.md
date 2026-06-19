@@ -27,6 +27,7 @@ Source basis:
 - `e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md`
 - `e0_paper10_manuscript_result_tables_freeze_2026-06-19.md`
 - `e0_paper10_manuscript_text_table_consistency_audit_2026-06-19.md`
+- `e0_paper10_figure_table_source_coverage_audit_2026-06-19.md`
 
 ## one-sentence argument
 
@@ -241,6 +242,11 @@ Use `e0_paper10_manuscript_text_table_consistency_audit_2026-06-19.md` before
 treating the Stage 3 manuscript draft, proposal report, author matrix, or
 assembly blueprint as synchronized with the frozen result tables. It does not
 rerun rollouts or add a new experimental claim.
+
+Use `e0_paper10_figure_table_source_coverage_audit_2026-06-19.md` before
+treating the formal manuscript figure/table assembly map as source-covered. It
+checks tracked source files and scripts, but final artwork, dimensions,
+placement, captions and export formats remain blockers.
 
 Current safe wording route:
 

@@ -176,6 +176,13 @@ rollouts, see:
 paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_text_table_consistency_audit_2026-06-19.md
 ```
 
+For the current figure/table source coverage audit that checks tracked source
+files and scripts for the formal manuscript figure/table assembly map, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_figure_table_source_coverage_audit_2026-06-19.md
+```
+
 For the data-access and rights decision register, including full Tool2,
 GPKG-root geospatial inputs, optional GeoFM rights, code licence, generated-data
 rights, Dongxing/Neijiang prepared-data access, and reviewer routes, see:

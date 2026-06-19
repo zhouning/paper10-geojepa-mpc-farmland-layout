@@ -219,6 +219,15 @@ blueprint without rerunning rollouts:
 paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_text_table_consistency_audit_2026-06-19.md
 ```
 
+Use the figure/table source coverage audit before converting the assembly map
+into final figure or table exports. It verifies tracked source files and
+scripts but keeps final artwork, dimensions, placement, captions, and export
+formats open:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_figure_table_source_coverage_audit_2026-06-19.md
+```
+
 - Original-vision validation design and registry:
   `docs/superpowers/specs/2026-06-17-paper10-original-vision-validation-design.md`
   and

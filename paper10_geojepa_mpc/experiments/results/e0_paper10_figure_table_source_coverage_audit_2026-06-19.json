@@ -1,0 +1,232 @@
+{
+  "coverage_checks": {
+    "expected_items": [
+      "Main Figure 1",
+      "Main Figure 2",
+      "Main Figure 3",
+      "Main Figure 4",
+      "Supplementary Figure S1",
+      "Main Table 1",
+      "Main Table 2",
+      "Main Table 3"
+    ],
+    "missing_blueprint_items": [],
+    "missing_boundary_tokens": [],
+    "missing_numbering_freeze_items": []
+  },
+  "date": "2026-06-19",
+  "items": [
+    {
+      "checked_path_count": 6,
+      "claim_boundaries": [
+        "workflow schematic only; no new quantitative result"
+      ],
+      "generation_scripts": [],
+      "generation_status": "blocked_pending_artwork",
+      "item": "Main Figure 1",
+      "manuscript_job": "Explain monitor-gated value filtering workflow.",
+      "missing_generation_scripts": [],
+      "missing_source_files": [],
+      "source_coverage_pass": true,
+      "source_files": [
+        "paper10_geojepa_mpc/experiments/value_label_generation.py",
+        "paper10_geojepa_mpc/experiments/value_label_monitor.py",
+        "paper10_geojepa_mpc/experiments/run_e0_value_head_train.py",
+        "paper10_geojepa_mpc/experiments/run_e0_env_rollout_smoke.py",
+        "paper10_geojepa_mpc/experiments/results/e0_frontier_random050_figure_plan_2026-06-09.md",
+        "paper10_geojepa_mpc/experiments/results/e0_integrated_dongxing_figure_plan_2026-06-11.md"
+      ],
+      "unresolved_fields": [
+        "final schematic artwork",
+        "journal figure dimensions"
+      ]
+    },
+    {
+      "checked_path_count": 4,
+      "claim_boundaries": [
+        "Bishan 20x16/top5 is the positive anchor only under the tested rollout protocol"
+      ],
+      "generation_scripts": [
+        "scripts/paper10/plot_frontier_random050_figures.py"
+      ],
+      "generation_status": "scripted_preview_available",
+      "item": "Main Figure 2",
+      "manuscript_job": "Show Bishan 20x16/top5 reward and stability.",
+      "missing_generation_scripts": [],
+      "missing_source_files": [],
+      "source_coverage_pass": true,
+      "source_files": [
+        "paper10_geojepa_mpc/experiments/results/e0_frontier_random050_seedwise_rewards_2026-06-09.csv",
+        "paper10_geojepa_mpc/experiments/results/e0_frontier_random050_value_head_10x12_h5_seed43_top4_rollout_summary.json",
+        "paper10_geojepa_mpc/experiments/results/e0_frontier_random050_value_head_20x16_h5_seed44_top5_rollout_summary.json"
+      ],
+      "unresolved_fields": [
+        "final figure number",
+        "inset decision"
+      ]
+    },
+    {
+      "checked_path_count": 6,
+      "claim_boundaries": [
+        "direct 50-state Bishan scale-up success is not supported",
+        "diagnostic near-pass must not be pooled"
+      ],
+      "generation_scripts": [
+        "scripts/paper10/plot_frontier_random050_figures.py"
+      ],
+      "generation_status": "scripted_preview_available",
+      "item": "Main Figure 3",
+      "manuscript_job": "Show Stage 3 50-state boundary.",
+      "missing_generation_scripts": [],
+      "missing_source_files": [],
+      "source_coverage_pass": true,
+      "source_files": [
+        "paper10_geojepa_mpc/experiments/results/e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.md",
+        "paper10_geojepa_mpc/experiments/results/e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json",
+        "paper10_geojepa_mpc/experiments/results/e0_frontier_random050_topk_diagnostics_2026-06-09.csv",
+        "paper10_geojepa_mpc/experiments/results/e0_windows_frontier_random050_ablation_findings_2026-06-09.md",
+        "paper10_geojepa_mpc/experiments/results/e0_macos_gpkg_reproduction_findings_2026-06-09.md"
+      ],
+      "unresolved_fields": [
+        "final main-versus-supplementary placement"
+      ]
+    },
+    {
+      "checked_path_count": 5,
+      "claim_boundaries": [
+        "robust Bishan-to-Dongxing transfer superiority is not supported",
+        "Dongxing/Neijiang supports calibration and stress-test value"
+      ],
+      "generation_scripts": [
+        "scripts/paper10/plot_integrated_dongxing_figures.py"
+      ],
+      "generation_status": "scripted_preview_available",
+      "item": "Main Figure 4",
+      "manuscript_job": "Show Dongxing return-label scaling.",
+      "missing_generation_scripts": [],
+      "missing_source_files": [],
+      "source_coverage_pass": true,
+      "source_files": [
+        "paper10_geojepa_mpc/experiments/results/e0_dongxing_return_label_family_summary_2026-06-10.csv",
+        "paper10_geojepa_mpc/experiments/results/e0_dongxing_return_label_50x16_family_2026-06-10.md",
+        "paper10_geojepa_mpc/experiments/results/e0_paper10_integrated_manuscript_tables_with_dongxing_2026-06-10.md",
+        "paper10_geojepa_mpc/experiments/results/e0_source_data_map_with_dongxing_2026-06-11.md"
+      ],
+      "unresolved_fields": [
+        "final figure number",
+        "metric panel placement"
+      ]
+    },
+    {
+      "checked_path_count": 5,
+      "claim_boundaries": [
+        "low-label transfer superiority is mixed and not robustly supported"
+      ],
+      "generation_scripts": [
+        "scripts/paper10/plot_integrated_dongxing_figures.py"
+      ],
+      "generation_status": "scripted_preview_available",
+      "item": "Supplementary Figure S1",
+      "manuscript_job": "Show Dongxing low-label stress test.",
+      "missing_generation_scripts": [],
+      "missing_source_files": [],
+      "source_coverage_pass": true,
+      "source_files": [
+        "paper10_geojepa_mpc/experiments/results/e0_dongxing_low_label_budget_family_summary_2026-06-10.csv",
+        "paper10_geojepa_mpc/experiments/results/e0_dongxing_low_label_budget_family_2026-06-10.md",
+        "paper10_geojepa_mpc/experiments/results/e0_paper10_integrated_manuscript_tables_with_dongxing_2026-06-10.md",
+        "paper10_geojepa_mpc/experiments/results/e0_source_data_map_with_dongxing_2026-06-11.md"
+      ],
+      "unresolved_fields": [
+        "final main-versus-supplementary placement",
+        "target-journal caption length"
+      ]
+    },
+    {
+      "checked_path_count": 3,
+      "claim_boundaries": [
+        "monitor gates authorize escalation; they do not prove general scale-up"
+      ],
+      "generation_scripts": [],
+      "generation_status": "table_source_available",
+      "item": "Main Table 1",
+      "manuscript_job": "Summarize monitor-selected Bishan gates.",
+      "missing_generation_scripts": [],
+      "missing_source_files": [],
+      "source_coverage_pass": true,
+      "source_files": [
+        "paper10_geojepa_mpc/experiments/results/e0_value_label_monitor_frontier_random050_10x12_h5_seed43_top4.json",
+        "paper10_geojepa_mpc/experiments/results/e0_value_label_monitor_frontier_random050_20x16_h5_seed44_top5.json",
+        "paper10_geojepa_mpc/experiments/results/e0_paper10_integrated_manuscript_tables_with_dongxing_2026-06-10.md"
+      ],
+      "unresolved_fields": [
+        "final table number"
+      ]
+    },
+    {
+      "checked_path_count": 4,
+      "claim_boundaries": [
+        "Table 1 of the freeze is the only positive Bishan performance anchor",
+        "Stage 3 rows are boundary evidence"
+      ],
+      "generation_scripts": [],
+      "generation_status": "frozen_table_available",
+      "item": "Main Table 2",
+      "manuscript_job": "Summarize matched-baseline rollout comparison.",
+      "missing_generation_scripts": [],
+      "missing_source_files": [],
+      "source_coverage_pass": true,
+      "source_files": [
+        "paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_result_tables_freeze_2026-06-19.md",
+        "paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_result_tables_freeze_2026-06-19.json",
+        "paper10_geojepa_mpc/experiments/results/e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.md",
+        "paper10_geojepa_mpc/experiments/results/e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json"
+      ],
+      "unresolved_fields": [
+        "rounding",
+        "main-text placement"
+      ]
+    },
+    {
+      "checked_path_count": 3,
+      "claim_boundaries": [
+        "return-label scaling is descriptive calibration evidence",
+        "robust Bishan-to-Dongxing transfer superiority is not supported"
+      ],
+      "generation_scripts": [],
+      "generation_status": "table_source_available",
+      "item": "Main Table 3",
+      "manuscript_job": "Summarize Dongxing return-label scaling.",
+      "missing_generation_scripts": [],
+      "missing_source_files": [],
+      "source_coverage_pass": true,
+      "source_files": [
+        "paper10_geojepa_mpc/experiments/results/e0_dongxing_return_label_family_summary_2026-06-10.csv",
+        "paper10_geojepa_mpc/experiments/results/e0_dongxing_return_label_50x16_family_2026-06-10.md",
+        "paper10_geojepa_mpc/experiments/results/e0_paper10_integrated_manuscript_tables_with_dongxing_2026-06-10.md"
+      ],
+      "unresolved_fields": [
+        "whether full metric table is main text"
+      ]
+    }
+  ],
+  "overall_source_coverage_pass": true,
+  "source_boundary": {
+    "interpretation": "This audit checks whether the current figure/table assembly map has tracked source data, scripts, and explicit blockers.",
+    "new_experimental_claim": false,
+    "reran_rollouts": false
+  },
+  "source_files": {
+    "blueprint": "paper10_geojepa_mpc/experiments/results/e0_paper10_formal_manuscript_assembly_blueprint_2026-06-18.md",
+    "numbering_freeze": "paper10_geojepa_mpc/experiments/results/e0_integrated_figure_table_numbering_freeze_2026-06-11.md",
+    "source_data_map": "paper10_geojepa_mpc/experiments/results/e0_source_data_map_with_dongxing_2026-06-11.md"
+  },
+  "status": "source-derived figure/table source coverage audit",
+  "submission_blockers": [
+    "final schematic artwork for Main Figure 1",
+    "target-journal figure dimensions and export formats",
+    "final main-versus-supplementary placement",
+    "journal-specific captions and table placement"
+  ],
+  "submission_ready": false
+}

@@ -25,6 +25,7 @@ Source basis:
 - `e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md`
 - `e0_paper10_manuscript_result_tables_freeze_2026-06-19.md`
 - `e0_paper10_manuscript_text_table_consistency_audit_2026-06-19.md`
+- `e0_paper10_figure_table_source_coverage_audit_2026-06-19.md`
 
 ## One-sentence conversion argument
 
@@ -110,6 +111,10 @@ writing route is:
   before treating manuscript-facing text as synchronized with those frozen
   tables; it checks the Stage 3 draft, proposal report, author matrix, and
   assembly blueprint without rerunning rollouts;
+- use `e0_paper10_figure_table_source_coverage_audit_2026-06-19.md` before
+  treating the figure/table assembly map as source-covered; it records tracked
+  sources and scripts but leaves final artwork, dimensions, placement, captions
+  and export formats as blockers;
 - keep the proposal report as temporary立项/开题 material, not a submission file.
 
 This route supports continued drafting but does not authorize final

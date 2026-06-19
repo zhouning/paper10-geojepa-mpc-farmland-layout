@@ -84,6 +84,12 @@ PAPER10_CLAIM_SOURCE_AUDIT_MD = (
 PAPER10_CLAIM_SOURCE_AUDIT_JSON = (
     RESULTS / "e0_paper10_claim_source_consistency_audit_2026-06-18.json"
 )
+PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD = (
+    RESULTS / "e0_paper10_figure_table_source_coverage_audit_2026-06-19.md"
+)
+PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON = (
+    RESULTS / "e0_paper10_figure_table_source_coverage_audit_2026-06-19.json"
+)
 PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD = (
     RESULTS / "e0_paper10_real_data_availability_audit_2026-06-18.md"
 )
@@ -198,6 +204,8 @@ REQUIRED_PATHS = (
     FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
     PAPER10_CLAIM_SOURCE_AUDIT_MD,
     PAPER10_CLAIM_SOURCE_AUDIT_JSON,
+    PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
+    PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON,
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_JSON,
     PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD,
@@ -250,6 +258,7 @@ PUBLIC_SUBMISSION_DOCS = (
     AUTHOR_DECISION_MATRIX,
     FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
     PAPER10_CLAIM_SOURCE_AUDIT_MD,
+    PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
     PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD,
     PAPER10_REAL_ENV_SMOKE_MD,
@@ -2222,6 +2231,257 @@ def check_paper10_claim_source_audit_current(root: Path) -> CheckResult:
     )
 
 
+def check_paper10_figure_table_source_coverage_audit_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
+        PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON,
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+        INTEGRATED_FIGURE_TABLE_NUMBERING_FREEZE,
+        INTEGRATED_DONGXING_SOURCE_DATA_MAP,
+        Path("README.md"),
+        MANIFEST,
+        DATA_AVAILABILITY,
+        REPRODUCIBILITY,
+        AUTHOR_DECISION_MATRIX,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_figure_table_source_coverage_audit_current",
+            False,
+            "missing Paper10 figure/table source coverage audit files: "
+            + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD)
+    try:
+        payload = json.loads(
+            read_text(root / PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON)
+        )
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_figure_table_source_coverage_audit_current",
+            False,
+            f"{PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    audit_name = PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD.name
+    linked_docs = [
+        Path("README.md"),
+        MANIFEST,
+        DATA_AVAILABILITY,
+        REPRODUCIBILITY,
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+        AUTHOR_DECISION_MATRIX,
+    ]
+    for rel_path in linked_docs:
+        path = root / rel_path
+        if not path.exists():
+            missing_tokens.append(f"{rel_path}: missing file")
+            continue
+        if audit_name not in read_text(path):
+            missing_tokens.append(f"{rel_path}: {audit_name}")
+
+    required_tokens = [
+        "Paper10 figure/table source coverage audit",
+        "source-derived figure/table source coverage audit",
+        "does not add a new experimental claim",
+        "No rollout was rerun",
+        "overall source coverage: PASS",
+        "submission-ready figure/table package: NO",
+        "Main Figure 1",
+        "Main Figure 2",
+        "Main Figure 3",
+        "Main Figure 4",
+        "Supplementary Figure S1",
+        "Main Table 1",
+        "Main Table 2",
+        "Main Table 3",
+        "blocked_pending_artwork",
+        "scripted_preview_available",
+        "frozen_table_available",
+        "direct 50-state Bishan scale-up success",
+        "robust Bishan-to-Dongxing transfer superiority is not supported",
+        "PASS does not mean the formal manuscript is ready for submission",
+        "paper10_geojepa_mpc.experiments.figure_table_source_coverage_audit",
+    ]
+    for token in required_tokens:
+        if token not in text:
+            missing_tokens.append(
+                f"{PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD}: {token}"
+            )
+
+    expected_values = {
+        ("date",): "2026-06-19",
+        ("status",): "source-derived figure/table source coverage audit",
+        ("overall_source_coverage_pass",): True,
+        ("submission_ready",): False,
+        ("source_boundary", "new_experimental_claim"): False,
+        ("source_boundary", "reran_rollouts"): False,
+        ("source_files", "blueprint"): FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT.as_posix(),
+        ("source_files", "numbering_freeze"): INTEGRATED_FIGURE_TABLE_NUMBERING_FREEZE.as_posix(),
+        ("source_files", "source_data_map"): INTEGRATED_DONGXING_SOURCE_DATA_MAP.as_posix(),
+    }
+    for path_keys, expected in expected_values.items():
+        value = payload
+        for key in path_keys:
+            if not isinstance(value, dict) or key not in value:
+                missing_tokens.append(
+                    f"{PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON}: "
+                    f"{'.'.join(path_keys)}"
+                )
+                value = None
+                break
+            value = value[key]
+        if value != expected:
+            missing_tokens.append(
+                f"{PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON}: "
+                f"{'.'.join(path_keys)}={value}"
+            )
+
+    expected_items = [
+        "Main Figure 1",
+        "Main Figure 2",
+        "Main Figure 3",
+        "Main Figure 4",
+        "Supplementary Figure S1",
+        "Main Table 1",
+        "Main Table 2",
+        "Main Table 3",
+    ]
+    coverage_checks = payload.get("coverage_checks", {})
+    if coverage_checks.get("expected_items") != expected_items:
+        missing_tokens.append(
+            f"{PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON}: "
+            f"coverage_checks.expected_items={coverage_checks.get('expected_items')}"
+        )
+    for key in (
+        "missing_blueprint_items",
+        "missing_numbering_freeze_items",
+        "missing_boundary_tokens",
+    ):
+        if coverage_checks.get(key) != []:
+            missing_tokens.append(
+                f"{PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON}: "
+                f"coverage_checks.{key}={coverage_checks.get(key)}"
+            )
+
+    items = payload.get("items")
+    if not isinstance(items, list) or len(items) != len(expected_items):
+        missing_tokens.append(
+            f"{PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON}: items"
+        )
+        items = []
+    observed_items = [row.get("item") for row in items if isinstance(row, dict)]
+    if observed_items != expected_items:
+        missing_tokens.append(
+            f"{PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON}: "
+            f"items={observed_items}"
+        )
+
+    by_item = {row.get("item"): row for row in items if isinstance(row, dict)}
+    expected_generation_status = {
+        "Main Figure 1": "blocked_pending_artwork",
+        "Main Figure 2": "scripted_preview_available",
+        "Main Figure 3": "scripted_preview_available",
+        "Main Figure 4": "scripted_preview_available",
+        "Supplementary Figure S1": "scripted_preview_available",
+        "Main Table 1": "table_source_available",
+        "Main Table 2": "frozen_table_available",
+        "Main Table 3": "table_source_available",
+    }
+    expected_required_paths = {
+        "Main Figure 2": [
+            "paper10_geojepa_mpc/experiments/results/e0_frontier_random050_seedwise_rewards_2026-06-09.csv",
+            "scripts/paper10/plot_frontier_random050_figures.py",
+        ],
+        "Main Figure 3": [
+            "paper10_geojepa_mpc/experiments/results/e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json",
+            "scripts/paper10/plot_frontier_random050_figures.py",
+        ],
+        "Main Figure 4": [
+            "paper10_geojepa_mpc/experiments/results/e0_dongxing_return_label_family_summary_2026-06-10.csv",
+            "scripts/paper10/plot_integrated_dongxing_figures.py",
+        ],
+        "Main Table 2": [
+            "paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_result_tables_freeze_2026-06-19.md",
+        ],
+    }
+    for item_name in expected_items:
+        row = by_item.get(item_name)
+        if not isinstance(row, dict):
+            continue
+        if row.get("source_coverage_pass") is not True:
+            missing_tokens.append(
+                f"{PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON}: "
+                f"{item_name}.source_coverage_pass={row.get('source_coverage_pass')}"
+            )
+        for key in ("missing_source_files", "missing_generation_scripts"):
+            if row.get(key) != []:
+                missing_tokens.append(
+                    f"{PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON}: "
+                    f"{item_name}.{key}={row.get(key)}"
+                )
+        if row.get("generation_status") != expected_generation_status[item_name]:
+            missing_tokens.append(
+                f"{PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON}: "
+                f"{item_name}.generation_status={row.get('generation_status')}"
+            )
+        row_paths = set(row.get("source_files", []) + row.get("generation_scripts", []))
+        for required_path in expected_required_paths.get(item_name, []):
+            if required_path not in row_paths:
+                missing_tokens.append(
+                    f"{PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON}: "
+                    f"{item_name}.{required_path}"
+                )
+
+    blockers = payload.get("submission_blockers")
+    if not isinstance(blockers, list) or len(blockers) < 4:
+        missing_tokens.append(
+            f"{PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON}: submission_blockers"
+        )
+    else:
+        for token in (
+            "final schematic artwork for Main Figure 1",
+            "target-journal figure dimensions and export formats",
+            "journal-specific captions and table placement",
+        ):
+            if token not in blockers:
+                missing_tokens.append(
+                    f"{PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON}: "
+                    f"submission_blockers.{token}"
+                )
+
+    forbidden_50_state = re.compile("|".join(FORBIDDEN_50_STATE_PATTERNS), re.IGNORECASE)
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if forbidden_50_state.search(line):
+            if "must not be used to claim" not in line and "is not supported" not in line:
+                missing_tokens.append(
+                    f"{PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD}:{line_no}: "
+                    "positive 50-state wording"
+                )
+        match = UNSUPPORTED_INFERENTIAL_STATS_PATTERN.search(line)
+        if match:
+            missing_tokens.append(
+                f"{PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD}:{line_no}: "
+                f"unsupported inferential wording {match.group(0)}"
+            )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_figure_table_source_coverage_audit_current",
+            False,
+            "Paper10 figure/table source coverage audit gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_figure_table_source_coverage_audit_current",
+        True,
+        "Paper10 figure/table source coverage audit is current and bounded",
+    )
+
+
 def check_paper10_real_data_availability_audit_current(root: Path) -> CheckResult:
     required_files = [
         PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
@@ -3979,6 +4239,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_author_decision_matrix_current,
     check_paper10_formal_manuscript_blueprint_current,
     check_paper10_claim_source_audit_current,
+    check_paper10_figure_table_source_coverage_audit_current,
     check_paper10_manuscript_result_tables_freeze_current,
     check_paper10_manuscript_text_table_consistency_audit_current,
     check_paper10_real_data_availability_audit_current,
