@@ -1,0 +1,117 @@
+{
+  "checkpoint": "D:\\test\\paper10_original_vision_validation\\stage3_colab_handoff\\frontier_random050_50x24_h5_seed48_f075\\value_head_top12_seed3048.pt",
+  "common_settings": {
+    "environment_source": "paper9",
+    "prepared_dir": "D:\\test",
+    "rollout_seeds": [0, 1, 2, 3, 4],
+    "rollout_steps": 100,
+    "horizon": 5,
+    "top_k": 50,
+    "mask_mode": "executable",
+    "selector": "value_filter"
+  },
+  "date": "2026-06-20",
+  "best_overall": {
+    "run": "paper9 baseline",
+    "mean_total_reward": 67.5436698503176
+  },
+  "best_value_filter": {
+    "run": "existing blend010",
+    "mean_total_reward": 67.49131359932167,
+    "delta_vs_paper9": -0.05235625099593127
+  },
+  "source_data": [
+    "D:\\test\\paper10_original_vision_validation\\stage3_colab_handoff\\baseline_paper9_rank_seed2028_h5_k50_seeds0-4_100step.json",
+    "D:\\test\\paper10_original_vision_validation\\stage3_colab_handoff\\frontier_random050_50x24_h5_seed48_f075\\value_filter_blend010_h5_k50_seeds0-4_100step.json",
+    "D:\\test\\paper10_original_vision_validation\\stage3_colab_handoff\\frontier_random050_50x24_h5_seed48_f075\\value_filter_blend005_h5_k50_seeds0-4_100step.json",
+    "D:\\test\\paper10_original_vision_validation\\stage3_colab_handoff\\frontier_random050_50x24_h5_seed48_f075\\value_filter_value_h5_k50_seeds0-4_100step.json",
+    "D:\\test\\paper10_original_vision_validation\\stage3_colab_handoff\\frontier_random050_50x24_h5_seed48_f075\\value_filter_blend015_h5_k50_seeds0-4_100step.json",
+    "D:\\test\\paper10_original_vision_validation\\stage3_colab_handoff\\frontier_random050_50x24_h5_seed48_f075\\value_filter_blend025_h5_k50_seeds0-4_100step.json"
+  ],
+  "results": [
+    {
+      "run": "paper9 baseline",
+      "selector": "paper9",
+      "candidate_score_mode": null,
+      "candidate_value_weight": null,
+      "mean_total_reward": 67.5436698503176,
+      "sd_total_reward": 7.224554398740973,
+      "min_total_reward": 60.76247356686642,
+      "max_total_reward": 78.09246266817792,
+      "mean_slope_change_pct": -1.2644944343005902,
+      "mean_cont_change": 0.01949805477153097,
+      "mean_baimu_area_change_ha": -211.8544230374372,
+      "delta_vs_paper9": 0.0
+    },
+    {
+      "run": "existing blend010",
+      "selector": "value_filter",
+      "candidate_score_mode": "blend",
+      "candidate_value_weight": 0.1,
+      "mean_total_reward": 67.49131359932167,
+      "sd_total_reward": 4.571073257111569,
+      "min_total_reward": 61.621435056531315,
+      "max_total_reward": 72.77318589599599,
+      "mean_slope_change_pct": -1.2665097102619932,
+      "mean_cont_change": 0.02074910366923488,
+      "mean_baimu_area_change_ha": -211.09304431764248,
+      "delta_vs_paper9": -0.05235625099593127
+    },
+    {
+      "run": "blend025",
+      "selector": "value_filter",
+      "candidate_score_mode": "blend",
+      "candidate_value_weight": 0.25,
+      "mean_total_reward": 65.89706500106031,
+      "sd_total_reward": 5.512594780591907,
+      "min_total_reward": 60.46244155857558,
+      "max_total_reward": 73.63844338544449,
+      "mean_slope_change_pct": -1.2695418684767563,
+      "mean_cont_change": 0.019701477356523344,
+      "mean_baimu_area_change_ha": -202.49145475358367,
+      "delta_vs_paper9": -1.6466048492572912
+    },
+    {
+      "run": "blend005",
+      "selector": "value_filter",
+      "candidate_score_mode": "blend",
+      "candidate_value_weight": 0.05,
+      "mean_total_reward": 63.645011600722576,
+      "sd_total_reward": 7.4414915139935755,
+      "min_total_reward": 52.35587956277371,
+      "max_total_reward": 71.87039768370055,
+      "mean_slope_change_pct": -1.2599999708358802,
+      "mean_cont_change": 0.020138835914257226,
+      "mean_baimu_area_change_ha": -209.07296488807677,
+      "delta_vs_paper9": -3.8986582495950243
+    },
+    {
+      "run": "value",
+      "selector": "value_filter",
+      "candidate_score_mode": "value",
+      "candidate_value_weight": 0.5,
+      "mean_total_reward": 63.18490401395155,
+      "sd_total_reward": 8.338899818115688,
+      "min_total_reward": 48.92780134547759,
+      "max_total_reward": 69.46653414055368,
+      "mean_slope_change_pct": -1.1499295113606856,
+      "mean_cont_change": 0.02060670785973997,
+      "mean_baimu_area_change_ha": -178.7797713477552,
+      "delta_vs_paper9": -4.358765836366048
+    },
+    {
+      "run": "blend015",
+      "selector": "value_filter",
+      "candidate_score_mode": "blend",
+      "candidate_value_weight": 0.15,
+      "mean_total_reward": 62.739749863962324,
+      "sd_total_reward": 3.821548683480094,
+      "min_total_reward": 59.713334319232374,
+      "max_total_reward": 67.65662425074916,
+      "mean_slope_change_pct": -1.2482089109198486,
+      "mean_cont_change": 0.019213263152541415,
+      "mean_baimu_area_change_ha": -208.53105833888173,
+      "delta_vs_paper9": -4.803919986355277
+    }
+  ]
+}
