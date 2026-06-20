@@ -16,6 +16,8 @@ Source controls used for this draft:
 - `e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json`
 - `e0_paper10_stage3_50x24_candidate_score_sweep_2026-06-20.md`
 - `e0_paper10_stage3_50x24_candidate_score_sweep_2026-06-20.json`
+- `e0_paper10_mechanism_ablation_packet_2026-06-20.md`
+- `e0_paper10_mechanism_ablation_packet_2026-06-20.json`
 - `e0_integrated_target_venue_and_manuscript_conversion_checklist_with_dongxing_2026-06-12.md`
 - `e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md`
 - `e0_ceus_reviewer_improvement_packet_2026-06-12.md`
@@ -28,12 +30,15 @@ placeholder in public manuscript text.
 ## One-Sentence Argument
 
 In constrained farmland layout planning, we show that monitor-gated value
-labels can improve and stabilize GeoJEPA-MPC rollouts at the validated Bishan
-20x16/top5 scale, supported by five-seed reward and matched-baseline checks,
-while Stage 3 confirmatory rollouts show that the tested 50-state value-label
-rows did not beat the matched Paper9 baseline and therefore bound the method
-as a calibrated planning-support workflow rather than a broad scale-up result;
-a later 50x24 candidate-score sweep did not change that boundary.
+labels and executable masks can improve and stabilize GeoJEPA-MPC rollouts at
+the validated Bishan 20x16/top5 scale, supported by five-seed reward and
+matched-baseline checks, while Stage 3 confirmatory rollouts show that the
+tested 50-state value-label rows did not beat the matched Paper9 baseline and
+therefore bound the method as a calibrated planning-support workflow rather
+than a broad scale-up result; a later 50x24 candidate-score sweep did not
+change that boundary. A mechanism ablation further showed that removing the
+executable mask sharply degraded reward, while an ungated top-4 control did
+not separate from the gated anchor under the same rollout protocol.
 
 ## Terminology Ledger
 
@@ -56,6 +61,7 @@ Monitor-gated value labels bound GeoJEPA-MPC farmland layout planning
 ## Highlights
 
 - Monitor gates control GeoJEPA-MPC value-label escalation.
+- Executable masks are rollout-critical.
 - Bishan 20x16/top5 exceeded the matched Paper9 baseline.
 - Stage 3 50-state rows did not exceed that baseline.
 - The later 50x24 candidate-score sweep did not recover the baseline.
@@ -70,21 +76,24 @@ monitor-gated GeoJEPA-MPC workflow that generates finite-horizon value labels,
 checks label quality before value-head training, and applies executable masks
 during rollout. In Bishan, the validated 20x16/top5 value filter reached
 69.4705 mean reward across five 100-step seeds, compared with 67.5437 for the
-matched Paper9 baseline and 65.2566 for the earlier 10x12/top4 pilot. Stage 3
-confirmatory tests then evaluated the two passing 50-state rows under matched
-rollout settings. The 50x16/top6 row reached 64.2960 mean reward and the
-50x24/top12 row reached 66.2544, both below the matched Paper9 baseline; a
-diagnostic near-pass row reached 67.4913 and must not be pooled with
-confirmatory rows. A later candidate-score sweep on the same 50x24/f075
-checkpoint varied `candidate-score-mode` across `blend` (0.05, 0.10, 0.15,
-0.25) and `value`; `blend0.10` remained the best variant, but it still fell
-short of the matched Paper9 baseline, and pure `value` filtering was
-materially worse. Dongxing/Neijiang evidence remains useful as a calibration
-and stress-test package, but it does not support robust Bishan-to-Dongxing
-transfer superiority. These results support monitor-gated value filtering as
-a reproducible evidence-control workflow for constrained geospatial planning,
-while bounding claims about broad 50-state scaling, arbitrary cadastral parcel
-deployment and cross-region transfer superiority.
+matched Paper9 baseline and 65.2566 for the earlier 10x12/top4 pilot. A
+mechanism ablation further showed that removing the executable mask sharply
+reduced reward, while an ungated top-4 negative control did not separate from
+the gated anchor under the same rollout protocol. Stage 3 confirmatory tests
+then evaluated the two passing 50-state rows under matched rollout settings.
+The 50x16/top6 row reached 64.2960 mean reward and the 50x24/top12 row
+reached 66.2544, both below the matched Paper9 baseline; a diagnostic
+near-pass row reached 67.4913 and must not be pooled with confirmatory rows.
+A later candidate-score sweep on the same 50x24/f075 checkpoint varied
+`candidate-score-mode` across `blend` (0.05, 0.10, 0.15, 0.25) and `value`;
+`blend0.10` remained the best variant, but it still fell short of the matched
+Paper9 baseline, and pure `value` filtering was materially worse.
+Dongxing/Neijiang evidence remains useful as a calibration and stress-test
+package, but it does not support robust Bishan-to-Dongxing transfer
+superiority. These results support monitor-gated value filtering and
+executable masking as a reproducible evidence-control workflow for constrained
+geospatial planning, while bounding claims about broad 50-state scaling,
+arbitrary cadastral parcel deployment and cross-region transfer superiority.
 
 ## Keywords
 
@@ -353,7 +362,22 @@ claim. The later candidate-score sweep reached the same best mean reward at
 `blend0.10`, confirming that the near-pass remains a boundary case rather than
 confirmatory success.
 
-### 3.5 Dongxing Required Planner Calibration
+### 3.5 Mechanism Ablation Identified Executable Masks as Rollout-Critical
+
+The mechanism packet compared four matched Bishan rollout conditions under the
+same 20x16/top5 protocol. The full gated masked condition reached 69.4705 mean
+reward with sample standard deviation 1.0004, exceeding the heuristic Paper9
+masked reference at 67.5437 with sample standard deviation 7.2246. Removing
+the executable mask collapsed mean reward to 40.3515 and produced 100 zero-
+swap steps and 98 negative-zero-swap steps, which indicates that the planner
+repeatedly chose blocks that did not execute useful paired swaps. The ungated
+top-4 control recorded the same mean reward and sample standard deviation as
+the full gated masked anchor, so the monitor gate should be framed as
+upstream label-quality control and escalation filtering rather than as an
+independent source of online rollout gain. Supplementary Table S3 records this
+four-condition packet.
+
+### 3.6 Dongxing Required Planner Calibration
 
 The Dongxing/Neijiang package established that the workflow could execute in a
 second real county-level environment. The action space contained 3711 blocks
@@ -364,7 +388,7 @@ candidate-value-weight=1.0, compared with the Bishan default 0.1, supporting
 the interpretation that value filtering is a calibratable component in a
 planning-support workflow.
 
-### 3.6 Dongxing Return Labels Improved Transfer and Scratch Families
+### 3.7 Dongxing Return Labels Improved Transfer and Scratch Families
 
 In Dongxing, real-environment return-label scaling improved both
 Bishan-initialized transfer and Dongxing scratch families relative to
@@ -375,7 +399,7 @@ mean in this comparison was scratch 50x16, not transfer 50x16, so the result
 supports local calibration and return-label scaling rather than robust
 transfer superiority.
 
-### 3.7 Low-Label Dongxing Transfer Was Mixed
+### 3.8 Low-Label Dongxing Transfer Was Mixed
 
 The Dongxing low-label stress test further bounds the transfer claim. At 5
 labels, scratch had higher mean reward than transfer (50.3654 versus
@@ -402,6 +426,14 @@ boundary. The monitor-gated workflow therefore functions as an evidence-control
 layer: it tells the user when value filtering is useful under a particular
 data, candidate and rollout configuration, and when additional label scale is
 not enough.
+
+The mechanism packet sharpens the causal reading of that positive anchor. The
+executable mask is rollout-critical: removing it dropped mean reward from
+69.4705 to 40.3515 and produced 100 zero-swap and 98 negative-zero-swap
+steps. By contrast, the ungated top-4 control did not produce a distinct
+online improvement over the gated anchor under the same rollout protocol. The
+monitor gate therefore belongs in the paper as a label-quality and
+evidence-control mechanism, not as the direct source of the reward gain.
 
 The Dongxing results add planning-support relevance because they show that the
 workflow can be adapted to a second real environment and can identify where
@@ -440,14 +472,16 @@ a final CEUS package, not minor wording issues.
 
 ## 5. Conclusion
 
-Paper10 supports monitor-gated value filtering as a calibrated workflow for
-constrained farmland layout planning. The validated Bishan 20x16/top5 value
-filter improved reward relative to the matched Paper9 baseline, but Stage 3
-confirmatory 50-state rows did not, and the later candidate-score sweep on the
-50x24/f075 line did not overturn that boundary. The manuscript should therefore
-claim a bounded, reproducible evidence-control workflow for GeoJEPA-MPC
-planning, not direct 50-state Bishan scale-up success, solved irregular parcel
-deployment or robust Bishan-to-Dongxing transfer superiority.
+Paper10 supports monitor-gated value filtering with executable masking as a
+calibrated workflow for constrained farmland layout planning. The validated
+Bishan 20x16/top5 value filter improved reward relative to the matched Paper9
+baseline, and the mechanism ablation shows that executable masks are
+rollout-critical, but Stage 3 confirmatory 50-state rows did not, and the
+later candidate-score sweep on the 50x24/f075 line did not overturn that
+boundary. The manuscript should therefore claim a bounded, reproducible
+evidence-control workflow for GeoJEPA-MPC planning, not direct 50-state Bishan
+scale-up success, solved irregular parcel deployment or robust Bishan-to-Dongxing
+transfer superiority.
 
 ## Data and Code Availability
 
@@ -498,12 +532,15 @@ submission commit and map each figure and table to its source data.
 | Main Table 3 | Dongxing return-label scaling. | Dongxing family summary CSV and integrated table package. |
 | Supplementary Table S1 | Stage 3 seed-level rollout rewards. | `e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.md`. |
 | Supplementary Table S2 | Dongxing low-label stress test. | Dongxing low-label summary CSV and detailed result note. |
+| Supplementary Table S3 | Mechanism ablation and control comparison. | `e0_paper10_mechanism_ablation_packet_2026-06-20.md`; `e0_paper10_mechanism_ablation_packet_2026-06-20.json`. |
 
 ## Claim-Evidence and Unresolved Blockers
 
 | claim or blocker | manuscript status | evidence or required action |
 |---|---|---|
 | Monitor-gated Bishan labels train a useful value filter at the validated anchor scale. | Supported. | Bishan 20x16/top5 mean reward 69.4705 versus matched Paper9 baseline 67.5437; sample standard deviation 1.0004 versus 7.2246. |
+| Executable mask is rollout-critical. | Supported. | full_gated_masked mean reward 69.4705 versus no_mask 40.3515; no_mask produced 100 zero-swap steps and 98 negative zero-swap steps. |
+| Ungated top-4 control improves on the gated anchor. | Not supported. | ungated_top4 matched full_gated_masked at 69.4705 mean reward and 1.0004 sample std under the same rollout protocol. |
 | Stage 3 confirmatory 50-state rows improve on the matched Paper9 baseline. | Not supported. | 50x16/top6 mean reward 64.2960 and 50x24/top12 mean reward 66.2544, both below the matched Paper9 baseline. Do not claim direct 50-state Bishan scale-up success. |
 | Candidate-score tuning rescues the 50x24/f075 line. | Not supported. | The 2026-06-20 sweep over `blend` 0.05/0.10/0.15/0.25 and `value` kept the best candidate-filter result at 67.4913, still below the matched Paper9 baseline. |
 | The diagnostic near-pass row can strengthen the confirmatory 50-state claim. | Not supported. | diagnostic_near_pass 50x24/top12 seed48 mean reward 67.4913, still below baseline by 0.0524, and must not be pooled with confirmatory rows. |
