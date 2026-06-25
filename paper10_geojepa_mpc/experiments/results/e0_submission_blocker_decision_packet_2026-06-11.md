@@ -26,29 +26,29 @@ be created.
 
 Do not submit until the author team has closed the decisions below:
 
-The current target route for the next manuscript-conversion pass is the CEUS
-Research Article candidate route recorded in
-`e0_ceus_reviewer_improvement_packet_2026-06-12.md`. This narrows the writing
-direction but does not close the journal-specific article-type, format,
-source-data, licence, DOI, or data-access blockers below.
+The current target route for the next manuscript-conversion pass is frozen as
+the CEUS Research Article candidate route recorded in
+`e0_ceus_reviewer_improvement_packet_2026-06-12.md`. That closes the venue
+choice for this conversion pass and leaves the repository DOI, code licence,
+generated-data rights, full-data access, citation, statistical-reporting, and
+final export blockers below.
 
-1. Target journal and article type.
-2. Repository DOI or reviewer link.
-3. Code licence.
-4. Generated-data rights and checkpoint/model-weight rights.
-5. Full Bishan Tool2 data access route.
-6. GPKG-root geospatial inputs access route.
-7. Dongxing/Neijiang prepared data access route.
-8. Citation policy for local-only sources, preprints, and final reference style.
-9. Statistical reporting policy for descriptive results versus hypothesis tests.
-10. Final journal-specific figure/table count, source-data naming, and export
-    formats.
+1. Repository DOI or reviewer link.
+2. Code licence.
+3. Generated-data rights and checkpoint/model-weight rights.
+4. Full Bishan Tool2 data access route.
+5. GPKG-root geospatial inputs access route.
+6. Dongxing/Neijiang prepared data access route.
+7. Citation policy for local-only sources, preprints, and final reference style.
+8. Statistical reporting policy for descriptive results versus hypothesis tests.
+9. Final journal-specific figure/table count, source-data naming, and export
+   formats.
 
 ## Decision table
 
 | decision | current status | minimum close-out before manuscript conversion | files to update after decision |
 |---|---|---|---|
-| Target journal and article type | Current status: unresolved. | Name journal, article type, abstract format, word limits, reference style, figure/table limits, anonymity policy, and source-data requirements. | Final manuscript; `e0_integrated_target_venue_and_manuscript_conversion_checklist_with_dongxing_2026-06-12.md`; `e0_target_venue_and_manuscript_conversion_checklist_2026-06-09.md`; README submission notes. |
+| Target journal and article type | Current status: frozen as CEUS Research Article candidate route. | Apply CEUS journal instructions in the current conversion pass; exact journal-format details will be finalized when the submission file is created. | Final manuscript; `e0_integrated_target_venue_and_manuscript_conversion_checklist_with_dongxing_2026-06-12.md`; README submission notes. |
 | Repository DOI or reviewer link | Current status: unresolved. | Archive the exact submission commit or create a reviewer link; record persistent identifier, version, access timing, and whether the link is anonymous. | `e0_data_code_availability_draft_2026-06-09.md`; `e0_archive_manifest_2026-06-09.csv`; `e0_archive_release_and_doi_backfill_checklist_2026-06-09.md`; final manuscript. |
 | Code licence | Current status: unresolved. | Select a named software licence and confirm it covers only code and scripts that the authors can license. | Repository licence file if added; `MANIFEST.md`; `e0_data_access_and_rights_decision_register_2026-06-09.md`; archive metadata. |
 | Generated-data rights | Current status: unresolved. | Select rights terms for generated JSON, Markdown, CSV, NPZ labels, checkpoints, model weights, and shareable source-data files without relicensing restricted raw geospatial data. | `e0_data_code_availability_draft_2026-06-09.md`; `e0_archive_metadata_templates_2026-06-09.md`; archive metadata. |
@@ -76,7 +76,7 @@ The next manuscript-conversion pass needs these concrete answers:
 
 | field | required answer |
 |---|---|
-| Target journal | Journal name and article type. |
+| Target journal | CEUS Research Article candidate route, frozen for the current conversion pass. |
 | Submission archive route | Public DOI before submission, anonymous reviewer link, or private review route. |
 | Code licence | Named licence or institutional restriction. |
 | Data rights terms | Named data licence for shareable derived data, or restriction statement. |
