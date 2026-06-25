@@ -10,6 +10,10 @@ small smoke Tool2 dataset needed for reviewer-side verification. The full
 Bishan Tool2 dataset is larger than a normal source repository and is documented
 as an external data dependency in `DATA_AVAILABILITY.md`.
 
+The current paper-facing boundary is the validated Bishan 20x16/top5 positive
+anchor plus the 2026-06-20 Stage 3 50x24 candidate-score sweep, which kept the
+50-state line below the matched Paper9 baseline.
+
 ## Latest Packaged Experiment
 
 This package now includes the 2026-06-08 `frontier_random050` value-head
@@ -24,6 +28,11 @@ The scale-up uses `selector=value_filter`, executable masks, `H=5`, `K=50`,
 candidate blend weight `0.1`, and the diagnostics-selected top-5 value-head
 gate. The recorded 100-step seeds 0-4 mean total reward is `69.4705` with sample
 standard deviation `1.0004`.
+
+The latest boundary update is the 2026-06-20 Stage 3 50x24 candidate-score
+sweep on the same `frontier_random050` line. `blend0.10` remained the best
+candidate-filter variant, but it still stayed below the matched Paper9
+baseline, so the manuscript claim boundary did not change.
 
 The previous 10x12/h5 top-4 pilot remains packaged as the direct baseline. Its
 recorded 100-step seeds 0-4 mean total reward is `65.2566` with sample standard
@@ -75,9 +84,12 @@ Paper-facing writing assets are tracked under
 - `e0_ceus_research_article_manuscript_draft_2026-06-12.md`
 - `e0_ceus_stage3_manuscript_reframe_2026-06-18.md`
 - `e0_ceus_stage3_manuscript_draft_2026-06-18.md`
+- `e0_paper10_formal_manuscript_draft_2026-06-20.md`
 - `e0_paper10_project_proposal_opening_report_2026-06-18.md`
 - `e0_paper10_author_decision_matrix_2026-06-18.md`
 - `e0_paper10_formal_manuscript_assembly_blueprint_2026-06-18.md`
+- `e0_paper10_stage3_50x24_candidate_score_sweep_2026-06-20.md`
+- `e0_paper10_stage3_50x24_candidate_score_sweep_2026-06-20.json`
 - `e0_paper10_claim_source_consistency_audit_2026-06-18.md`
 - `e0_paper10_real_data_availability_audit_2026-06-18.md`
 - `e0_paper10_real_data_integrity_smoke_2026-06-18.md`

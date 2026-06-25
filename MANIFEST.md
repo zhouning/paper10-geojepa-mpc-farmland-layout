@@ -51,6 +51,14 @@ data needed for smoke verification.
   checkpoint used by the 10x12/h5 pilot rollouts.
 - `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_20x16_h5_seed44_top5_report_2026-06-08.md`:
   latest `frontier_random050` value-head 20x16/h5 scale-up report.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_formal_manuscript_draft_2026-06-20.md`:
+  current formal manuscript draft with the 2026-06-20 candidate-score sweep
+  boundary.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_stage3_50x24_candidate_score_sweep_2026-06-20.md`:
+  latest 50x24/f075 candidate-score sweep showing the boundary remains below
+  the matched Paper9 baseline.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_stage3_50x24_candidate_score_sweep_2026-06-20.json`:
+  machine-readable output for the latest 50x24/f075 candidate-score sweep.
 - `paper10_geojepa_mpc/experiments/results/e0_windows_frontier_random050_ablation_findings_2026-06-09.md`:
   Windows CPU 50-state ablation findings for the completed negative
   `frontier_random050` candidate-grid diagnosis.

@@ -1,6 +1,6 @@
 # Paper10 E0 archive metadata templates
 
-Date: 2026-06-09
+Date: 2026-06-20
 
 This document provides fill-in templates for the repository and data archive
 records needed before a Paper10 E0 submission. It does not assign identifiers,
@@ -13,7 +13,9 @@ Use these templates after selecting the submission route in
 `e0_submission_route_and_archive_plan_2026-06-09.md`. Keep one archive record
 for the public code and packaged E0 evidence, and decide separately whether the
 full Bishan `tool2/` data and prepared GPKG-root geospatial inputs can be
-public or must be controlled.
+public or must be controlled. The current formal manuscript boundary is the
+Bishan 20x16/top5 anchor plus the 2026-06-20 Stage 3 50x24 candidate-score
+sweep, so the template text below should stay aligned to that evidence set.
 
 Use `e0_archive_manifest_2026-06-09.csv` as the machine-readable checklist for
 which file families are included in Record 1, externalized into Records 2-3,
@@ -66,10 +68,12 @@ evaluation in constrained Bishan farmland layout planning. It includes source
 code, tests, small reviewer smoke data, generated E0 value-label files,
 monitor outputs, rollout summaries, saved checkpoints, figure-ready CSV source
 data, manuscript source notes, and reproducibility documentation. The current
-paper-facing positive result is the 20x16/h5 top-5 value-head package with
+paper-facing positive result is the Bishan 20x16/top5 value-head package with
 five-seed mean total reward `69.4705` and sample standard deviation `1.0004`.
-Tested 50-state `frontier_random050` runs are included only as failed
-diagnostics and should not be interpreted as positive scale-up evidence.
+The 2026-06-20 Stage 3 50x24 candidate-score sweep did not overturn that
+boundary. Tested 50-state `frontier_random050` runs are included only as
+failed diagnostics and should not be interpreted as positive scale-up
+evidence.
 
 Keywords:
 GeoJEPA-MPC; farmland layout planning; model predictive control; value labels;
@@ -98,7 +102,7 @@ The machine-readable version of this inventory is
 |---|---|---|
 | `paper10_geojepa_mpc/` source code and tests | include | Main Paper10 implementation and test suite. |
 | `arcgis_toolbox_paper9/_scratch/tool1_smoke/prepared/tool2/` | include | Small smoke data for reviewer-side tests; not a substitute for full Bishan data. |
-| `paper10_geojepa_mpc/experiments/results/*.json`, `*.md`, `*.csv`, `*.npz` | include | Generated E0 evidence, value labels, monitor outputs, rollout summaries, and manuscript source data. |
+| `paper10_geojepa_mpc/experiments/results/*.json`, `*.md`, `*.csv`, `*.npz` | include | Generated E0 evidence, value labels, monitor outputs, rollout summaries, claim freezes, and manuscript source data. |
 | `paper10_geojepa_mpc/experiments/checkpoints/` | include | Saved model checkpoints used by packaged rollouts. |
 | `scripts/`, `notebooks/`, `docs/`, root reproducibility docs | include | Reproduction commands, continuation guides, and manuscript planning notes. |
 | ignored `reviewer_outputs/` | exclude unless final figures are selected | Generated local previews are not source data until intentionally exported and documented. |
@@ -231,9 +235,9 @@ The current detailed source-data map is tracked in
 | manuscript item | source files | archive record | notes |
 |---|---|---|---|
 | Figure 1, workflow schematic | `[FINAL SOURCE OR ARTWORK FILE]` | Record 1 | Add only after final figure is selected. |
-| Figure 2, seed-wise reward comparison | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_seedwise_rewards_2026-06-09.csv` | Record 1 | Supports 10x12/top4 vs 20x16/top5 reward comparison. |
-| Figure 3, failed 50-state diagnostics | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_topk_diagnostics_2026-06-09.csv` | Record 1 | Boundary diagnostic only; not positive scale-up evidence. |
-| Main results table | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_manuscript_tables_2026-06-09.md` and rollout summaries | Record 1 | Confirm final table number before submission. |
+| Figure 2, seed-wise reward comparison | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_seedwise_rewards_2026-06-09.csv` | Record 1 | Supports the Bishan 20x16/top5 positive anchor. |
+| Figure 3, failed 50-state diagnostics | `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_topk_diagnostics_2026-06-09.csv` | Record 1 | Boundary diagnostic only; not positive scale-up evidence. Keep the 2026-06-20 sweep separate. |
+| Main results table | `paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_result_tables_freeze_2026-06-19.md` and `paper10_geojepa_mpc/experiments/results/e0_paper10_stage3_50x24_candidate_score_sweep_2026-06-20.md` | Record 1 | Confirm final table number and claim boundary before submission. |
 | Full rerun commands | `REPRODUCIBILITY.md` | Record 1 plus Records 2 and 3 if full reruns are required | Smoke verification runs from Record 1 alone. |
 
 ## Dataset README skeleton

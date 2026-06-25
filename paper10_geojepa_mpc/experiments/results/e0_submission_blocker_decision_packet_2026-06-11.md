@@ -15,6 +15,8 @@ be created.
 - `e0_data_code_availability_draft_2026-06-09.md`
 - `e0_data_access_and_rights_decision_register_2026-06-09.md`
 - `e0_archive_release_and_doi_backfill_checklist_2026-06-09.md`
+- `e0_paper10_formal_manuscript_draft_2026-06-20.md`
+- `e0_paper10_stage3_50x24_candidate_score_sweep_2026-06-20.md`
 - `e0_source_data_map_with_dongxing_2026-06-11.md`
 - `e0_integrated_target_venue_and_manuscript_conversion_checklist_with_dongxing_2026-06-12.md`
 - `e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md`
@@ -62,6 +64,7 @@ source-data, licence, DOI, or data-access blockers below.
 - Do not claim robust Bishan-to-Dongxing transfer superiority.
 - Do not claim direct 50-state Bishan scale-up success.
 - Keep Bishan 20x16/top5 as the primary positive result.
+- Treat the 2026-06-20 50x24 candidate-score sweep as boundary evidence only.
 - Use Dongxing/Neijiang as external-region calibration and transfer stress-test
   evidence.
 - Keep Dongxing scratch advantages at 50x16 and at 5/10 low-label budgets

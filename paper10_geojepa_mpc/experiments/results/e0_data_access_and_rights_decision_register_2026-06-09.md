@@ -1,6 +1,6 @@
 # Paper10 E0 data access and rights decision register
 
-Date: 2026-06-09
+Date: 2026-06-20
 
 This register lists the data, code, model, and derived-output rights decisions
 that must be made before the Paper10 E0 manuscript can be submitted. It does
@@ -27,9 +27,10 @@ Use this register before filling:
 - `[PUBLIC DOI OR REVIEWER LINK TO BE ADDED]`
 - `e0_submission_blocker_decision_packet_2026-06-11.md`
 
-The current positive E0 claim remains limited to the monitor-gated
-`frontier_random050` 20x16/top5 result. The tested 50-state rows remain failed
-diagnostics and do not change any data-access route.
+The current positive E0 claim remains limited to the Bishan 20x16/top5 result.
+The 2026-06-20 Stage 3 50x24 candidate-score sweep did not change any
+data-access route. The tested 50-state rows remain failed diagnostics and do
+not change any data-access route.
 
 ## Decision register
 
@@ -37,7 +38,7 @@ diagnostics and do not change any data-access route.
 |---|---|---|---|---|---|
 | Paper10 source code, tests, scripts, and notebooks | Included in Git. | Reviewer smoke verification, value-label generation, rollout evaluation, plotting, and manuscript reproducibility. | Public code/evidence archive with DOI or private reviewer link during review. | Select software licence, archive platform, release tag, and exact submission commit. | `[CODE LICENCE TO BE SELECTED]`; `[REPOSITORY/DOI TO BE ADDED]`; `[PUBLIC DOI OR REVIEWER LINK TO BE ADDED]`; `[SUBMISSION COMMIT HASH]` |
 | Small reviewer smoke Tool2 data | Included in Git under `arcgis_toolbox_paper9/_scratch/tool1_smoke/prepared/tool2/`. | Automated tests and smoke-scale verification. | Included with Record 1 if rights allow. | Confirm the smoke data can be redistributed with the repository archive and state any data rights terms. | `[DATA LICENCE OR DATA RIGHTS TERMS TO BE SELECTED]` |
-| Generated E0 JSON, Markdown, CSV, and NPZ outputs | Included in Git under `paper10_geojepa_mpc/experiments/results/`. | Main 20x16/top5 result, 10x12/top4 baseline, monitor diagnostics, source-data mapping, and failed 50-state diagnostics. | Public code/evidence archive with Record 1. | Select generated-output rights terms and confirm no restricted raw geospatial data are embedded beyond permitted derived outputs. | `[DATA LICENCE OR DATA RIGHTS TERMS TO BE SELECTED]`; `[REPOSITORY/DOI TO BE ADDED]` |
+| Generated E0 JSON, Markdown, CSV, and NPZ outputs | Included in Git under `paper10_geojepa_mpc/experiments/results/`. | Main Bishan 20x16/top5 result, Stage 3 boundary evidence, source-data mapping, and failed 50-state diagnostics. | Public code/evidence archive with Record 1. | Select generated-output rights terms and confirm no restricted raw geospatial data are embedded beyond permitted derived outputs. | `[DATA LICENCE OR DATA RIGHTS TERMS TO BE SELECTED]`; `[REPOSITORY/DOI TO BE ADDED]` |
 | E0 checkpoints | Included in Git under `paper10_geojepa_mpc/experiments/checkpoints/`. | Reproducing packaged rollouts and value-filter evaluation. | Public code/evidence archive with Record 1. | Decide whether checkpoint files are covered by the software licence, data rights terms, or a separate model-weight licence. | `[CODE LICENCE TO BE SELECTED]`; `[DATA LICENCE OR DATA RIGHTS TERMS TO BE SELECTED]` |
 | Optional GeoFM asset | Included in Git under `paper7/data/`. | Optional fusion tests and ablations. | Include only if redistribution terms are confirmed; otherwise remove, replace, or document as external. | Confirm source, owner, licence, and whether it can remain in a public archive. | Optional GeoFM rights field in archive manifest; `[DATA LICENCE OR DATA RIGHTS TERMS TO BE SELECTED]` |
 | Full Bishan Tool2 data | External to Git; expected as `tool2/transitions.npz` and `tool2/pairwise.npz`. | Full-scale training and real-environment rollout reruns. | Public dataset DOI if redistribution rights exist; otherwise controlled-access repository or institutional access route. | Identify owner, repository or access body, public-versus-controlled route, reviewer access, eligibility, review criteria, and data-use terms. | `[FULL TOOL2 DOI TO BE ADDED]`; `[FULL TOOL2 CONTROLLED-ACCESS RECORD TO BE ADDED]`; `[RESTRICTED-DATA ACCESS ROUTE TO BE ADDED]` |

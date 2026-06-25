@@ -1,12 +1,14 @@
 # Paper10 E0 Data and Code Availability draft
 
-Date: 2026-06-09
+Date: 2026-06-20
 
 This document prepares a manuscript-ready Data and Code Availability statement
-for the current Paper10 E0 `frontier_random050` evidence package. It is a
-draft for journal submission and must be updated with repository DOIs,
-anonymous reviewer links, licences, and any institutional access route selected
-before submission.
+for the current Paper10 formal manuscript package. It is a draft for journal
+submission and must be updated with repository DOIs, anonymous reviewer links,
+licences, and any institutional access route selected before submission. The
+current evidence boundary is the validated Bishan 20x16/top5 anchor plus the
+2026-06-20 Stage 3 50x24 candidate-score sweep, which did not change the data-
+access requirements.
 
 Target journal: not fixed. This draft follows a generic Nature-style structure
 without assuming final journal-specific wording.
@@ -39,7 +41,7 @@ The current no-go submission blocker decision packet is tracked in
 | Optional GeoFM asset | Optional fusion-code paths and tests | `paper7/data/block_geofm_embeddings.npy`; `paper7/data/geofm_metadata.json` | public code repository after archive/release | included in Git; licence/metadata should be checked before submission |
 | Paper10 E0 generated value labels | Monitor gates, value-head training, figure/table source evidence | `paper10_geojepa_mpc/experiments/results/*.npz`; JSON/Markdown monitor outputs | public code/data repository after archive/release | included in Git; record should describe each file family |
 | Paper10 E0 checkpoints | Reproducing packaged value-head rollouts | `paper10_geojepa_mpc/experiments/checkpoints/` | public code/data repository after archive/release | included in Git; record should include model/checkpoint metadata |
-| Paper10 E0 rollout summaries and manuscript source data | Reported 10x12/top4 and 20x16/top5 metrics, 50-state boundary diagnostics, figure source data | `paper10_geojepa_mpc/experiments/results/`; figure-ready CSV files | public code/data repository after archive/release | included in Git; source-data mapping is already documented in figure/table drafts |
+| Paper10 E0 rollout summaries and manuscript source data | Reported 20x16/top5 anchor metrics, 50-state boundary diagnostics, and figure source data | `paper10_geojepa_mpc/experiments/results/`; figure-ready CSV files | public code/data repository after archive/release | included in Git; source-data mapping is already documented in figure/table drafts |
 | Dongxing/Neijiang generated summaries and figure source data | Cross-region calibration tables, Figure 4 return-label scaling, and Figure 5 low-label transfer stress test | `paper10_geojepa_mpc/experiments/results/e0_dongxing_*_2026-06-10.*`; `e0_dongxing_return_label_family_summary_2026-06-10.csv`; `e0_dongxing_low_label_budget_family_summary_2026-06-10.csv` | public code/data repository after archive/release | included in Git as derived source data; needs repository DOI or release URL before submission |
 | Generated figure previews | Draft visual checks | ignored `reviewer_outputs/` | not part of submitted source data unless selected | generated locally; do not cite unless exported and deposited |
 | Full Bishan Tool2 data (`tool2/transitions.npz`, `tool2/pairwise.npz`) | Full-scale training and rollout reproduction | external to Git; placement documented in `DATA_AVAILABILITY.md` and `REPRODUCIBILITY.md` | public repository or controlled/justified request, depending on authors' rights | not yet deposited; needs DOI/access route before submission |
@@ -54,9 +56,9 @@ Paper10 repository and associated data record [REPOSITORY/DOI TO BE ADDED].
 The record contains the small reviewer smoke dataset, generated E0 value-label
 files, monitor outputs, rollout summaries, figure-ready CSV source data,
 manuscript table source notes, saved checkpoints, and metadata needed to
-inspect the reported `frontier_random050` 10x12/top4 and 20x16/top5 results.
-The figure source data used for the current E0 draft figures are the tracked
-CSV files
+inspect the reported Bishan 20x16/top5 anchor and the 2026-06-20 Stage 3
+50x24 candidate-score sweep. The figure source data used for the current E0
+draft figures are the tracked CSV files
 `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_seedwise_rewards_2026-06-09.csv`
 and
 `paper10_geojepa_mpc/experiments/results/e0_frontier_random050_topk_diagnostics_2026-06-09.csv`.
@@ -70,10 +72,10 @@ themselves provide the prepared Dongxing/Neijiang data needed for full reruns.
 The full Bishan Tool2 transition and pairwise datasets are not stored directly
 in the Git repository because the binary files are approximately 1.65 GB in
 total. These files are required to rerun full-scale training and real
-environment rollouts from scratch. Before submission, the authors should either
-deposit the full `tool2/` directory in a durable research-data repository with
-a DOI [FULL TOOL2 DOI TO BE ADDED], or provide a controlled institutional access
-route if redistribution is restricted.
+environment rollouts from scratch. Before submission, the authors should
+either deposit the full `tool2/` directory in a durable research-data
+repository with a DOI [FULL TOOL2 DOI TO BE ADDED], or provide a controlled
+institutional access route if redistribution is restricted.
 
 Full real-environment rollouts and label generation also require prepared
 Bishan geospatial inputs, including the parcel/block data and a data root that
@@ -81,24 +83,25 @@ resolves `dem_slope_analysis/output/DLTB_with_slope.gpkg`. The packaged 20x16
 label set reproduced on the GPKG data root, whereas a root resolving shapefile
 inputs first generated materially different labels. The GPKG root convention is
 therefore part of the reproducibility condition for the reported 20x16/top5
-result. If raw cadastral or prepared geospatial files cannot be redistributed
-because of governance, licensing, or third-party restrictions, the final
-statement should name the responsible data owner or institutional access route,
-the eligibility conditions for qualified researchers, and any data-use
-agreement required for access [RESTRICTED-DATA ACCESS ROUTE TO BE ADDED].
+result. The 2026-06-20 50x24 candidate-score sweep does not change this route.
+If raw cadastral or prepared geospatial files cannot be redistributed because
+of governance, licensing, or third-party restrictions, the final statement
+should name the responsible data owner or institutional access route, the
+eligibility conditions for qualified researchers, and any data-use agreement
+required for access [RESTRICTED-DATA ACCESS ROUTE TO BE ADDED].
 
 The Dongxing/Neijiang external-region evidence depends on prepared
 cross-region data and environment files outside the Git repository, including
 3711-block prepared features, 76,376 parcel assignments, transition
 trajectories, pairwise candidate labels, block products, and slope-enriched
 geospatial inputs. The tracked repository contains derived Dongxing summaries,
-tables, and figure source data, but full Dongxing/Neijiang training and rollout
-reproduction requires a separate data record. Before submission, the authors
-should either deposit the prepared Dongxing/Neijiang data in a durable
+tables, and figure source data, but full Dongxing/Neijiang training and
+rollout reproduction requires a separate data record. Before submission, the
+authors should either deposit the prepared Dongxing/Neijiang data in a durable
 repository with a DOI [DONGXING/NEIJIANG DATA DOI TO BE ADDED], or provide a
 controlled-access metadata record that names the responsible data owner,
-request route, eligibility criteria, review process, reviewer access route, and
-data-use or no-redistribution terms [DONGXING/NEIJIANG CONTROLLED-ACCESS RECORD TO BE ADDED].
+request route, eligibility criteria, review process, reviewer access route,
+and data-use or no-redistribution terms [DONGXING/NEIJIANG CONTROLLED-ACCESS RECORD TO BE ADDED].
 
 The repository also includes a small smoke dataset under
 `arcgis_toolbox_paper9/_scratch/tool1_smoke/prepared/tool2/`. This smoke data is
@@ -121,11 +124,11 @@ verification command is:
 .\.venv\Scripts\python.exe -m pytest paper10_geojepa_mpc\tests -q -p no:cacheprovider
 ```
 
-The full command recipes for smoke verification, packaged 10x12/top4 reruns,
-packaged 20x16/top5 reruns, Windows 50-state diagnostic ablations, and macOS
-50x24/h5 diagnostic reproduction are documented in `REPRODUCIBILITY.md`.
-Generated preview figures and rerun outputs are written under ignored
-`reviewer_outputs/` by default.
+The full command recipes for smoke verification, packaged 20x16/top5 reruns,
+Windows 50-state diagnostic ablations, the 2026-06-20 50x24 candidate-score
+sweep, and macOS 50x24/h5 diagnostic reproduction are documented in
+`REPRODUCIBILITY.md`. Generated preview figures and rerun outputs are written
+under ignored `reviewer_outputs/` by default.
 
 ## Repository and citation actions
 
@@ -184,7 +187,7 @@ Generated preview figures and rerun outputs are written under ignored
 | Full raw/processed data route | Full Tool2 and prepared geospatial data are external to Git. | Decide public deposit versus controlled/justified access. |
 | Restricted-data rationale | Raw cadastral/geospatial restriction is inferred from Paper9 local-source notes and repository policy, but the responsible access body is not named. | Add the data owner, responsible institution, request route, eligibility, and data-use conditions. |
 | Licence | Repository/data licence is not fixed in this statement. | Add code licence and data licence or restriction terms. |
-| Versioning | Current manuscript assets are dated 2026-06-09 and tied to commit history. | Archive the exact submission commit and cite that version. |
+| Versioning | Current manuscript-facing assets are dated 2026-06-20 and tied to commit history, while older 2026-06-09 result files remain as historical records. | Archive the exact submission commit and cite that version. |
 
 ## Missing information / risk flags
 

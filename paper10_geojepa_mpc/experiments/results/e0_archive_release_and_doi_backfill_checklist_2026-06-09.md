@@ -1,6 +1,6 @@
 # Paper10 E0 archive release and DOI backfill checklist
 
-Date: 2026-06-09
+Date: 2026-06-20
 
 This checklist turns the current Paper10 E0 archive plan, metadata templates,
 manifest, and source-data map into a release sequence. It does not assign
@@ -23,22 +23,25 @@ Use this file after selecting the target venue and archive route. It covers:
 Use `e0_data_access_and_rights_decision_register_2026-06-09.md` before this
 release sequence to centralize code licence, generated-output rights, optional
 GeoFM rights, full Tool2 access, GPKG-root access, and reviewer-route
-decisions.
+decisions. The release sequence should remain aligned with the current
+formal-manuscript boundary: Bishan 20x16/top5 as the positive anchor and the
+2026-06-20 Stage 3 50x24 candidate-score sweep as boundary evidence.
 
-The current paper-facing positive claim remains bounded to the monitor-gated
-`frontier_random050` 20x16/h5 top-5 value-head result. Tested 50-state
-`frontier_random050` rows remain failed diagnostics and must not be promoted
-to positive scale-up evidence.
+The current paper-facing positive claim remains bounded to the Bishan
+20x16/top5 value-head result. The 2026-06-20 Stage 3 50x24 candidate-score
+sweep did not overturn that boundary. Tested 50-state `frontier_random050`
+rows remain failed diagnostics and must not be promoted to positive scale-up
+evidence.
 
 ## Preconditions before release
 
 | item | required state before release | current action |
 |---|---|---|
 | Target venue | Journal or venue family selected, including anonymity and data-policy requirements. | Fill `[TARGET VENUE TO BE SELECTED]`. |
-| Public manuscript route | Self-contained integrated manuscript variant selected unless a public Paper9 citation becomes available. | Use `e0_frontier_random050_integrated_manuscript_self_contained_methods_draft_2026-06-09.md`. |
+| Public manuscript route | Self-contained integrated manuscript variant selected unless a public Paper9 citation becomes available. | Use `e0_paper10_formal_manuscript_draft_2026-06-20.md`. |
 | Archive route | GitHub release plus Zenodo, Figshare, OSF, institutional repository, or another durable record selected. | Fill `[ARCHIVE PLATFORM TO BE SELECTED]`. |
 | Archive manifest | `e0_archive_manifest_2026-06-09.csv` frozen or updated for any venue-driven membership change. | Confirm no unintended restricted files are included. |
-| Source-data map | `e0_source_data_map_2026-06-09.md` frozen to final figure/table numbering. | Update after final figure selection. |
+| Source-data map | `e0_source_data_map_2026-06-09.md` and `e0_source_data_map_with_dongxing_2026-06-11.md` frozen to final figure/table numbering. | Update after final figure selection. |
 | Licences and rights | Code licence, generated-data terms, optional GeoFM rights, and full-data rights decided. | Fill licence and rights placeholders. |
 | Full Tool2 route | Public deposit or controlled-access route selected for `tool2/transitions.npz` and `tool2/pairwise.npz`. | Fill `[FULL TOOL2 DOI TO BE ADDED]` or controlled-access record. |
 | GPKG-root route | Public deposit or controlled-access route selected for GPKG-root geospatial inputs. | Fill `[RESTRICTED-DATA ACCESS ROUTE TO BE ADDED]` if not public. |
@@ -105,7 +108,7 @@ not write only "available upon request" or "available upon reasonable request".
 | `[FULL TOOL2 DOI TO BE ADDED]` | Data Availability; archive templates; source-data or supplementary metadata if full reruns are promised | Public DOI for full `tool2/` data, or replace with controlled-access wording. |
 | `[RESTRICTED-DATA ACCESS ROUTE TO BE ADDED]` | Data Availability; Record 3 metadata; final manuscript if GPKG-root data are restricted | Named access body, request URL/email/form, eligibility, review criteria, and data-use terms. |
 | Optional GeoFM rights field | `e0_archive_manifest_2026-06-09.csv`; archive metadata | Confirm redistribution terms or remove/replace the asset before release. |
-| Final figure/table numbering | `e0_source_data_map_2026-06-09.md`; figure plan; table draft; integrated manuscript | Frozen figure/table numbers and source-data mapping. |
+| Final figure/table numbering | `e0_source_data_map_2026-06-09.md`; `e0_source_data_map_with_dongxing_2026-06-11.md`; figure plan; table draft; integrated manuscript | Frozen figure/table numbers and source-data mapping. |
 
 ## Final verification sequence
 

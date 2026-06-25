@@ -129,6 +129,13 @@ after applying the Stage 3 claim boundary:
 paper10_geojepa_mpc/experiments/results/e0_ceus_stage3_manuscript_draft_2026-06-18.md
 ```
 
+Use the current formal manuscript draft as the active paper-facing output
+after the 2026-06-20 candidate-score sweep:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_formal_manuscript_draft_2026-06-20.md
+```
+
 Use the current author-decision matrix before claiming the formal manuscript
 package is ready:
 
@@ -208,6 +215,14 @@ JSON files without adding a new experimental claim:
 
 ```text
 paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_result_tables_freeze_2026-06-19.md
+```
+
+Use the 2026-06-20 Stage 3 50x24 candidate-score sweep before interpreting
+the current 50-state line. It checks whether candidate-score tuning can rescue
+the same checkpoint without changing the rollout protocol:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_stage3_50x24_candidate_score_sweep_2026-06-20.md
 ```
 
 Use the manuscript text/table consistency audit before treating

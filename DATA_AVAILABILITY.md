@@ -1,7 +1,14 @@
 # Data Availability
 
 For manuscript submission wording and the current repository/data DOI action
-list, see:
+list, see the current formal manuscript draft:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_formal_manuscript_draft_2026-06-20.md
+```
+
+For the manuscript-facing Data and Code Availability draft that still carries
+the unresolved DOI, licence, and controlled-access backfill, see:
 
 ```text
 paper10_geojepa_mpc/experiments/results/e0_data_code_availability_draft_2026-06-09.md
@@ -33,6 +40,20 @@ For the current figure, table, and claim-to-source-data mapping, see:
 ```text
 paper10_geojepa_mpc/experiments/results/e0_source_data_map_2026-06-09.md
 paper10_geojepa_mpc/experiments/results/e0_source_data_map_with_dongxing_2026-06-11.md
+```
+
+For the current frozen Bishan anchor, Stage 3 boundary rows, and claim-status
+table, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_result_tables_freeze_2026-06-19.md
+```
+
+For the current 50x24 candidate-score sweep that preserved the claim
+boundary, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_stage3_50x24_candidate_score_sweep_2026-06-20.md
 ```
 
 For the current generic manuscript-conversion figure/table numbering freeze,
