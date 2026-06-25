@@ -21,6 +21,7 @@ be created.
 - `e0_integrated_target_venue_and_manuscript_conversion_checklist_with_dongxing_2026-06-12.md`
 - `e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md`
 - `e0_ceus_reviewer_improvement_packet_2026-06-12.md`
+- `e0_paper10_final_figure_table_export_package_2026-06-20.md`
 
 ## Current no-go status
 
@@ -57,7 +58,7 @@ final export blockers below.
 | Dongxing/Neijiang prepared data access route | Current status: unresolved. | Choose public DOI or controlled-access metadata route for prepared 3711-block products, 76,376 parcel assignments, transition/pairwise files, environment wrappers, and slope-enriched geospatial inputs. | `e0_data_code_availability_draft_2026-06-09.md`; `e0_data_access_and_rights_decision_register_2026-06-09.md`; `e0_source_data_map_with_dongxing_2026-06-11.md`; final manuscript. |
 | Citation policy | Current status: unresolved. | Decide whether local-only sources can be formalized, whether preprints are acceptable for the target venue, and which verified references are required in Introduction, Methods, Results, and Discussion. | `e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md`; `references/paper10_citation_map_2026-06-09.md`; final manuscript; bibliography files. |
 | Statistical reporting policy | Current status: unresolved. | Decide whether descriptive means and standard deviations are sufficient, or define pre-declared statistical tests, comparison groups, multiple-comparison handling, and reporting precision. | `e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md`; Results section; table captions; `e0_paper10_integrated_manuscript_tables_with_dongxing_2026-06-10.md`; final manuscript. |
-| Final figure/table export package | Current status: partially frozen for generic draft. | Use `e0_integrated_figure_table_numbering_freeze_2026-06-11.md` as the current generic freeze, then adapt only after target journal limits are selected. | Figure exports; source-data maps; final manuscript; supplementary files. |
+| Final figure/table export package | Current status: frozen export contract for the current CEUS route; Main Figure 1 artwork remains pending. | Use `e0_paper10_final_figure_table_export_package_2026-06-20.md` with `e0_integrated_figure_table_numbering_freeze_2026-06-11.md` as the current export contract, then finalize PDF/SVG and raster previews only as required. | Figure exports; source-data maps; final manuscript; supplementary files; `e0_paper10_final_figure_table_export_package_2026-06-20.md`. |
 
 ## Claim locks
 
