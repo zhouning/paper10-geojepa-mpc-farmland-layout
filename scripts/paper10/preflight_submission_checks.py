@@ -114,6 +114,27 @@ PAPER10_MECHANISM_ABLATION_PACKET_MD = (
 PAPER10_MECHANISM_ABLATION_PACKET_JSON = (
     RESULTS / "e0_paper10_mechanism_ablation_packet_2026-06-20.json"
 )
+PAPER10_MONITOR_GATED_TOP5_JSON = (
+    RESULTS / "e0_value_label_monitor_frontier_random050_20x16_h5_seed44_top5.json"
+)
+PAPER10_MONITOR_UNGATED_TOP4_JSON = (
+    RESULTS / "e0_value_label_monitor_frontier_random050_20x16_h5_seed44_top4.json"
+)
+PAPER10_MECHANISM_FULL_GATED_MASKED_JSON = (
+    RESULTS / "e0_mechanism_full_gated_masked_20x16_top5_2026-06-20.json"
+)
+PAPER10_MECHANISM_HEURISTIC_PAPER9_MASKED_JSON = (
+    RESULTS / "e0_mechanism_heuristic_paper9_masked_2026-06-20.json"
+)
+PAPER10_MECHANISM_NO_MASK_JSON = (
+    RESULTS / "e0_mechanism_no_mask_20x16_top5_2026-06-20.json"
+)
+PAPER10_MECHANISM_UNGATED_TOP4_ROLLOUT_JSON = (
+    RESULTS / "e0_mechanism_ungated_top4_20x16_h5_seed44_2026-06-20.json"
+)
+PAPER10_MECHANISM_UNGATED_TOP4_TRAIN_JSON = (
+    RESULTS / "e0_mechanism_ungated_top4_train_20x16_h5_seed44_2026-06-20.json"
+)
 PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD = (
     RESULTS / "e0_paper10_real_data_availability_audit_2026-06-18.md"
 )
@@ -238,6 +259,13 @@ REQUIRED_PATHS = (
     PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_JSON,
     PAPER10_MECHANISM_ABLATION_PACKET_MD,
     PAPER10_MECHANISM_ABLATION_PACKET_JSON,
+    PAPER10_MONITOR_GATED_TOP5_JSON,
+    PAPER10_MONITOR_UNGATED_TOP4_JSON,
+    PAPER10_MECHANISM_FULL_GATED_MASKED_JSON,
+    PAPER10_MECHANISM_HEURISTIC_PAPER9_MASKED_JSON,
+    PAPER10_MECHANISM_NO_MASK_JSON,
+    PAPER10_MECHANISM_UNGATED_TOP4_ROLLOUT_JSON,
+    PAPER10_MECHANISM_UNGATED_TOP4_TRAIN_JSON,
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_JSON,
     PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD,
@@ -2272,6 +2300,212 @@ def check_paper10_formal_manuscript_draft_current(root: Path) -> CheckResult:
         True,
         "Paper10 formal manuscript draft is current and claim-bounded",
     )
+
+
+def check_paper10_mechanism_ablation_packet_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_MECHANISM_ABLATION_PACKET_MD,
+        PAPER10_MECHANISM_ABLATION_PACKET_JSON,
+        PAPER10_MONITOR_GATED_TOP5_JSON,
+        PAPER10_MONITOR_UNGATED_TOP4_JSON,
+        PAPER10_MECHANISM_FULL_GATED_MASKED_JSON,
+        PAPER10_MECHANISM_HEURISTIC_PAPER9_MASKED_JSON,
+        PAPER10_MECHANISM_NO_MASK_JSON,
+        PAPER10_MECHANISM_UNGATED_TOP4_ROLLOUT_JSON,
+        PAPER10_MECHANISM_UNGATED_TOP4_TRAIN_JSON,
+        PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_JSON,
+        PAPER10_FORMAL_MANUSCRIPT_DRAFT,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_mechanism_ablation_packet_current",
+            False,
+            "missing Paper10 mechanism ablation packet files: " + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_MECHANISM_ABLATION_PACKET_MD)
+    normalized_text = " ".join(text.split())
+    normalized_casefold_text = normalized_text.casefold()
+    try:
+        payload = json.loads(read_text(root / PAPER10_MECHANISM_ABLATION_PACKET_JSON))
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_mechanism_ablation_packet_current",
+            False,
+            f"{PAPER10_MECHANISM_ABLATION_PACKET_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    packet_name = PAPER10_MECHANISM_ABLATION_PACKET_MD.name
+    for rel_path in [PAPER10_FORMAL_MANUSCRIPT_DRAFT]:
+        path = root / rel_path
+        if not path.exists():
+            missing_tokens.append(f"{rel_path}: missing file")
+            continue
+        if packet_name not in read_text(path):
+            missing_tokens.append(f"{rel_path}: {packet_name}")
+
+    required_tokens = [
+        "Paper10 mechanism ablation evidence packet",
+        "not a manuscript claim",
+        "Claim Boundary",
+        "Monitor Gates",
+        "Matched Bishan Mechanism Conditions",
+        "Stage 3 Boundary Link",
+        "Interpretation",
+        "GeoJEPA itself is prior art",
+        "monitor-gated value labels plus executable masks plus value-filtered MPC",
+        "50-state evidence remains boundary evidence",
+        "gated_top5",
+        "ungated_top4",
+        "full_gated_masked",
+        "heuristic_paper9_masked",
+        "no_mask",
+        "69.4705",
+        "67.5437",
+        "40.3515",
+        "100.0000",
+        "98.0000",
+        "must not be written as positive 50-state scale-up evidence",
+    ]
+    for token in required_tokens:
+        if token.casefold() not in normalized_casefold_text:
+            missing_tokens.append(f"{PAPER10_MECHANISM_ABLATION_PACKET_MD}: {token}")
+
+    def payload_value(path: tuple[str, ...]):
+        value = payload
+        for key in path:
+            if not isinstance(value, dict) or key not in value:
+                missing_tokens.append(
+                    f"{PAPER10_MECHANISM_ABLATION_PACKET_JSON}: {'.'.join(path)}"
+                )
+                return None
+            value = value[key]
+        return value
+
+    expected_values = [
+        (("packet",), "paper10_mechanism_ablation"),
+        (("baseline_condition",), "full_gated_masked"),
+        (("claim_boundary", "geo_jepa_prior_art_guard"), True),
+        (("claim_boundary", "do_not_claim_geo_jepa_invention"), True),
+        (("claim_boundary", "do_not_claim_direct_50_state_success"), True),
+        (("claim_boundary", "do_not_claim_robust_transfer_superiority"), True),
+        (("monitor_gates", "gated_top5", "decision"), "continue"),
+        (("monitor_gates", "gated_top5", "gate_class"), "pass"),
+        (("monitor_gates", "gated_top5", "top_k"), 5),
+        (("monitor_gates", "ungated_top4", "decision"), "stop"),
+        (("monitor_gates", "ungated_top4", "gate_class"), "stop"),
+        (("monitor_gates", "ungated_top4", "top_k"), 4),
+        (("stage3_boundary", "best_overall", "run"), "paper9 baseline"),
+        (("stage3_boundary", "best_value_filter", "run"), "existing blend010"),
+    ]
+    for path, expected in expected_values:
+        value = payload_value(path)
+        if value is not None and value != expected:
+            missing_tokens.append(
+                f"{PAPER10_MECHANISM_ABLATION_PACKET_JSON}: "
+                f"{'.'.join(path)}={value!r}"
+            )
+
+    failed_metrics = payload_value(("monitor_gates", "ungated_top4", "failed_metrics"))
+    if not isinstance(failed_metrics, list):
+        missing_tokens.append(
+            f"{PAPER10_MECHANISM_ABLATION_PACKET_JSON}: "
+            "monitor_gates.ungated_top4.failed_metrics"
+        )
+    else:
+        for metric in ("candidate_topk_regret", "candidate_topk_overlap"):
+            if metric not in failed_metrics:
+                missing_tokens.append(
+                    f"{PAPER10_MECHANISM_ABLATION_PACKET_JSON}: "
+                    f"monitor_gates.ungated_top4.failed_metrics.{metric}"
+                )
+
+    expected_condition_values = [
+        (("condition_comparisons", "full_gated_masked", "mean_reward"), 69.4705),
+        (("condition_comparisons", "full_gated_masked", "std_sample"), 1.0004),
+        (("condition_comparisons", "heuristic_paper9_masked", "mean_reward"), 67.5437),
+        (("condition_comparisons", "heuristic_paper9_masked", "std_sample"), 7.2246),
+        (("condition_comparisons", "no_mask", "mean_reward"), 40.3515),
+        (("condition_comparisons", "no_mask", "zero_swap_steps_sum"), 100.0),
+        (("condition_comparisons", "no_mask", "negative_zero_swap_steps_sum"), 98.0),
+        (("condition_comparisons", "ungated_top4", "mean_reward"), 69.4705),
+    ]
+    for path, expected in expected_condition_values:
+        value = payload_value(path)
+        if value is None:
+            continue
+        try:
+            rounded = round(float(value), 4)
+        except (TypeError, ValueError):
+            missing_tokens.append(
+                f"{PAPER10_MECHANISM_ABLATION_PACKET_JSON}: "
+                f"{'.'.join(path)}={value!r}"
+            )
+            continue
+        if rounded != expected:
+            missing_tokens.append(
+                f"{PAPER10_MECHANISM_ABLATION_PACKET_JSON}: "
+                f"{'.'.join(path)}={rounded!r}"
+            )
+
+    source_data = payload_value(("stage3_boundary", "source_data"))
+    if not isinstance(source_data, list) or len(source_data) < 6:
+        missing_tokens.append(
+            f"{PAPER10_MECHANISM_ABLATION_PACKET_JSON}: stage3_boundary.source_data"
+        )
+
+    checkpoint_path = payload_value(
+        ("training_metrics", "ungated_top4", "checkpoint_path")
+    )
+    if not isinstance(checkpoint_path, str) or "e0_mechanism_ungated_top4" not in checkpoint_path:
+        missing_tokens.append(
+            f"{PAPER10_MECHANISM_ABLATION_PACKET_JSON}: "
+            "training_metrics.ungated_top4.checkpoint_path"
+        )
+
+    forbidden_50_state = re.compile("|".join(FORBIDDEN_50_STATE_PATTERNS), re.IGNORECASE)
+    allowed_negative_context = (
+        "do not",
+        "must not",
+        "not supported",
+        "did not support",
+        "boundary",
+        "unless",
+    )
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        lowered = line.lower()
+        if forbidden_50_state.search(line):
+            if not any(token in lowered for token in allowed_negative_context):
+                missing_tokens.append(
+                    f"{PAPER10_MECHANISM_ABLATION_PACKET_MD}:{line_no}: "
+                    "positive 50-state wording"
+                )
+        match = UNSUPPORTED_INFERENTIAL_STATS_PATTERN.search(line)
+        if match:
+            missing_tokens.append(
+                f"{PAPER10_MECHANISM_ABLATION_PACKET_MD}:{line_no}: "
+                f"unsupported inferential wording {match.group(0)}"
+            )
+    for forbidden in ("invented geojepa", "submission-ready"):
+        if forbidden in text.casefold():
+            missing_tokens.append(
+                f"{PAPER10_MECHANISM_ABLATION_PACKET_MD}: {forbidden}"
+            )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_mechanism_ablation_packet_current",
+            False,
+            "Paper10 mechanism ablation packet gaps: " + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_mechanism_ablation_packet_current",
+        True,
+        "Paper10 mechanism ablation packet is current and claim-bounded",
+    )
+
 def check_paper10_claim_source_audit_current(root: Path) -> CheckResult:
     required_files = [
         PAPER10_CLAIM_SOURCE_AUDIT_MD,
@@ -4745,6 +4979,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_author_decision_matrix_current,
     check_paper10_formal_manuscript_blueprint_current,
     check_paper10_formal_manuscript_draft_current,
+    check_paper10_mechanism_ablation_packet_current,
     check_paper10_claim_source_audit_current,
     check_paper10_figure_table_source_coverage_audit_current,
     check_paper10_figure_table_caption_claim_packet_current,

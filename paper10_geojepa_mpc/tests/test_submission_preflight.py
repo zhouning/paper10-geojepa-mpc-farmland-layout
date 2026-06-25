@@ -113,6 +113,13 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     PAPER10_FORMAL_MANUSCRIPT_DRAFT,
     PAPER10_MECHANISM_ABLATION_PACKET_MD,
     PAPER10_MECHANISM_ABLATION_PACKET_JSON,
+    RESULTS / "e0_value_label_monitor_frontier_random050_20x16_h5_seed44_top5.json",
+    RESULTS / "e0_value_label_monitor_frontier_random050_20x16_h5_seed44_top4.json",
+    RESULTS / "e0_mechanism_full_gated_masked_20x16_top5_2026-06-20.json",
+    RESULTS / "e0_mechanism_heuristic_paper9_masked_2026-06-20.json",
+    RESULTS / "e0_mechanism_no_mask_20x16_top5_2026-06-20.json",
+    RESULTS / "e0_mechanism_ungated_top4_20x16_h5_seed44_2026-06-20.json",
+    RESULTS / "e0_mechanism_ungated_top4_train_20x16_h5_seed44_2026-06-20.json",
     PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_MD,
     PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_JSON,
     PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD,
@@ -268,6 +275,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "paper10_author_decision_matrix_current" in payload["passed_checks"]
     assert "paper10_formal_manuscript_blueprint_current" in payload["passed_checks"]
     assert "paper10_formal_manuscript_draft_current" in payload["passed_checks"]
+    assert "paper10_mechanism_ablation_packet_current" in payload["passed_checks"]
     assert "paper10_claim_source_audit_current" in payload["passed_checks"]
     assert "paper10_figure_table_caption_claim_packet_current" in payload["passed_checks"]
     assert "paper10_figure_table_source_coverage_audit_current" in payload["passed_checks"]
@@ -410,6 +418,20 @@ def test_submission_preflight_minimal_fixture_reports_missing_figure_table_capti
     details = check_details(payload, "paper10_figure_table_caption_claim_packet_current")
     assert "missing Paper10 figure/table caption-claim packet files" in details
     assert str(PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD) in details
+
+
+def test_submission_preflight_minimal_fixture_reports_missing_mechanism_ablation_packet(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    (fixture / PAPER10_MECHANISM_ABLATION_PACKET_JSON).unlink()
+
+    result, payload = run_submission_preflight_json(fixture)
+
+    assert result.returncode == 1
+    assert payload["ok"] is False
+    assert "paper10_mechanism_ablation_packet_current" in payload["failed_checks"]
+    details = check_details(payload, "paper10_mechanism_ablation_packet_current")
+    assert "missing Paper10 mechanism ablation packet files" in details
+    assert str(PAPER10_MECHANISM_ABLATION_PACKET_JSON) in details
 
 
 def test_submission_preflight_minimal_fixture_reports_missing_final_export_package(tmp_path):
