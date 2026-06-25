@@ -34,6 +34,11 @@ from scripts.paper10.preflight_submission_checks import (
     PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON,
     PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD,
     PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
+    PAPER10_FORMAL_MANUSCRIPT_DRAFT,
+    PAPER10_MECHANISM_ABLATION_PACKET_JSON,
+    PAPER10_MECHANISM_ABLATION_PACKET_MD,
+    PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_JSON,
+    PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_MD,
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON,
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
     PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON,
@@ -105,6 +110,11 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON,
     PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
+    PAPER10_FORMAL_MANUSCRIPT_DRAFT,
+    PAPER10_MECHANISM_ABLATION_PACKET_MD,
+    PAPER10_MECHANISM_ABLATION_PACKET_JSON,
+    PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_MD,
+    PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_JSON,
     PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD,
     PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON,
     PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_MD,
@@ -257,6 +267,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "paper10_project_proposal_report_current" in payload["passed_checks"]
     assert "paper10_author_decision_matrix_current" in payload["passed_checks"]
     assert "paper10_formal_manuscript_blueprint_current" in payload["passed_checks"]
+    assert "paper10_formal_manuscript_draft_current" in payload["passed_checks"]
     assert "paper10_claim_source_audit_current" in payload["passed_checks"]
     assert "paper10_figure_table_caption_claim_packet_current" in payload["passed_checks"]
     assert "paper10_figure_table_source_coverage_audit_current" in payload["passed_checks"]
@@ -345,6 +356,19 @@ def test_submission_preflight_minimal_fixture_reports_missing_formal_manuscript_
     assert "missing Paper10 formal manuscript blueprint files" in details
     assert str(FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT) in details
 
+
+def test_submission_preflight_minimal_fixture_reports_missing_formal_manuscript_draft(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    (fixture / PAPER10_FORMAL_MANUSCRIPT_DRAFT).unlink()
+
+    result, payload = run_submission_preflight_json(fixture)
+
+    assert result.returncode == 1
+    assert payload["ok"] is False
+    assert "paper10_formal_manuscript_draft_current" in payload["failed_checks"]
+    details = check_details(payload, "paper10_formal_manuscript_draft_current")
+    assert "missing Paper10 formal manuscript draft files" in details
+    assert str(PAPER10_FORMAL_MANUSCRIPT_DRAFT) in details
 
 def test_submission_preflight_minimal_fixture_reports_missing_claim_source_audit(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)

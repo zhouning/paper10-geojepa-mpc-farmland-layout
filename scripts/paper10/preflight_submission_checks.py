@@ -99,6 +99,21 @@ PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON = (
 PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE = (
     RESULTS / "e0_paper10_final_figure_table_export_package_2026-06-20.md"
 )
+PAPER10_FORMAL_MANUSCRIPT_DRAFT = (
+    RESULTS / "e0_paper10_formal_manuscript_draft_2026-06-20.md"
+)
+PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_MD = (
+    RESULTS / "e0_paper10_stage3_50x24_candidate_score_sweep_2026-06-20.md"
+)
+PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_JSON = (
+    RESULTS / "e0_paper10_stage3_50x24_candidate_score_sweep_2026-06-20.json"
+)
+PAPER10_MECHANISM_ABLATION_PACKET_MD = (
+    RESULTS / "e0_paper10_mechanism_ablation_packet_2026-06-20.md"
+)
+PAPER10_MECHANISM_ABLATION_PACKET_JSON = (
+    RESULTS / "e0_paper10_mechanism_ablation_packet_2026-06-20.json"
+)
 PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD = (
     RESULTS / "e0_paper10_real_data_availability_audit_2026-06-18.md"
 )
@@ -211,6 +226,7 @@ REQUIRED_PATHS = (
     PROJECT_PROPOSAL_REPORT,
     AUTHOR_DECISION_MATRIX,
     FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+    PAPER10_FORMAL_MANUSCRIPT_DRAFT,
     PAPER10_CLAIM_SOURCE_AUDIT_MD,
     PAPER10_CLAIM_SOURCE_AUDIT_JSON,
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
@@ -218,6 +234,10 @@ REQUIRED_PATHS = (
     PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD,
     PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON,
     PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
+    PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_MD,
+    PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_JSON,
+    PAPER10_MECHANISM_ABLATION_PACKET_MD,
+    PAPER10_MECHANISM_ABLATION_PACKET_JSON,
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_JSON,
     PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD,
@@ -269,6 +289,7 @@ PUBLIC_SUBMISSION_DOCS = (
     PROJECT_PROPOSAL_REPORT,
     AUTHOR_DECISION_MATRIX,
     FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+    PAPER10_FORMAL_MANUSCRIPT_DRAFT,
     PAPER10_CLAIM_SOURCE_AUDIT_MD,
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
     PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD,
@@ -2124,6 +2145,133 @@ def check_paper10_formal_manuscript_blueprint_current(root: Path) -> CheckResult
     )
 
 
+def check_paper10_formal_manuscript_draft_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_FORMAL_MANUSCRIPT_DRAFT,
+        CEUS_STAGE3_MANUSCRIPT_DRAFT,
+        CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT,
+        ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD,
+        ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_JSON,
+        PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_MD,
+        PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_JSON,
+        PAPER10_MECHANISM_ABLATION_PACKET_MD,
+        PAPER10_MECHANISM_ABLATION_PACKET_JSON,
+        INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST,
+        INTEGRATED_CITATION_STATISTICS_POLICY,
+        CEUS_REVIEWER_IMPROVEMENT_PACKET,
+        SUBMISSION_BLOCKER_DECISION_PACKET,
+        PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD,
+        PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_formal_manuscript_draft_current",
+            False,
+            "missing Paper10 formal manuscript draft files: " + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_FORMAL_MANUSCRIPT_DRAFT)
+    normalized_text = " ".join(text.split())
+    normalized_casefold_text = normalized_text.casefold()
+    missing_tokens = []
+    draft_name = PAPER10_FORMAL_MANUSCRIPT_DRAFT.name
+    linked_docs = [
+        Path("README.md"),
+        Path("MANIFEST.md"),
+        Path("DATA_AVAILABILITY.md"),
+        Path("REPRODUCIBILITY.md"),
+    ]
+    for rel_path in linked_docs:
+        path = root / rel_path
+        if not path.exists():
+            missing_tokens.append(f"{rel_path}: missing file")
+            continue
+        if draft_name not in read_text(path):
+            missing_tokens.append(f"{rel_path}: {draft_name}")
+
+    required_tokens = [
+        "Paper10 formal manuscript draft",
+        "not a final submission package",
+        "One-Sentence Argument",
+        "Terminology Ledger",
+        "Title",
+        "Highlights",
+        "Abstract",
+        "Introduction",
+        "Methods",
+        "Results",
+        "Discussion",
+        "Conclusion",
+        "Data and Code Availability",
+        "Figure and Table List",
+        "Claim-Evidence and Unresolved Blockers",
+        "Chinese Author Notes",
+        CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT.name,
+        ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD.name,
+        ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_JSON.name,
+        PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_MD.name,
+        PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_JSON.name,
+        PAPER10_MECHANISM_ABLATION_PACKET_MD.name,
+        PAPER10_MECHANISM_ABLATION_PACKET_JSON.name,
+        INTEGRATED_TARGET_VENUE_CONVERSION_CHECKLIST.name,
+        INTEGRATED_CITATION_STATISTICS_POLICY.name,
+        CEUS_REVIEWER_IMPROVEMENT_PACKET.name,
+        SUBMISSION_BLOCKER_DECISION_PACKET.name,
+        "monitor-gated value labels",
+        "Executable masks are rollout-critical",
+        "Bishan 20x16/top5",
+        "69.4705",
+        "67.5437",
+        "1.0004",
+        "7.2246",
+        "40.3515",
+        "64.2960",
+        "66.2544",
+        "67.4913",
+        "candidate-score sweep",
+        "blend0.10",
+        "must not be pooled",
+        "candidate-value-weight=1.0",
+        "direct 50-state Bishan scale-up success",
+        "robust Bishan-to-Dongxing transfer superiority",
+        "irregular cadastral parcel deployment",
+        "Repository DOI or anonymous reviewer link is pending",
+        "software licence and generated-output rights terms remain pending",
+        "formal hypothesis-test language requires a predefined statistical plan",
+    ]
+    for token in required_tokens:
+        if token.casefold() not in normalized_casefold_text:
+            missing_tokens.append(f"{PAPER10_FORMAL_MANUSCRIPT_DRAFT}: {token}")
+
+    if "@zhou2026paper9_local" in text:
+        missing_tokens.append(f"{PAPER10_FORMAL_MANUSCRIPT_DRAFT}: @zhou2026paper9_local")
+
+    forbidden_50_state = re.compile("|".join(FORBIDDEN_50_STATE_PATTERNS), re.IGNORECASE)
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if forbidden_50_state.search(line):
+            missing_tokens.append(
+                f"{PAPER10_FORMAL_MANUSCRIPT_DRAFT}:{line_no}: "
+                "positive 50-state wording"
+            )
+        match = UNSUPPORTED_INFERENTIAL_STATS_PATTERN.search(line)
+        if match:
+            missing_tokens.append(
+                f"{PAPER10_FORMAL_MANUSCRIPT_DRAFT}:{line_no}: "
+                f"unsupported inferential wording {match.group(0)}"
+            )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_formal_manuscript_draft_current",
+            False,
+            "Paper10 formal manuscript draft gaps: " + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_formal_manuscript_draft_current",
+        True,
+        "Paper10 formal manuscript draft is current and claim-bounded",
+    )
 def check_paper10_claim_source_audit_current(root: Path) -> CheckResult:
     required_files = [
         PAPER10_CLAIM_SOURCE_AUDIT_MD,
@@ -4596,6 +4744,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_project_proposal_report_current,
     check_paper10_author_decision_matrix_current,
     check_paper10_formal_manuscript_blueprint_current,
+    check_paper10_formal_manuscript_draft_current,
     check_paper10_claim_source_audit_current,
     check_paper10_figure_table_source_coverage_audit_current,
     check_paper10_figure_table_caption_claim_packet_current,
