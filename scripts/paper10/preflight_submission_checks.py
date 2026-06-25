@@ -96,6 +96,9 @@ PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD = (
 PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON = (
     RESULTS / "e0_paper10_figure_table_caption_claim_packet_2026-06-19.json"
 )
+PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE = (
+    RESULTS / "e0_paper10_final_figure_table_export_package_2026-06-20.md"
+)
 PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD = (
     RESULTS / "e0_paper10_real_data_availability_audit_2026-06-18.md"
 )
@@ -214,6 +217,7 @@ REQUIRED_PATHS = (
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON,
     PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD,
     PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON,
+    PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_JSON,
     PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD,
@@ -268,6 +272,7 @@ PUBLIC_SUBMISSION_DOCS = (
     PAPER10_CLAIM_SOURCE_AUDIT_MD,
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
     PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD,
+    PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
     PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD,
     PAPER10_REAL_ENV_SMOKE_MD,
@@ -2755,6 +2760,86 @@ def check_paper10_figure_table_caption_claim_packet_current(root: Path) -> Check
     )
 
 
+def check_paper10_final_figure_table_export_package_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
+        PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
+        PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD,
+        INTEGRATED_FIGURE_TABLE_NUMBERING_FREEZE,
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
+        INTEGRATED_DONGXING_FIGURE_PLAN,
+        SUBMISSION_BLOCKER_DECISION_PACKET,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_final_figure_table_export_package_current",
+            False,
+            "missing Paper10 final figure/table export package files: "
+            + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE)
+    normalized_text = " ".join(text.split())
+    missing_tokens = []
+    required_tokens = [
+        "Paper10 final figure/table export package",
+        "frozen export contract",
+        PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD.name,
+        PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD.name,
+        INTEGRATED_FIGURE_TABLE_NUMBERING_FREEZE.name,
+        FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT.name,
+        INTEGRATED_DONGXING_FIGURE_PLAN.name,
+        SUBMISSION_BLOCKER_DECISION_PACKET.name,
+        "reviewer_outputs/",
+        "Do not change claim wording",
+        "does not create new experimental evidence",
+        "does not change the manuscript claim boundary",
+    ]
+    for token in required_tokens:
+        if token not in normalized_text:
+            missing_tokens.append(
+                f"{PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE}: {token}"
+            )
+
+    expected_rows = {
+        "Main Figure 1": "pending_artwork",
+        "Main Figure 2": "export_ready",
+        "Main Figure 3": "export_ready",
+        "Main Figure 4": "export_ready",
+        "Supplementary Figure S1": "export_ready",
+        "Main Tables 1-3": "export_ready",
+    }
+    lines = text.splitlines()
+    for item_name, expected_status in expected_rows.items():
+        row_line = next(
+            (line.strip() for line in lines if line.startswith(f"| {item_name} |")),
+            None,
+        )
+        if row_line is None:
+            missing_tokens.append(
+                f"{PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE}: {item_name}"
+            )
+            continue
+        if expected_status not in row_line:
+            missing_tokens.append(
+                f"{PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE}: "
+                f"{item_name}.{expected_status}"
+            )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_final_figure_table_export_package_current",
+            False,
+            "Paper10 final figure/table export package gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_final_figure_table_export_package_current",
+        True,
+        "Paper10 final figure/table export package is current and export-bounded",
+    )
+
 def check_paper10_real_data_availability_audit_current(root: Path) -> CheckResult:
     required_files = [
         PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
@@ -4514,6 +4599,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_claim_source_audit_current,
     check_paper10_figure_table_source_coverage_audit_current,
     check_paper10_figure_table_caption_claim_packet_current,
+    check_paper10_final_figure_table_export_package_current,
     check_paper10_manuscript_result_tables_freeze_current,
     check_paper10_manuscript_text_table_consistency_audit_current,
     check_paper10_real_data_availability_audit_current,
