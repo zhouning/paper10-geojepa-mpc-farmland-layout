@@ -4935,6 +4935,7 @@ SUBMISSION_READINESS_FORBIDDEN_TARGETS = (
     re.compile(r"\bStatus:\s*submission_ready\b", re.IGNORECASE),
     re.compile(r"\bfinal submission-ready\b", re.IGNORECASE),
     re.compile(r"\bready for final submission\b", re.IGNORECASE),
+    re.compile(r"\bready to submit\b", re.IGNORECASE),
     re.compile(r"\ball blockers closed\b", re.IGNORECASE),
     re.compile(
         r"\bdirect\b.{0,80}\b50[- ]state\b.{0,80}\bbishan\b.{0,80}\bscale[- ]?up\b.{0,80}\bsuccess\b",
