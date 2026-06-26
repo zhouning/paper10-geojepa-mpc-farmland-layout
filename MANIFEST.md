@@ -54,6 +54,10 @@ data needed for smoke verification.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_formal_manuscript_draft_2026-06-20.md`:
   current formal manuscript draft with the 2026-06-20 candidate-score sweep
   boundary.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_submission_readiness_boundary_2026-06-26.md`:
+  current no-go submission-readiness boundary for the CEUS route, preserving
+  unresolved DOI, licence, data-access, citation, statistical-reporting, and
+  final figure/export blockers without declaring final submission readiness.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_stage3_50x24_candidate_score_sweep_2026-06-20.md`:
   latest 50x24/f075 candidate-score sweep showing the boundary remains below
   the matched Paper9 baseline.

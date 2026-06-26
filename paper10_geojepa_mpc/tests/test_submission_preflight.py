@@ -10,6 +10,7 @@ from scripts.paper10.preflight_submission_checks import (
     CEUS_REVIEWER_IMPROVEMENT_PACKET,
     CEUS_STAGE3_MANUSCRIPT_DRAFT,
     CEUS_STAGE3_MANUSCRIPT_REFRAME,
+    check_paper10_submission_readiness_boundary_current,
     check_original_vision_validation_registry_current,
     DATA_ACCESS_RIGHTS_REGISTER,
     DATA_CODE_AVAILABILITY,
@@ -37,6 +38,7 @@ from scripts.paper10.preflight_submission_checks import (
     PAPER10_FORMAL_MANUSCRIPT_DRAFT,
     PAPER10_MECHANISM_ABLATION_PACKET_JSON,
     PAPER10_MECHANISM_ABLATION_PACKET_MD,
+    PAPER10_SUBMISSION_READINESS_BOUNDARY,
     PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_JSON,
     PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_MD,
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON,
@@ -110,6 +112,7 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON,
     PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
+    PAPER10_SUBMISSION_READINESS_BOUNDARY,
     PAPER10_FORMAL_MANUSCRIPT_DRAFT,
     PAPER10_MECHANISM_ABLATION_PACKET_MD,
     PAPER10_MECHANISM_ABLATION_PACKET_JSON,
@@ -280,6 +283,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "paper10_figure_table_caption_claim_packet_current" in payload["passed_checks"]
     assert "paper10_figure_table_source_coverage_audit_current" in payload["passed_checks"]
     assert "paper10_final_figure_table_export_package_current" in payload["passed_checks"]
+    assert "paper10_submission_readiness_boundary_current" in payload["passed_checks"]
     assert "paper10_manuscript_result_tables_freeze_current" in payload["passed_checks"]
     assert "paper10_manuscript_text_table_consistency_audit_current" in payload["passed_checks"]
     assert "paper10_real_data_availability_audit_current" in payload["passed_checks"]
@@ -446,6 +450,88 @@ def test_submission_preflight_minimal_fixture_reports_missing_final_export_packa
     details = check_details(payload, "paper10_final_figure_table_export_package_current")
     assert "missing Paper10 final figure/table export package files" in details
     assert str(PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE) in details
+
+
+def test_submission_preflight_minimal_fixture_reports_missing_submission_readiness_boundary(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    (fixture / PAPER10_SUBMISSION_READINESS_BOUNDARY).unlink()
+
+    result, payload = run_submission_preflight_json(fixture)
+
+    assert result.returncode == 1
+    assert payload["ok"] is False
+    assert "paper10_submission_readiness_boundary_current" in payload["failed_checks"]
+    details = check_details(payload, "paper10_submission_readiness_boundary_current")
+    assert "missing Paper10 submission readiness boundary files" in details
+    assert str(PAPER10_SUBMISSION_READINESS_BOUNDARY) in details
+
+
+def test_submission_readiness_boundary_requires_no_go_status(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    boundary = fixture / PAPER10_SUBMISSION_READINESS_BOUNDARY
+    boundary.write_text(
+        boundary.read_text(encoding="utf-8").replace(
+            "Status: not_submission_ready",
+            "Status: draft_boundary",
+        ),
+        encoding="utf-8",
+    )
+
+    result = check_paper10_submission_readiness_boundary_current(fixture)
+
+    assert result.name == "paper10_submission_readiness_boundary_current"
+    assert result.ok is False
+    assert "Status: not_submission_ready" in result.details
+
+
+def test_submission_readiness_boundary_requires_all_blockers(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    boundary = fixture / PAPER10_SUBMISSION_READINESS_BOUNDARY
+    boundary.write_text(
+        boundary.read_text(encoding="utf-8").replace(
+            "repository DOI or anonymous reviewer link",
+            "repository archive route",
+        ),
+        encoding="utf-8",
+    )
+
+    result = check_paper10_submission_readiness_boundary_current(fixture)
+
+    assert result.name == "paper10_submission_readiness_boundary_current"
+    assert result.ok is False
+    assert "repository DOI or anonymous reviewer link" in result.details
+
+
+def test_submission_readiness_boundary_rejects_submission_ready_claim(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    boundary = fixture / PAPER10_SUBMISSION_READINESS_BOUNDARY
+    boundary.write_text(
+        boundary.read_text(encoding="utf-8")
+        + "\n\nStatus: submission_ready\nThe paper is ready for final submission.\n",
+        encoding="utf-8",
+    )
+
+    result = check_paper10_submission_readiness_boundary_current(fixture)
+
+    assert result.name == "paper10_submission_readiness_boundary_current"
+    assert result.ok is False
+    assert "forbidden submission-readiness wording" in result.details
+    assert "Status: submission_ready" in result.details
+
+
+def test_submission_readiness_boundary_allows_negative_guardrails(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    boundary = fixture / PAPER10_SUBMISSION_READINESS_BOUNDARY
+    boundary.write_text(
+        boundary.read_text(encoding="utf-8")
+        + "\n\nDo not claim direct 50-state Bishan scale-up success.\n",
+        encoding="utf-8",
+    )
+
+    result = check_paper10_submission_readiness_boundary_current(fixture)
+
+    assert result.name == "paper10_submission_readiness_boundary_current"
+    assert result.ok is True
 
 def test_submission_preflight_minimal_fixture_reports_missing_manuscript_result_tables_freeze(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)

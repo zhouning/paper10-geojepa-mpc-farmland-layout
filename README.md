@@ -172,6 +172,10 @@ backfill:
 .\.venv\Scripts\python.exe scripts/paper10/preflight_submission_checks.py
 ```
 
+Use `paper10_geojepa_mpc/experiments/results/e0_paper10_submission_readiness_boundary_2026-06-26.md` as the current no-go
+submission-readiness boundary. It records that preflight passing does not mean
+final submission readiness.
+
 Generate draft integrated Dongxing Figure 4 and Figure 5 previews from tracked
 CSV source data:
 

@@ -7,6 +7,15 @@ list, see the current formal manuscript draft:
 paper10_geojepa_mpc/experiments/results/e0_paper10_formal_manuscript_draft_2026-06-20.md
 ```
 
+For the current no-go submission-readiness boundary and unresolved repository,
+licence, data-access, citation, statistics, and final export decisions, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_submission_readiness_boundary_2026-06-26.md
+```
+
+This boundary does not declare final submission readiness.
+
 For the manuscript-facing Data and Code Availability draft that still carries
 the unresolved DOI, licence, and controlled-access backfill, see:
 

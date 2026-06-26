@@ -66,6 +66,14 @@ availability files:
 .\.venv\Scripts\python.exe scripts/paper10/preflight_submission_checks.py
 ```
 
+Use the current no-go submission-readiness boundary before interpreting
+preflight as submission readiness. This boundary does not declare final
+submission readiness:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_submission_readiness_boundary_2026-06-26.md
+```
+
 Generate draft integrated Dongxing Figure 4 and Figure 5 previews from tracked
 CSV source data:
 

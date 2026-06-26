@@ -99,6 +99,9 @@ PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON = (
 PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE = (
     RESULTS / "e0_paper10_final_figure_table_export_package_2026-06-20.md"
 )
+PAPER10_SUBMISSION_READINESS_BOUNDARY = (
+    RESULTS / "e0_paper10_submission_readiness_boundary_2026-06-26.md"
+)
 PAPER10_FORMAL_MANUSCRIPT_DRAFT = (
     RESULTS / "e0_paper10_formal_manuscript_draft_2026-06-20.md"
 )
@@ -255,6 +258,7 @@ REQUIRED_PATHS = (
     PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD,
     PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON,
     PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
+    PAPER10_SUBMISSION_READINESS_BOUNDARY,
     PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_MD,
     PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_JSON,
     PAPER10_MECHANISM_ABLATION_PACKET_MD,
@@ -322,6 +326,7 @@ PUBLIC_SUBMISSION_DOCS = (
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
     PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD,
     PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
+    PAPER10_SUBMISSION_READINESS_BOUNDARY,
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
     PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD,
     PAPER10_REAL_ENV_SMOKE_MD,
@@ -3222,6 +3227,94 @@ def check_paper10_final_figure_table_export_package_current(root: Path) -> Check
         "Paper10 final figure/table export package is current and export-bounded",
     )
 
+def check_paper10_submission_readiness_boundary_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_SUBMISSION_READINESS_BOUNDARY,
+        PAPER10_FORMAL_MANUSCRIPT_DRAFT,
+        SUBMISSION_BLOCKER_DECISION_PACKET,
+        PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
+        PAPER10_MECHANISM_ABLATION_PACKET_MD,
+        ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD,
+        PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_MD,
+        README,
+        MANIFEST,
+        REPRODUCIBILITY,
+        DATA_AVAILABILITY,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_submission_readiness_boundary_current",
+            False,
+            "missing Paper10 submission readiness boundary files: "
+            + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_SUBMISSION_READINESS_BOUNDARY)
+    normalized_text = " ".join(text.split())
+    missing_tokens = []
+    required_tokens = [
+        "Paper10 submission-readiness boundary",
+        "Status: not_submission_ready",
+        "Preflight passing does not mean final submission readiness",
+        PAPER10_FORMAL_MANUSCRIPT_DRAFT.name,
+        SUBMISSION_BLOCKER_DECISION_PACKET.name,
+        PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE.name,
+        PAPER10_MECHANISM_ABLATION_PACKET_MD.name,
+        ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_MD.name,
+        PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_MD.name,
+        "repository DOI or anonymous reviewer link",
+        "code licence",
+        "generated-data rights and checkpoint or model-weight rights",
+        "full Bishan Tool2 data access route",
+        "GPKG-root geospatial input access route",
+        "Dongxing/Neijiang prepared-data access route",
+        "citation policy for local-only sources, preprints, and final reference style",
+        "statistical reporting policy for descriptive results versus hypothesis tests",
+        "Main Figure 1 final schematic artwork and journal-specific figure/table export rules",
+        "Do not claim direct 50-state Bishan scale-up success",
+        "Do not claim robust Bishan-to-Dongxing transfer superiority",
+        "Do not claim solved irregular cadastral parcel deployment",
+        "Do not claim a full Constrained MDP, CPO, or RCPO solver",
+        "Do not claim Paper10 invented GeoJEPA",
+        "does not mean the paper is ready to submit",
+    ]
+    for token in required_tokens:
+        if token not in normalized_text:
+            missing_tokens.append(
+                f"{PAPER10_SUBMISSION_READINESS_BOUNDARY}: {token}"
+            )
+
+    for doc in (README, MANIFEST, REPRODUCIBILITY, DATA_AVAILABILITY):
+        if PAPER10_SUBMISSION_READINESS_BOUNDARY.name not in read_text(root / doc):
+            missing_tokens.append(f"{doc}: {PAPER10_SUBMISSION_READINESS_BOUNDARY.name}")
+
+    hits = []
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if is_submission_readiness_positive_claim(line):
+            hits.append(
+                f"{PAPER10_SUBMISSION_READINESS_BOUNDARY}:{line_no}: {line.strip()}"
+            )
+    if hits:
+        return CheckResult(
+            "paper10_submission_readiness_boundary_current",
+            False,
+            "forbidden submission-readiness wording: " + " | ".join(hits),
+        )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_submission_readiness_boundary_current",
+            False,
+            "Paper10 submission readiness boundary gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_submission_readiness_boundary_current",
+        True,
+        "Paper10 submission-readiness boundary is current and no-go guarded",
+    )
+
 def check_paper10_real_data_availability_audit_current(root: Path) -> CheckResult:
     required_files = [
         PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
@@ -4831,6 +4924,42 @@ def check_paper10_manuscript_text_table_consistency_audit_current(root: Path) ->
     )
 
 
+SUBMISSION_READINESS_NEGATIVE_GUARDRAIL = re.compile(
+    r"\b("
+    r"not|no-go|blocked|unresolved|pending|does not mean|do not|must not|cannot"
+    r")\b",
+    re.IGNORECASE,
+)
+SUBMISSION_READINESS_CLAUSE_SPLIT_PATTERN = re.compile(r"[;.!?]+")
+SUBMISSION_READINESS_FORBIDDEN_TARGETS = (
+    re.compile(r"\bStatus:\s*submission_ready\b", re.IGNORECASE),
+    re.compile(r"\bfinal submission-ready\b", re.IGNORECASE),
+    re.compile(r"\bready for final submission\b", re.IGNORECASE),
+    re.compile(r"\ball blockers closed\b", re.IGNORECASE),
+    re.compile(
+        r"\bdirect\b.{0,80}\b50[- ]state\b.{0,80}\bbishan\b.{0,80}\bscale[- ]?up\b.{0,80}\bsuccess\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\brobust\b.{0,80}\bbishan[- ]to[- ]dongxing\b.{0,80}\btransfer\b.{0,80}\bsuperiority\b",
+        re.IGNORECASE,
+    ),
+)
+
+
+def is_submission_readiness_positive_claim(line: str) -> bool:
+    for clause in (
+        clause.strip()
+        for clause in SUBMISSION_READINESS_CLAUSE_SPLIT_PATTERN.split(line)
+    ):
+        if not clause:
+            continue
+        if SUBMISSION_READINESS_NEGATIVE_GUARDRAIL.search(clause):
+            continue
+        if any(target.search(clause) for target in SUBMISSION_READINESS_FORBIDDEN_TARGETS):
+            return True
+    return False
+
 ORIGINAL_VISION_POSITIVE_CLAIM_CUE = re.compile(
     r"\b("
     r"claim(?:s|ed|ing)?"
@@ -4984,6 +5113,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_figure_table_source_coverage_audit_current,
     check_paper10_figure_table_caption_claim_packet_current,
     check_paper10_final_figure_table_export_package_current,
+    check_paper10_submission_readiness_boundary_current,
     check_paper10_manuscript_result_tables_freeze_current,
     check_paper10_manuscript_text_table_consistency_audit_current,
     check_paper10_real_data_availability_audit_current,
