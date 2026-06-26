@@ -534,6 +534,22 @@ def test_submission_readiness_boundary_rejects_ready_to_submit_claim(tmp_path):
     assert "forbidden submission-readiness wording" in result.details
     assert "The paper is ready to submit." in result.details
 
+def test_submission_readiness_boundary_rejects_mixed_blocked_ready_claim(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    boundary = fixture / PAPER10_SUBMISSION_READINESS_BOUNDARY
+    boundary.write_text(
+        boundary.read_text(encoding="utf-8")
+        + "\n\nThe paper is not blocked and ready to submit.\n",
+        encoding="utf-8",
+    )
+
+    result = check_paper10_submission_readiness_boundary_current(fixture)
+
+    assert result.name == "paper10_submission_readiness_boundary_current"
+    assert result.ok is False
+    assert "forbidden submission-readiness wording" in result.details
+    assert "The paper is not blocked and ready to submit." in result.details
+
 def test_submission_readiness_boundary_allows_negative_guardrails(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
     boundary = fixture / PAPER10_SUBMISSION_READINESS_BOUNDARY

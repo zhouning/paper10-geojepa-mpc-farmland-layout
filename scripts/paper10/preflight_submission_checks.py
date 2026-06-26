@@ -3290,10 +3290,28 @@ def check_paper10_submission_readiness_boundary_current(root: Path) -> CheckResu
             missing_tokens.append(f"{doc}: {PAPER10_SUBMISSION_READINESS_BOUNDARY.name}")
 
     hits = []
+    paragraph_start = None
+    paragraph_lines = []
     for line_no, line in enumerate(text.splitlines(), start=1):
-        if is_submission_readiness_positive_claim(line):
+        stripped = line.strip()
+        if stripped:
+            if paragraph_start is None:
+                paragraph_start = line_no
+            paragraph_lines.append(stripped)
+            continue
+        if paragraph_lines:
+            paragraph = " ".join(paragraph_lines)
+            if is_submission_readiness_positive_claim(paragraph):
+                hits.append(
+                    f"{PAPER10_SUBMISSION_READINESS_BOUNDARY}:{paragraph_start}: {paragraph}"
+                )
+            paragraph_start = None
+            paragraph_lines = []
+    if paragraph_lines:
+        paragraph = " ".join(paragraph_lines)
+        if is_submission_readiness_positive_claim(paragraph):
             hits.append(
-                f"{PAPER10_SUBMISSION_READINESS_BOUNDARY}:{line_no}: {line.strip()}"
+                f"{PAPER10_SUBMISSION_READINESS_BOUNDARY}:{paragraph_start}: {paragraph}"
             )
     if hits:
         return CheckResult(
@@ -4926,7 +4944,7 @@ def check_paper10_manuscript_text_table_consistency_audit_current(root: Path) ->
 
 SUBMISSION_READINESS_NEGATIVE_GUARDRAIL = re.compile(
     r"\b("
-    r"not|no-go|blocked|unresolved|pending|does not mean|do not|must not|cannot"
+    r"does not mean|do not|must not|cannot|can't|may not|should not"
     r")\b",
     re.IGNORECASE,
 )
