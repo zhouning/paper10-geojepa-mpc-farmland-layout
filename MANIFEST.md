@@ -313,6 +313,13 @@ data needed for smoke verification.
   boundary.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_longhorizon_seed0_pilot_audit_2026-06-27.json`:
   machine-readable output for the long-horizon seed0 pilot audit.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.md`:
+  source-derived matched seeds 0-4 Paper9/value-filter audit; it links the
+  tracked raw rollout files to the seed0 pilot audit and keeps the result as a
+  descriptive Bishan-only evidence boundary.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.json`:
+  machine-readable output for the matched 5-seed long-horizon confirmatory
+  audit.
 - paper10_geojepa_mpc/experiments/results/e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md:
   source-derived raw-rollout consistency audit for the Bishan 20x16/top5
   frozen anchor; it recomputes five seed rewards from tracked raw step records
@@ -370,6 +377,8 @@ data needed for smoke verification.
   source-derived CEUS monitor-threshold sensitivity audit runner.
 - `paper10_geojepa_mpc/experiments/ceus_mechanism_claim_audit.py`:
   source-derived CEUS mechanism/baseline claim audit runner.
+- `paper10_geojepa_mpc/experiments/real_env_longhorizon_confirmatory_audit.py`:
+  source-derived matched 5-seed real-environment Paper9/value-filter audit runner.
 - scripts/paper10/preflight_submission_checks.py:
   submission preflight checker for archive manifest required fields,
   included-path resolution, excluded/local Git-tracking guardrails,

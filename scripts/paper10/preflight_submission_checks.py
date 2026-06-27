@@ -182,6 +182,12 @@ PAPER10_REAL_ENV_LONGHORIZON_PILOT_AUDIT_MD = (
 PAPER10_REAL_ENV_LONGHORIZON_PILOT_AUDIT_JSON = (
     RESULTS / "e0_paper10_real_env_longhorizon_seed0_pilot_audit_2026-06-27.json"
 )
+PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD = (
+    RESULTS / "e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.md"
+)
+PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_JSON = (
+    RESULTS / "e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.json"
+)
 PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD = (
     RESULTS / "e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md"
 )
@@ -296,6 +302,8 @@ REQUIRED_PATHS = (
     PAPER10_CEUS_REVIEW_OPTIMIZATION_REGISTER,
     PAPER10_REAL_ENV_LONGHORIZON_PILOT_AUDIT_MD,
     PAPER10_REAL_ENV_LONGHORIZON_PILOT_AUDIT_JSON,
+    PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD,
+    PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_JSON,
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD,
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON,
     PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD,
@@ -4473,6 +4481,196 @@ def check_paper10_real_env_longhorizon_pilot_audit_current(root: Path) -> CheckR
         True,
         "Paper10 real-environment long-horizon pilot audit is current and claim-bounded",
     )
+def check_paper10_real_env_longhorizon_confirmatory_audit_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD,
+        PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_JSON,
+        PAPER10_REAL_ENV_LONGHORIZON_PILOT_AUDIT_JSON,
+        PAPER10_CEUS_REVIEW_OPTIMIZATION_REGISTER,
+        REPRODUCIBILITY,
+        MANIFEST,
+        Path("README.md"),
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_real_env_longhorizon_confirmatory_audit_current",
+            False,
+            "missing Paper10 real-environment long-horizon confirmatory audit files: "
+            + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD)
+    try:
+        payload = json.loads(
+            read_text(root / PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_JSON)
+        )
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_real_env_longhorizon_confirmatory_audit_current",
+            False,
+            f"{PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    audit_name = PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD.name
+    linked_docs = [
+        Path("README.md"),
+        Path("MANIFEST.md"),
+        Path("REPRODUCIBILITY.md"),
+        PAPER10_CEUS_REVIEW_OPTIMIZATION_REGISTER,
+    ]
+    for rel_path in linked_docs:
+        path = root / rel_path
+        if not path.exists():
+            missing_tokens.append(f"{rel_path}: missing file")
+            continue
+        if audit_name not in read_text(path):
+            missing_tokens.append(f"{rel_path}: {audit_name}")
+
+    required_tokens = [
+        "Paper10 real-data long-horizon matched 5-seed audit",
+        "descriptive matched 5-seed result",
+        "| total reward mean | 67.5437 | 69.4705 | 1.9269 |",
+        "| total reward sample std | 7.2246 | 1.0004 | -6.2242 |",
+        "| candidate win count | 0 | 3 | 3 |",
+        "| 0 | 70.9543 | 67.7135 | -3.2408 | 9 |",
+        "| 4 | 78.0925 | 69.8677 | -8.2248 | 2 |",
+        "Matches pilot audit: `True`",
+        "inferential superiority is not supported",
+        "post-hoc tuning",
+    ]
+    for token in required_tokens:
+        if token not in text:
+            missing_tokens.append(
+                f"{PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD}: {token}"
+            )
+
+    expected_values = {
+        ("date",): "2026-06-27",
+        ("status",): "locked matched 5-seed real-data audit",
+        ("source_boundary", "reran_rollouts"): False,
+        ("source_boundary", "protocol_locked"): True,
+        ("source_boundary", "post_hoc_tuning_allowed"): False,
+        ("evidence_boundary", "descriptive_matched_5seed_result"): True,
+        ("evidence_boundary", "descriptive_matched_5seed_mean_reward_higher"): True,
+        ("evidence_boundary", "variance_lower_in_matched_5seed"): True,
+        ("evidence_boundary", "inferential_superiority_supported"): False,
+        ("evidence_boundary", "direct_50_state_scaleup_success_supported"): False,
+        ("evidence_boundary", "post_hoc_tuning_allowed"): False,
+        ("seed0_pilot_linkage", "matches_pilot_audit"): True,
+        ("seed0_pilot_linkage", "baseline_action_trace_match"): True,
+        ("seed0_pilot_linkage", "candidate_action_trace_match"): True,
+        ("paired_comparison", "matched_seeds"): [0, 1, 2, 3, 4],
+        ("paired_comparison", "candidate_win_count"): 3,
+        ("paired_comparison", "candidate_loss_count"): 2,
+    }
+    for path_keys, expected in expected_values.items():
+        value = payload
+        for key in path_keys:
+            if not isinstance(value, dict) or key not in value:
+                missing_tokens.append(
+                    f"{PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_JSON}: "
+                    f"{'.'.join(path_keys)}"
+                )
+                value = None
+                break
+            value = value[key]
+        if value != expected:
+            missing_tokens.append(
+                f"{PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_JSON}: "
+                f"{'.'.join(path_keys)}={value}"
+            )
+
+    float_expectations = {
+        ("policies", "baseline", "aggregate", "total_reward_mean"): 67.5436698503176,
+        ("policies", "baseline", "aggregate", "total_reward_std_sample"): 7.22455439874099,
+        ("policies", "candidate", "aggregate", "total_reward_mean"): 69.47054604253474,
+        ("policies", "candidate", "aggregate", "total_reward_std_sample"): 1.0003610285842477,
+        ("paired_comparison", "total_reward_delta_mean"): 1.9268761922171436,
+        ("paired_comparison", "total_reward_delta_std_sample"): 7.512208608270984,
+    }
+    for path_keys, expected in float_expectations.items():
+        value = payload
+        for key in path_keys:
+            if not isinstance(value, dict) or key not in value:
+                missing_tokens.append(
+                    f"{PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_JSON}: "
+                    f"{'.'.join(path_keys)}"
+                )
+                value = None
+                break
+            value = value[key]
+        if not isinstance(value, (int, float)) or abs(float(value) - expected) > 1e-9:
+            missing_tokens.append(
+                f"{PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_JSON}: "
+                f"{'.'.join(path_keys)}={value}"
+            )
+
+    per_seed = payload.get("paired_comparison", {}).get("per_seed")
+    expected_seed_deltas = [
+        (0, -3.2408477615812643, 9),
+        (1, 3.613740374883278, 1),
+        (2, 8.424238053365706, 1),
+        (3, 9.062029496163603, 2),
+        (4, -8.224779201745605, 2),
+    ]
+    if not isinstance(per_seed, list) or len(per_seed) != 5:
+        missing_tokens.append(
+            f"{PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_JSON}: "
+            f"len(paired_comparison.per_seed)={len(per_seed) if isinstance(per_seed, list) else 'non-list'}"
+        )
+        per_seed = []
+    for index, (seed, expected_delta, expected_divergence) in enumerate(expected_seed_deltas):
+        if index >= len(per_seed):
+            continue
+        row = per_seed[index]
+        if row.get("seed") != seed:
+            missing_tokens.append(
+                f"{PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_JSON}: "
+                f"paired_comparison.per_seed[{index}].seed={row.get('seed')}"
+            )
+        value = row.get("total_reward_delta_candidate_minus_baseline")
+        if not isinstance(value, (int, float)) or abs(float(value) - expected_delta) > 1e-9:
+            missing_tokens.append(
+                f"{PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_JSON}: "
+                f"paired_comparison.per_seed[{index}].delta={value}"
+            )
+        if row.get("first_action_divergence_step") != expected_divergence:
+            missing_tokens.append(
+                f"{PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_JSON}: "
+                f"paired_comparison.per_seed[{index}].first_action_divergence_step="
+                f"{row.get('first_action_divergence_step')}"
+            )
+
+    forbidden_50_state = re.compile("|".join(FORBIDDEN_50_STATE_PATTERNS), re.IGNORECASE)
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if forbidden_50_state.search(line):
+            missing_tokens.append(
+                f"{PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD}:{line_no}: "
+                "positive 50-state wording"
+            )
+        match = UNSUPPORTED_INFERENTIAL_STATS_PATTERN.search(line)
+        if match:
+            missing_tokens.append(
+                f"{PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD}:{line_no}: "
+                f"unsupported inferential wording {match.group(0)}"
+            )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_real_env_longhorizon_confirmatory_audit_current",
+            False,
+            "Paper10 real-environment long-horizon confirmatory audit gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_real_env_longhorizon_confirmatory_audit_current",
+        True,
+        "Paper10 real-environment long-horizon confirmatory audit is current and claim-bounded",
+    )
+
+
 def check_paper10_anchor_raw_rollout_consistency_audit_current(root: Path) -> CheckResult:
     required_files = [
         PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD,
@@ -5357,6 +5555,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_real_env_value_filter_smoke_current,
     check_paper10_real_env_smoke_boundary_audit_current,
     check_paper10_real_env_longhorizon_pilot_audit_current,
+    check_paper10_real_env_longhorizon_confirmatory_audit_current,
     check_paper10_anchor_raw_rollout_consistency_audit_current,
     check_original_vision_validation_registry_current,
 )

@@ -499,6 +499,18 @@ The packaged five-seed summary reports mean total reward `69.4705`, sample
 standard deviation `1.0004`, and a `6.46%` mean-reward improvement over the
 10x12/top4 pilot.
 
+Generate the source-derived matched 5-seed Paper9/value-filter audit from the
+tracked raw rollout files and the seed0 pilot audit:
+
+```powershell
+D:\adk\.venv\Scripts\python.exe -m paper10_geojepa_mpc.experiments.real_env_longhorizon_confirmatory_audit --baseline-json paper10_geojepa_mpc\experiments\results\e0_env_rollout_5seed_h5_k50_executable_mask.json --candidate-json paper10_geojepa_mpc\experiments\results\e0_env_rollout_frontier_random050_value_head_20x16_h5_seed44_top5_blend010_h5_k50_seed0_100step.json --candidate-json paper10_geojepa_mpc\experiments\results\e0_env_rollout_frontier_random050_value_head_20x16_h5_seed44_top5_blend010_h5_k50_seeds1-4_100step.json --seed0-pilot-json paper10_geojepa_mpc\experiments\results\e0_paper10_real_env_longhorizon_seed0_pilot_audit_2026-06-27.json --output-json paper10_geojepa_mpc\experiments\results\e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.json --output-md paper10_geojepa_mpc\experiments\results\e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.md --date 2026-06-27
+```
+
+The audit reports matched Paper9 mean reward `67.5437` and value-filter mean
+reward `69.4705`, with value-filter wins on 3/5 seeds. It is descriptive
+matched-seed evidence only and does not add an inferential or cross-region
+superiority claim.
+
 ## Expected Packaged Evidence
 
 The repository already includes the recorded Paper10 result artifacts under
