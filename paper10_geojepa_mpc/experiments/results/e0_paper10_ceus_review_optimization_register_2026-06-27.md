@@ -16,6 +16,7 @@ needed for stronger claims.
 | Monitor gate may be overclaimed as direct online reward gain. | Mechanism audit detects equal reward between full_gated_masked and ungated_top4. | `e0_paper10_ceus_mechanism_claim_audit_2026-06-27.md` | Monitor gate is framed as evidence control, not a demonstrated online reward-gain mechanism. |
 | Secondary metrics may conflict with reward. | Mechanism audit reports secondary metric tradeoffs against matched Paper9. | `e0_paper10_ceus_mechanism_claim_audit_2026-06-27.md` | The result is mixed: slope and baimu-area deltas align, contiguity delta is a tradeoff. |
 | 50-state evidence may be overstated. | Mechanism audit keeps Stage 3 50-state delta versus Paper9 as a boundary check. | `e0_paper10_ceus_mechanism_claim_audit_2026-06-27.md` | Positive 50-state scale-up remains unsupported because best value-filter delta versus Paper9 is negative. |
+| Full-data smoke conditions were previously mismatched. | Ran matched full-Bishan 5-step smoke runs for matched Paper9 and value-filter with seed 0, H=5, K=50, and executable masks. | `e0_paper10_real_env_matched_smoke_boundary_audit_2026-06-27.md` | The two traces have identical actions and rewards; this supports execution-chain reachability and condition alignment only, not value-filter superiority. |
 
 ## Current technical interpretation
 
@@ -31,7 +32,7 @@ needed for stronger claims.
 
 | open item | why it remains open | required next evidence |
 |---|---|---|
-| New real-data planning-quality evaluation. | The new files are source-derived audits; they do not run new long-horizon real-data rollouts. | A predefined full-data rollout protocol with matched comparator, seeds, and locked metrics. |
+| New real-data planning-quality evaluation. | The new files now include a matched five-step full-Bishan smoke pair, but they still do not provide long-horizon planning-quality evidence. | A predefined full-data rollout protocol with matched comparator, multiple seeds, and locked metrics. |
 | Multi-region robustness. | Dongxing/Neijiang remain calibration or stress-test evidence under current files. | Matched multi-region rollouts with the same baseline policy and monitor gates. |
 | Strong value-filter superiority. | Current ungated_top4 reward matches full_gated_masked in the mechanism packet. | A matched ablation where full value-filtered MPC beats ungated and heuristic comparators under the same rollout settings. |
 | Inferential statistical claims. | Existing policy is descriptive statistics only. | A predefined inferential analysis plan before adding p-values or confidence-interval claims. |

@@ -113,6 +113,43 @@ def test_build_boundary_audit_records_non_comparability_reasons():
     assert audit["smokes"][1]["negative_reward_steps"] == 1
 
 
+def test_build_boundary_audit_detects_identical_matched_step_trace():
+    paper9 = _value_filter_smoke()
+    paper9["configuration"] = dict(paper9["configuration"])
+    paper9["configuration"].update(
+        {
+            "checkpoint": "rank_seed2028.pt",
+            "selector": "paper9",
+            "candidate_score_mode": "value",
+            "candidate_value_weight": 0.5,
+        }
+    )
+    paper9["steps"] = [
+        {"step": 1, "action": 1434, "reward": 0.68},
+        {"step": 2, "action": 2580, "reward": 0.58},
+    ]
+    value_filter = _value_filter_smoke()
+    value_filter["steps"] = [
+        {"step": 1, "action": 1434, "reward": 0.68},
+        {"step": 2, "action": 2580, "reward": 0.58},
+    ]
+
+    audit = build_boundary_audit(
+        [
+            ("matched_paper9", "paper9_report.json", paper9),
+            ("matched_value_filter", "value_filter_report.json", value_filter),
+        ],
+        date="2026-06-27",
+    )
+
+    assert audit["comparability"]["same_step_trace"] is True
+    assert "matched smoke reports have identical action/reward traces" in audit[
+        "comparability"
+    ]["reasons"]
+    assert audit["smokes"][0]["step_trace_signature"] == audit["smokes"][1][
+        "step_trace_signature"
+    ]
+
 def test_markdown_report_keeps_boundary_language_and_shows_key_smoke_rows():
     text = markdown_report(
         build_boundary_audit(

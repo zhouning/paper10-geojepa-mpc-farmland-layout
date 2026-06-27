@@ -1,0 +1,145 @@
+{
+  "comparability": {
+    "different_fields": [
+      "checkpoint",
+      "selector",
+      "candidate_score_mode",
+      "candidate_value_weight"
+    ],
+    "performance_comparison_valid": false,
+    "planning_quality_result": false,
+    "reasons": [
+      "configuration settings differ across smoke reports",
+      "single seed and five executed steps",
+      "matched smoke reports have identical action/reward traces",
+      "value-filter run includes one negative reward step"
+    ],
+    "same_step_trace": true,
+    "short_horizon_performance_comparison": false
+  },
+  "date": "2026-06-27",
+  "interpretation_boundary": "These smoke reports confirm execution-chain reachability only. They are not a planning-quality result, not a short-horizon performance comparison, and not support for a new scale-up claim.",
+  "smokes": [
+    {
+      "candidate_score_mode": "value",
+      "candidate_value_weight": 0.5,
+      "checkpoint": "paper10_geojepa_mpc\\experiments\\checkpoints\\e0_bishan_rank_seed2028\\rank_seed2028.pt",
+      "command": "D:\\adk\\.venv\\Scripts\\python.exe -m paper10_geojepa_mpc.experiments.run_e0_env_rollout_smoke --checkpoint paper10_geojepa_mpc\\experiments\\checkpoints\\e0_bishan_rank_seed2028\\rank_seed2028.pt --prepared-dir D:\\test --rollout-steps 5 --horizon 5 --top-k 50 --seed 0 --device cpu --mask-mode executable --selector paper9 --output reviewer_outputs\\paper10_real_env_matched_paper9_5step_h5_k50_seed0_2026-06-27.json",
+      "date": "2026-06-27",
+      "env_source": "paper9",
+      "final_metrics": {
+        "baimu_area_change_ha": -24.969707818043233,
+        "cont_change": 0.0007628346937216257,
+        "slope_change_pct": -0.10330620803581785
+      },
+      "horizon": 5,
+      "mask_mode": "executable",
+      "min_base_valid": 2381,
+      "min_executable_valid": 2312,
+      "name": "matched_paper9",
+      "negative_reward_steps": 1,
+      "positive_reward_steps": 4,
+      "prepared_dir": "D:\\test",
+      "random_continuation_mode": "independent",
+      "raw_output": "reviewer_outputs\\paper10_real_env_matched_paper9_5step_h5_k50_seed0_2026-06-27.json",
+      "rollout_steps": 5,
+      "seed": 0,
+      "selector": "paper9",
+      "source_report": "paper10_geojepa_mpc\\experiments\\results\\e0_paper10_real_env_matched_paper9_smoke_5step_h5_k50_seed0_2026-06-27.json",
+      "stable_candidate_order": false,
+      "step_trace_signature": [
+        {
+          "action": 1434,
+          "reward": 0.684977197041,
+          "step": 1
+        },
+        {
+          "action": 2580,
+          "reward": 0.580092479365,
+          "step": 2
+        },
+        {
+          "action": 2414,
+          "reward": 1.298268704438,
+          "step": 3
+        },
+        {
+          "action": 2197,
+          "reward": 0.496032027912,
+          "step": 4
+        },
+        {
+          "action": 2379,
+          "reward": -0.633981969497,
+          "step": 5
+        }
+      ],
+      "steps_run": 5,
+      "terminated": false,
+      "top_k": 50,
+      "total_reward": 2.4253884392585983,
+      "truncated": false
+    },
+    {
+      "candidate_score_mode": "blend",
+      "candidate_value_weight": 0.1,
+      "checkpoint": "paper10_geojepa_mpc\\experiments\\checkpoints\\e0_frontier_random050_value_head_20x16_h5_seed44_top5\\value_head_seed3044.pt",
+      "command": "D:\\adk\\.venv\\Scripts\\python.exe -m paper10_geojepa_mpc.experiments.run_e0_env_rollout_smoke --checkpoint paper10_geojepa_mpc\\experiments\\checkpoints\\e0_frontier_random050_value_head_20x16_h5_seed44_top5\\value_head_seed3044.pt --prepared-dir D:\\test --rollout-steps 5 --horizon 5 --top-k 50 --seed 0 --device cpu --mask-mode executable --selector value_filter --candidate-score-mode blend --candidate-value-weight 0.1 --output reviewer_outputs\\paper10_real_env_matched_value_filter_5step_h5_k50_seed0_2026-06-27.json",
+      "date": "2026-06-27",
+      "env_source": "paper9",
+      "final_metrics": {
+        "baimu_area_change_ha": -24.969707818043233,
+        "cont_change": 0.0007628346937216257,
+        "slope_change_pct": -0.10330620803581785
+      },
+      "horizon": 5,
+      "mask_mode": "executable",
+      "min_base_valid": 2381,
+      "min_executable_valid": 2312,
+      "name": "matched_value_filter",
+      "negative_reward_steps": 1,
+      "positive_reward_steps": 4,
+      "prepared_dir": "D:\\test",
+      "random_continuation_mode": "independent",
+      "raw_output": "reviewer_outputs\\paper10_real_env_matched_value_filter_5step_h5_k50_seed0_2026-06-27.json",
+      "rollout_steps": 5,
+      "seed": 0,
+      "selector": "value_filter",
+      "source_report": "paper10_geojepa_mpc\\experiments\\results\\e0_paper10_real_env_matched_value_filter_smoke_5step_h5_k50_seed0_2026-06-27.json",
+      "stable_candidate_order": false,
+      "step_trace_signature": [
+        {
+          "action": 1434,
+          "reward": 0.684977197041,
+          "step": 1
+        },
+        {
+          "action": 2580,
+          "reward": 0.580092479365,
+          "step": 2
+        },
+        {
+          "action": 2414,
+          "reward": 1.298268704438,
+          "step": 3
+        },
+        {
+          "action": 2197,
+          "reward": 0.496032027912,
+          "step": 4
+        },
+        {
+          "action": 2379,
+          "reward": -0.633981969497,
+          "step": 5
+        }
+      ],
+      "steps_run": 5,
+      "terminated": false,
+      "top_k": 50,
+      "total_reward": 2.4253884392585983,
+      "truncated": false
+    }
+  ],
+  "status": "execution-chain boundary audit"
+}

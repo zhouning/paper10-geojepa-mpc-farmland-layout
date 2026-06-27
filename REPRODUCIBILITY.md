@@ -228,6 +228,23 @@ short-horizon performance-comparison use:
 paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_smoke_boundary_audit_2026-06-19.md
 ```
 
+Run the matched full-Bishan five-step smoke pair only as an execution-chain
+and condition-alignment check. These commands use the same seed, H=5, K=50,
+rollout length, and executable mask for matched Paper9 and value-filter:
+
+```powershell
+.\.venv\Scripts\python.exe -m paper10_geojepa_mpc.experiments.run_e0_env_rollout_smoke --checkpoint paper10_geojepa_mpc\experiments\checkpoints\e0_bishan_rank_seed2028\rank_seed2028.pt --prepared-dir D:\test --rollout-steps 5 --horizon 5 --top-k 50 --seed 0 --device cpu --mask-mode executable --selector paper9 --output reviewer_outputs\paper10_real_env_matched_paper9_5step_h5_k50_seed0_2026-06-27.json
+.\.venv\Scripts\python.exe -m paper10_geojepa_mpc.experiments.run_e0_env_rollout_smoke --checkpoint paper10_geojepa_mpc\experiments\checkpoints\e0_frontier_random050_value_head_20x16_h5_seed44_top5\value_head_seed3044.pt --prepared-dir D:\test --rollout-steps 5 --horizon 5 --top-k 50 --seed 0 --device cpu --mask-mode executable --selector value_filter --candidate-score-mode blend --candidate-value-weight 0.1 --output reviewer_outputs\paper10_real_env_matched_value_filter_5step_h5_k50_seed0_2026-06-27.json
+```
+
+Use the matched smoke boundary audit before mentioning these runs. It records
+that the action/reward traces are identical and blocks short-horizon
+value-filter superiority claims:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_matched_smoke_boundary_audit_2026-06-27.md
+```
+
 Use the anchor raw-rollout consistency audit before editing the Bishan
 20x16/top5 anchor result. It recomputes the five seed rewards from tracked raw
 step records and checks the packaged rollout summary and Stage 3 frozen-anchor

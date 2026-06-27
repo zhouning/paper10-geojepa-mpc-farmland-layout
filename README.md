@@ -104,6 +104,9 @@ Paper-facing writing assets are tracked under
 - `e0_paper10_real_env_smoke_5step_h3_k20_seed0_2026-06-18.md`
 - `e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.md`
 - `e0_paper10_real_env_smoke_boundary_audit_2026-06-19.md`
+- `e0_paper10_real_env_matched_paper9_smoke_5step_h5_k50_seed0_2026-06-27.md`
+- `e0_paper10_real_env_matched_value_filter_smoke_5step_h5_k50_seed0_2026-06-27.md`
+- `e0_paper10_real_env_matched_smoke_boundary_audit_2026-06-27.md`
 - `e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md`
 - `e0_paper10_manuscript_result_tables_freeze_2026-06-19.md`
 - `e0_paper10_manuscript_text_table_consistency_audit_2026-06-19.md`
@@ -313,6 +316,12 @@ Use
 as the current boundary audit for the two real-environment smoke reports. It
 records that they use different checkpoint, selector, horizon, and top_k
 settings and must not be treated as a short-horizon performance comparison.
+Use
+`paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_matched_smoke_boundary_audit_2026-06-27.md`
+as the current matched full-Bishan smoke boundary audit. It records that the
+matched Paper9 and value-filter five-step H=5/K=50 traces are identical and
+therefore support execution-chain reachability only, not short-horizon
+value-filter superiority.
 Use
 `paper10_geojepa_mpc/experiments/results/e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md`
 as the current source-derived raw-rollout consistency audit for the Bishan

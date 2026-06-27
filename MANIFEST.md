@@ -291,6 +291,19 @@ data needed for smoke verification.
   prevent short-horizon performance-comparison use.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_smoke_boundary_audit_2026-06-19.json`:
   machine-readable output for the real-environment smoke boundary audit.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_matched_paper9_smoke_5step_h5_k50_seed0_2026-06-27.md`:
+  matched full-Bishan five-step H=5/K=50 Paper9 smoke report.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_matched_paper9_smoke_5step_h5_k50_seed0_2026-06-27.json`:
+  machine-readable output for the matched Paper9 smoke report.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_matched_value_filter_smoke_5step_h5_k50_seed0_2026-06-27.md`:
+  matched full-Bishan five-step H=5/K=50 value-filter smoke report.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_matched_value_filter_smoke_5step_h5_k50_seed0_2026-06-27.json`:
+  machine-readable output for the matched value-filter smoke report.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_matched_smoke_boundary_audit_2026-06-27.md`:
+  boundary audit for the matched full-Bishan smoke pair, recording identical
+  action/reward traces and the no-performance-claim boundary.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_matched_smoke_boundary_audit_2026-06-27.json`:
+  machine-readable output for the matched smoke boundary audit.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md`:
   source-derived raw-rollout consistency audit for the Bishan 20x16/top5
   frozen anchor; it recomputes five seed rewards from tracked raw step records

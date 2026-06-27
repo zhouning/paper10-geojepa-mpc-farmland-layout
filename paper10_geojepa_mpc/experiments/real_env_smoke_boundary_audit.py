@@ -19,6 +19,19 @@ def _fmt(value: float) -> str:
     return f"{float(value):.4f}"
 
 
+def _step_trace_signature(payload: dict) -> list[dict]:
+    signature = []
+    for step in payload.get("steps", []):
+        signature.append(
+            {
+                "step": int(step.get("step", len(signature) + 1)),
+                "action": int(step.get("action", -1)),
+                "reward": round(float(step.get("reward", 0.0)), 12),
+            }
+        )
+    return signature
+
+
 def _smoke_row(name: str, source_report: str, payload: dict) -> dict:
     config = payload.get("configuration", {})
     outcome = payload.get("outcome", {})
@@ -55,6 +68,7 @@ def _smoke_row(name: str, source_report: str, payload: dict) -> dict:
             "cont_change": float(metrics.get("cont_change", 0.0)),
             "baimu_area_change_ha": float(metrics.get("baimu_area_change_ha", 0.0)),
         },
+        "step_trace_signature": _step_trace_signature(payload),
     }
 
 
@@ -67,7 +81,21 @@ def _different_fields(smokes: list[dict]) -> list[str]:
     return different
 
 
-def _comparability_reasons(smokes: list[dict], different_fields: list[str]) -> list[str]:
+def _same_step_trace(smokes: list[dict]) -> bool:
+    if len(smokes) < 2:
+        return False
+    signatures = [smoke.get("step_trace_signature", []) for smoke in smokes]
+    if not signatures[0]:
+        return False
+    return all(signature == signatures[0] for signature in signatures[1:])
+
+
+def _comparability_reasons(
+    smokes: list[dict],
+    different_fields: list[str],
+    *,
+    same_step_trace: bool,
+) -> list[str]:
     reasons = []
     if different_fields:
         reasons.append(
@@ -81,8 +109,16 @@ def _comparability_reasons(smokes: list[dict], different_fields: list[str]) -> l
         smoke.get("steps_run") for smoke in smokes
     } == {5}:
         reasons.append("single seed and five executed steps")
-    if any(smoke.get("negative_reward_steps", 0) for smoke in smokes):
+    if same_step_trace:
+        reasons.append("matched smoke reports have identical action/reward traces")
+    if any(
+        smoke.get("selector") == "value_filter"
+        and smoke.get("negative_reward_steps", 0)
+        for smoke in smokes
+    ):
         reasons.append("value-filter run includes one negative reward step")
+    elif any(smoke.get("negative_reward_steps", 0) for smoke in smokes):
+        reasons.append("at least one smoke report includes a negative reward step")
     return reasons
 
 
@@ -96,6 +132,7 @@ def build_boundary_audit(
         for name, source_report, payload in smoke_reports
     ]
     different_fields = _different_fields(smokes)
+    same_trace = _same_step_trace(smokes)
     return {
         "date": date,
         "status": "execution-chain boundary audit",
@@ -104,8 +141,13 @@ def build_boundary_audit(
             "performance_comparison_valid": False,
             "planning_quality_result": False,
             "short_horizon_performance_comparison": False,
+            "same_step_trace": same_trace,
             "different_fields": different_fields,
-            "reasons": _comparability_reasons(smokes, different_fields),
+            "reasons": _comparability_reasons(
+                smokes,
+                different_fields,
+                same_step_trace=same_trace,
+            ),
         },
         "interpretation_boundary": (
             "These smoke reports confirm execution-chain reachability only. "
@@ -126,7 +168,9 @@ def markdown_report(payload: dict) -> str:
         "",
         "## Boundary",
         "",
-        "This audit is not a planning-quality result and not a short-horizon performance comparison. It only records that the two tracked real-environment smoke reports exercise the full Bishan execution path.",
+        "This audit is not a planning-quality result and not a short-horizon performance comparison. It only records that the tracked real-environment smoke reports exercise the full Bishan execution path.",
+        "",
+        f"Same action/reward trace: `{str(comparability.get('same_step_trace', False)).lower()}`",
         "",
         "Reasons:",
     ]
@@ -177,7 +221,7 @@ def markdown_report(payload: dict) -> str:
             "",
             payload["interpretation_boundary"],
             "",
-            "The value-filter row contains one negative reward step. That observation keeps the current real-environment evidence in smoke-test territory and prevents treating the row as performance evidence.",
+            "A negative reward step keeps the current real-environment evidence in smoke-test territory and prevents treating the row as performance evidence.",
         ]
     )
     return "\n".join(lines) + "\n"
