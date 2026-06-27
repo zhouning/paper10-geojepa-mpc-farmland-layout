@@ -1,0 +1,59 @@
+{
+  "audit_boundary": "Source-derived claim audit only; not a new rollout, training run, or inferential statistics test.",
+  "baseline_policy": {
+    "default_comparator": "matched_paper9_masked",
+    "default_comparator_condition": "heuristic_paper9_masked",
+    "pairwise_only_role": "diagnostic/model-initialization evidence only; not the default performance comparator"
+  },
+  "claims": {
+    "direct_monitor_gate_reward_gain": {
+      "forbidden_language": "the monitor gate directly caused an online reward gain in the matched top-4/top-5 ablation",
+      "reward_delta": 0.0,
+      "status": "not_supported_equal_reward"
+    },
+    "executable_mask_necessity": {
+      "allowed_language": "the executable mask is necessary for executable rollouts",
+      "negative_zero_swap_steps": 98.0,
+      "status": "supported",
+      "zero_swap_steps": 100.0
+    },
+    "matched_paper9_reward_stability": {
+      "allowed_language": "descriptive reward and variance improvement versus the matched Paper9 masked comparator",
+      "reward_delta": 1.9268761922171507,
+      "status": "descriptive_support",
+      "std_delta": -6.224193370156741
+    },
+    "stage3_50state_positive_scaleup": {
+      "delta_vs_paper9": -0.05235625099593127,
+      "forbidden_language": "the 50-state Stage 3 run demonstrates positive scale-up over the matched Paper9 baseline",
+      "status": "not_supported_boundary"
+    },
+    "value_filter_superiority_vs_ungated": {
+      "forbidden_language": "value filtering alone improves reward over the ungated top-4 condition",
+      "reward_delta": 0.0,
+      "status": "not_supported_equal_reward"
+    }
+  },
+  "secondary_metric_tradeoffs": {
+    "aligned_metrics": [
+      "slope_change_pct_mean",
+      "baimu_area_change_ha_mean"
+    ],
+    "classification": "mixed",
+    "deltas_vs_matched_paper9": {
+      "baimu_area_change_ha_mean": 4.5904857148242115,
+      "cont_change_mean": -0.0002644493604903736,
+      "slope_change_pct_mean": 0.013767641645155537
+    },
+    "metric_direction": {
+      "baimu_area_change_ha_mean": "higher_is_better",
+      "cont_change_mean": "higher_is_better",
+      "slope_change_pct_mean": "higher_is_better"
+    },
+    "neutral_metrics": [],
+    "tradeoff_metrics": [
+      "cont_change_mean"
+    ]
+  },
+  "status": "ceus mechanism-claim audit"
+}

@@ -1,0 +1,2523 @@
+{
+  "rows": [
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.5,
+            "candidate_topk_regret": 0.49231343269348143,
+            "one_step_topk_regret": 1.291640293598175
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.5,
+            "candidate_topk_regret": 0.49231343269348143,
+            "one_step_topk_regret": 1.291640293598175
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.5,
+            "candidate_topk_regret": 0.49231343269348143,
+            "one_step_topk_regret": 1.291640293598175
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_continue_current_default_stop",
+      "default_failed_metrics": [
+        "candidate_topk_regret"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.5,
+        "candidate_topk_regret": 0.49231343269348143,
+        "one_step_topk_regret": 1.291640293598175
+      },
+      "name": "bishan_10x12_top4",
+      "pass_count": 0,
+      "pass_fraction": 0.0,
+      "recorded_decision": "continue",
+      "recorded_threshold_pass": true,
+      "recorded_thresholds": {
+        "candidate_topk_overlap_min": 0.4,
+        "candidate_topk_regret_max": 0.75,
+        "name": "recorded",
+        "one_step_topk_regret_min": 0.5
+      },
+      "stability_class": "robust_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "historical_thresholds",
+      "top_k": 4
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [],
+          "metrics": {
+            "candidate_topk_overlap": 0.6300000000000001,
+            "candidate_topk_regret": 0.18767197132110597,
+            "one_step_topk_regret": 2.462647271156311
+          },
+          "passes": true,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [],
+          "metrics": {
+            "candidate_topk_overlap": 0.6300000000000001,
+            "candidate_topk_regret": 0.18767197132110597,
+            "one_step_topk_regret": 2.462647271156311
+          },
+          "passes": true,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [],
+          "metrics": {
+            "candidate_topk_overlap": 0.6300000000000001,
+            "candidate_topk_regret": 0.18767197132110597,
+            "one_step_topk_regret": 2.462647271156311
+          },
+          "passes": true,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_continue_current_default_pass",
+      "default_failed_metrics": [],
+      "default_pass": true,
+      "metrics": {
+        "candidate_topk_overlap": 0.6300000000000001,
+        "candidate_topk_regret": 0.18767197132110597,
+        "one_step_topk_regret": 2.462647271156311
+      },
+      "name": "bishan_20x16_top5",
+      "pass_count": 3,
+      "pass_fraction": 1.0,
+      "recorded_decision": "continue",
+      "recorded_threshold_pass": true,
+      "recorded_thresholds": {
+        "candidate_topk_overlap_min": 0.5,
+        "candidate_topk_regret_max": 0.25,
+        "name": "recorded",
+        "one_step_topk_regret_min": 0.25
+      },
+      "stability_class": "robust_pass",
+      "threshold_count": 3,
+      "threshold_provenance": "default_thresholds",
+      "top_k": 5
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.4875,
+            "candidate_topk_regret": 0.46797910928726194,
+            "one_step_topk_regret": 2.462647271156311
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.4875,
+            "candidate_topk_regret": 0.46797910928726194,
+            "one_step_topk_regret": 2.462647271156311
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.4875,
+            "candidate_topk_regret": 0.46797910928726194,
+            "one_step_topk_regret": 2.462647271156311
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "candidate_topk_regret",
+        "candidate_topk_overlap"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.4875,
+        "candidate_topk_regret": 0.46797910928726194,
+        "one_step_topk_regret": 2.462647271156311
+      },
+      "name": "bishan_20x16_top4",
+      "pass_count": 0,
+      "pass_fraction": 0.0,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": false,
+      "recorded_thresholds": {
+        "candidate_topk_overlap_min": 0.5,
+        "candidate_topk_regret_max": 0.25,
+        "name": "recorded",
+        "one_step_topk_regret_min": 0.25
+      },
+      "stability_class": "robust_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "default_thresholds",
+      "top_k": 4
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.5880000000000001,
+            "candidate_topk_regret": 0.4203803277015686,
+            "one_step_topk_regret": 2.7525760996341706
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.5880000000000001,
+            "candidate_topk_regret": 0.4203803277015686,
+            "one_step_topk_regret": 2.7525760996341706
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.5880000000000001,
+            "candidate_topk_regret": 0.4203803277015686,
+            "one_step_topk_regret": 2.7525760996341706
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "candidate_topk_regret"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.5880000000000001,
+        "candidate_topk_regret": 0.4203803277015686,
+        "one_step_topk_regret": 2.7525760996341706
+      },
+      "name": "frontier_random050_50x16_h5_seed47_f050_top5",
+      "pass_count": 0,
+      "pass_fraction": 0.0,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "robust_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 5
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.6299999999999999,
+            "candidate_topk_regret": 0.3399780821800232,
+            "one_step_topk_regret": 1.1834070301055908
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.6299999999999999,
+            "candidate_topk_regret": 0.3399780821800232,
+            "one_step_topk_regret": 1.1834070301055908
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.6299999999999999,
+            "candidate_topk_regret": 0.3399780821800232,
+            "one_step_topk_regret": 1.1834070301055908
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "candidate_topk_regret"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.6299999999999999,
+        "candidate_topk_regret": 0.3399780821800232,
+        "one_step_topk_regret": 1.1834070301055908
+      },
+      "name": "frontier_random050_50x16_h5_seed47_f050_top6",
+      "pass_count": 0,
+      "pass_fraction": 0.0,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "robust_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 6
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.705,
+            "candidate_topk_regret": 0.272598934173584,
+            "one_step_topk_regret": 0.22681126594543458
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.705,
+            "candidate_topk_regret": 0.272598934173584,
+            "one_step_topk_regret": 0.22681126594543458
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [],
+          "metrics": {
+            "candidate_topk_overlap": 0.705,
+            "candidate_topk_regret": 0.272598934173584,
+            "one_step_topk_regret": 0.22681126594543458
+          },
+          "passes": true,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "candidate_topk_regret",
+        "one_step_topk_regret"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.705,
+        "candidate_topk_regret": 0.272598934173584,
+        "one_step_topk_regret": 0.22681126594543458
+      },
+      "name": "frontier_random050_50x16_h5_seed47_f050_top8",
+      "pass_count": 1,
+      "pass_fraction": 0.3333333333333333,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "threshold_sensitive_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 8
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.7420000000000002,
+            "candidate_topk_regret": 0.18437810897827148,
+            "one_step_topk_regret": 0.18437810897827148
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.7420000000000002,
+            "candidate_topk_regret": 0.18437810897827148,
+            "one_step_topk_regret": 0.18437810897827148
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [],
+          "metrics": {
+            "candidate_topk_overlap": 0.7420000000000002,
+            "candidate_topk_regret": 0.18437810897827148,
+            "one_step_topk_regret": 0.18437810897827148
+          },
+          "passes": true,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "one_step_topk_regret"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.7420000000000002,
+        "candidate_topk_regret": 0.18437810897827148,
+        "one_step_topk_regret": 0.18437810897827148
+      },
+      "name": "frontier_random050_50x16_h5_seed47_f050_top10",
+      "pass_count": 1,
+      "pass_fraction": 0.3333333333333333,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "threshold_sensitive_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 10
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.805,
+            "candidate_topk_regret": 0.07106719017028809,
+            "one_step_topk_regret": 0.18437810897827148
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.805,
+            "candidate_topk_regret": 0.07106719017028809,
+            "one_step_topk_regret": 0.18437810897827148
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [],
+          "metrics": {
+            "candidate_topk_overlap": 0.805,
+            "candidate_topk_regret": 0.07106719017028809,
+            "one_step_topk_regret": 0.18437810897827148
+          },
+          "passes": true,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "one_step_topk_regret"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.805,
+        "candidate_topk_regret": 0.07106719017028809,
+        "one_step_topk_regret": 0.18437810897827148
+      },
+      "name": "frontier_random050_50x16_h5_seed47_f050_top12",
+      "pass_count": 1,
+      "pass_fraction": 0.3333333333333333,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "threshold_sensitive_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 12
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.5880000000000001,
+            "candidate_topk_regret": 0.2690488862991333,
+            "one_step_topk_regret": 2.551508512496948
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.5880000000000001,
+            "candidate_topk_regret": 0.2690488862991333,
+            "one_step_topk_regret": 2.551508512496948
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [],
+          "metrics": {
+            "candidate_topk_overlap": 0.5880000000000001,
+            "candidate_topk_regret": 0.2690488862991333,
+            "one_step_topk_regret": 2.551508512496948
+          },
+          "passes": true,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "candidate_topk_regret"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.5880000000000001,
+        "candidate_topk_regret": 0.2690488862991333,
+        "one_step_topk_regret": 2.551508512496948
+      },
+      "name": "frontier_random050_50x16_h5_seed48_f050_top5",
+      "pass_count": 1,
+      "pass_fraction": 0.3333333333333333,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "threshold_sensitive_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 5
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.64,
+            "candidate_topk_regret": 0.2469981336593628,
+            "one_step_topk_regret": 2.3227433919906617
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [],
+          "metrics": {
+            "candidate_topk_overlap": 0.64,
+            "candidate_topk_regret": 0.2469981336593628,
+            "one_step_topk_regret": 2.3227433919906617
+          },
+          "passes": true,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [],
+          "metrics": {
+            "candidate_topk_overlap": 0.64,
+            "candidate_topk_regret": 0.2469981336593628,
+            "one_step_topk_regret": 2.3227433919906617
+          },
+          "passes": true,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_continue_current_default_pass",
+      "default_failed_metrics": [],
+      "default_pass": true,
+      "metrics": {
+        "candidate_topk_overlap": 0.64,
+        "candidate_topk_regret": 0.2469981336593628,
+        "one_step_topk_regret": 2.3227433919906617
+      },
+      "name": "frontier_random050_50x16_h5_seed48_f050_top6",
+      "pass_count": 2,
+      "pass_fraction": 0.6666666666666666,
+      "recorded_decision": "continue",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "threshold_sensitive_pass",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 6
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.7175,
+            "candidate_topk_regret": 0.16044301986694337,
+            "one_step_topk_regret": 0.23175767421722412
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.7175,
+            "candidate_topk_regret": 0.16044301986694337,
+            "one_step_topk_regret": 0.23175767421722412
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [],
+          "metrics": {
+            "candidate_topk_overlap": 0.7175,
+            "candidate_topk_regret": 0.16044301986694337,
+            "one_step_topk_regret": 0.23175767421722412
+          },
+          "passes": true,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "one_step_topk_regret"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.7175,
+        "candidate_topk_regret": 0.16044301986694337,
+        "one_step_topk_regret": 0.23175767421722412
+      },
+      "name": "frontier_random050_50x16_h5_seed48_f050_top8",
+      "pass_count": 1,
+      "pass_fraction": 0.3333333333333333,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "threshold_sensitive_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 8
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.76,
+            "candidate_topk_regret": 0.16044301986694337,
+            "one_step_topk_regret": 0.16044301986694337
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.76,
+            "candidate_topk_regret": 0.16044301986694337,
+            "one_step_topk_regret": 0.16044301986694337
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [],
+          "metrics": {
+            "candidate_topk_overlap": 0.76,
+            "candidate_topk_regret": 0.16044301986694337,
+            "one_step_topk_regret": 0.16044301986694337
+          },
+          "passes": true,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "one_step_topk_regret"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.76,
+        "candidate_topk_regret": 0.16044301986694337,
+        "one_step_topk_regret": 0.16044301986694337
+      },
+      "name": "frontier_random050_50x16_h5_seed48_f050_top10",
+      "pass_count": 1,
+      "pass_fraction": 0.3333333333333333,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "threshold_sensitive_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 10
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.8066666666666665,
+            "candidate_topk_regret": 0.007958965301513672,
+            "one_step_topk_regret": 0.10098428726196289
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.8066666666666665,
+            "candidate_topk_regret": 0.007958965301513672,
+            "one_step_topk_regret": 0.10098428726196289
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [],
+          "metrics": {
+            "candidate_topk_overlap": 0.8066666666666665,
+            "candidate_topk_regret": 0.007958965301513672,
+            "one_step_topk_regret": 0.10098428726196289
+          },
+          "passes": true,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "one_step_topk_regret"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.8066666666666665,
+        "candidate_topk_regret": 0.007958965301513672,
+        "one_step_topk_regret": 0.10098428726196289
+      },
+      "name": "frontier_random050_50x16_h5_seed48_f050_top12",
+      "pass_count": 1,
+      "pass_fraction": 0.3333333333333333,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "threshold_sensitive_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 12
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.52,
+            "candidate_topk_regret": 0.47383216142654416,
+            "one_step_topk_regret": 2.879281826019287
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.52,
+            "candidate_topk_regret": 0.47383216142654416,
+            "one_step_topk_regret": 2.879281826019287
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.52,
+            "candidate_topk_regret": 0.47383216142654416,
+            "one_step_topk_regret": 2.879281826019287
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "candidate_topk_regret"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.52,
+        "candidate_topk_regret": 0.47383216142654416,
+        "one_step_topk_regret": 2.879281826019287
+      },
+      "name": "frontier_random050_50x20_h5_seed47_f050_top5",
+      "pass_count": 0,
+      "pass_fraction": 0.0,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "robust_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 5
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.5599999999999999,
+            "candidate_topk_regret": 0.3927612900733948,
+            "one_step_topk_regret": 1.8121560859680175
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.5599999999999999,
+            "candidate_topk_regret": 0.3927612900733948,
+            "one_step_topk_regret": 1.8121560859680175
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.5599999999999999,
+            "candidate_topk_regret": 0.3927612900733948,
+            "one_step_topk_regret": 1.8121560859680175
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "candidate_topk_regret"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.5599999999999999,
+        "candidate_topk_regret": 0.3927612900733948,
+        "one_step_topk_regret": 1.8121560859680175
+      },
+      "name": "frontier_random050_50x20_h5_seed47_f050_top6",
+      "pass_count": 0,
+      "pass_fraction": 0.0,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "robust_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 6
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.6125,
+            "candidate_topk_regret": 0.20538142442703247,
+            "one_step_topk_regret": 0.16224599361419678
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.6125,
+            "candidate_topk_regret": 0.20538142442703247,
+            "one_step_topk_regret": 0.16224599361419678
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [],
+          "metrics": {
+            "candidate_topk_overlap": 0.6125,
+            "candidate_topk_regret": 0.20538142442703247,
+            "one_step_topk_regret": 0.16224599361419678
+          },
+          "passes": true,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "one_step_topk_regret"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.6125,
+        "candidate_topk_regret": 0.20538142442703247,
+        "one_step_topk_regret": 0.16224599361419678
+      },
+      "name": "frontier_random050_50x20_h5_seed47_f050_top8",
+      "pass_count": 1,
+      "pass_fraction": 0.3333333333333333,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "threshold_sensitive_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 8
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.7,
+            "candidate_topk_regret": 0.08282930374145508,
+            "one_step_topk_regret": 0.08282930374145508
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.7,
+            "candidate_topk_regret": 0.08282930374145508,
+            "one_step_topk_regret": 0.08282930374145508
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.7,
+            "candidate_topk_regret": 0.08282930374145508,
+            "one_step_topk_regret": 0.08282930374145508
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "one_step_topk_regret"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.7,
+        "candidate_topk_regret": 0.08282930374145508,
+        "one_step_topk_regret": 0.08282930374145508
+      },
+      "name": "frontier_random050_50x20_h5_seed47_f050_top10",
+      "pass_count": 0,
+      "pass_fraction": 0.0,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "robust_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 10
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.7333333333333334,
+            "candidate_topk_regret": 0.08282930374145508,
+            "one_step_topk_regret": 0.08205988883972168
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.7333333333333334,
+            "candidate_topk_regret": 0.08282930374145508,
+            "one_step_topk_regret": 0.08205988883972168
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.7333333333333334,
+            "candidate_topk_regret": 0.08282930374145508,
+            "one_step_topk_regret": 0.08205988883972168
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "one_step_topk_regret"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.7333333333333334,
+        "candidate_topk_regret": 0.08282930374145508,
+        "one_step_topk_regret": 0.08205988883972168
+      },
+      "name": "frontier_random050_50x20_h5_seed47_f050_top12",
+      "pass_count": 0,
+      "pass_fraction": 0.0,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "robust_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 12
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.4760000000000001,
+            "candidate_topk_regret": 0.8057617402076721,
+            "one_step_topk_regret": 2.1545803785324096
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.4760000000000001,
+            "candidate_topk_regret": 0.8057617402076721,
+            "one_step_topk_regret": 2.1545803785324096
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.4760000000000001,
+            "candidate_topk_regret": 0.8057617402076721,
+            "one_step_topk_regret": 2.1545803785324096
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "candidate_topk_regret",
+        "candidate_topk_overlap"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.4760000000000001,
+        "candidate_topk_regret": 0.8057617402076721,
+        "one_step_topk_regret": 2.1545803785324096
+      },
+      "name": "frontier_random050_50x20_h5_seed48_f050_top5",
+      "pass_count": 0,
+      "pass_fraction": 0.0,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "robust_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 5
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.5333333333333333,
+            "candidate_topk_regret": 0.8013247036933899,
+            "one_step_topk_regret": 0.5291804933547973
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.5333333333333333,
+            "candidate_topk_regret": 0.8013247036933899,
+            "one_step_topk_regret": 0.5291804933547973
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.5333333333333333,
+            "candidate_topk_regret": 0.8013247036933899,
+            "one_step_topk_regret": 0.5291804933547973
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "candidate_topk_regret"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.5333333333333333,
+        "candidate_topk_regret": 0.8013247036933899,
+        "one_step_topk_regret": 0.5291804933547973
+      },
+      "name": "frontier_random050_50x20_h5_seed48_f050_top6",
+      "pass_count": 0,
+      "pass_fraction": 0.0,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "robust_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 6
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.6,
+            "candidate_topk_regret": 0.7383690571784973,
+            "one_step_topk_regret": 0.0479627513885498
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.6,
+            "candidate_topk_regret": 0.7383690571784973,
+            "one_step_topk_regret": 0.0479627513885498
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.6,
+            "candidate_topk_regret": 0.7383690571784973,
+            "one_step_topk_regret": 0.0479627513885498
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "candidate_topk_regret",
+        "one_step_topk_regret"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.6,
+        "candidate_topk_regret": 0.7383690571784973,
+        "one_step_topk_regret": 0.0479627513885498
+      },
+      "name": "frontier_random050_50x20_h5_seed48_f050_top8",
+      "pass_count": 0,
+      "pass_fraction": 0.0,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "robust_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 8
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.7279999999999999,
+            "candidate_topk_regret": 0.037111244201660155,
+            "one_step_topk_regret": 0.037111244201660155
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.7279999999999999,
+            "candidate_topk_regret": 0.037111244201660155,
+            "one_step_topk_regret": 0.037111244201660155
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.7279999999999999,
+            "candidate_topk_regret": 0.037111244201660155,
+            "one_step_topk_regret": 0.037111244201660155
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "one_step_topk_regret"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.7279999999999999,
+        "candidate_topk_regret": 0.037111244201660155,
+        "one_step_topk_regret": 0.037111244201660155
+      },
+      "name": "frontier_random050_50x20_h5_seed48_f050_top10",
+      "pass_count": 0,
+      "pass_fraction": 0.0,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "robust_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 10
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.7516666666666667,
+            "candidate_topk_regret": 0.037111244201660155,
+            "one_step_topk_regret": 0.037111244201660155
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.7516666666666667,
+            "candidate_topk_regret": 0.037111244201660155,
+            "one_step_topk_regret": 0.037111244201660155
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.7516666666666667,
+            "candidate_topk_regret": 0.037111244201660155,
+            "one_step_topk_regret": 0.037111244201660155
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "one_step_topk_regret"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.7516666666666667,
+        "candidate_topk_regret": 0.037111244201660155,
+        "one_step_topk_regret": 0.037111244201660155
+      },
+      "name": "frontier_random050_50x20_h5_seed48_f050_top12",
+      "pass_count": 0,
+      "pass_fraction": 0.0,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "robust_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 12
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.33599999999999997,
+            "candidate_topk_regret": 0.7521915316581727,
+            "one_step_topk_regret": 2.6213339626789094
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.33599999999999997,
+            "candidate_topk_regret": 0.7521915316581727,
+            "one_step_topk_regret": 2.6213339626789094
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.33599999999999997,
+            "candidate_topk_regret": 0.7521915316581727,
+            "one_step_topk_regret": 2.6213339626789094
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "candidate_topk_regret",
+        "candidate_topk_overlap"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.33599999999999997,
+        "candidate_topk_regret": 0.7521915316581727,
+        "one_step_topk_regret": 2.6213339626789094
+      },
+      "name": "frontier_random050_50x24_h5_seed47_f075_top5",
+      "pass_count": 0,
+      "pass_fraction": 0.0,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "robust_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 5
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.36333333333333334,
+            "candidate_topk_regret": 0.7521915316581727,
+            "one_step_topk_regret": 2.5070266127586365
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.36333333333333334,
+            "candidate_topk_regret": 0.7521915316581727,
+            "one_step_topk_regret": 2.5070266127586365
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.36333333333333334,
+            "candidate_topk_regret": 0.7521915316581727,
+            "one_step_topk_regret": 2.5070266127586365
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "candidate_topk_regret",
+        "candidate_topk_overlap"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.36333333333333334,
+        "candidate_topk_regret": 0.7521915316581727,
+        "one_step_topk_regret": 2.5070266127586365
+      },
+      "name": "frontier_random050_50x24_h5_seed47_f075_top6",
+      "pass_count": 0,
+      "pass_fraction": 0.0,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "robust_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 6
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.4325,
+            "candidate_topk_regret": 0.7439931201934814,
+            "one_step_topk_regret": 2.406042363643646
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.4325,
+            "candidate_topk_regret": 0.7439931201934814,
+            "one_step_topk_regret": 2.406042363643646
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.4325,
+            "candidate_topk_regret": 0.7439931201934814,
+            "one_step_topk_regret": 2.406042363643646
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "candidate_topk_regret",
+        "candidate_topk_overlap"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.4325,
+        "candidate_topk_regret": 0.7439931201934814,
+        "one_step_topk_regret": 2.406042363643646
+      },
+      "name": "frontier_random050_50x24_h5_seed47_f075_top8",
+      "pass_count": 0,
+      "pass_fraction": 0.0,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "robust_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 8
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.55,
+            "candidate_topk_regret": 0.2895536994934082,
+            "one_step_topk_regret": 0.47062824249267576
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.55,
+            "candidate_topk_regret": 0.2895536994934082,
+            "one_step_topk_regret": 0.47062824249267576
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [],
+          "metrics": {
+            "candidate_topk_overlap": 0.55,
+            "candidate_topk_regret": 0.2895536994934082,
+            "one_step_topk_regret": 0.47062824249267576
+          },
+          "passes": true,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "candidate_topk_regret"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.55,
+        "candidate_topk_regret": 0.2895536994934082,
+        "one_step_topk_regret": 0.47062824249267576
+      },
+      "name": "frontier_random050_50x24_h5_seed47_f075_top10",
+      "pass_count": 1,
+      "pass_fraction": 0.3333333333333333,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "threshold_sensitive_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 10
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "one_step_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.6466666666666666,
+            "candidate_topk_regret": 0.09792789220809936,
+            "one_step_topk_regret": 0.4295042514801025
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [],
+          "metrics": {
+            "candidate_topk_overlap": 0.6466666666666666,
+            "candidate_topk_regret": 0.09792789220809936,
+            "one_step_topk_regret": 0.4295042514801025
+          },
+          "passes": true,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [],
+          "metrics": {
+            "candidate_topk_overlap": 0.6466666666666666,
+            "candidate_topk_regret": 0.09792789220809936,
+            "one_step_topk_regret": 0.4295042514801025
+          },
+          "passes": true,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_continue_current_default_pass",
+      "default_failed_metrics": [],
+      "default_pass": true,
+      "metrics": {
+        "candidate_topk_overlap": 0.6466666666666666,
+        "candidate_topk_regret": 0.09792789220809936,
+        "one_step_topk_regret": 0.4295042514801025
+      },
+      "name": "frontier_random050_50x24_h5_seed47_f075_top12",
+      "pass_count": 2,
+      "pass_fraction": 0.6666666666666666,
+      "recorded_decision": "continue",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "threshold_sensitive_pass",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 12
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.2799999999999999,
+            "candidate_topk_regret": 1.4478332591056824,
+            "one_step_topk_regret": 3.526983573436737
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.2799999999999999,
+            "candidate_topk_regret": 1.4478332591056824,
+            "one_step_topk_regret": 3.526983573436737
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.2799999999999999,
+            "candidate_topk_regret": 1.4478332591056824,
+            "one_step_topk_regret": 3.526983573436737
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "candidate_topk_regret",
+        "candidate_topk_overlap"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.2799999999999999,
+        "candidate_topk_regret": 1.4478332591056824,
+        "one_step_topk_regret": 3.526983573436737
+      },
+      "name": "frontier_random050_50x24_h5_seed48_f075_top5",
+      "pass_count": 0,
+      "pass_fraction": 0.0,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "robust_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 5
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.33666666666666667,
+            "candidate_topk_regret": 1.4478332591056824,
+            "one_step_topk_regret": 3.490461485385895
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.33666666666666667,
+            "candidate_topk_regret": 1.4478332591056824,
+            "one_step_topk_regret": 3.490461485385895
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.33666666666666667,
+            "candidate_topk_regret": 1.4478332591056824,
+            "one_step_topk_regret": 3.490461485385895
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "candidate_topk_regret",
+        "candidate_topk_overlap"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.33666666666666667,
+        "candidate_topk_regret": 1.4478332591056824,
+        "one_step_topk_regret": 3.490461485385895
+      },
+      "name": "frontier_random050_50x24_h5_seed48_f075_top6",
+      "pass_count": 0,
+      "pass_fraction": 0.0,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "robust_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 6
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.44,
+            "candidate_topk_regret": 1.446487376689911,
+            "one_step_topk_regret": 3.286637327671051
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.44,
+            "candidate_topk_regret": 1.446487376689911,
+            "one_step_topk_regret": 3.286637327671051
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret",
+            "candidate_topk_overlap"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.44,
+            "candidate_topk_regret": 1.446487376689911,
+            "one_step_topk_regret": 3.286637327671051
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "candidate_topk_regret",
+        "candidate_topk_overlap"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.44,
+        "candidate_topk_regret": 1.446487376689911,
+        "one_step_topk_regret": 3.286637327671051
+      },
+      "name": "frontier_random050_50x24_h5_seed48_f075_top8",
+      "pass_count": 0,
+      "pass_fraction": 0.0,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "robust_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 8
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.56,
+            "candidate_topk_regret": 0.7791562914848328,
+            "one_step_topk_regret": 0.5917127132415771
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.56,
+            "candidate_topk_regret": 0.7791562914848328,
+            "one_step_topk_regret": 0.5917127132415771
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.56,
+            "candidate_topk_regret": 0.7791562914848328,
+            "one_step_topk_regret": 0.5917127132415771
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "candidate_topk_regret"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.56,
+        "candidate_topk_regret": 0.7791562914848328,
+        "one_step_topk_regret": 0.5917127132415771
+      },
+      "name": "frontier_random050_50x24_h5_seed48_f075_top10",
+      "pass_count": 0,
+      "pass_fraction": 0.0,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "robust_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 10
+    },
+    {
+      "classifications": [
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.6566666666666667,
+            "candidate_topk_regret": 0.2836338520050049,
+            "one_step_topk_regret": 0.5611930751800537
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.55,
+            "candidate_topk_regret_max": 0.2,
+            "name": "strict",
+            "one_step_topk_regret_min": 0.5
+          }
+        },
+        {
+          "failed_metrics": [
+            "candidate_topk_regret"
+          ],
+          "metrics": {
+            "candidate_topk_overlap": 0.6566666666666667,
+            "candidate_topk_regret": 0.2836338520050049,
+            "one_step_topk_regret": 0.5611930751800537
+          },
+          "passes": false,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.5,
+            "candidate_topk_regret_max": 0.25,
+            "name": "default",
+            "one_step_topk_regret_min": 0.25
+          }
+        },
+        {
+          "failed_metrics": [],
+          "metrics": {
+            "candidate_topk_overlap": 0.6566666666666667,
+            "candidate_topk_regret": 0.2836338520050049,
+            "one_step_topk_regret": 0.5611930751800537
+          },
+          "passes": true,
+          "threshold_set": {
+            "candidate_topk_overlap_min": 0.45,
+            "candidate_topk_regret_max": 0.3,
+            "name": "lenient",
+            "one_step_topk_regret_min": 0.1
+          }
+        }
+      ],
+      "decision_alignment": "recorded_stop_current_default_stop",
+      "default_failed_metrics": [
+        "candidate_topk_regret"
+      ],
+      "default_pass": false,
+      "metrics": {
+        "candidate_topk_overlap": 0.6566666666666667,
+        "candidate_topk_regret": 0.2836338520050049,
+        "one_step_topk_regret": 0.5611930751800537
+      },
+      "name": "frontier_random050_50x24_h5_seed48_f075_top12",
+      "pass_count": 1,
+      "pass_fraction": 0.3333333333333333,
+      "recorded_decision": "stop",
+      "recorded_threshold_pass": null,
+      "recorded_thresholds": null,
+      "stability_class": "threshold_sensitive_stop",
+      "threshold_count": 3,
+      "threshold_provenance": "no_recorded_thresholds",
+      "top_k": 12
+    }
+  ],
+  "status": "monitor-threshold sensitivity audit",
+  "summary_counts": {
+    "robust_pass": 1,
+    "robust_stop": 20,
+    "threshold_sensitive_pass": 2,
+    "threshold_sensitive_stop": 10
+  },
+  "threshold_sets": [
+    {
+      "candidate_topk_overlap_min": 0.55,
+      "candidate_topk_regret_max": 0.2,
+      "name": "strict",
+      "one_step_topk_regret_min": 0.5
+    },
+    {
+      "candidate_topk_overlap_min": 0.5,
+      "candidate_topk_regret_max": 0.25,
+      "name": "default",
+      "one_step_topk_regret_min": 0.25
+    },
+    {
+      "candidate_topk_overlap_min": 0.45,
+      "candidate_topk_regret_max": 0.3,
+      "name": "lenient",
+      "one_step_topk_regret_min": 0.1
+    }
+  ]
+}

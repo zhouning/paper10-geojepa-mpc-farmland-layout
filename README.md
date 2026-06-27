@@ -88,6 +88,9 @@ Paper-facing writing assets are tracked under
 - `e0_paper10_bounded_manuscript_assembly_draft_2026-06-27.md`
 - `e0_paper10_main_figure1_artwork_preview_2026-06-27.md`
 - `e0_paper10_target_journal_fit_assessment_2026-06-27.md`
+- `e0_paper10_ceus_monitor_threshold_sensitivity_2026-06-27.md`
+- `e0_paper10_ceus_mechanism_claim_audit_2026-06-27.md`
+- `e0_paper10_ceus_review_optimization_register_2026-06-27.md`
 - `e0_paper10_experiment_freeze_audit_2026-06-27.md`
 - `e0_paper10_experiment_closure_register_2026-06-27.md`
 - `e0_paper10_project_proposal_opening_report_2026-06-18.md`
@@ -205,6 +208,20 @@ Use
 as the current target-journal route assessment. It recommends a CEUS-first
 route by default, with EMS, CEA, SAT, AI in Agriculture, JAG, and Scientific
 Reports treated as conditional alternatives.
+Use
+`paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_monitor_threshold_sensitivity_2026-06-27.md`
+as the current monitor-threshold sensitivity audit before defending monitor
+threshold choices or the 10x12/top4 historical pilot boundary.
+Use
+`paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_mechanism_claim_audit_2026-06-27.md`
+as the current mechanism/baseline claim audit before interpreting matched
+Paper9, pairwise-only, no-mask, ungated-top4, secondary-metric, or 50-state
+results.
+Use
+`paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_review_optimization_register_2026-06-27.md`
+as the current CEUS review-driven optimization register. It records which
+review concerns were addressed by source-derived technical audits and which
+still need new real-data or multi-region experiments.
 
 Generate the Main Figure 1 workflow preview:
 

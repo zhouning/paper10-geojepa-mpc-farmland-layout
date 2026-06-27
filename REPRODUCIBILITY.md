@@ -74,6 +74,27 @@ submission readiness:
 paper10_geojepa_mpc/experiments/results/e0_paper10_submission_readiness_boundary_2026-06-26.md
 ```
 
+Run the CEUS monitor-threshold sensitivity audit. This command reclassifies
+tracked monitor outputs only; it does not train models or add rollout results:
+
+```powershell
+.\.venv\Scripts\python.exe -m paper10_geojepa_mpc.experiments.monitor_threshold_sensitivity --monitor-json bishan_10x12_top4=paper10_geojepa_mpc\experiments\results\e0_value_label_monitor_frontier_random050_10x12_h5_seed43_top4.json --monitor-json bishan_20x16_top5=paper10_geojepa_mpc\experiments\results\e0_value_label_monitor_frontier_random050_20x16_h5_seed44_top5.json --monitor-json bishan_20x16_top4=paper10_geojepa_mpc\experiments\results\e0_value_label_monitor_frontier_random050_20x16_h5_seed44_top4.json --stage1-matrix-json paper10_geojepa_mpc\experiments\results\e0_original_vision_stage1_50state_label_matrix_2026-06-17.json --output-json reviewer_outputs\e0_paper10_ceus_monitor_threshold_sensitivity.json --output-md reviewer_outputs\e0_paper10_ceus_monitor_threshold_sensitivity.md
+```
+
+Run the CEUS mechanism/baseline claim audit. This command reads the tracked
+mechanism ablation packet and produces a claim-boundary audit only:
+
+```powershell
+.\.venv\Scripts\python.exe -m paper10_geojepa_mpc.experiments.ceus_mechanism_claim_audit --packet-json paper10_geojepa_mpc\experiments\results\e0_paper10_mechanism_ablation_packet_2026-06-20.json --output-json reviewer_outputs\e0_paper10_ceus_mechanism_claim_audit.json --output-md reviewer_outputs\e0_paper10_ceus_mechanism_claim_audit.md
+```
+
+Use the CEUS review-driven optimization register before deciding whether to
+write the bounded manuscript or run stronger-claim experiments:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_review_optimization_register_2026-06-27.md
+```
+
 Generate draft integrated Dongxing Figure 4 and Figure 5 previews from tracked
 CSV source data:
 

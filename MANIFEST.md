@@ -77,6 +77,21 @@ data needed for smoke verification.
   current target-journal route assessment, recommending CEUS first under the
   frozen claim boundary and documenting conditional EMS, CEA, SAT, AI in
   Agriculture, JAG, and Scientific Reports alternatives.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_monitor_threshold_sensitivity_2026-06-27.md`:
+  current CEUS monitor-threshold sensitivity audit, including strict/default/
+  lenient gates and recorded-threshold provenance for historical monitor rows.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_monitor_threshold_sensitivity_2026-06-27.json`:
+  machine-readable output for the monitor-threshold sensitivity audit.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_mechanism_claim_audit_2026-06-27.md`:
+  current CEUS mechanism/baseline claim audit separating matched Paper9,
+  pairwise-only, no-mask, ungated-top4, secondary-metric, and 50-state claim
+  boundaries.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_mechanism_claim_audit_2026-06-27.json`:
+  machine-readable output for the mechanism/baseline claim audit.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_review_optimization_register_2026-06-27.md`:
+  CEUS review-driven optimization register separating addressed technical
+  audit items from unresolved real-data, multi-region, and stronger-claim
+  experiment needs.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_stage3_50x24_candidate_score_sweep_2026-06-20.md`:
   latest 50x24/f075 candidate-score sweep showing the boundary remains below
   the matched Paper9 baseline.
@@ -329,7 +344,11 @@ data needed for smoke verification.
 - `scripts/paper10/plot_integrated_dongxing_figures.py`:
   offline plotting script for integrated Dongxing Figure 4 and Figure 5
   previews from tracked CSV source data.
-- `scripts/paper10/preflight_submission_checks.py`:
+- `paper10_geojepa_mpc/experiments/monitor_threshold_sensitivity.py`:
+  source-derived CEUS monitor-threshold sensitivity audit runner.
+- `paper10_geojepa_mpc/experiments/ceus_mechanism_claim_audit.py`:
+  source-derived CEUS mechanism/baseline claim audit runner.
+- scripts/paper10/preflight_submission_checks.py:
   submission preflight checker for archive manifest required fields,
   included-path resolution, excluded/local Git-tracking guardrails,
   public-facing placeholder leakage, vague data-route wording, prohibited
