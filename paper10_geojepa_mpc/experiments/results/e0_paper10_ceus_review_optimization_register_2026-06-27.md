@@ -17,6 +17,7 @@ needed for stronger claims.
 | Secondary metrics may conflict with reward. | Mechanism audit reports secondary metric tradeoffs against matched Paper9. | `e0_paper10_ceus_mechanism_claim_audit_2026-06-27.md` | The result is mixed: slope and baimu-area deltas align, contiguity delta is a tradeoff. |
 | 50-state evidence may be overstated. | Mechanism audit keeps Stage 3 50-state delta versus Paper9 as a boundary check. | `e0_paper10_ceus_mechanism_claim_audit_2026-06-27.md` | Positive 50-state scale-up remains unsupported because best value-filter delta versus Paper9 is negative. |
 | Full-data smoke conditions were previously mismatched. | Ran matched full-Bishan 5-step smoke runs for matched Paper9 and value-filter with seed 0, H=5, K=50, and executable masks. | `e0_paper10_real_env_matched_smoke_boundary_audit_2026-06-27.md` | The two traces have identical actions and rewards; this supports execution-chain reachability and condition alignment only, not value-filter superiority. |
+| Short matched smokes do not test long-horizon divergence. | Added a locked 100-step seed0 protocol and audit for matched Paper9 versus value-filter under the same H=5/K=50/executable-mask settings. | `e0_paper10_ceus_realdata_longhorizon_protocol_2026-06-27.md`; `e0_paper10_real_env_longhorizon_seed0_pilot_audit_2026-06-27.md` | The value-filter candidate did not beat matched Paper9 on seed0 (`67.7135` versus `70.9543`), so value-filter superiority remains unsupported and matched seeds `0-4` are the next confirmatory step if stronger evidence is still desired. |
 
 ## Current technical interpretation
 
@@ -26,13 +27,14 @@ needed for stronger claims.
 - The code-level audits now block the main overclaims identified by the CEUS
   review: arbitrary threshold selection, ambiguous comparator use, no-mask
   overinterpretation, monitor-gate reward overclaiming, mixed secondary-metric
-  treatment, and positive 50-state scale-up language.
+  treatment, long-horizon value-filter superiority from seed0, and positive
+  50-state scale-up language.
 
 ## Not solved by this pass
 
 | open item | why it remains open | required next evidence |
 |---|---|---|
-| New real-data planning-quality evaluation. | The new files now include a matched five-step full-Bishan smoke pair, but they still do not provide long-horizon planning-quality evidence. | A predefined full-data rollout protocol with matched comparator, multiple seeds, and locked metrics. |
+| New real-data planning-quality evaluation. | The new files now include a matched five-step full-Bishan smoke pair and a locked 100-step seed0 pilot; the seed0 pilot is negative for value-filter superiority and remains single-seed evidence. | The same predefined full-data rollout protocol on matched seeds `0-4`, with locked metrics and no post-hoc threshold or weight tuning. |
 | Multi-region robustness. | Dongxing/Neijiang remain calibration or stress-test evidence under current files. | Matched multi-region rollouts with the same baseline policy and monitor gates. |
 | Strong value-filter superiority. | Current ungated_top4 reward matches full_gated_masked in the mechanism packet. | A matched ablation where full value-filtered MPC beats ungated and heuristic comparators under the same rollout settings. |
 | Inferential statistical claims. | Existing policy is descriptive statistics only. | A predefined inferential analysis plan before adding p-values or confidence-interval claims. |
@@ -42,5 +44,6 @@ needed for stronger claims.
 
 Proceed to a bounded CEUS manuscript rewrite only if the target claim remains:
 evidence-controlled decision-support workflow, not broad agricultural-AI
-scale-up success. If a stronger claim is desired, run the open real-data and
-multi-region experiments before writing the final paper.
+scale-up success. If a stronger value-filter claim is desired, first run the
+locked matched seeds `0-4` real-data protocol and any multi-region experiments
+before writing the final paper.

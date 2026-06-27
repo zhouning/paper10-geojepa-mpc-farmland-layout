@@ -304,7 +304,16 @@ data needed for smoke verification.
   action/reward traces and the no-performance-claim boundary.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_matched_smoke_boundary_audit_2026-06-27.json`:
   machine-readable output for the matched smoke boundary audit.
-- `paper10_geojepa_mpc/experiments/results/e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md`:
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_realdata_longhorizon_protocol_2026-06-27.md`:
+  locked 100-step full-Bishan seed0 matched rollout pilot protocol for the
+  CEUS real-data follow-up.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_longhorizon_seed0_pilot_audit_2026-06-27.md`:
+  seed0 100-step matched Paper9/value-filter pilot audit recording the step-9
+  trace divergence, reward delta, secondary-metric deltas, and no-superiority
+  boundary.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_longhorizon_seed0_pilot_audit_2026-06-27.json`:
+  machine-readable output for the long-horizon seed0 pilot audit.
+- paper10_geojepa_mpc/experiments/results/e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md:
   source-derived raw-rollout consistency audit for the Bishan 20x16/top5
   frozen anchor; it recomputes five seed rewards from tracked raw step records
   and checks the packaged rollout summary and Stage 3 frozen-anchor row.

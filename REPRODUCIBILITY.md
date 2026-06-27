@@ -244,6 +244,21 @@ value-filter superiority claims:
 ```text
 paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_matched_smoke_boundary_audit_2026-06-27.md
 ```
+Use the locked long-horizon protocol before any further matched 100-step
+full-Bishan pilot or confirmatory run:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_realdata_longhorizon_protocol_2026-06-27.md
+```
+
+Use the seed0 long-horizon pilot audit before interpreting the 100-step matched
+Paper9/value-filter pair. It records step-9 trace divergence, Paper9 total
+reward `70.9543`, value-filter total reward `67.7135`, and the boundary that
+this is not final planning-quality evidence:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_longhorizon_seed0_pilot_audit_2026-06-27.md
+```
 
 Use the anchor raw-rollout consistency audit before editing the Bishan
 20x16/top5 anchor result. It recomputes the five seed rewards from tracked raw

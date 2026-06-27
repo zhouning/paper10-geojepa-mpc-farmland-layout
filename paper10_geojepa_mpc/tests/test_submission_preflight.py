@@ -51,8 +51,12 @@ from scripts.paper10.preflight_submission_checks import (
     PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD,
     PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_JSON,
     PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_MD,
+    PAPER10_CEUS_REALDATA_LONGHORIZON_PROTOCOL,
+    PAPER10_CEUS_REVIEW_OPTIMIZATION_REGISTER,
     PAPER10_REAL_ENV_SMOKE_JSON,
     PAPER10_REAL_ENV_SMOKE_MD,
+    PAPER10_REAL_ENV_LONGHORIZON_PILOT_AUDIT_JSON,
+    PAPER10_REAL_ENV_LONGHORIZON_PILOT_AUDIT_MD,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_JSON,
@@ -137,6 +141,10 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_JSON,
     PAPER10_REAL_ENV_SMOKE_MD,
     PAPER10_REAL_ENV_SMOKE_JSON,
+    PAPER10_CEUS_REALDATA_LONGHORIZON_PROTOCOL,
+    PAPER10_CEUS_REVIEW_OPTIMIZATION_REGISTER,
+    PAPER10_REAL_ENV_LONGHORIZON_PILOT_AUDIT_MD,
+    PAPER10_REAL_ENV_LONGHORIZON_PILOT_AUDIT_JSON,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON,
     RESULTS / "e0_archive_release_and_doi_backfill_checklist_2026-06-09.md",
@@ -291,6 +299,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "paper10_real_env_smoke_current" in payload["passed_checks"]
     assert "paper10_real_env_value_filter_smoke_current" in payload["passed_checks"]
     assert "paper10_real_env_smoke_boundary_audit_current" in payload["passed_checks"]
+    assert "paper10_real_env_longhorizon_pilot_audit_current" in payload["passed_checks"]
     assert "paper10_anchor_raw_rollout_consistency_audit_current" in payload["passed_checks"]
     assert "original_vision_validation_registry_current" in payload["passed_checks"]
 
@@ -660,6 +669,20 @@ def test_submission_preflight_minimal_fixture_reports_missing_real_env_smoke_bou
     details = check_details(payload, "paper10_real_env_smoke_boundary_audit_current")
     assert "missing Paper10 real-environment smoke boundary audit files" in details
     assert str(PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_MD) in details
+
+
+def test_submission_preflight_minimal_fixture_reports_missing_real_env_longhorizon_pilot_audit(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    (fixture / PAPER10_REAL_ENV_LONGHORIZON_PILOT_AUDIT_MD).unlink()
+
+    result, payload = run_submission_preflight_json(fixture)
+
+    assert result.returncode == 1
+    assert payload["ok"] is False
+    assert "paper10_real_env_longhorizon_pilot_audit_current" in payload["failed_checks"]
+    details = check_details(payload, "paper10_real_env_longhorizon_pilot_audit_current")
+    assert "missing Paper10 real-environment long-horizon pilot audit files" in details
+    assert str(PAPER10_REAL_ENV_LONGHORIZON_PILOT_AUDIT_MD) in details
 
 
 def test_submission_preflight_minimal_fixture_reports_missing_anchor_raw_rollout_consistency_audit(tmp_path):

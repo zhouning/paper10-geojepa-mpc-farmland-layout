@@ -33,6 +33,11 @@ The latest boundary update is the 2026-06-20 Stage 3 50x24 candidate-score
 sweep on the same `frontier_random050` line. `blend0.10` remained the best
 candidate-filter variant, but it still stayed below the matched Paper9
 baseline, so the manuscript claim boundary did not change.
+A 2026-06-27 locked full-Bishan 100-step seed0 pilot now tests the matched
+Paper9 and Paper10 value-filter policies under the same H=5/K=50/executable-mask
+settings. The two traces diverged at step 9, and the value-filter candidate
+scored `67.7135` versus `70.9543` for matched Paper9. This is tracked as pilot
+evidence only in `paper10_geojepa_mpc/experiments/results/e0_paper10_real_env_longhorizon_seed0_pilot_audit_2026-06-27.md`; it does not support value-filter superiority and points to matched seeds `0-4` as the confirmatory next step.
 
 The previous 10x12/h5 top-4 pilot remains packaged as the direct baseline. Its
 recorded 100-step seeds 0-4 mean total reward is `65.2566` with sample standard
