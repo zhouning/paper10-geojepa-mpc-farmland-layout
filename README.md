@@ -85,6 +85,9 @@ Paper-facing writing assets are tracked under
 - `e0_ceus_stage3_manuscript_reframe_2026-06-18.md`
 - `e0_ceus_stage3_manuscript_draft_2026-06-18.md`
 - `e0_paper10_formal_manuscript_draft_2026-06-20.md`
+- `e0_paper10_bounded_manuscript_assembly_draft_2026-06-27.md`
+- `e0_paper10_experiment_freeze_audit_2026-06-27.md`
+- `e0_paper10_experiment_closure_register_2026-06-27.md`
 - `e0_paper10_project_proposal_opening_report_2026-06-18.md`
 - `e0_paper10_author_decision_matrix_2026-06-18.md`
 - `e0_paper10_formal_manuscript_assembly_blueprint_2026-06-18.md`
@@ -175,6 +178,21 @@ backfill:
 Use `paper10_geojepa_mpc/experiments/results/e0_paper10_submission_readiness_boundary_2026-06-26.md` as the current no-go
 submission-readiness boundary. It records that preflight passing does not mean
 final submission readiness.
+Use
+`paper10_geojepa_mpc/experiments/results/e0_paper10_experiment_freeze_audit_2026-06-27.md`
+as the current algorithm-freeze decision boundary before deciding whether to
+continue algorithm development or move into bounded manuscript assembly. It
+keeps the default path on experiment closure and claim-controlled writing,
+while reserving algorithm redesign for a deliberate stronger-claim track.
+Use
+`paper10_geojepa_mpc/experiments/results/e0_paper10_experiment_closure_register_2026-06-27.md`
+as the current experiment-closure register for default comparator,
+statistics, figure/export, data-route, and algorithm-work decisions before
+the next bounded manuscript assembly pass.
+Use
+`paper10_geojepa_mpc/experiments/results/e0_paper10_bounded_manuscript_assembly_draft_2026-06-27.md`
+as the current bounded manuscript assembly draft before journal-specific
+formatting, figure export, DOI/licence backfill, or data-access wording.
 
 Generate draft integrated Dongxing Figure 4 and Figure 5 previews from tracked
 CSV source data:

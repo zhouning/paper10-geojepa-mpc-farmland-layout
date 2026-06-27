@@ -6,8 +6,8 @@ data needed for smoke verification.
 
 ## Included
 
-- `paper10_geojepa_mpc/`: 352 tracked non-cache files in the active Paper10
-  workspace, including 83 Python files, 115 JSON files, 108 Markdown files,
+- `paper10_geojepa_mpc/`: 355 tracked non-cache files in the active Paper10
+  workspace, including 83 Python files, 115 JSON files, 111 Markdown files,
   11 CSV files,
   9 NPZ files, 10 PyTorch checkpoint files, and 16 log files.
 - `arcgis_toolbox_paper9/private_source/`: 10 Paper9 compatibility source files
@@ -58,6 +58,17 @@ data needed for smoke verification.
   current no-go submission-readiness boundary for the CEUS route, preserving
   unresolved DOI, licence, data-access, citation, statistical-reporting, and
   final figure/export blockers without declaring final submission readiness.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_experiment_freeze_audit_2026-06-27.md`:
+  current algorithm-freeze decision boundary for choosing experiment closure
+  and claim-controlled manuscript assembly by default, while reserving
+  algorithm redesign for deliberate stronger-claim tracks.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_experiment_closure_register_2026-06-27.md`:
+  current experiment-closure register that freezes default comparator,
+  descriptive-statistics, figure/export, data-route, and algorithm-work
+  decisions for the next bounded manuscript assembly pass.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_bounded_manuscript_assembly_draft_2026-06-27.md`:
+  current bounded manuscript assembly draft carrying the 2026-06-20
+  formal draft into the 2026-06-27 freeze and closure boundary.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_stage3_50x24_candidate_score_sweep_2026-06-20.md`:
   latest 50x24/f075 candidate-score sweep showing the boundary remains below
   the matched Paper9 baseline.
