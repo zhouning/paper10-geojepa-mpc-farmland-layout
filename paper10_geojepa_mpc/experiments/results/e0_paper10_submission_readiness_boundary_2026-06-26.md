@@ -13,6 +13,7 @@ submission remains blocked. Preflight passing does not mean final submission rea
 - `e0_paper10_formal_manuscript_draft_2026-06-20.md`
 - `e0_submission_blocker_decision_packet_2026-06-11.md`
 - `e0_paper10_final_figure_table_export_package_2026-06-20.md`
+- `e0_paper10_bounded_manuscript_assembly_draft_2026-06-27.md`
 - `e0_paper10_mechanism_ablation_packet_2026-06-20.md`
 - `e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.md`
 - `e0_paper10_stage3_50x24_candidate_score_sweep_2026-06-20.md`
@@ -26,6 +27,13 @@ submission remains blocked. Preflight passing does not mean final submission rea
 - Prepare figure/table exports under the frozen export contract.
 - Close author decisions for DOI, licence, data access, citation policy,
   statistical reporting, and journal-specific export rules.
+
+## Locked post-5seed source routing
+
+- 5-seed figure/table source routing is locked for the current bounded route.
+- The bounded assembly routes Main Figure 2 and Main Table 2 through the 5-seed confirmatory audit.
+- The final export package routes Main Figure 2 and Main Tables 1-3 through the 5-seed confirmatory audit.
+- This source-routing lock does not close Main Figure 1 artwork, and it does not close repository DOI, licence, full-data access, citation, statistical-reporting, or journal-specific export blockers.
 
 ## Submission blockers
 

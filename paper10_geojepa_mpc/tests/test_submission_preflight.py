@@ -554,6 +554,32 @@ def test_submission_preflight_rejects_final_export_package_missing_5seed_source_
     assert "Main Tables 1-3 5-seed export source" in details
 
 
+def test_submission_preflight_rejects_submission_boundary_without_5seed_source_routing_lock(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    boundary = fixture / PAPER10_SUBMISSION_READINESS_BOUNDARY
+    locked_routing_section = """## Locked post-5seed source routing
+
+- 5-seed figure/table source routing is locked for the current bounded route.
+- The bounded assembly routes Main Figure 2 and Main Table 2 through the 5-seed confirmatory audit.
+- The final export package routes Main Figure 2 and Main Tables 1-3 through the 5-seed confirmatory audit.
+- This source-routing lock does not close Main Figure 1 artwork, and it does not close repository DOI, licence, full-data access, citation, statistical-reporting, or journal-specific export blockers.
+
+"""
+    boundary.write_text(
+        boundary.read_text(encoding="utf-8").replace(locked_routing_section, ""),
+        encoding="utf-8",
+    )
+
+    result, payload = run_submission_preflight_json(fixture)
+
+    assert result.returncode == 1
+    assert payload["ok"] is False
+    assert "paper10_submission_readiness_boundary_current" in payload["failed_checks"]
+    details = check_details(payload, "paper10_submission_readiness_boundary_current")
+    assert "5-seed figure/table source routing is locked" in details
+    assert "does not close Main Figure 1 artwork" in details
+
+
 def test_submission_preflight_minimal_fixture_reports_missing_submission_readiness_boundary(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
     (fixture / PAPER10_SUBMISSION_READINESS_BOUNDARY).unlink()
