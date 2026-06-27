@@ -3331,6 +3331,8 @@ def check_paper10_final_figure_table_export_package_current(root: Path) -> Check
         PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
         PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
         PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD,
+        PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD,
+        PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_JSON,
         INTEGRATED_FIGURE_TABLE_NUMBERING_FREEZE,
         FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
         INTEGRATED_DONGXING_FIGURE_PLAN,
@@ -3391,6 +3393,20 @@ def check_paper10_final_figure_table_export_package_current(root: Path) -> Check
             missing_tokens.append(
                 f"{PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE}: "
                 f"{item_name}.{expected_status}"
+            )
+
+    five_seed_export_token = (
+        "e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.md/JSON"
+    )
+    for item_name in ("Main Figure 2", "Main Tables 1-3"):
+        row_line = next(
+            (line.strip() for line in lines if line.startswith(f"| {item_name} |")),
+            "",
+        )
+        if five_seed_export_token not in row_line:
+            missing_tokens.append(
+                f"{PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE}: "
+                f"{item_name} 5-seed export source"
             )
 
     if missing_tokens:

@@ -531,6 +531,29 @@ def test_submission_preflight_minimal_fixture_reports_missing_final_export_packa
     assert str(PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE) in details
 
 
+def test_submission_preflight_rejects_final_export_package_missing_5seed_source_route(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    package = fixture / PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE
+    updated_lines = []
+    for line in package.read_text(encoding="utf-8").splitlines():
+        if line.startswith("| Main Figure 2 |") or line.startswith("| Main Tables 1-3 |"):
+            line = line.replace(
+                "e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.md/JSON",
+                "legacy rollout summaries",
+            )
+        updated_lines.append(line)
+    package.write_text("\n".join(updated_lines) + "\n", encoding="utf-8")
+
+    result, payload = run_submission_preflight_json(fixture)
+
+    assert result.returncode == 1
+    assert payload["ok"] is False
+    assert "paper10_final_figure_table_export_package_current" in payload["failed_checks"]
+    details = check_details(payload, "paper10_final_figure_table_export_package_current")
+    assert "Main Figure 2 5-seed export source" in details
+    assert "Main Tables 1-3 5-seed export source" in details
+
+
 def test_submission_preflight_minimal_fixture_reports_missing_submission_readiness_boundary(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
     (fixture / PAPER10_SUBMISSION_READINESS_BOUNDARY).unlink()

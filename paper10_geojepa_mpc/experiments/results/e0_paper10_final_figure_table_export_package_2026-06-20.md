@@ -20,11 +20,11 @@ Source basis:
 | asset family | source basis | preview output | final export | status |
 |---|---|---|---|---|
 | Main Figure 1 | workflow schematic source map, monitor/value-label code paths | SVG/PNG under ignored `reviewer_outputs/` | PDF/SVG after artwork is finished | pending_artwork |
-| Main Figure 2 | seedwise reward CSV and rollout summaries | SVG/PNG under ignored `reviewer_outputs/` | PDF/SVG, plus 300+ dpi PNG if raster upload is required | export_ready |
+| Main Figure 2 | 5-seed confirmatory audit source (`e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.md/JSON`) plus tracked rollout summaries | SVG/PNG under ignored `reviewer_outputs/` | PDF/SVG, plus 300+ dpi PNG if raster upload is required | export_ready |
 | Main Figure 3 | stage-3 boundary audit sources | SVG/PNG under ignored `reviewer_outputs/` | PDF/SVG, plus 300+ dpi PNG if raster upload is required | export_ready |
 | Main Figure 4 | Dongxing return-label family summary | SVG/PNG under ignored `reviewer_outputs/` | PDF/SVG, plus 300+ dpi PNG if raster upload is required | export_ready |
 | Supplementary Figure S1 | Dongxing low-label family summary | SVG/PNG under ignored `reviewer_outputs/` | PDF/SVG, plus 300+ dpi PNG if raster upload is required | export_ready |
-| Main Tables 1-3 | tracked markdown/CSV/JSON source tables | markdown preview | tracked markdown/CSV/JSON source package; journal table format later | export_ready |
+| Main Tables 1-3 | tracked markdown/CSV/JSON source tables, including 5-seed confirmatory audit source (`e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.md/JSON`) | markdown preview | tracked markdown/CSV/JSON source package; journal table format later | export_ready |
 
 ## Export rules
 
