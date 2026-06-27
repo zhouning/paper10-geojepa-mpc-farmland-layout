@@ -415,6 +415,33 @@ def test_submission_preflight_minimal_fixture_reports_missing_bounded_manuscript
     assert str(PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT) in details
 
 
+def test_submission_preflight_rejects_bounded_manuscript_missing_5seed_figure_table_sources(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    draft = fixture / PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT
+    updated_lines = []
+    for line in draft.read_text(encoding="utf-8").splitlines():
+        if line.startswith("| Main Figure 2 |") or line.startswith("| Main Table 2 |"):
+            line = line.replace(
+                "`e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.md`; ",
+                "",
+            )
+            line = line.replace(
+                "`e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.json`; ",
+                "",
+            )
+        updated_lines.append(line)
+    draft.write_text("\n".join(updated_lines) + "\n", encoding="utf-8")
+
+    result, payload = run_submission_preflight_json(fixture)
+
+    assert result.returncode == 1
+    assert payload["ok"] is False
+    assert "paper10_bounded_manuscript_assembly_current" in payload["failed_checks"]
+    details = check_details(payload, "paper10_bounded_manuscript_assembly_current")
+    assert "Main Figure 2 5-seed source route" in details
+    assert "Main Table 2 5-seed source route" in details
+
+
 def test_submission_preflight_rejects_bounded_manuscript_every_seed_claim(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
     draft = fixture / PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT

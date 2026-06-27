@@ -543,12 +543,12 @@ submission commit and map each figure and table to its source data.
 | item | role | source-data route |
 |---|---|---|
 | Main Figure 1 | Monitor-gated value filtering workflow. | Code modules and workflow source map. |
-| Main Figure 2 | Bishan 20x16/top5 reward and stability. | `e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.md`; rollout summaries. |
+| Main Figure 2 | Bishan 20x16/top5 reward and stability. | `e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.md`; `e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.json`; tracked 5-seed rollout summaries. |
 | Main Figure 3 | Bishan Stage 3 50-state boundary. | `e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.md`; `e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json`. |
 | Main Figure 4 | Dongxing return-label scaling. | `e0_dongxing_return_label_family_summary_2026-06-10.csv`. |
 | Supplementary Figure S1 | Dongxing low-label transfer stress test. | `e0_dongxing_low_label_budget_family_summary_2026-06-10.csv`. |
 | Main Table 1 | Bishan monitor-selected gates. | Monitor JSON files and integrated table package. |
-| Main Table 2 | Bishan matched-baseline rollout comparison. | `e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.md`; Stage 3 summary JSON. |
+| Main Table 2 | Bishan matched-baseline rollout comparison. | `e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.md`; `e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.json`; `e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json`. |
 | Main Table 3 | Dongxing return-label scaling. | Dongxing family summary CSV and integrated table package. |
 | Supplementary Table S1 | Stage 3 seed-level rollout rewards. | `e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.md`. |
 | Supplementary Table S2 | Dongxing low-label stress test. | Dongxing low-label summary CSV and detailed result note. |

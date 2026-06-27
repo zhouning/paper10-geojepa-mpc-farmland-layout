@@ -2437,6 +2437,23 @@ def check_paper10_bounded_manuscript_assembly_current(root: Path) -> CheckResult
             f"{PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT}: @zhou2026paper9_local"
         )
 
+    figure_table_lines = {
+        line.split("|")[1].strip(): line
+        for line in text.splitlines()
+        if line.startswith("| Main Figure 2 |") or line.startswith("| Main Table 2 |")
+    }
+    five_seed_sources = [
+        PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD.name,
+        PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_JSON.name,
+    ]
+    for item in ("Main Figure 2", "Main Table 2"):
+        line = figure_table_lines.get(item, "")
+        if not line or not all(source in line for source in five_seed_sources):
+            missing_tokens.append(
+                f"{PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT}: "
+                f"{item} 5-seed source route"
+            )
+
     forbidden_50_state = re.compile("|".join(FORBIDDEN_50_STATE_PATTERNS), re.IGNORECASE)
     for line_no, line in enumerate(text.splitlines(), start=1):
         if forbidden_50_state.search(line):
