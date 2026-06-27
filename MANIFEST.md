@@ -69,6 +69,10 @@ data needed for smoke verification.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_bounded_manuscript_assembly_draft_2026-06-27.md`:
   current bounded manuscript assembly draft carrying the 2026-06-20
   formal draft into the 2026-06-27 freeze and closure boundary.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_main_figure1_artwork_preview_2026-06-27.md`:
+  current Main Figure 1 workflow-artwork preview record, documenting the
+  reproducible schematic script, ignored local PNG/SVG/PDF outputs, and the
+  remaining journal-specific figure/export decisions.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_stage3_50x24_candidate_score_sweep_2026-06-20.md`:
   latest 50x24/f075 candidate-score sweep showing the boundary remains below
   the matched Paper9 baseline.
@@ -314,6 +318,10 @@ data needed for smoke verification.
 - `scripts/paper10/plot_frontier_random050_figures.py`:
   offline plotting script for the seed-wise reward and top-k diagnostic figures;
   writes generated figure files under ignored `reviewer_outputs/` by default.
+- `scripts/paper10/plot_main_figure1_workflow.py`:
+  offline plotting script for the Main Figure 1 monitor-gated workflow
+  schematic preview; writes generated PNG/SVG/PDF files under ignored
+  `reviewer_outputs/` by default.
 - `scripts/paper10/plot_integrated_dongxing_figures.py`:
   offline plotting script for integrated Dongxing Figure 4 and Figure 5
   previews from tracked CSV source data.
