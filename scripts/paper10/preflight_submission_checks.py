@@ -105,6 +105,9 @@ PAPER10_SUBMISSION_READINESS_BOUNDARY = (
 PAPER10_FORMAL_MANUSCRIPT_DRAFT = (
     RESULTS / "e0_paper10_formal_manuscript_draft_2026-06-20.md"
 )
+PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT = (
+    RESULTS / "e0_paper10_bounded_manuscript_assembly_draft_2026-06-27.md"
+)
 PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_MD = (
     RESULTS / "e0_paper10_stage3_50x24_candidate_score_sweep_2026-06-20.md"
 )
@@ -269,6 +272,7 @@ REQUIRED_PATHS = (
     AUTHOR_DECISION_MATRIX,
     FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
     PAPER10_FORMAL_MANUSCRIPT_DRAFT,
+    PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT,
     PAPER10_CLAIM_SOURCE_AUDIT_MD,
     PAPER10_CLAIM_SOURCE_AUDIT_JSON,
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
@@ -346,6 +350,7 @@ PUBLIC_SUBMISSION_DOCS = (
     AUTHOR_DECISION_MATRIX,
     FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
     PAPER10_FORMAL_MANUSCRIPT_DRAFT,
+    PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT,
     PAPER10_CLAIM_SOURCE_AUDIT_MD,
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
     PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD,
@@ -2328,6 +2333,139 @@ def check_paper10_formal_manuscript_draft_current(root: Path) -> CheckResult:
         "paper10_formal_manuscript_draft_current",
         True,
         "Paper10 formal manuscript draft is current and claim-bounded",
+    )
+
+
+def _is_unguarded_every_seed_claim(line: str) -> bool:
+    negative_guardrail = re.compile(
+        r"\b(does not|do not|must not|cannot|can't|should not|not supported|unsupported|not uniform|mixed)\b",
+        re.IGNORECASE,
+    )
+    targets = (
+        re.compile(
+            r"\bevery[- ]seed\b.{0,100}\b(improv(?:e|es|ed|ement)?|win(?:s)?|beat(?:s)?|superior(?:ity)?)\b",
+            re.IGNORECASE,
+        ),
+        re.compile(
+            r"\buniform\b.{0,100}\b(seed|per[- ]seed)\b.{0,100}\b(improv(?:e|es|ed|ement)?|win(?:s)?|beat(?:s)?|superior(?:ity)?)\b",
+            re.IGNORECASE,
+        ),
+    )
+    for clause in re.split(r"[;.!?]+", line):
+        if not clause.strip():
+            continue
+        if negative_guardrail.search(clause):
+            continue
+        if any(target.search(clause) for target in targets):
+            return True
+    return False
+
+
+def check_paper10_bounded_manuscript_assembly_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT,
+        PAPER10_FORMAL_MANUSCRIPT_DRAFT,
+        PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD,
+        PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_JSON,
+        PAPER10_REAL_ENV_LONGHORIZON_PILOT_AUDIT_MD,
+        PAPER10_REAL_ENV_LONGHORIZON_PILOT_AUDIT_JSON,
+        PAPER10_CEUS_REVIEW_OPTIMIZATION_REGISTER,
+        PAPER10_MECHANISM_ABLATION_PACKET_MD,
+        PAPER10_MECHANISM_ABLATION_PACKET_JSON,
+        PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_MD,
+        PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_JSON,
+        PAPER10_SUBMISSION_READINESS_BOUNDARY,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_bounded_manuscript_assembly_current",
+            False,
+            "missing Paper10 bounded manuscript assembly files: " + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT)
+    normalized_text = " ".join(text.split())
+    normalized_casefold_text = normalized_text.casefold()
+    missing_tokens = []
+    draft_name = PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT.name
+    linked_docs = [Path("README.md"), Path("MANIFEST.md")]
+    for rel_path in linked_docs:
+        path = root / rel_path
+        if not path.exists():
+            missing_tokens.append(f"{rel_path}: missing file")
+            continue
+        if draft_name not in read_text(path):
+            missing_tokens.append(f"{rel_path}: {draft_name}")
+
+    required_tokens = [
+        "Paper10 bounded manuscript assembly draft",
+        "not a final submission package",
+        PAPER10_FORMAL_MANUSCRIPT_DRAFT.name,
+        PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD.name,
+        PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_JSON.name,
+        PAPER10_REAL_ENV_LONGHORIZON_PILOT_AUDIT_MD.name,
+        PAPER10_CEUS_REVIEW_OPTIMIZATION_REGISTER.name,
+        "descriptive matched 5-seed result",
+        "wins only 3/5 seeds",
+        "seed0",
+        "seed4",
+        "-3.2408",
+        "-8.2248",
+        "inferential superiority is not supported",
+        "uniform per-seed superiority",
+        "post-hoc tuning",
+        "69.4705",
+        "67.5437",
+        "1.9269",
+        "1.0004",
+        "7.2246",
+        "40.3515",
+        "64.2960",
+        "66.2544",
+        "67.4913",
+        "direct 50-state Bishan scale-up success",
+        "robust Bishan-to-Dongxing transfer superiority",
+        "formal hypothesis-test language requires a predefined statistical plan",
+    ]
+    for token in required_tokens:
+        if token.casefold() not in normalized_casefold_text:
+            missing_tokens.append(f"{PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT}: {token}")
+
+    if "@zhou2026paper9_local" in text:
+        missing_tokens.append(
+            f"{PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT}: @zhou2026paper9_local"
+        )
+
+    forbidden_50_state = re.compile("|".join(FORBIDDEN_50_STATE_PATTERNS), re.IGNORECASE)
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if forbidden_50_state.search(line):
+            missing_tokens.append(
+                f"{PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT}:{line_no}: "
+                "positive 50-state wording"
+            )
+        if _is_unguarded_every_seed_claim(line):
+            missing_tokens.append(
+                f"{PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT}:{line_no}: "
+                f"forbidden every-seed wording {line.strip()}"
+            )
+        match = UNSUPPORTED_INFERENTIAL_STATS_PATTERN.search(line)
+        if match:
+            missing_tokens.append(
+                f"{PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT}:{line_no}: "
+                f"unsupported inferential wording {match.group(0)}"
+            )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_bounded_manuscript_assembly_current",
+            False,
+            "Paper10 bounded manuscript assembly gaps: " + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_bounded_manuscript_assembly_current",
+        True,
+        "Paper10 bounded manuscript assembly is current and claim-bounded",
     )
 
 
@@ -5541,6 +5679,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_author_decision_matrix_current,
     check_paper10_formal_manuscript_blueprint_current,
     check_paper10_formal_manuscript_draft_current,
+    check_paper10_bounded_manuscript_assembly_current,
     check_paper10_mechanism_ablation_packet_current,
     check_paper10_claim_source_audit_current,
     check_paper10_figure_table_source_coverage_audit_current,

@@ -74,6 +74,9 @@ from scripts.paper10.preflight_submission_checks import (
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts" / "paper10" / "preflight_submission_checks.py"
+PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT = (
+    RESULTS / "e0_paper10_bounded_manuscript_assembly_draft_2026-06-27.md"
+)
 MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     Path("README.md"),
     Path("REPRODUCIBILITY.md"),
@@ -120,6 +123,7 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
     PAPER10_SUBMISSION_READINESS_BOUNDARY,
     PAPER10_FORMAL_MANUSCRIPT_DRAFT,
+    PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT,
     PAPER10_MECHANISM_ABLATION_PACKET_MD,
     PAPER10_MECHANISM_ABLATION_PACKET_JSON,
     RESULTS / "e0_value_label_monitor_frontier_random050_20x16_h5_seed44_top5.json",
@@ -290,6 +294,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "paper10_author_decision_matrix_current" in payload["passed_checks"]
     assert "paper10_formal_manuscript_blueprint_current" in payload["passed_checks"]
     assert "paper10_formal_manuscript_draft_current" in payload["passed_checks"]
+    assert "paper10_bounded_manuscript_assembly_current" in payload["passed_checks"]
     assert "paper10_mechanism_ablation_packet_current" in payload["passed_checks"]
     assert "paper10_claim_source_audit_current" in payload["passed_checks"]
     assert "paper10_figure_table_caption_claim_packet_current" in payload["passed_checks"]
@@ -395,6 +400,39 @@ def test_submission_preflight_minimal_fixture_reports_missing_formal_manuscript_
     details = check_details(payload, "paper10_formal_manuscript_draft_current")
     assert "missing Paper10 formal manuscript draft files" in details
     assert str(PAPER10_FORMAL_MANUSCRIPT_DRAFT) in details
+
+def test_submission_preflight_minimal_fixture_reports_missing_bounded_manuscript_assembly(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    (fixture / PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT).unlink()
+
+    result, payload = run_submission_preflight_json(fixture)
+
+    assert result.returncode == 1
+    assert payload["ok"] is False
+    assert "paper10_bounded_manuscript_assembly_current" in payload["failed_checks"]
+    details = check_details(payload, "paper10_bounded_manuscript_assembly_current")
+    assert "missing Paper10 bounded manuscript assembly files" in details
+    assert str(PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT) in details
+
+
+def test_submission_preflight_rejects_bounded_manuscript_every_seed_claim(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    draft = fixture / PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT
+    draft.write_text(
+        draft.read_text(encoding="utf-8")
+        + "\n\nEvery seed improves over the matched Paper9 baseline.\n",
+        encoding="utf-8",
+    )
+
+    result, payload = run_submission_preflight_json(fixture)
+
+    assert result.returncode == 1
+    assert payload["ok"] is False
+    assert "paper10_bounded_manuscript_assembly_current" in payload["failed_checks"]
+    details = check_details(payload, "paper10_bounded_manuscript_assembly_current")
+    assert "forbidden every-seed wording" in details
+    assert "Every seed improves" in details
+
 
 def test_submission_preflight_minimal_fixture_reports_missing_claim_source_audit(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)

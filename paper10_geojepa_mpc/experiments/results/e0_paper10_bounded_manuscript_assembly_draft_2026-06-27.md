@@ -6,10 +6,15 @@ Status: bounded manuscript assembly draft. This file carries the 2026-06-20
 formal manuscript into the 2026-06-27 experiment-freeze and closure boundary.
 It is not a final submission package. The draft uses the matched Paper9
 `rank_seed2028` comparator as the default bounded-route comparator, descriptive
-reporting only, and the current no-go data/licence/figure/export blockers.
+reporting only, and the current no-go data/licence/figure/export blockers. The
+post-CEUS long-horizon audit is treated as a descriptive matched 5-seed result:
+value-filter wins only 3/5 seeds, loses seed0 and seed4, inferential superiority
+is not supported, uniform per-seed superiority is not supported, and post-hoc
+tuning after seeing the mixed seed outcomes remains disallowed.
 
 Source controls used for this draft:
 
+- `e0_paper10_formal_manuscript_draft_2026-06-20.md`
 - `e0_ceus_stage3_manuscript_reframe_2026-06-18.md`
 - `e0_ceus_research_article_manuscript_draft_2026-06-12.md`
 - `e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.md`
@@ -24,6 +29,11 @@ Source controls used for this draft:
 - `e0_submission_blocker_decision_packet_2026-06-11.md`
 - `e0_paper10_experiment_freeze_audit_2026-06-27.md`
 - `e0_paper10_experiment_closure_register_2026-06-27.md`
+- `e0_paper10_ceus_review_optimization_register_2026-06-27.md`
+- `e0_paper10_real_env_longhorizon_seed0_pilot_audit_2026-06-27.md`
+- `e0_paper10_real_env_longhorizon_seed0_pilot_audit_2026-06-27.json`
+- `e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.md`
+- `e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.json`
 
 Paper9 has not been formally submitted. This draft therefore uses the
 self-contained Paper10 Methods route and does not cite the local Paper9
@@ -78,8 +88,10 @@ monitor-gated GeoJEPA-MPC workflow that generates finite-horizon value labels,
 checks label quality before value-head training, and applies executable masks
 during rollout. In Bishan, the validated 20x16/top5 value filter reached
 69.4705 mean reward across five 100-step seeds, compared with 67.5437 for the
-matched Paper9 baseline and 65.2566 for the earlier 10x12/top4 pilot. A
-mechanism ablation further showed that removing the executable mask sharply
+matched Paper9 baseline and 65.2566 for the earlier 10x12/top4 pilot. The
+post-CEUS matched audit was mixed seed-wise, with wins only 3/5 seeds, so it
+supports a descriptive mean-reward and lower-variation statement and does not support uniform per-seed
+superiority. A mechanism ablation further showed that removing the executable mask sharply
 reduced reward, while an ungated top-4 negative control did not separate from
 the gated anchor under the same rollout protocol. Stage 3 confirmatory tests
 then evaluated the two passing 50-state rows under matched rollout settings.
@@ -320,9 +332,15 @@ The validated Bishan 20x16/top5 value-filter anchor remains the primary
 positive result. Across five 100-step rollout seeds, the 20x16/top5 value
 filter reached 69.4705 mean reward with sample standard deviation 1.0004. In
 the Stage 3 matched comparison, the Paper9 `rank_seed2028` baseline reached
-67.5437 mean reward with sample standard deviation 7.2246. The anchor
-therefore exceeded the matched Paper9 baseline by 1.9269 reward units and
-showed lower seed-level variation under the tested rollout protocol.
+67.5437 mean reward with sample standard deviation 7.2246. The post-CEUS matched 5-seed audit
+(`e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.md`)
+therefore records a descriptive matched 5-seed result: the anchor exceeded the
+matched Paper9 baseline by 1.9269 reward units and showed lower seed-level
+variation under the tested rollout protocol, but it wins only 3/5 seeds. The
+value filter lost seed0 by -3.2408 reward units and seed4 by -8.2248 reward
+units, so inferential superiority is not supported, uniform per-seed superiority
+is not supported, and post-hoc tuning of thresholds, top-k, horizon or
+candidate-value weight remains disallowed.
 
 Relative to the earlier 10x12/top4 pilot, the 20x16/top5 value filter also
 improved five-seed mean reward from 65.2566 to 69.4705 and reduced sample
@@ -540,7 +558,7 @@ submission commit and map each figure and table to its source data.
 
 | claim or blocker | manuscript status | evidence or required action |
 |---|---|---|
-| Monitor-gated Bishan labels train a useful value filter at the validated anchor scale. | Supported. | Bishan 20x16/top5 mean reward 69.4705 versus matched Paper9 baseline 67.5437; sample standard deviation 1.0004 versus 7.2246. |
+| Monitor-gated Bishan labels train a useful value filter at the validated anchor scale. | Supported descriptively. | Bishan 20x16/top5 mean reward 69.4705 versus matched Paper9 baseline 67.5437; sample standard deviation 1.0004 versus 7.2246. The descriptive matched 5-seed result wins only 3/5 seeds and loses seed0 (-3.2408) and seed4 (-8.2248), so inferential superiority is not supported and uniform per-seed superiority is not supported. |
 | Executable mask is rollout-critical. | Supported. | full_gated_masked mean reward 69.4705 versus no_mask 40.3515; no_mask produced 100 zero-swap steps and 98 negative zero-swap steps. |
 | Ungated top-4 control improves on the gated anchor. | Not supported. | ungated_top4 matched full_gated_masked at 69.4705 mean reward and 1.0004 sample std under the same rollout protocol. |
 | Stage 3 confirmatory 50-state rows improve on the matched Paper9 baseline. | Not supported. | 50x16/top6 mean reward 64.2960 and 50x24/top12 mean reward 66.2544, both below the matched Paper9 baseline. Do not claim direct 50-state Bishan scale-up success. |
@@ -560,6 +578,6 @@ submission commit and map each figure and table to its source data.
 
 - This is the 2026-06-27 bounded assembly draft, not a journal-specific final package.
 - The paper line is monitor-gated value labels as evidence control, not broad 50-state scale-up.
-- The draft supports the Bishan 20x16/top5 positive anchor against the matched Paper9 baseline.
+- The draft supports the Bishan 20x16/top5 positive anchor against the matched Paper9 baseline as descriptive matched 5-seed evidence, with wins only 3/5 seeds and seed0/seed4 losses preserved.
 - The draft does not support broad 50-state scale-up, robust Bishan-to-Dongxing transfer superiority, solved irregular parcel deployment, or a full CMDP/CPO/RCPO solver.
 - The next non-algorithm blockers are Main Figure 1 artwork, repository DOI or reviewer link, code licence, generated-output rights, full-data access routes, citation style, and journal-specific figure/table exports.
