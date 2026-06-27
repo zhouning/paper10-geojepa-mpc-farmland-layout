@@ -87,6 +87,7 @@ Paper-facing writing assets are tracked under
 - `e0_paper10_formal_manuscript_draft_2026-06-20.md`
 - `e0_paper10_bounded_manuscript_assembly_draft_2026-06-27.md`
 - `e0_paper10_main_figure1_artwork_preview_2026-06-27.md`
+- `e0_paper10_target_journal_fit_assessment_2026-06-27.md`
 - `e0_paper10_experiment_freeze_audit_2026-06-27.md`
 - `e0_paper10_experiment_closure_register_2026-06-27.md`
 - `e0_paper10_project_proposal_opening_report_2026-06-18.md`
@@ -199,6 +200,11 @@ Use
 as the current Main Figure 1 workflow-artwork preview record. It documents the
 generated schematic and keeps final journal dimensions, caption length, and
 selected export-package decisions open.
+Use
+`paper10_geojepa_mpc/experiments/results/e0_paper10_target_journal_fit_assessment_2026-06-27.md`
+as the current target-journal route assessment. It recommends a CEUS-first
+route by default, with EMS, CEA, SAT, AI in Agriculture, JAG, and Scientific
+Reports treated as conditional alternatives.
 
 Generate the Main Figure 1 workflow preview:
 

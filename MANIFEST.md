@@ -73,6 +73,10 @@ data needed for smoke verification.
   current Main Figure 1 workflow-artwork preview record, documenting the
   reproducible schematic script, ignored local PNG/SVG/PDF outputs, and the
   remaining journal-specific figure/export decisions.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_target_journal_fit_assessment_2026-06-27.md`:
+  current target-journal route assessment, recommending CEUS first under the
+  frozen claim boundary and documenting conditional EMS, CEA, SAT, AI in
+  Agriculture, JAG, and Scientific Reports alternatives.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_stage3_50x24_candidate_score_sweep_2026-06-20.md`:
   latest 50x24/f075 candidate-score sweep showing the boundary remains below
   the matched Paper9 baseline.
