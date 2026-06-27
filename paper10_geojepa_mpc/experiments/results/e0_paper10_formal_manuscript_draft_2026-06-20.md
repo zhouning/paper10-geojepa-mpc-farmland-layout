@@ -62,7 +62,7 @@ Monitor-gated value labels bound GeoJEPA-MPC farmland layout planning
 
 - Monitor gates control GeoJEPA-MPC value-label escalation.
 - Executable masks are rollout-critical.
-- Bishan 20x16/top5 exceeded the matched Paper9 baseline.
+- Bishan 20x16/top5 exceeded the matched Paper9 baseline in mean reward.
 - Stage 3 50-state rows did not exceed that baseline.
 - The later 50x24 candidate-score sweep did not recover the baseline.
 - Dongxing evidence supports calibration, not transfer superiority.
@@ -76,8 +76,10 @@ monitor-gated GeoJEPA-MPC workflow that generates finite-horizon value labels,
 checks label quality before value-head training, and applies executable masks
 during rollout. In Bishan, the validated 20x16/top5 value filter reached
 69.4705 mean reward across five 100-step seeds, compared with 67.5437 for the
-matched Paper9 baseline and 65.2566 for the earlier 10x12/top4 pilot. A
-mechanism ablation further showed that removing the executable mask sharply
+matched Paper9 baseline and 65.2566 for the earlier 10x12/top4 pilot; the
+post-CEUS seed audit is mixed seed-wise and therefore supports a descriptive
+mean-reward claim rather than uniform per-seed superiority. A mechanism ablation
+further showed that removing the executable mask sharply
 reduced reward, while an ungated top-4 negative control did not separate from
 the gated anchor under the same rollout protocol. Stage 3 confirmatory tests
 then evaluated the two passing 50-state rows under matched rollout settings.
@@ -318,9 +320,13 @@ The validated Bishan 20x16/top5 value-filter anchor remains the primary
 positive result. Across five 100-step rollout seeds, the 20x16/top5 value
 filter reached 69.4705 mean reward with sample standard deviation 1.0004. In
 the Stage 3 matched comparison, the Paper9 `rank_seed2028` baseline reached
-67.5437 mean reward with sample standard deviation 7.2246. The anchor
-therefore exceeded the matched Paper9 baseline by 1.9269 reward units and
-showed lower seed-level variation under the tested rollout protocol.
+67.5437 mean reward with sample standard deviation 7.2246. The post-CEUS
+matched 5-seed audit (`e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.md`)
+links these summary values to tracked raw rollout files and the seed0 pilot
+audit. The anchor therefore exceeded the matched Paper9 baseline by 1.9269
+reward units and showed lower seed-level variation under the tested rollout
+protocol, while seed-level deltas remained mixed: value-filter won seeds 1-3
+and lost seeds 0 and 4.
 
 Relative to the earlier 10x12/top4 pilot, the 20x16/top5 value filter also
 improved five-seed mean reward from 65.2566 to 69.4705 and reduced sample
@@ -538,7 +544,7 @@ submission commit and map each figure and table to its source data.
 
 | claim or blocker | manuscript status | evidence or required action |
 |---|---|---|
-| Monitor-gated Bishan labels train a useful value filter at the validated anchor scale. | Supported. | Bishan 20x16/top5 mean reward 69.4705 versus matched Paper9 baseline 67.5437; sample standard deviation 1.0004 versus 7.2246. |
+| Monitor-gated Bishan labels train a useful value filter at the validated anchor scale. | Supported descriptively. | Bishan 20x16/top5 mean reward 69.4705 versus matched Paper9 baseline 67.5437; sample standard deviation 1.0004 versus 7.2246; post-CEUS matched 5-seed audit records wins on 3/5 seeds and losses on seeds 0 and 4. |
 | Executable mask is rollout-critical. | Supported. | full_gated_masked mean reward 69.4705 versus no_mask 40.3515; no_mask produced 100 zero-swap steps and 98 negative zero-swap steps. |
 | Ungated top-4 control improves on the gated anchor. | Not supported. | ungated_top4 matched full_gated_masked at 69.4705 mean reward and 1.0004 sample std under the same rollout protocol. |
 | Stage 3 confirmatory 50-state rows improve on the matched Paper9 baseline. | Not supported. | 50x16/top6 mean reward 64.2960 and 50x24/top12 mean reward 66.2544, both below the matched Paper9 baseline. Do not claim direct 50-state Bishan scale-up success. |

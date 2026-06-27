@@ -16,11 +16,13 @@ submission remains blocked. Preflight passing does not mean final submission rea
 - `e0_paper10_mechanism_ablation_packet_2026-06-20.md`
 - `e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.md`
 - `e0_paper10_stage3_50x24_candidate_score_sweep_2026-06-20.md`
+- `e0_paper10_real_env_longhorizon_seed0_pilot_audit_2026-06-27.md`
+- `e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.md`
 
 ## Allowed next actions
 
 - Continue CEUS manuscript conversion.
-- Edit the formal manuscript draft within the current claim boundary.
+- Edit the formal manuscript draft within the current post-5seed claim boundary.
 - Prepare figure/table exports under the frozen export contract.
 - Close author decisions for DOI, licence, data access, citation policy,
   statistical reporting, and journal-specific export rules.
@@ -46,6 +48,7 @@ submission remains blocked. Preflight passing does not mean final submission rea
 - Do not claim solved irregular cadastral parcel deployment.
 - Do not claim a full Constrained MDP, CPO, or RCPO solver.
 - Do not claim Paper10 invented GeoJEPA.
+- Do not claim every-seed value-filter improvement or inferential superiority from the descriptive 5-seed audit.
 
 ## Preflight meaning
 

@@ -22,6 +22,8 @@ Source basis:
 - `e0_paper10_real_env_smoke_5step_h3_k20_seed0_2026-06-18.md`
 - `e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.md`
 - `e0_paper10_real_env_smoke_boundary_audit_2026-06-19.md`
+- `e0_paper10_real_env_longhorizon_seed0_pilot_audit_2026-06-27.md`
+- `e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.md`
 - `e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md`
 - `e0_paper10_manuscript_result_tables_freeze_2026-06-19.md`
 - `e0_paper10_manuscript_text_table_consistency_audit_2026-06-19.md`
@@ -125,7 +127,7 @@ data-access, citation, statistical, and export decisions are closed.
 
 | claim | current evidence | allowed wording | blocked wording |
 |---|---|---|---|
-| Bishan positive anchor | 20x16/top5 mean reward `69.4705`; matched Paper9 baseline `67.5437`; sample standard deviation `1.0004` versus `7.2246`. | The validated Bishan 20x16/top5 value filter improved reward and seed-level stability under the tested rollout protocol. | Do not claim universal planner superiority or all-indicator improvement. |
+| Bishan positive anchor | 20x16/top5 mean reward `69.4705`; matched Paper9 baseline `67.5437`; sample standard deviation `1.0004` versus `7.2246`; post-CEUS audit wins 3/5 seeds and loses seeds 0 and 4. | The validated Bishan 20x16/top5 value filter improved mean reward and seed-level variation under the tested rollout protocol. | Do not claim universal planner superiority, every-seed improvement, inferential superiority, or all-indicator improvement. |
 | Stage 3 50-state boundary | `64.2960` and `66.2544` mean rewards for the two confirmatory rows, both below baseline. | Stage 3 completed 50-state rollouts but did not support direct positive scale-up under the matched comparator. | Do not claim direct 50-state Bishan scale-up success. |
 | Diagnostic near-pass | `67.4913` mean reward, `-0.0524` below baseline. | The near-pass row is useful diagnostic context and must not be pooled with confirmatory rows. | Do not use the near-pass row to strengthen the confirmatory 50-state claim. |
 | Dongxing/Neijiang calibration | Return-label scaling improves both transfer and scratch families; scratch remains stronger at 50x16 and at 5/10 low-label budgets. | Dongxing/Neijiang supports calibration and stress-test value. | Do not claim robust Bishan-to-Dongxing transfer superiority. |

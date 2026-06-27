@@ -24,6 +24,8 @@ Source basis:
 - `e0_paper10_real_env_smoke_5step_h3_k20_seed0_2026-06-18.md`
 - `e0_paper10_real_env_value_filter_smoke_5step_h5_k50_seed0_2026-06-19.md`
 - `e0_paper10_real_env_smoke_boundary_audit_2026-06-19.md`
+- `e0_paper10_real_env_longhorizon_seed0_pilot_audit_2026-06-27.md`
+- `e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.md`
 - `e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md`
 - `e0_paper10_manuscript_result_tables_freeze_2026-06-19.md`
 - `e0_paper10_manuscript_text_table_consistency_audit_2026-06-19.md`
@@ -158,7 +160,7 @@ Results should be written as a ladder of four claims.
 | result claim | evidence source | manuscript wording |
 |---|---|---|
 | Monitor gates selected the Bishan value-label anchor. | Monitor JSON/Markdown files and Stage 3 draft section 3.1. | Monitor checks authorized the 20x16/top5 label setting for manuscript-facing value-filter testing. |
-| Bishan 20x16/top5 improved reward and stability. | Mean reward `69.4705` versus matched baseline `67.5437`; sample standard deviation `1.0004` versus `7.2246`. | The validated Bishan 20x16/top5 value filter improved reward and seed-level stability under the tested protocol. |
+| Bishan 20x16/top5 improved mean reward and seed-level variation. | Mean reward `69.4705` versus matched baseline `67.5437`; sample standard deviation `1.0004` versus `7.2246`; post-CEUS matched audit wins 3/5 seeds and loses seeds 0 and 4. | The validated Bishan 20x16/top5 value filter improved mean reward and seed-level variation under the tested protocol; do not imply every-seed dominance. |
 | Stage 3 50-state rows did not support broad scale-up. | Confirmatory rows `64.2960` and `66.2544`; diagnostic near-pass `67.4913`. | Stage 3 completed rollouts but did not support direct positive 50-state scale-up under the matched comparator; the near-pass row must not be pooled. |
 | Dongxing/Neijiang supports calibration and stress testing. | Return-label family and low-label budget summaries. | Dongxing/Neijiang shows real-environment calibration value, while scratch strength prevents a robust transfer-superiority claim. |
 
@@ -289,7 +291,7 @@ same commit.
 
 | claim | status | evidence or blocker |
 |---|---|---|
-| Monitor-gated value labels are useful at the validated Bishan anchor. | Supported. | Bishan 20x16/top5 mean reward `69.4705` versus `67.5437`; sample standard deviation `1.0004` versus `7.2246`. |
+| Monitor-gated value labels are useful at the validated Bishan anchor. | Supported descriptively. | Bishan 20x16/top5 mean reward `69.4705` versus `67.5437`; sample standard deviation `1.0004` versus `7.2246`; post-CEUS matched audit is positive in mean reward but mixed seed-wise. |
 | Stage 3 supports direct positive 50-state scale-up. | Not supported. | Confirmatory rows `64.2960` and `66.2544` are below the matched baseline; diagnostic `67.4913` must not be pooled. |
 | Dongxing/Neijiang proves transfer superiority. | Not supported. | Return-label scaling helps both transfer and scratch families; scratch remains stronger in key settings. |
 | Irregular cadastral deployment is solved. | Not supported. | Current evidence is block-level and queen-contiguity based; deployment needs added parcel geometry constraints. |
