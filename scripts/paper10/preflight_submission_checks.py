@@ -200,6 +200,12 @@ PAPER10_CEUS_BASELINE_HARDENING_JSON = (
 PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH = (
     RESULTS / "e0_paper10_ceus_baseline_hardened_manuscript_patch_2026-07-06.md"
 )
+PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT = (
+    RESULTS / "e0_paper10_ceus_clean_main_manuscript_draft_2026-07-06.md"
+)
+PAPER10_CEUS_HIGHLIGHTS = (
+    RESULTS / "e0_paper10_ceus_highlights_2026-07-06.txt"
+)
 PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD = (
     RESULTS / "e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md"
 )
@@ -320,6 +326,8 @@ REQUIRED_PATHS = (
     PAPER10_CEUS_BASELINE_HARDENING_MD,
     PAPER10_CEUS_BASELINE_HARDENING_JSON,
     PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH,
+    PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT,
+    PAPER10_CEUS_HIGHLIGHTS,
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD,
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON,
     PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD,
@@ -375,6 +383,8 @@ PUBLIC_SUBMISSION_DOCS = (
     PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_MD,
     PAPER10_CEUS_BASELINE_HARDENING_MD,
     PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH,
+    PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT,
+    PAPER10_CEUS_HIGHLIGHTS,
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD,
     PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD,
     PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_MD,
@@ -4996,6 +5006,148 @@ def check_paper10_ceus_baseline_inference_hardening_current(root: Path) -> Check
         "Paper10 CEUS baseline hardening audit and manuscript patch are current",
     )
 
+
+CEUS_CLEAN_MANUSCRIPT_INTERNAL_SECTIONS = (
+    "## Source controls used for this draft",
+    "## Terminology Ledger",
+    "## Claim-Evidence and Unresolved Blockers",
+    "## Author Handoff Notes",
+)
+
+
+def markdown_bullets(section_text: str) -> list[str]:
+    return [
+        line.strip()[2:].strip()
+        for line in section_text.splitlines()
+        if line.strip().startswith("- ")
+    ]
+
+
+def check_paper10_ceus_clean_main_manuscript_draft_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT,
+        PAPER10_CEUS_HIGHLIGHTS,
+        README,
+        MANIFEST,
+        DATA_AVAILABILITY,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_ceus_clean_main_manuscript_draft_current",
+            False,
+            "missing Paper10 CEUS clean main manuscript draft files: "
+            + ", ".join(missing),
+        )
+
+    draft_text = read_text(root / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT)
+    highlights_text = read_text(root / PAPER10_CEUS_HIGHLIGHTS)
+    missing_tokens = []
+
+    for doc in (README, MANIFEST, DATA_AVAILABILITY):
+        doc_text = read_text(root / doc)
+        if PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT.name not in doc_text:
+            missing_tokens.append(
+                f"{doc}: {PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT.name}"
+            )
+
+    required_tokens = [
+        "Status: clean CEUS main-manuscript draft, not a final submission package",
+        "Source assembly: `e0_paper10_ceus_baseline_hardened_manuscript_assembly_draft_2026-07-06.md`",
+        "## Title page",
+        "## Highlights",
+        "## Abstract",
+        "## Keywords",
+        "## Data and Code Availability",
+        "## Declaration of generative AI and AI-assisted technologies",
+        "## CRediT authorship contribution statement",
+        "## Declaration of competing interest",
+        "## Funding",
+        "## Clean-draft boundary",
+        "not suitable as a final submission package",
+        "repository DOI or anonymous reviewer link is pending",
+        "licence",
+        "controlled-access metadata record",
+        "Pending author decision",
+        "diagnostic-only two-sided sign-test readout was 1.0000",
+        "does not support a claim that the value filter improved every seed or established inferential superiority",
+        "not broad scale-up, transfer superiority or operational cadastral deployment",
+    ]
+    for token in required_tokens:
+        if token not in draft_text:
+            missing_tokens.append(f"{PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT}: {token}")
+
+    abstract = markdown_section_outside_code_fences(draft_text, "## Abstract")
+    if not abstract:
+        missing_tokens.append(f"{PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT}: ## Abstract")
+    else:
+        word_count = markdown_word_count(abstract)
+        if word_count > 250:
+            missing_tokens.append(
+                f"{PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT}: "
+                f"abstract word count exceeds 250 ({word_count})"
+            )
+
+    highlights_section = markdown_section_outside_code_fences(draft_text, "## Highlights")
+    draft_highlights = markdown_bullets(highlights_section)
+    separate_highlights = [
+        line.strip()[2:].strip() if line.strip().startswith("- ") else line.strip()
+        for line in highlights_text.splitlines()
+        if line.strip()
+    ]
+    if len(draft_highlights) < 3 or len(draft_highlights) > 5:
+        missing_tokens.append(
+            f"{PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT}: "
+            f"highlights count={len(draft_highlights)}"
+        )
+    for index, highlight in enumerate(draft_highlights, start=1):
+        if len(highlight) > 85:
+            missing_tokens.append(
+                f"{PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT}: "
+                f"highlight exceeds 85 characters at item {index}: {len(highlight)}"
+            )
+    if separate_highlights != draft_highlights:
+        missing_tokens.append(
+            f"{PAPER10_CEUS_HIGHLIGHTS}: separate highlights do not match clean draft"
+        )
+
+    for section in CEUS_CLEAN_MANUSCRIPT_INTERNAL_SECTIONS:
+        if has_markdown_heading_outside_code_fences(draft_text, section):
+            missing_tokens.append(
+                f"{PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT}: "
+                f"internal-only manuscript section: {section.lstrip('#').strip()}"
+            )
+
+    for line_no, line in enumerate(draft_text.splitlines(), start=1):
+        for match in PUBLIC_PLACEHOLDER_PATTERN.finditer(line):
+            missing_tokens.append(
+                f"{PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT}:{line_no}: "
+                f"unresolved bracket placeholder {match.group(0)}"
+            )
+        if is_submission_readiness_positive_claim(line):
+            missing_tokens.append(
+                f"{PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT}:{line_no}: "
+                f"forbidden submission-readiness wording: {line.strip()}"
+            )
+        if is_ceus_baseline_positive_overclaim(line):
+            missing_tokens.append(
+                f"{PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT}:{line_no}: "
+                f"forbidden CEUS clean manuscript overclaim: {line.strip()}"
+            )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_ceus_clean_main_manuscript_draft_current",
+            False,
+            "Paper10 CEUS clean main manuscript draft gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_ceus_clean_main_manuscript_draft_current",
+        True,
+        "Paper10 CEUS clean main manuscript draft is current and claim-bounded",
+    )
+
 def check_paper10_anchor_raw_rollout_consistency_audit_current(root: Path) -> CheckResult:
     required_files = [
         PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD,
@@ -5917,6 +6069,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_real_env_longhorizon_pilot_audit_current,
     check_paper10_real_env_longhorizon_confirmatory_audit_current,
     check_paper10_ceus_baseline_inference_hardening_current,
+    check_paper10_ceus_clean_main_manuscript_draft_current,
     check_paper10_anchor_raw_rollout_consistency_audit_current,
     check_original_vision_validation_registry_current,
 )

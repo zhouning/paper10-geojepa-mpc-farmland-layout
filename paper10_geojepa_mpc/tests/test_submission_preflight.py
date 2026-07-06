@@ -3,6 +3,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import scripts.paper10.preflight_submission_checks as preflight_checks
+
 from scripts.paper10.preflight_submission_checks import (
     ARCHIVE_MANIFEST,
     AUTHOR_DECISION_MATRIX,
@@ -62,6 +64,8 @@ from scripts.paper10.preflight_submission_checks import (
     PAPER10_CEUS_BASELINE_HARDENING_MD,
     PAPER10_CEUS_BASELINE_HARDENING_JSON,
     PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH,
+    PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT,
+    PAPER10_CEUS_HIGHLIGHTS,
     PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
@@ -160,6 +164,8 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     PAPER10_CEUS_BASELINE_HARDENING_MD,
     PAPER10_CEUS_BASELINE_HARDENING_JSON,
     PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH,
+    PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT,
+    PAPER10_CEUS_HIGHLIGHTS,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON,
     RESULTS / "e0_archive_release_and_doi_backfill_checklist_2026-06-09.md",
@@ -318,6 +324,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "paper10_real_env_longhorizon_pilot_audit_current" in payload["passed_checks"]
     assert "paper10_real_env_longhorizon_confirmatory_audit_current" in payload["passed_checks"]
     assert "paper10_ceus_baseline_inference_hardening_current" in payload["passed_checks"]
+    assert "paper10_ceus_clean_main_manuscript_draft_current" in payload["passed_checks"]
     assert "paper10_anchor_raw_rollout_consistency_audit_current" in payload["passed_checks"]
     assert "original_vision_validation_registry_current" in payload["passed_checks"]
 
@@ -913,6 +920,163 @@ def test_ceus_baseline_hardening_preflight_allows_negative_guardrails(tmp_path):
     assert result.name == "paper10_ceus_baseline_inference_hardening_current"
     assert result.ok is True
 
+
+def test_submission_preflight_current_repository_includes_ceus_clean_main_manuscript_draft():
+    result = subprocess.run(
+        [sys.executable, str(SCRIPT), "--json"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    payload = json.loads(result.stdout)
+
+    assert "paper10_ceus_clean_main_manuscript_draft_current" in payload["passed_checks"]
+
+
+def test_submission_preflight_minimal_fixture_reports_missing_ceus_clean_main_manuscript_draft(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    (fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT).unlink()
+
+    result, payload = run_submission_preflight_json(fixture)
+
+    assert result.returncode == 1
+    assert payload["ok"] is False
+    assert "paper10_ceus_clean_main_manuscript_draft_current" in payload["failed_checks"]
+    details = check_details(payload, "paper10_ceus_clean_main_manuscript_draft_current")
+    assert "missing Paper10 CEUS clean main manuscript draft files" in details
+    assert str(PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT) in details
+
+
+def test_ceus_clean_main_manuscript_draft_preflight_rejects_overlong_abstract(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT
+    draft.write_text(
+        draft.read_text(encoding="utf-8").replace(
+            "\n## Keywords\n",
+            "\n" + " ".join(["extra"] * 260) + "\n\n## Keywords\n",
+        ),
+        encoding="utf-8",
+    )
+
+    result = preflight_checks.check_paper10_ceus_clean_main_manuscript_draft_current(fixture)
+
+    assert result.name == "paper10_ceus_clean_main_manuscript_draft_current"
+    assert result.ok is False
+    assert "abstract word count exceeds 250" in result.details
+
+
+def test_ceus_clean_main_manuscript_draft_preflight_rejects_invalid_highlight_count(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT
+    original = draft.read_text(encoding="utf-8")
+    highlights = """## Highlights
+
+Submit `e0_paper10_ceus_highlights_2026-07-06.txt` as the separate editable highlights file.
+
+- One bounded highlight.
+- Another bounded highlight.
+
+## Abstract"""
+    draft.write_text(
+        original.replace(
+            original[
+                original.index("## Highlights") : original.index("## Abstract") + len("## Abstract")
+            ],
+            highlights,
+        ),
+        encoding="utf-8",
+    )
+
+    result = preflight_checks.check_paper10_ceus_clean_main_manuscript_draft_current(fixture)
+
+    assert result.name == "paper10_ceus_clean_main_manuscript_draft_current"
+    assert result.ok is False
+    assert "highlights count=2" in result.details
+
+
+def test_ceus_clean_main_manuscript_draft_preflight_rejects_long_highlight(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT
+    draft.write_text(
+        draft.read_text(encoding="utf-8").replace(
+            "Monitor gates control value-label escalation for farmland layout planning.",
+            "Monitor gates control value-label escalation for farmland layout planning with a sentence that exceeds the eighty-five character CEUS highlight limit.",
+        ),
+        encoding="utf-8",
+    )
+
+    result = preflight_checks.check_paper10_ceus_clean_main_manuscript_draft_current(fixture)
+
+    assert result.name == "paper10_ceus_clean_main_manuscript_draft_current"
+    assert result.ok is False
+    assert "highlight exceeds 85 characters" in result.details
+
+
+def test_ceus_clean_main_manuscript_draft_preflight_rejects_internal_handoff_sections(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT
+    draft.write_text(
+        draft.read_text(encoding="utf-8")
+        + "\n\n## Author Handoff Notes\n\nInternal follow-up list.\n",
+        encoding="utf-8",
+    )
+
+    result = preflight_checks.check_paper10_ceus_clean_main_manuscript_draft_current(fixture)
+
+    assert result.name == "paper10_ceus_clean_main_manuscript_draft_current"
+    assert result.ok is False
+    assert "internal-only manuscript section" in result.details
+    assert "Author Handoff Notes" in result.details
+
+
+def test_ceus_clean_main_manuscript_draft_preflight_rejects_submission_ready_claim(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT
+    draft.write_text(
+        draft.read_text(encoding="utf-8")
+        + "\n\nThe clean manuscript is ready for final submission.\n",
+        encoding="utf-8",
+    )
+
+    result = preflight_checks.check_paper10_ceus_clean_main_manuscript_draft_current(fixture)
+
+    assert result.name == "paper10_ceus_clean_main_manuscript_draft_current"
+    assert result.ok is False
+    assert "forbidden submission-readiness wording" in result.details
+
+
+def test_ceus_clean_main_manuscript_draft_preflight_rejects_statistical_overclaim(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT
+    draft.write_text(
+        draft.read_text(encoding="utf-8")
+        + "\n\nThe Bishan value filter was statistically significant.\n",
+        encoding="utf-8",
+    )
+
+    result = preflight_checks.check_paper10_ceus_clean_main_manuscript_draft_current(fixture)
+
+    assert result.name == "paper10_ceus_clean_main_manuscript_draft_current"
+    assert result.ok is False
+    assert "forbidden CEUS clean manuscript overclaim" in result.details
+
+
+def test_ceus_clean_main_manuscript_draft_preflight_rejects_unresolved_placeholder(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT
+    draft.write_text(
+        draft.read_text(encoding="utf-8")
+        + "\n\nRepository DOI: [DOI TO BE ASSIGNED]\n",
+        encoding="utf-8",
+    )
+
+    result = preflight_checks.check_paper10_ceus_clean_main_manuscript_draft_current(fixture)
+
+    assert result.name == "paper10_ceus_clean_main_manuscript_draft_current"
+    assert result.ok is False
+    assert "unresolved bracket placeholder" in result.details
 def test_submission_preflight_minimal_fixture_reports_missing_anchor_raw_rollout_consistency_audit(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
     (fixture / PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD).unlink()
