@@ -104,6 +104,16 @@ see:
 paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_baseline_inference_hardening_2026-07-06.md
 ```
 
+For the current CEUS baseline-hardened manuscript assembly, formal-output
+readiness audit, conversion patch, and separate highlights file, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_baseline_hardened_manuscript_assembly_draft_2026-07-06.md
+paper10_geojepa_mpc/experiments/results/e0_paper10_formal_output_readiness_audit_2026-07-06.md
+paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_formal_output_conversion_patch_2026-07-06.md
+paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_highlights_2026-07-06.txt
+```
+
 For the current CEUS Research Article candidate manuscript draft, including
 the draft Data and Code Availability text that still requires DOI, licence,
 and controlled-access backfill, see:

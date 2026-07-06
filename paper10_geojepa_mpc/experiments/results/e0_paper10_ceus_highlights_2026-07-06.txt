@@ -1,0 +1,5 @@
+Monitor gates control value-label escalation for farmland layout planning.
+Bishan 20x16/top5 gives a descriptive matched 5-seed reward anchor.
+Value filtering wins 3/5 seeds, so superiority remains descriptive.
+Executable masks prevent invalid zero-swap rollout behavior.
+Stage 3 and Dongxing tests define scale and calibration boundaries.

@@ -75,13 +75,11 @@ Monitor-gated value labels for evidence-controlled GeoJEPA-MPC farmland layout p
 
 ## Highlights
 
-- Monitor gates control GeoJEPA-MPC value-label escalation.
-- Bishan 20x16/top5 is a descriptive matched 5-seed reward anchor.
-- The seed-wise outcome is mixed: value filter wins 3/5 seeds.
-- Executable masks are necessary for valid rollouts under the current protocol.
-- The monitor gate is evidence control, not a separately proven online gain.
-- Stage 3 50-state rows and the later sweep remain boundary evidence.
-- Dongxing/Neijiang supports calibration, not transfer superiority.
+- Monitor gates control value-label escalation for farmland layout planning.
+- Bishan 20x16/top5 gives a descriptive matched 5-seed reward anchor.
+- Value filtering wins 3/5 seeds, so superiority remains descriptive.
+- Executable masks prevent invalid zero-swap rollout behavior.
+- Stage 3 and Dongxing tests define scale and calibration boundaries.
 
 ## Abstract
 
@@ -350,6 +348,7 @@ interpretation is therefore reward-centered: the value-filter anchor improved
 mean reward and reduced reward variation under the implemented reward
 definition, while final planning indicators did not all move in the same
 favorable direction.
+
 ### 3.3 Stage 3 Did Not Support Broad 50-State Scale-Up
 
 Stage 3 trained and rolled out only the authorized Bishan rows from the
@@ -504,6 +503,7 @@ superiority, larger-label improvement, transfer superiority or operational
 cadastral deployment. The CEUS manuscript should therefore present the work as
 a reproducible evidence-control and planning-support workflow with explicit
 boundaries.
+
 ## Data and Code Availability
 
 This statement is a CEUS-facing draft and must be backfilled after the author
@@ -585,3 +585,4 @@ submission commit and map each figure and table to its source data.
 - The draft supports the Bishan 20x16/top5 descriptive matched 5-seed reward anchor, with wins only 3/5 seeds, seed0/seed4 losses and diagnostic-only sign-test readout preserved.
 - The draft does not support broad 50-state scale-up, robust Bishan-to-Dongxing transfer superiority, solved irregular parcel deployment, or a full CMDP/CPO/RCPO solver.
 - The next non-algorithm blockers are Main Figure 1 artwork, repository DOI or reviewer link, code licence, generated-output rights, full-data access routes, citation style, and journal-specific figure/table exports.
+

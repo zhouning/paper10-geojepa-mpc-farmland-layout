@@ -6,10 +6,10 @@ data needed for smoke verification.
 
 ## Included
 
-- `paper10_geojepa_mpc/`: 356 tracked non-cache files in the active Paper10
-  workspace, including 83 Python files, 115 JSON files, 112 Markdown files,
-  11 CSV files,
-  9 NPZ files, 10 PyTorch checkpoint files, and 16 log files.
+- `paper10_geojepa_mpc/`: 406 tracked non-cache files in the active
+  Paper10 workspace, including 96 Python files, 130 JSON files, 132 Markdown
+  files, 11 CSV files, 9 NPZ files, 11 PyTorch checkpoint files, 16 log files,
+  and 1 TXT highlights file.
 - `arcgis_toolbox_paper9/private_source/`: 10 Paper9 compatibility source files
   used by Paper10's real-environment rollout and value-label workflows.
 - `county_env.py`: Paper9 county-level environment implementation used by
@@ -103,6 +103,17 @@ data needed for smoke verification.
   2026-07-06 baseline/inference hardening audit with the bounded manuscript,
   mechanism ablation, Stage 3 boundary and Dongxing/Neijiang calibration
   evidence.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_formal_output_readiness_audit_2026-07-06.md`:
+  formal-output readiness audit recording that Paper10 is convertible into a
+  bounded CEUS manuscript draft but still has open repository, licence,
+  data-access, declaration and figure/export blockers before formal submission.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_formal_output_conversion_patch_2026-07-06.md`:
+  CEUS formal-output conversion patch with title options, five compliant
+  highlights, abstract replacement text, cleanup map, data/code backfill
+  template and figure/table export checklist.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_highlights_2026-07-06.txt`:
+  separate editable CEUS highlights file with five bullet points, each no more
+  than 85 characters including spaces.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_stage3_50x24_candidate_score_sweep_2026-06-20.md`:
   latest 50x24/f075 candidate-score sweep showing the boundary remains below
   the matched Paper9 baseline.

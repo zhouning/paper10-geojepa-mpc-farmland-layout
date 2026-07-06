@@ -114,6 +114,9 @@ Paper-facing writing assets are tracked under
 - `e0_paper10_ceus_baseline_inference_hardening_2026-07-06.md`
 - `e0_paper10_ceus_baseline_hardened_manuscript_patch_2026-07-06.md`
 - `e0_paper10_ceus_baseline_hardened_manuscript_assembly_draft_2026-07-06.md`
+- `e0_paper10_formal_output_readiness_audit_2026-07-06.md`
+- `e0_paper10_ceus_formal_output_conversion_patch_2026-07-06.md`
+- `e0_paper10_ceus_highlights_2026-07-06.txt`
 - `e0_paper10_experiment_freeze_audit_2026-06-27.md`
 - `e0_paper10_experiment_closure_register_2026-06-27.md`
 - `e0_paper10_project_proposal_opening_report_2026-06-18.md`
@@ -230,6 +233,17 @@ as the current CEUS baseline-hardened assembly draft for the next manuscript
 writing pass. It incorporates the 2026-07-06 baseline and inference hardening
 audit, keeps the Bishan 20x16/top5 result descriptive, and preserves Stage 3,
 Dongxing/Neijiang and data-access boundaries.
+Use
+`paper10_geojepa_mpc/experiments/results/e0_paper10_formal_output_readiness_audit_2026-07-06.md`
+as the current formal-output readiness audit. It records that Paper10 can be
+converted into a bounded CEUS manuscript draft but still has open DOI, licence,
+full-data access, declaration and figure-export blockers before formal
+submission.
+Use
+`paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_formal_output_conversion_patch_2026-07-06.md`
+and
+`paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_highlights_2026-07-06.txt`
+for the next CEUS formal-output conversion pass.
 Use
 `paper10_geojepa_mpc/experiments/results/e0_paper10_main_figure1_artwork_preview_2026-06-27.md`
 as the current Main Figure 1 workflow-artwork preview record. It documents the
