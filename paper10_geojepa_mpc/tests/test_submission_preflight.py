@@ -1066,6 +1066,31 @@ def test_ceus_clean_main_manuscript_draft_preflight_rejects_missing_references_s
     assert "## References" in result.details
     assert "paper10_verified_references_2026-06-09.bib" in result.details
 
+
+def test_ceus_clean_main_manuscript_draft_preflight_rejects_misordered_references(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT
+    text = draft.read_text(encoding="utf-8")
+    references_block = text[
+        text.index("\n## References\n") : text.index("\n## Figure captions\n")
+    ]
+    without_references = text.replace(references_block, "")
+    draft.write_text(
+        without_references.replace(
+            "\n## Clean-draft boundary\n",
+            references_block + "\n## Clean-draft boundary\n",
+        ),
+        encoding="utf-8",
+    )
+
+    result = preflight_checks.check_paper10_ceus_clean_main_manuscript_draft_current(fixture)
+
+    assert result.name == "paper10_ceus_clean_main_manuscript_draft_current"
+    assert result.ok is False
+    assert "CEUS clean manuscript section order" in result.details
+    assert "## References -> ## Figure captions" in result.details
+
+
 def test_ceus_clean_main_manuscript_draft_preflight_rejects_missing_main_figure_caption(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
     draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT

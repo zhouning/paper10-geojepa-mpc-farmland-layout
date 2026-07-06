@@ -811,6 +811,22 @@ def has_markdown_heading_outside_code_fences(text: str, heading: str) -> bool:
     return False
 
 
+def markdown_heading_positions_outside_code_fences(
+    text: str, headings: tuple[str, ...]
+) -> dict[str, int]:
+    heading_set = set(headings)
+    positions = {}
+    in_fence = False
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        stripped = line.strip()
+        if stripped.startswith("```") or stripped.startswith("~~~"):
+            in_fence = not in_fence
+            continue
+        if not in_fence and stripped in heading_set and stripped not in positions:
+            positions[stripped] = line_no
+    return positions
+
+
 def markdown_word_count(text: str) -> int:
     return len(re.findall(r"[A-Za-z0-9]+(?:[-'][A-Za-z0-9]+)?", text))
 
@@ -5035,6 +5051,29 @@ CEUS_CLEAN_MANUSCRIPT_REQUIRED_CAPTIONS = (
 )
 
 
+CEUS_CLEAN_MANUSCRIPT_REQUIRED_SECTION_ORDER = (
+    "## Title page",
+    "## Highlights",
+    "## Abstract",
+    "## Keywords",
+    "## 1. Introduction",
+    "## 2. Materials and methods",
+    "## 3. Results",
+    "## 4. Discussion",
+    "## 5. Conclusion",
+    "## Data and Code Availability",
+    "## Declaration of generative AI and AI-assisted technologies",
+    "## CRediT authorship contribution statement",
+    "## Declaration of competing interest",
+    "## Acknowledgements",
+    "## Funding",
+    "## References",
+    "## Figure captions",
+    "## Table captions",
+    "## Clean-draft boundary",
+)
+
+
 def markdown_bullets(section_text: str) -> list[str]:
     return [
         line.strip()[2:].strip()
@@ -5107,6 +5146,29 @@ def check_paper10_ceus_clean_main_manuscript_draft_current(root: Path) -> CheckR
             missing_tokens.append(
                 f"{PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT}: "
                 f"missing required figure/table caption: {caption}"
+            )
+
+    section_positions = markdown_heading_positions_outside_code_fences(
+        draft_text, CEUS_CLEAN_MANUSCRIPT_REQUIRED_SECTION_ORDER
+    )
+    for heading in CEUS_CLEAN_MANUSCRIPT_REQUIRED_SECTION_ORDER:
+        if heading not in section_positions:
+            missing_tokens.append(
+                f"{PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT}: "
+                f"CEUS clean manuscript section order missing: {heading}"
+            )
+    for before, after in zip(
+        CEUS_CLEAN_MANUSCRIPT_REQUIRED_SECTION_ORDER,
+        CEUS_CLEAN_MANUSCRIPT_REQUIRED_SECTION_ORDER[1:],
+    ):
+        if before not in section_positions or after not in section_positions:
+            continue
+        if section_positions[before] >= section_positions[after]:
+            missing_tokens.append(
+                f"{PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT}: "
+                "CEUS clean manuscript section order violation: "
+                f"{before} -> {after} "
+                f"(lines {section_positions[before]}, {section_positions[after]})"
             )
 
     abstract = markdown_section_outside_code_fences(draft_text, "## Abstract")
