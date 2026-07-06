@@ -111,6 +111,7 @@ readiness audit, conversion patch, and separate highlights file, see:
 paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_baseline_hardened_manuscript_assembly_draft_2026-07-06.md
 paper10_geojepa_mpc/experiments/results/e0_paper10_formal_output_readiness_audit_2026-07-06.md
 paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_formal_output_conversion_patch_2026-07-06.md
+paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_clean_main_manuscript_draft_2026-07-06.md
 paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_highlights_2026-07-06.txt
 ```
 

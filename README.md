@@ -116,6 +116,7 @@ Paper-facing writing assets are tracked under
 - `e0_paper10_ceus_baseline_hardened_manuscript_assembly_draft_2026-07-06.md`
 - `e0_paper10_formal_output_readiness_audit_2026-07-06.md`
 - `e0_paper10_ceus_formal_output_conversion_patch_2026-07-06.md`
+- `e0_paper10_ceus_clean_main_manuscript_draft_2026-07-06.md`
 - `e0_paper10_ceus_highlights_2026-07-06.txt`
 - `e0_paper10_experiment_freeze_audit_2026-06-27.md`
 - `e0_paper10_experiment_closure_register_2026-06-27.md`
@@ -244,6 +245,11 @@ Use
 and
 `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_highlights_2026-07-06.txt`
 for the next CEUS formal-output conversion pass.
+Use
+`paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_clean_main_manuscript_draft_2026-07-06.md`
+as the current clean main-manuscript draft for author review and journal-format
+conversion. It removes internal handoff and claim-lock material from the main
+body while preserving the no-go submission boundary.
 Use
 `paper10_geojepa_mpc/experiments/results/e0_paper10_main_figure1_artwork_preview_2026-06-27.md`
 as the current Main Figure 1 workflow-artwork preview record. It documents the
