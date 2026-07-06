@@ -1151,6 +1151,28 @@ def test_ceus_clean_main_manuscript_draft_preflight_rejects_missing_supplementar
     assert "missing required figure/table caption" in result.details
     assert "Supplementary Table S3. Mechanism ablation and control comparison" in result.details
 
+
+def test_ceus_clean_main_manuscript_draft_preflight_rejects_section_after_clean_boundary(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT
+    draft.write_text(
+        draft.read_text(encoding="utf-8")
+        + """
+
+## Appendix
+
+Internal conversion note.
+""",
+        encoding="utf-8",
+    )
+
+    result = preflight_checks.check_paper10_ceus_clean_main_manuscript_draft_current(fixture)
+
+    assert result.name == "paper10_ceus_clean_main_manuscript_draft_current"
+    assert result.ok is False
+    assert "unexpected section after clean-draft boundary" in result.details
+    assert "## Appendix" in result.details
+
 def test_ceus_clean_main_manuscript_draft_preflight_rejects_internal_handoff_sections(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
     draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT

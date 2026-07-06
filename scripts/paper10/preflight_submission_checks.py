@@ -5179,6 +5179,23 @@ def check_paper10_ceus_clean_main_manuscript_draft_current(root: Path) -> CheckR
                 f"(lines {section_positions[before]}, {section_positions[after]})"
             )
 
+    boundary_line = section_positions.get("## Clean-draft boundary")
+    if boundary_line is not None:
+        in_fence = False
+        for line_no, line in enumerate(draft_text.splitlines(), start=1):
+            stripped = line.strip()
+            if stripped.startswith("```") or stripped.startswith("~~~"):
+                in_fence = not in_fence
+                continue
+            if in_fence or line_no <= boundary_line:
+                continue
+            if stripped.startswith("## "):
+                missing_tokens.append(
+                    f"{PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT}: "
+                    "unexpected section after clean-draft boundary: "
+                    f"{stripped}"
+                )
+
     abstract = markdown_section_outside_code_fences(draft_text, "## Abstract")
     if not abstract:
         missing_tokens.append(f"{PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT}: ## Abstract")
