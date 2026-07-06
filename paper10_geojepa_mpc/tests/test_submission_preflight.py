@@ -10,6 +10,7 @@ from scripts.paper10.preflight_submission_checks import (
     CEUS_REVIEWER_IMPROVEMENT_PACKET,
     CEUS_STAGE3_MANUSCRIPT_DRAFT,
     CEUS_STAGE3_MANUSCRIPT_REFRAME,
+    check_paper10_ceus_baseline_inference_hardening_current,
     check_paper10_submission_readiness_boundary_current,
     check_original_vision_validation_registry_current,
     DATA_ACCESS_RIGHTS_REGISTER,
@@ -58,6 +59,9 @@ from scripts.paper10.preflight_submission_checks import (
     PAPER10_REAL_ENV_LONGHORIZON_PILOT_AUDIT_JSON,
     PAPER10_REAL_ENV_LONGHORIZON_PILOT_AUDIT_MD,
     PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_JSON,
+    PAPER10_CEUS_BASELINE_HARDENING_MD,
+    PAPER10_CEUS_BASELINE_HARDENING_JSON,
+    PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH,
     PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
@@ -310,6 +314,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "paper10_real_env_smoke_boundary_audit_current" in payload["passed_checks"]
     assert "paper10_real_env_longhorizon_pilot_audit_current" in payload["passed_checks"]
     assert "paper10_real_env_longhorizon_confirmatory_audit_current" in payload["passed_checks"]
+    assert "paper10_ceus_baseline_inference_hardening_current" in payload["passed_checks"]
     assert "paper10_anchor_raw_rollout_consistency_audit_current" in payload["passed_checks"]
     assert "original_vision_validation_registry_current" in payload["passed_checks"]
 
@@ -816,6 +821,94 @@ def test_submission_preflight_minimal_fixture_reports_missing_real_env_longhoriz
     details = check_details(payload, "paper10_real_env_longhorizon_confirmatory_audit_current")
     assert "missing Paper10 real-environment long-horizon confirmatory audit files" in details
     assert str(PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD) in details
+
+
+def test_submission_preflight_current_repository_includes_ceus_baseline_hardening():
+    result = subprocess.run(
+        [sys.executable, str(SCRIPT), "--json"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    payload = json.loads(result.stdout)
+
+    assert "paper10_ceus_baseline_inference_hardening_current" in payload["passed_checks"]
+
+
+def test_submission_preflight_minimal_fixture_reports_missing_ceus_baseline_hardening(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    (fixture / PAPER10_CEUS_BASELINE_HARDENING_JSON).unlink()
+
+    result, payload = run_submission_preflight_json(fixture)
+
+    assert result.returncode == 1
+    assert payload["ok"] is False
+    assert "paper10_ceus_baseline_inference_hardening_current" in payload["failed_checks"]
+    details = check_details(payload, "paper10_ceus_baseline_inference_hardening_current")
+    assert "missing Paper10 CEUS baseline hardening files" in details
+    assert str(PAPER10_CEUS_BASELINE_HARDENING_JSON) in details
+
+
+def test_ceus_baseline_hardening_preflight_rejects_uniform_superiority_flag(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    path = fixture / PAPER10_CEUS_BASELINE_HARDENING_JSON
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["claim_gates"]["uniform_superiority_supported"] = True
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+    result = check_paper10_ceus_baseline_inference_hardening_current(fixture)
+
+    assert result.name == "paper10_ceus_baseline_inference_hardening_current"
+    assert result.ok is False
+    assert "uniform_superiority_supported=True" in result.details
+
+
+def test_ceus_baseline_hardening_preflight_rejects_inferential_superiority_flag(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    path = fixture / PAPER10_CEUS_BASELINE_HARDENING_JSON
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["claim_gates"]["inferential_superiority_supported"] = True
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+    result = check_paper10_ceus_baseline_inference_hardening_current(fixture)
+
+    assert result.name == "paper10_ceus_baseline_inference_hardening_current"
+    assert result.ok is False
+    assert "inferential_superiority_supported=True" in result.details
+
+
+def test_ceus_baseline_hardening_preflight_rejects_statistical_overclaim(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    patch = fixture / PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH
+    patch.write_text(
+        patch.read_text(encoding="utf-8")
+        + "\n\nThe result is statistically significant.\n",
+        encoding="utf-8",
+    )
+
+    result = check_paper10_ceus_baseline_inference_hardening_current(fixture)
+
+    assert result.name == "paper10_ceus_baseline_inference_hardening_current"
+    assert result.ok is False
+    assert "forbidden CEUS baseline hardening wording" in result.details
+    assert "statistically significant" in result.details
+
+
+def test_ceus_baseline_hardening_preflight_allows_negative_guardrails(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    patch = fixture / PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH
+    patch.write_text(
+        patch.read_text(encoding="utf-8")
+        + "\n\nDo not claim robust Bishan-to-Dongxing transfer superiority.\n",
+        encoding="utf-8",
+    )
+
+    result = check_paper10_ceus_baseline_inference_hardening_current(fixture)
+
+    assert result.name == "paper10_ceus_baseline_inference_hardening_current"
+    assert result.ok is True
 
 def test_submission_preflight_minimal_fixture_reports_missing_anchor_raw_rollout_consistency_audit(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
