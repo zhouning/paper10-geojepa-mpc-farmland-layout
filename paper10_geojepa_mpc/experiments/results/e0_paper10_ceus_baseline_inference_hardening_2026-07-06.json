@@ -1,0 +1,160 @@
+{
+  "allowed_language": [
+    "descriptive matched 5-seed reward anchor",
+    "mixed seed-wise outcome",
+    "diagnostic-only two-sided sign test",
+    "executable-mask necessity",
+    "monitor gate as evidence control",
+    "Stage 3 boundary evidence",
+    "Dongxing/Neijiang calibration evidence"
+  ],
+  "blocked_language": [
+    "uniform superiority",
+    "inferential superiority",
+    "direct 50-state Bishan scale-up success",
+    "robust Bishan-to-Dongxing transfer superiority",
+    "deployment-ready irregular cadastral planning"
+  ],
+  "claim_gates": {
+    "descriptive_mean_reward_anchor_supported": true,
+    "executable_mask_necessity_supported": true,
+    "inferential_superiority_supported": false,
+    "irregular_cadastral_deployment_supported": false,
+    "mixed_seedwise_outcome_required": true,
+    "monitor_gate_direct_reward_gain_supported": false,
+    "monitor_gate_evidence_control_supported": true,
+    "robust_transfer_superiority_supported": false,
+    "stage3_50state_scaleup_supported": false,
+    "uniform_superiority_supported": false
+  },
+  "date": "2026-07-06",
+  "paired_reward_summary": {
+    "all_seeds_improve": false,
+    "baseline_mean_reward": 67.5436698503176,
+    "baseline_sample_std": 7.22455439874099,
+    "candidate_loss_count": 2,
+    "candidate_mean_reward": 69.47054604253475,
+    "candidate_sample_std": 1.0003610285842477,
+    "candidate_win_count": 3,
+    "descriptive_mean_reward_anchor_supported": true,
+    "inferential_superiority_supported": false,
+    "n_seeds": 5,
+    "paired_max_delta": 9.062029496163603,
+    "paired_mean_delta": 1.9268761922171436,
+    "paired_median_delta": 3.613740374883278,
+    "paired_min_delta": -8.224779201745605,
+    "paired_std_delta": 7.512208608270984,
+    "seed_rows": [
+      {
+        "baseline_total_reward": 70.95434469700466,
+        "candidate_total_reward": 67.7134969354234,
+        "delta": -3.2408477615812643,
+        "final_metric_deltas": {
+          "baimu_area_change_ha": 29.600013869750512,
+          "cont_change": 0.003559895237368771,
+          "slope_change_pct": 0.007503881995781114
+        },
+        "outcome": "loss",
+        "seed": 0
+      },
+      {
+        "baseline_total_reward": 66.61146840551982,
+        "candidate_total_reward": 70.2252087804031,
+        "delta": 3.613740374883278,
+        "final_metric_deltas": {
+          "baimu_area_change_ha": 16.708463958156102,
+          "cont_change": -0.0044244412235872055,
+          "slope_change_pct": 0.04955950854782776
+        },
+        "outcome": "win",
+        "seed": 1
+      },
+      {
+        "baseline_total_reward": 61.297599914019195,
+        "candidate_total_reward": 69.7218379673849,
+        "delta": 8.424238053365706,
+        "final_metric_deltas": {
+          "baimu_area_change_ha": 2.0629915683090587,
+          "cont_change": 0.0005594121087293402,
+          "slope_change_pct": 0.050288404215757865
+        },
+        "outcome": "win",
+        "seed": 2
+      },
+      {
+        "baseline_total_reward": 60.76247356686642,
+        "candidate_total_reward": 69.82450306303002,
+        "delta": 9.062029496163603,
+        "final_metric_deltas": {
+          "baimu_area_change_ha": 9.202559118604682,
+          "cont_change": -0.0020342258499250754,
+          "slope_change_pct": 0.04492734584443725
+        },
+        "outcome": "win",
+        "seed": 3
+      },
+      {
+        "baseline_total_reward": 78.09246266817792,
+        "candidate_total_reward": 69.86768346643231,
+        "delta": -8.224779201745605,
+        "final_metric_deltas": {
+          "baimu_area_change_ha": -34.621599940699355,
+          "cont_change": 0.0010171129249623156,
+          "slope_change_pct": -0.08344093237802652
+        },
+        "outcome": "loss",
+        "seed": 4
+      }
+    ],
+    "sign_test": {
+      "classification": "diagnostic_only",
+      "interpretation": "Small-sample diagnostic only; current CEUS wording remains descriptive because no inferential plan was predefined.",
+      "losses": 2,
+      "p_value": 1.0,
+      "ties_excluded": 0,
+      "wins": 3
+    },
+    "tie_count": 0,
+    "uniform_superiority_supported": false
+  },
+  "secondary_metric_tradeoffs": {
+    "aligned_metrics": [
+      "slope_change_pct_mean",
+      "baimu_area_change_ha_mean"
+    ],
+    "classification": "reward_descriptive_secondary_mixed",
+    "deltas_vs_matched_paper9": {
+      "baimu_area_change_ha_mean": 4.5904857148242115,
+      "cont_change_mean": -0.0002644493604903736,
+      "slope_change_pct_mean": 0.013767641645155537
+    },
+    "executable_mask_necessity_supported": true,
+    "metric_direction": {
+      "baimu_area_change_ha_mean": "higher_is_better",
+      "cont_change_mean": "higher_is_better",
+      "slope_change_pct_mean": "higher_is_better"
+    },
+    "monitor_gate_direct_reward_gain_supported": false,
+    "neutral_metrics": [],
+    "no_mask_negative_zero_swap_steps": 98.0,
+    "no_mask_zero_swap_steps": 100.0,
+    "reward_delta_vs_matched_paper9": 1.9268761922171507,
+    "std_delta_vs_matched_paper9": -6.224193370156741,
+    "tradeoff_metrics": [
+      "cont_change_mean"
+    ],
+    "ungated_reward_delta_vs_full": 0.0
+  },
+  "source_boundary": {
+    "algorithm_redesign_performed": false,
+    "post_hoc_tuning_allowed": false,
+    "reran_rollouts": false,
+    "reran_training": false,
+    "source": "tracked JSON audit artifacts only"
+  },
+  "source_provenance": {
+    "matched_5seed_audit": "paper10_geojepa_mpc\\experiments\\results\\e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.json",
+    "mechanism_ablation_packet": "paper10_geojepa_mpc\\experiments\\results\\e0_paper10_mechanism_ablation_packet_2026-06-20.json"
+  },
+  "status": "source-derived CEUS baseline and inference hardening audit"
+}
