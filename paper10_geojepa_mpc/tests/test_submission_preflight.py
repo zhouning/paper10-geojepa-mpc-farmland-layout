@@ -1190,6 +1190,24 @@ def test_ceus_clean_main_manuscript_draft_preflight_rejects_internal_handoff_sec
     assert "Author Handoff Notes" in result.details
 
 
+def test_ceus_clean_main_manuscript_draft_preflight_rejects_resolved_author_declaration(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT
+    draft.write_text(
+        draft.read_text(encoding="utf-8").replace(
+            "\n## Funding\n\nPending author decision.\n",
+            "\n## Funding\n\nNo external funding was received.\n",
+        ),
+        encoding="utf-8",
+    )
+
+    result = preflight_checks.check_paper10_ceus_clean_main_manuscript_draft_current(fixture)
+
+    assert result.name == "paper10_ceus_clean_main_manuscript_draft_current"
+    assert result.ok is False
+    assert "pending author decision missing in section" in result.details
+    assert "## Funding" in result.details
+
 def test_ceus_clean_main_manuscript_draft_preflight_rejects_submission_ready_claim(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
     draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT

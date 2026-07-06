@@ -5036,6 +5036,14 @@ CEUS_CLEAN_MANUSCRIPT_INTERNAL_SECTIONS = (
     "## Author Handoff Notes",
 )
 
+CEUS_CLEAN_MANUSCRIPT_PENDING_AUTHOR_SECTIONS = (
+    "## Declaration of generative AI and AI-assisted technologies",
+    "## CRediT authorship contribution statement",
+    "## Declaration of competing interest",
+    "## Acknowledgements",
+    "## Funding",
+)
+
 CEUS_CLEAN_MANUSCRIPT_REQUIRED_CAPTIONS = (
     "Figure 1. Monitor-gated GeoJEPA-MPC workflow for farmland layout planning",
     "Figure 2. Bishan 20x16/top5 matched 5-seed reward anchor",
@@ -5148,6 +5156,18 @@ def check_paper10_ceus_clean_main_manuscript_draft_current(root: Path) -> CheckR
     for token in required_tokens:
         if token not in draft_text:
             missing_tokens.append(f"{PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT}: {token}")
+
+    for section in CEUS_CLEAN_MANUSCRIPT_PENDING_AUTHOR_SECTIONS:
+        section_text = markdown_section_outside_code_fences(draft_text, section)
+        normalized_section = section_text.lower()
+        if (
+            "pending author decision" not in normalized_section
+            and "author decision pending" not in normalized_section
+        ):
+            missing_tokens.append(
+                f"{PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT}: "
+                f"pending author decision missing in section: {section}"
+            )
 
     for caption in CEUS_CLEAN_MANUSCRIPT_REQUIRED_CAPTIONS:
         if caption not in draft_text:
