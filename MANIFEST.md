@@ -92,6 +92,12 @@ data needed for smoke verification.
   CEUS review-driven optimization register separating addressed technical
   audit items from unresolved real-data, multi-region, and stronger-claim
   experiment needs.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_baseline_inference_hardening_2026-07-06.md`:
+  source-derived CEUS baseline and inference hardening audit that locks mixed
+  seed-wise wording, diagnostic-only sign-test interpretation, secondary-metric
+  tradeoffs and no-overclaim gates for the next CEUS manuscript pass.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_baseline_hardened_manuscript_patch_2026-07-06.md`:
+  bounded manuscript patch for the next CEUS assembly pass.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_stage3_50x24_candidate_score_sweep_2026-06-20.md`:
   latest 50x24/f075 candidate-score sweep showing the boundary remains below
   the matched Paper9 baseline.

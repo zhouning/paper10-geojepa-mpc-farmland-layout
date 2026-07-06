@@ -95,6 +95,17 @@ write the bounded manuscript or run stronger-claim experiments:
 paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_review_optimization_register_2026-06-27.md
 ```
 
+Use the current CEUS baseline and inference hardening audit before editing the
+matched Paper9 comparison, seed-wise result wording, sign-test language, or
+monitor-gate interpretation:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_baseline_inference_hardening_2026-07-06.md
+```
+
+- `e0_paper10_ceus_baseline_inference_hardening_2026-07-06.md`: source-derived
+  CEUS baseline and inference wording audit; no rollout or training is rerun.
+
 Generate draft integrated Dongxing Figure 4 and Figure 5 previews from tracked
 CSV source data:
 

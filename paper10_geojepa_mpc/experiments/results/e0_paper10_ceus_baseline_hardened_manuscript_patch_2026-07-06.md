@@ -25,9 +25,7 @@ baseline hardening. Across the locked seeds 0-4, value-filter mean reward was
 and sample standard deviation was lower for the value-filter policy (1.0004
 versus 7.2246). The paired reward deltas were -3.2408, 3.6137, 8.4242, 9.0620
 and -8.2248. This establishes a descriptive matched 5-seed reward anchor, but
-not a uniform seed-wise improvement. A diagnostic-only two-sided sign test gives
-p=1.0000 for the 3-win/2-loss split, so the result should remain descriptive
-unless a future predefined inference plan is added before new rollouts.
+not a uniform seed-wise improvement. A diagnostic-only two-sided sign test gives p=1.0000 for the 3-win/2-loss split, so the result should remain descriptive unless a future predefined inference plan is added before new rollouts.
 
 ## Results: Mechanism and Secondary Metrics
 

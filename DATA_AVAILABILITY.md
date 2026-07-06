@@ -96,6 +96,14 @@ no-copy/no-redistribution boundary for full geospatial payloads, see:
 paper10_geojepa_mpc/experiments/results/e0_ceus_reviewer_improvement_packet_2026-06-12.md
 ```
 
+For the current CEUS baseline and inference wording boundary, including the
+descriptive matched 5-seed reward anchor and diagnostic-only sign-test readout,
+see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_baseline_inference_hardening_2026-07-06.md
+```
+
 For the current CEUS Research Article candidate manuscript draft, including
 the draft Data and Code Availability text that still requires DOI, licence,
 and controlled-access backfill, see:

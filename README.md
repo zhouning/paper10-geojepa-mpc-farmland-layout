@@ -48,6 +48,12 @@ seeds and loses on seeds 0 and 4, so this supports only a bounded descriptive
 Bishan 5-seed statement, not an inferential, multi-region, or 50-state scale-up
 claim.
 
+Use
+`paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_baseline_inference_hardening_2026-07-06.md`
+as the current CEUS baseline and inference hardening audit. It fixes matched
+Paper9 versus value-filter wording, keeps the 5-seed result descriptive and
+mixed seed-wise, and prevents uniform or inferential superiority claims.
+
 The previous 10x12/h5 top-4 pilot remains packaged as the direct baseline. Its
 recorded 100-step seeds 0-4 mean total reward is `65.2566` with sample standard
 deviation `5.0037`.
@@ -105,6 +111,8 @@ Paper-facing writing assets are tracked under
 - `e0_paper10_ceus_monitor_threshold_sensitivity_2026-06-27.md`
 - `e0_paper10_ceus_mechanism_claim_audit_2026-06-27.md`
 - `e0_paper10_ceus_review_optimization_register_2026-06-27.md`
+- `e0_paper10_ceus_baseline_inference_hardening_2026-07-06.md`
+- `e0_paper10_ceus_baseline_hardened_manuscript_patch_2026-07-06.md`
 - `e0_paper10_experiment_freeze_audit_2026-06-27.md`
 - `e0_paper10_experiment_closure_register_2026-06-27.md`
 - `e0_paper10_project_proposal_opening_report_2026-06-18.md`

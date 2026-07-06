@@ -191,6 +191,15 @@ PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD = (
 PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_JSON = (
     RESULTS / "e0_paper10_real_env_longhorizon_5seed_confirmatory_audit_2026-06-27.json"
 )
+PAPER10_CEUS_BASELINE_HARDENING_MD = (
+    RESULTS / "e0_paper10_ceus_baseline_inference_hardening_2026-07-06.md"
+)
+PAPER10_CEUS_BASELINE_HARDENING_JSON = (
+    RESULTS / "e0_paper10_ceus_baseline_inference_hardening_2026-07-06.json"
+)
+PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH = (
+    RESULTS / "e0_paper10_ceus_baseline_hardened_manuscript_patch_2026-07-06.md"
+)
 PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD = (
     RESULTS / "e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md"
 )
@@ -308,6 +317,9 @@ REQUIRED_PATHS = (
     PAPER10_REAL_ENV_LONGHORIZON_PILOT_AUDIT_JSON,
     PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD,
     PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_JSON,
+    PAPER10_CEUS_BASELINE_HARDENING_MD,
+    PAPER10_CEUS_BASELINE_HARDENING_JSON,
+    PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH,
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD,
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON,
     PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD,
@@ -361,6 +373,8 @@ PUBLIC_SUBMISSION_DOCS = (
     PAPER10_REAL_ENV_SMOKE_MD,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
     PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_MD,
+    PAPER10_CEUS_BASELINE_HARDENING_MD,
+    PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH,
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD,
     PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD,
     PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_MD,
@@ -4850,6 +4864,138 @@ def check_paper10_real_env_longhorizon_confirmatory_audit_current(root: Path) ->
     )
 
 
+def check_paper10_ceus_baseline_inference_hardening_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_CEUS_BASELINE_HARDENING_MD,
+        PAPER10_CEUS_BASELINE_HARDENING_JSON,
+        PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH,
+        README,
+        MANIFEST,
+        REPRODUCIBILITY,
+        DATA_AVAILABILITY,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_ceus_baseline_inference_hardening_current",
+            False,
+            "missing Paper10 CEUS baseline hardening files: "
+            + ", ".join(missing),
+        )
+
+    audit_text = read_text(root / PAPER10_CEUS_BASELINE_HARDENING_MD)
+    patch_text = read_text(root / PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH)
+    try:
+        payload = json.loads(read_text(root / PAPER10_CEUS_BASELINE_HARDENING_JSON))
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_ceus_baseline_inference_hardening_current",
+            False,
+            f"{PAPER10_CEUS_BASELINE_HARDENING_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    for doc in (README, MANIFEST, REPRODUCIBILITY, DATA_AVAILABILITY):
+        doc_text = read_text(root / doc)
+        if PAPER10_CEUS_BASELINE_HARDENING_MD.name not in doc_text:
+            missing_tokens.append(f"{doc}: {PAPER10_CEUS_BASELINE_HARDENING_MD.name}")
+
+    required_audit_tokens = [
+        "Paper10 CEUS baseline and inference hardening audit",
+        "diagnostic_only",
+        "mixed seed-wise outcome",
+        "uniform superiority is not supported",
+        "inferential superiority is not supported",
+        "executable-mask necessity",
+        "monitor gate as evidence control",
+    ]
+    for token in required_audit_tokens:
+        if token not in audit_text:
+            missing_tokens.append(f"{PAPER10_CEUS_BASELINE_HARDENING_MD}: {token}")
+
+    required_patch_tokens = [
+        "Paper10 CEUS baseline-hardened manuscript patch",
+        "descriptive matched 5-seed reward anchor",
+        "mixed seed-wise outcome",
+        "diagnostic-only two-sided sign test gives p=1.0000",
+        "executable-mask necessity",
+        "monitor gate as evidence control",
+        "Stage 3 boundary evidence",
+        "Dongxing/Neijiang calibration evidence",
+    ]
+    for token in required_patch_tokens:
+        if token not in patch_text:
+            missing_tokens.append(
+                f"{PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH}: {token}"
+            )
+
+    expected_values = {
+        ("status",): "source-derived CEUS baseline and inference hardening audit",
+        ("source_boundary", "reran_training"): False,
+        ("source_boundary", "reran_rollouts"): False,
+        ("source_boundary", "post_hoc_tuning_allowed"): False,
+        ("paired_reward_summary", "n_seeds"): 5,
+        ("paired_reward_summary", "candidate_win_count"): 3,
+        ("paired_reward_summary", "candidate_loss_count"): 2,
+        ("paired_reward_summary", "uniform_superiority_supported"): False,
+        ("paired_reward_summary", "inferential_superiority_supported"): False,
+        ("paired_reward_summary", "descriptive_mean_reward_anchor_supported"): True,
+        ("paired_reward_summary", "sign_test", "classification"): "diagnostic_only",
+        ("claim_gates", "descriptive_mean_reward_anchor_supported"): True,
+        ("claim_gates", "uniform_superiority_supported"): False,
+        ("claim_gates", "inferential_superiority_supported"): False,
+        ("claim_gates", "stage3_50state_scaleup_supported"): False,
+        ("claim_gates", "robust_transfer_superiority_supported"): False,
+        ("claim_gates", "irregular_cadastral_deployment_supported"): False,
+    }
+    for path_keys, expected in expected_values.items():
+        value = payload
+        for key in path_keys:
+            if not isinstance(value, dict) or key not in value:
+                missing_tokens.append(
+                    f"{PAPER10_CEUS_BASELINE_HARDENING_JSON}: {'.'.join(path_keys)}"
+                )
+                value = None
+                break
+            value = value[key]
+        if value != expected:
+            missing_tokens.append(
+                f"{PAPER10_CEUS_BASELINE_HARDENING_JSON}: "
+                f"{'.'.join(path_keys)}={value}"
+            )
+
+    p_value = (
+        payload.get("paired_reward_summary", {})
+        .get("sign_test", {})
+        .get("p_value")
+    )
+    if not isinstance(p_value, (float, int)) or abs(float(p_value) - 1.0) > 1e-8:
+        missing_tokens.append(
+            f"{PAPER10_CEUS_BASELINE_HARDENING_JSON}: sign_test.p_value={p_value}"
+        )
+
+    for rel_path, text in (
+        (PAPER10_CEUS_BASELINE_HARDENING_MD, audit_text),
+        (PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH, patch_text),
+    ):
+        for line_no, line in enumerate(text.splitlines(), start=1):
+            if is_ceus_baseline_positive_overclaim(line):
+                missing_tokens.append(
+                    f"{rel_path}:{line_no}: forbidden CEUS baseline hardening wording: {line.strip()}"
+                )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_ceus_baseline_inference_hardening_current",
+            False,
+            "Paper10 CEUS baseline hardening gaps: " + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_ceus_baseline_inference_hardening_current",
+        True,
+        "Paper10 CEUS baseline hardening audit and manuscript patch are current",
+    )
+
 def check_paper10_anchor_raw_rollout_consistency_audit_current(root: Path) -> CheckResult:
     required_files = [
         PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD,
@@ -5535,6 +5681,40 @@ def check_paper10_manuscript_text_table_consistency_audit_current(root: Path) ->
     )
 
 
+CEUS_BASELINE_NEGATIVE_GUARDRAIL = re.compile(
+    r"\b("
+    r"do not|does not|not supported|insufficient|cannot|must not|should not|no "
+    r"|without|rather than"
+    r")\b",
+    re.IGNORECASE,
+)
+CEUS_BASELINE_CLAUSE_SPLIT_PATTERN = re.compile(r"[;.!?]+")
+CEUS_BASELINE_FORBIDDEN_TARGETS = (
+    re.compile(r"\bstatistically significant\b", re.IGNORECASE),
+    re.compile(r"\brobustly superior\b", re.IGNORECASE),
+    re.compile(r"\buniformly superior\b", re.IGNORECASE),
+    re.compile(r"\bdirect 50[- ]state Bishan scale[- ]up success\b", re.IGNORECASE),
+    re.compile(
+        r"\brobust Bishan[- ]to[- ]Dongxing transfer superiority\b",
+        re.IGNORECASE,
+    ),
+    re.compile(r"\bdeployment-ready\b", re.IGNORECASE),
+)
+
+
+def is_ceus_baseline_positive_overclaim(line: str) -> bool:
+    for clause in (
+        clause.strip()
+        for clause in CEUS_BASELINE_CLAUSE_SPLIT_PATTERN.split(line)
+    ):
+        if not clause:
+            continue
+        if CEUS_BASELINE_NEGATIVE_GUARDRAIL.search(clause):
+            continue
+        if any(target.search(clause) for target in CEUS_BASELINE_FORBIDDEN_TARGETS):
+            return True
+    return False
+
 SUBMISSION_READINESS_NEGATIVE_GUARDRAIL = re.compile(
     r"\b("
     r"does not mean|do not|must not|cannot|can't|may not|should not"
@@ -5736,6 +5916,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_real_env_smoke_boundary_audit_current,
     check_paper10_real_env_longhorizon_pilot_audit_current,
     check_paper10_real_env_longhorizon_confirmatory_audit_current,
+    check_paper10_ceus_baseline_inference_hardening_current,
     check_paper10_anchor_raw_rollout_consistency_audit_current,
     check_original_vision_validation_registry_current,
 )
