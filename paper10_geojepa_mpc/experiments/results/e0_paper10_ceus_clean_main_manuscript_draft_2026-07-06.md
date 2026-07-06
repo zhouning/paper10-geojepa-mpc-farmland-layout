@@ -188,6 +188,10 @@ Pending author decision.
 
 Pending author decision.
 
+## References
+
+Reference list source files for the clean draft are `references/paper10_verified_references_2026-06-09.bib` and `references/paper10_local_sources_2026-06-09.bib`. The journal-formatted reference list must be generated from these verified BibTeX files during final CEUS conversion.
+
 ## Figure captions
 
 Figure 1. Monitor-gated GeoJEPA-MPC workflow for farmland layout planning. The schematic should show finite-horizon value-label generation, monitor-gate checks, value-head training, executable-mask rollout and claim-boundary recording.

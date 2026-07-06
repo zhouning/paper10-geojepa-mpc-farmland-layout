@@ -1032,6 +1032,26 @@ def test_ceus_clean_main_manuscript_draft_preflight_rejects_long_highlight(tmp_p
 
 
 
+
+def test_ceus_clean_main_manuscript_draft_preflight_rejects_missing_references_section(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT
+    text = draft.read_text(encoding="utf-8")
+    draft.write_text(
+        text.replace(
+            "\n## References\n\nReference list source files for the clean draft are `references/paper10_verified_references_2026-06-09.bib` and `references/paper10_local_sources_2026-06-09.bib`. The journal-formatted reference list must be generated from these verified BibTeX files during final CEUS conversion.\n",
+            "\n",
+        ),
+        encoding="utf-8",
+    )
+
+    result = preflight_checks.check_paper10_ceus_clean_main_manuscript_draft_current(fixture)
+
+    assert result.name == "paper10_ceus_clean_main_manuscript_draft_current"
+    assert result.ok is False
+    assert "## References" in result.details
+    assert "paper10_verified_references_2026-06-09.bib" in result.details
+
 def test_ceus_clean_main_manuscript_draft_preflight_rejects_missing_main_figure_caption(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
     draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT
