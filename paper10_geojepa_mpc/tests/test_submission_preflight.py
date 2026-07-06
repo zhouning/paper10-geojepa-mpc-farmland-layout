@@ -966,6 +966,29 @@ def test_ceus_clean_main_manuscript_draft_preflight_rejects_missing_source_assem
     assert "missing Paper10 CEUS clean main manuscript draft files" in result.details
     assert str(PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_ASSEMBLY_DRAFT) in result.details
 
+
+def test_ceus_clean_main_manuscript_draft_preflight_rejects_missing_source_assembly_index_link(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    readme = fixture / "README.md"
+    readme.write_text(
+        readme.read_text(encoding="utf-8").replace(
+            "e0_paper10_ceus_baseline_hardened_manuscript_assembly_draft_2026-07-06.md",
+            "removed_source_assembly.md",
+        ),
+        encoding="utf-8",
+    )
+
+    result = preflight_checks.check_paper10_ceus_clean_main_manuscript_draft_current(fixture)
+
+    assert result.name == "paper10_ceus_clean_main_manuscript_draft_current"
+    assert result.ok is False
+    assert "missing clean-draft source assembly index link" in result.details
+    assert "README.md" in result.details
+    assert (
+        "e0_paper10_ceus_baseline_hardened_manuscript_assembly_draft_2026-07-06.md"
+        in result.details
+    )
+
 def test_submission_preflight_minimal_fixture_reports_missing_ceus_clean_main_manuscript_draft(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
     (fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT).unlink()

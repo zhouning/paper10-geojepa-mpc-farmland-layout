@@ -5104,11 +5104,19 @@ def check_paper10_ceus_clean_main_manuscript_draft_current(root: Path) -> CheckR
     highlights_text = read_text(root / PAPER10_CEUS_HIGHLIGHTS)
     missing_tokens = []
 
+    source_assembly_name = (
+        PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_ASSEMBLY_DRAFT.name
+    )
     for doc in (README, MANIFEST, DATA_AVAILABILITY):
         doc_text = read_text(root / doc)
         if PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT.name not in doc_text:
             missing_tokens.append(
                 f"{doc}: {PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT.name}"
+            )
+        if source_assembly_name not in doc_text:
+            missing_tokens.append(
+                f"{doc}: missing clean-draft source assembly index link: "
+                f"{source_assembly_name}"
             )
 
     required_tokens = [
