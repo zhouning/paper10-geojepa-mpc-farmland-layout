@@ -1190,6 +1190,24 @@ def test_ceus_clean_main_manuscript_draft_preflight_rejects_internal_handoff_sec
     assert "Author Handoff Notes" in result.details
 
 
+def test_ceus_clean_main_manuscript_draft_preflight_rejects_missing_data_availability_route(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT
+    draft.write_text(
+        draft.read_text(encoding="utf-8").replace(
+            "The Dongxing/Neijiang prepared data are also external to Git.",
+            "The external-region prepared data are also external to Git.",
+        ),
+        encoding="utf-8",
+    )
+
+    result = preflight_checks.check_paper10_ceus_clean_main_manuscript_draft_current(fixture)
+
+    assert result.name == "paper10_ceus_clean_main_manuscript_draft_current"
+    assert result.ok is False
+    assert "Data and Code Availability missing route" in result.details
+    assert "Dongxing/Neijiang prepared data" in result.details
+
 def test_ceus_clean_main_manuscript_draft_preflight_rejects_resolved_author_declaration(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
     draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT

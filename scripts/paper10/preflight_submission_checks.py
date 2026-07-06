@@ -5036,6 +5036,16 @@ CEUS_CLEAN_MANUSCRIPT_INTERNAL_SECTIONS = (
     "## Author Handoff Notes",
 )
 
+CEUS_CLEAN_MANUSCRIPT_DATA_AVAILABILITY_TOKENS = (
+    "repository DOI",
+    "full Bishan Tool2",
+    "prepared GPKG-root geospatial inputs",
+    "Dongxing/Neijiang prepared data",
+    "controlled-access metadata record",
+    "software licence",
+    "generated-output rights",
+)
+
 CEUS_CLEAN_MANUSCRIPT_PENDING_AUTHOR_SECTIONS = (
     "## Declaration of generative AI and AI-assisted technologies",
     "## CRediT authorship contribution statement",
@@ -5156,6 +5166,16 @@ def check_paper10_ceus_clean_main_manuscript_draft_current(root: Path) -> CheckR
     for token in required_tokens:
         if token not in draft_text:
             missing_tokens.append(f"{PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT}: {token}")
+
+    data_availability = markdown_section_outside_code_fences(
+        draft_text, "## Data and Code Availability"
+    )
+    for token in CEUS_CLEAN_MANUSCRIPT_DATA_AVAILABILITY_TOKENS:
+        if token not in data_availability:
+            missing_tokens.append(
+                f"{PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT}: "
+                f"Data and Code Availability missing route: {token}"
+            )
 
     for section in CEUS_CLEAN_MANUSCRIPT_PENDING_AUTHOR_SECTIONS:
         section_text = markdown_section_outside_code_fences(draft_text, section)
