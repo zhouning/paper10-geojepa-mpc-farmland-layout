@@ -65,6 +65,7 @@ from scripts.paper10.preflight_submission_checks import (
     PAPER10_CEUS_BASELINE_HARDENING_MD,
     PAPER10_CEUS_BASELINE_HARDENING_JSON,
     PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH,
+    PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_ASSEMBLY_DRAFT,
     PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT,
     PAPER10_CEUS_HIGHLIGHTS,
     PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD,
@@ -165,6 +166,7 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     PAPER10_CEUS_BASELINE_HARDENING_MD,
     PAPER10_CEUS_BASELINE_HARDENING_JSON,
     PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH,
+    PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_ASSEMBLY_DRAFT,
     PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT,
     PAPER10_CEUS_HIGHLIGHTS,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
@@ -951,6 +953,18 @@ def test_submission_preflight_current_repository_includes_ceus_clean_main_manusc
 
     assert "paper10_ceus_clean_main_manuscript_draft_current" in payload["passed_checks"]
 
+
+
+def test_ceus_clean_main_manuscript_draft_preflight_rejects_missing_source_assembly(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    (fixture / PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_ASSEMBLY_DRAFT).unlink()
+
+    result = preflight_checks.check_paper10_ceus_clean_main_manuscript_draft_current(fixture)
+
+    assert result.name == "paper10_ceus_clean_main_manuscript_draft_current"
+    assert result.ok is False
+    assert "missing Paper10 CEUS clean main manuscript draft files" in result.details
+    assert str(PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_ASSEMBLY_DRAFT) in result.details
 
 def test_submission_preflight_minimal_fixture_reports_missing_ceus_clean_main_manuscript_draft(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
