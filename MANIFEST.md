@@ -6,8 +6,8 @@ data needed for smoke verification.
 
 ## Included
 
-- `paper10_geojepa_mpc/`: 355 tracked non-cache files in the active Paper10
-  workspace, including 83 Python files, 115 JSON files, 111 Markdown files,
+- `paper10_geojepa_mpc/`: 356 tracked non-cache files in the active Paper10
+  workspace, including 83 Python files, 115 JSON files, 112 Markdown files,
   11 CSV files,
   9 NPZ files, 10 PyTorch checkpoint files, and 16 log files.
 - `arcgis_toolbox_paper9/private_source/`: 10 Paper9 compatibility source files
@@ -98,6 +98,11 @@ data needed for smoke verification.
   tradeoffs and no-overclaim gates for the next CEUS manuscript pass.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_baseline_hardened_manuscript_patch_2026-07-06.md`:
   bounded manuscript patch for the next CEUS assembly pass.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_baseline_hardened_manuscript_assembly_draft_2026-07-06.md`:
+  current CEUS baseline-hardened manuscript assembly draft that integrates the
+  2026-07-06 baseline/inference hardening audit with the bounded manuscript,
+  mechanism ablation, Stage 3 boundary and Dongxing/Neijiang calibration
+  evidence.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_stage3_50x24_candidate_score_sweep_2026-06-20.md`:
   latest 50x24/f075 candidate-score sweep showing the boundary remains below
   the matched Paper9 baseline.
