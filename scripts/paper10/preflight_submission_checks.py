@@ -831,6 +831,7 @@ def check_citation_keys_resolve(root: Path) -> CheckResult:
         / RESULTS
         / "e0_frontier_random050_integrated_manuscript_self_contained_methods_draft_2026-06-09.md",
         root / CEUS_RESEARCH_ARTICLE_MANUSCRIPT_DRAFT,
+        root / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT,
         root / "references" / "paper10_citation_map_2026-06-09.md",
         root / RESULTS / "e0_citation_and_claim_checklist_2026-06-09.md",
     ]

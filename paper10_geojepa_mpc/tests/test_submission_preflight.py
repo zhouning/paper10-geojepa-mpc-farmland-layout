@@ -12,6 +12,7 @@ from scripts.paper10.preflight_submission_checks import (
     CEUS_REVIEWER_IMPROVEMENT_PACKET,
     CEUS_STAGE3_MANUSCRIPT_DRAFT,
     CEUS_STAGE3_MANUSCRIPT_REFRAME,
+    check_citation_keys_resolve,
     check_paper10_ceus_baseline_inference_hardening_current,
     check_paper10_submission_readiness_boundary_current,
     check_original_vision_validation_registry_current,
@@ -328,6 +329,22 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "paper10_anchor_raw_rollout_consistency_audit_current" in payload["passed_checks"]
     assert "original_vision_validation_registry_current" in payload["passed_checks"]
 
+
+
+def test_citation_resolver_checks_ceus_clean_main_manuscript_draft(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT
+    draft.write_text(
+        draft.read_text(encoding="utf-8")
+        + "\n\nThis clean draft cites @paper10_missing_clean_draft_key.\n",
+        encoding="utf-8",
+    )
+
+    result = check_citation_keys_resolve(fixture)
+
+    assert result.name == "citation_keys_resolve"
+    assert result.ok is False
+    assert "paper10_missing_clean_draft_key" in result.details
 
 def test_submission_preflight_reports_missing_required_path(tmp_path):
     fixture = tmp_path / "repo"
