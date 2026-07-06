@@ -1031,6 +1031,44 @@ def test_ceus_clean_main_manuscript_draft_preflight_rejects_long_highlight(tmp_p
     assert "highlight exceeds 85 characters" in result.details
 
 
+
+def test_ceus_clean_main_manuscript_draft_preflight_rejects_missing_main_figure_caption(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT
+    draft.write_text(
+        draft.read_text(encoding="utf-8").replace(
+            "Figure 3. Bishan Stage 3 boundary rows and candidate-score sweep.",
+            "Figure 3 removed.",
+        ),
+        encoding="utf-8",
+    )
+
+    result = preflight_checks.check_paper10_ceus_clean_main_manuscript_draft_current(fixture)
+
+    assert result.name == "paper10_ceus_clean_main_manuscript_draft_current"
+    assert result.ok is False
+    assert "missing required figure/table caption" in result.details
+    assert "Figure 3. Bishan Stage 3 boundary rows and candidate-score sweep" in result.details
+
+
+def test_ceus_clean_main_manuscript_draft_preflight_rejects_missing_supplementary_table_caption(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT
+    draft.write_text(
+        draft.read_text(encoding="utf-8").replace(
+            "Supplementary Table S3. Mechanism ablation and control comparison for executable masks and monitor-gate evidence control.",
+            "Supplementary Table S3 removed.",
+        ),
+        encoding="utf-8",
+    )
+
+    result = preflight_checks.check_paper10_ceus_clean_main_manuscript_draft_current(fixture)
+
+    assert result.name == "paper10_ceus_clean_main_manuscript_draft_current"
+    assert result.ok is False
+    assert "missing required figure/table caption" in result.details
+    assert "Supplementary Table S3. Mechanism ablation and control comparison" in result.details
+
 def test_ceus_clean_main_manuscript_draft_preflight_rejects_internal_handoff_sections(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
     draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT

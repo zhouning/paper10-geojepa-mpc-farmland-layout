@@ -5015,6 +5015,20 @@ CEUS_CLEAN_MANUSCRIPT_INTERNAL_SECTIONS = (
     "## Author Handoff Notes",
 )
 
+CEUS_CLEAN_MANUSCRIPT_REQUIRED_CAPTIONS = (
+    "Figure 1. Monitor-gated GeoJEPA-MPC workflow for farmland layout planning",
+    "Figure 2. Bishan 20x16/top5 matched 5-seed reward anchor",
+    "Figure 3. Bishan Stage 3 boundary rows and candidate-score sweep",
+    "Figure 4. Dongxing/Neijiang return-label scaling",
+    "Supplementary Figure S1. Dongxing/Neijiang low-label transfer stress test",
+    "Table 1. Bishan monitor-selected value-label gates",
+    "Table 2. Bishan matched 5-seed rollout comparison",
+    "Table 3. Dongxing/Neijiang return-label scaling summary",
+    "Supplementary Table S1. Stage 3 seed-level rollout rewards",
+    "Supplementary Table S2. Dongxing/Neijiang low-label transfer stress-test summary",
+    "Supplementary Table S3. Mechanism ablation and control comparison",
+)
+
 
 def markdown_bullets(section_text: str) -> list[str]:
     return [
@@ -5077,6 +5091,13 @@ def check_paper10_ceus_clean_main_manuscript_draft_current(root: Path) -> CheckR
     for token in required_tokens:
         if token not in draft_text:
             missing_tokens.append(f"{PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT}: {token}")
+
+    for caption in CEUS_CLEAN_MANUSCRIPT_REQUIRED_CAPTIONS:
+        if caption not in draft_text:
+            missing_tokens.append(
+                f"{PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT}: "
+                f"missing required figure/table caption: {caption}"
+            )
 
     abstract = markdown_section_outside_code_fences(draft_text, "## Abstract")
     if not abstract:
