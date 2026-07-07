@@ -215,6 +215,7 @@ def value_filter_mpc_select_action(
     scoring="reward",
     candidate_score_mode="value",
     candidate_value_weight=0.5,
+    candidate_reward_reserve=0,
     use_geojepa_fast_path=True,
     stable_candidate_order=False,
     random_continuation_mode="independent",
@@ -233,6 +234,9 @@ def value_filter_mpc_select_action(
         raise ValueError("continuation must be 'random' or 'greedy'")
     if random_continuation_mode not in {"independent", "common"}:
         raise ValueError("random_continuation_mode must be 'independent' or 'common'")
+    candidate_reward_reserve = int(candidate_reward_reserve)
+    if candidate_reward_reserve < 0:
+        raise ValueError("candidate_reward_reserve must be non-negative")
 
     rng = rng or np.random.default_rng()
     valid_actions = np.where(action_mask)[0]
@@ -252,7 +256,43 @@ def value_filter_mpc_select_action(
 
     n_valid = len(valid_actions)
     k = min(top_k, n_valid)
-    top_idx = np.argsort(candidate_scores)[-k:]
+    reward_reserve_used = 0
+    reward_reserve_score_time_sec = 0.0
+    if candidate_reward_reserve > 0:
+        reserve_count = min(candidate_reward_reserve, k)
+        reward_score_started = perf_counter()
+        if candidate_score_mode == "reward":
+            reward_scores = candidate_scores
+        else:
+            reward_scores = _score_valid_actions(
+                adapter,
+                np.asarray(block_features, dtype=np.float32),
+                np.asarray(global_features, dtype=np.float32),
+                valid_actions.astype(np.int64),
+                "reward",
+                0.5,
+            )
+        reward_reserve_score_time_sec = perf_counter() - reward_score_started
+        selected_idx = []
+        selected_set = set()
+        for idx in np.argsort(reward_scores)[::-1]:
+            index = int(idx)
+            selected_idx.append(index)
+            selected_set.add(index)
+            if len(selected_idx) >= reserve_count:
+                break
+        reward_reserve_used = len(selected_idx)
+        for idx in np.argsort(candidate_scores)[::-1]:
+            index = int(idx)
+            if index in selected_set:
+                continue
+            selected_idx.append(index)
+            selected_set.add(index)
+            if len(selected_idx) >= k:
+                break
+        top_idx = np.asarray(selected_idx, dtype=np.int64)
+    else:
+        top_idx = np.argsort(candidate_scores)[-k:]
     candidates = valid_actions[top_idx]
     selected_candidate_scores = candidate_scores[top_idx]
     if stable_candidate_order:
@@ -331,6 +371,9 @@ def value_filter_mpc_select_action(
         "scoring": scoring,
         "candidate_score_mode": candidate_score_mode,
         "candidate_value_weight": float(candidate_value_weight),
+        "candidate_reward_reserve": int(candidate_reward_reserve),
+        "candidate_reward_reserve_used": int(reward_reserve_used),
+        "reward_reserve_score_time_sec": float(reward_reserve_score_time_sec),
         "stable_candidate_order": bool(stable_candidate_order),
         "random_continuation_mode": random_continuation_mode,
         "fast_path": fast_path,

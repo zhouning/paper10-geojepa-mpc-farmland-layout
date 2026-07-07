@@ -190,12 +190,14 @@ def test_run_episode_passes_value_filter_candidate_scoring_metadata():
         scoring,
         candidate_score_mode,
         candidate_value_weight,
+        candidate_reward_reserve,
         random_continuation_mode,
         stable_candidate_order,
         rng,
     ):
         seen["candidate_score_mode"] = candidate_score_mode
         seen["candidate_value_weight"] = candidate_value_weight
+        seen["candidate_reward_reserve"] = candidate_reward_reserve
         seen["random_continuation_mode"] = random_continuation_mode
         seen["stable_candidate_order"] = stable_candidate_order
         return 1, {
@@ -218,6 +220,7 @@ def test_run_episode_passes_value_filter_candidate_scoring_metadata():
         selector="value_filter",
         candidate_score_mode="value",
         candidate_value_weight=0.75,
+        candidate_reward_reserve=3,
         random_continuation_mode="common",
         stable_candidate_order=True,
     )
@@ -236,6 +239,8 @@ def test_run_episode_passes_value_filter_candidate_scoring_metadata():
     assert result["selector"] == "value_filter"
     assert result["candidate_score_mode"] == "value"
     assert result["candidate_value_weight"] == 0.75
+    assert seen["candidate_reward_reserve"] == 3
+    assert result["candidate_reward_reserve"] == 3
     assert seen["random_continuation_mode"] == "common"
     assert result["random_continuation_mode"] == "common"
     assert seen["stable_candidate_order"] is True
@@ -325,6 +330,7 @@ def _multiseed_args(tmp_path):
         model_value_weight=0.5,
         candidate_score_mode="blend",
         candidate_value_weight=0.1,
+        candidate_reward_reserve=0,
         random_continuation_mode="independent",
         stable_candidate_order=False,
         output=str(tmp_path / "rollout.json"),

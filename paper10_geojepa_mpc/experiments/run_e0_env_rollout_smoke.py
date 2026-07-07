@@ -84,6 +84,12 @@ def parse_args():
     )
     parser.add_argument("--candidate-value-weight", type=float, default=0.5)
     parser.add_argument(
+        "--candidate-reward-reserve",
+        type=int,
+        default=0,
+        help="Reserve this many value-filter candidate slots for reward-top actions.",
+    )
+    parser.add_argument(
         "--random-continuation-mode",
         choices=("independent", "common"),
         default="independent",
@@ -157,6 +163,9 @@ def _run_episode(
                 scoring=args.scoring,
                 candidate_score_mode=args.candidate_score_mode,
                 candidate_value_weight=args.candidate_value_weight,
+                candidate_reward_reserve=int(
+                    getattr(args, "candidate_reward_reserve", 0)
+                ),
                 random_continuation_mode=getattr(
                     args, "random_continuation_mode", "independent"
                 ),
@@ -233,6 +242,9 @@ def _run_episode(
             if hasattr(args, "candidate_value_weight")
             else None
         ),
+        "candidate_reward_reserve": int(
+            getattr(args, "candidate_reward_reserve", 0)
+        ),
         "random_continuation_mode": getattr(
             args, "random_continuation_mode", "independent"
         ),
@@ -291,6 +303,9 @@ def _build_multiseed_result(
         "model_value_weight": float(args.model_value_weight),
         "candidate_score_mode": args.candidate_score_mode,
         "candidate_value_weight": float(args.candidate_value_weight),
+        "candidate_reward_reserve": int(
+            getattr(args, "candidate_reward_reserve", 0)
+        ),
         "random_continuation_mode": getattr(
             args, "random_continuation_mode", "independent"
         ),

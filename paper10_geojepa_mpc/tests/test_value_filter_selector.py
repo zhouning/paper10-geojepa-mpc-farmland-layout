@@ -94,6 +94,31 @@ def test_value_filter_selects_best_reward_only_inside_value_topk():
     assert info["rollout_time_sec"] >= 0.0
 
 
+def test_value_filter_can_reserve_reward_top_candidate_outside_value_topk():
+    block_features = np.zeros((3, 17), dtype=np.float32)
+    global_features = np.zeros(12, dtype=np.float32)
+    action_mask = np.asarray([True, True, True])
+
+    action, info = value_filter_mpc_select_action(
+        RewardAdapter(),
+        block_features,
+        global_features,
+        action_mask,
+        horizon=1,
+        top_k=2,
+        gamma=0.99,
+        scoring="reward",
+        candidate_score_mode="value",
+        candidate_reward_reserve=1,
+        rng=np.random.default_rng(0),
+    )
+
+    assert action == 2
+    assert info["candidate_reward_reserve"] == 1
+    assert info["candidate_reward_reserve_used"] == 1
+    assert info["n_candidates"] == 2
+
+
 def test_value_filter_can_stabilize_candidate_order_before_random_rollout():
     block_features = np.zeros((3, 17), dtype=np.float32)
     global_features = np.zeros(12, dtype=np.float32)
