@@ -134,16 +134,43 @@ def select_top_scored_actions(
     return valid_actions[order].astype(np.int64), scores[order].astype(np.float32)
 
 
+def _validate_adapter_score_request(score_mode: str, value_weight: float) -> None:
+    if score_mode not in {"reward", "value", "blend", "zscore_blend"}:
+        raise ValueError(
+            "score_mode must be 'reward', 'value', 'blend', or 'zscore_blend'"
+        )
+    if not 0.0 <= value_weight <= 1.0:
+        raise ValueError("value_weight must be in [0, 1]")
+
+
+def _zscore_1d(scores: np.ndarray, eps: float = 1e-8) -> np.ndarray:
+    centered = scores - np.mean(scores)
+    scale = float(np.sqrt(np.mean(centered * centered)))
+    if scale <= eps:
+        return np.zeros_like(scores, dtype=np.float32)
+    return (centered / scale).astype(np.float32)
+
+
+def _zscore_blend_adapter_scores(
+    rewards: np.ndarray,
+    values: np.ndarray,
+    value_weight: float,
+) -> np.ndarray:
+    if rewards.shape != values.shape:
+        raise ValueError("adapter aux['value'] must match rewards shape")
+    return (
+        (1.0 - float(value_weight)) * _zscore_1d(rewards)
+        + float(value_weight) * _zscore_1d(values)
+    ).astype(np.float32)
+
+
 def _scalar_scores_from_adapter_output(
     rewards: np.ndarray,
     aux: dict,
     score_mode: str,
     value_weight: float,
 ) -> np.ndarray:
-    if score_mode not in {"reward", "value", "blend"}:
-        raise ValueError("score_mode must be 'reward', 'value', or 'blend'")
-    if not 0.0 <= value_weight <= 1.0:
-        raise ValueError("value_weight must be in [0, 1]")
+    _validate_adapter_score_request(score_mode, value_weight)
 
     rewards = np.asarray(rewards, dtype=np.float32).reshape(-1)
     if score_mode == "reward":
@@ -155,6 +182,8 @@ def _scalar_scores_from_adapter_output(
         raise ValueError("adapter aux['value'] must match rewards shape")
     if score_mode == "value":
         return values
+    if score_mode == "zscore_blend":
+        return _zscore_blend_adapter_scores(rewards, values, value_weight)
     return (1.0 - float(value_weight)) * rewards + float(value_weight) * values
 
 
@@ -169,14 +198,23 @@ def _score_actions_with_adapter(
 ) -> np.ndarray:
     if score_batch_size <= 0:
         raise ValueError("score_batch_size must be positive")
+    _validate_adapter_score_request(score_mode, value_weight)
 
     valid_actions = np.asarray(valid_actions, dtype=np.int64)
     scores = []
+    reward_chunks = []
+    value_chunks = []
     for start in range(0, valid_actions.shape[0], score_batch_size):
         chunk = valid_actions[start : start + score_batch_size]
         bf_batch = np.repeat(block_features[np.newaxis], chunk.shape[0], axis=0)
         gf_batch = np.repeat(global_features[np.newaxis], chunk.shape[0], axis=0)
         _, _, rewards, aux = adapter.batch_predict(bf_batch, gf_batch, chunk)
+        if score_mode == "zscore_blend":
+            if "value" not in aux:
+                raise ValueError("score_mode requires adapter aux['value']")
+            reward_chunks.append(np.asarray(rewards, dtype=np.float32).reshape(-1))
+            value_chunks.append(np.asarray(aux["value"], dtype=np.float32).reshape(-1))
+            continue
         scores.append(
             _scalar_scores_from_adapter_output(
                 rewards,
@@ -184,6 +222,12 @@ def _score_actions_with_adapter(
                 score_mode=score_mode,
                 value_weight=value_weight,
             )
+        )
+    if score_mode == "zscore_blend":
+        return _zscore_blend_adapter_scores(
+            np.concatenate(reward_chunks),
+            np.concatenate(value_chunks),
+            value_weight,
         )
     return np.concatenate(scores).astype(np.float32)
 
@@ -750,7 +794,7 @@ def parse_args():
     )
     parser.add_argument(
         "--candidate-score-mode",
-        choices=("reward", "value", "blend"),
+        choices=("reward", "value", "blend", "zscore_blend"),
         default="reward",
     )
     parser.add_argument("--candidate-value-weight", type=float, default=0.5)

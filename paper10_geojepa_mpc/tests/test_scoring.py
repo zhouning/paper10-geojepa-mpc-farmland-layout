@@ -20,6 +20,17 @@ class ActionIdRewardValueModel(torch.nn.Module):
         return block_features, global_features, reward, {"value": value}
 
 
+class LargeScaleRewardSparseValueModel(torch.nn.Module):
+    def forward(self, block_features, global_features, action, geofm_features=None):
+        reward = (action.float() * 1000.0).unsqueeze(-1)
+        value = torch.where(
+            action == 0,
+            torch.full_like(action, 10).float(),
+            torch.zeros_like(action).float(),
+        ).unsqueeze(-1)
+        return block_features, global_features, reward, {"value": value}
+
+
 class CountingEncoder(torch.nn.Module):
     def __init__(self, wrapped):
         super().__init__()
@@ -91,6 +102,25 @@ def test_score_candidate_actions_can_blend_reward_and_value_scores():
 
     assert torch.equal(scores, torch.tensor([4.0, 3.0]))
 
+
+def test_score_candidate_actions_can_zscore_blend_scale_mismatched_scores():
+    model = LargeScaleRewardSparseValueModel()
+    block_features = torch.zeros(4, 17)
+    global_features = torch.zeros(12)
+    actions = torch.tensor([0, 1, 2])
+
+    scores = score_candidate_actions(
+        model,
+        block_features,
+        global_features,
+        actions,
+        score_mode="zscore_blend",
+        value_weight=0.8,
+    )
+
+    expected = torch.tensor([0.8864, -0.5657, -0.3207])
+    assert torch.allclose(scores, expected, atol=1e-4)
+    assert int(scores.argmax()) == 0
 
 def test_score_candidate_actions_fast_path_matches_geojepa_forward_for_single_state():
     torch.manual_seed(0)

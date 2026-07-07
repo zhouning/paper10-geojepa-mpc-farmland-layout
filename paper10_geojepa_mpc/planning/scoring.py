@@ -1,16 +1,48 @@
 import torch
 
 
+SCORE_MODES = {"reward", "value", "blend", "zscore_blend"}
+
+
+def _validate_score_request(score_mode: str, value_weight: float) -> None:
+    if score_mode not in SCORE_MODES:
+        raise ValueError(
+            "score_mode must be 'reward', 'value', 'blend', or 'zscore_blend'"
+        )
+    if not 0.0 <= value_weight <= 1.0:
+        raise ValueError("value_weight must be in [0, 1]")
+
+
+def _zscore_last_dim(scores: torch.Tensor, eps: float = 1e-8) -> torch.Tensor:
+    centered = scores - scores.mean(dim=-1, keepdim=True)
+    scale = centered.pow(2).mean(dim=-1, keepdim=True).sqrt()
+    return torch.where(
+        scale > eps,
+        centered / scale.clamp_min(eps),
+        torch.zeros_like(scores),
+    )
+
+
+def zscore_blend_candidate_scores(
+    reward: torch.Tensor,
+    value: torch.Tensor,
+    value_weight: float,
+) -> torch.Tensor:
+    _validate_score_request("zscore_blend", value_weight)
+    if reward.shape != value.shape:
+        raise ValueError("reward and value scores must have matching shapes")
+    reward_z = _zscore_last_dim(reward)
+    value_z = _zscore_last_dim(value)
+    return (1.0 - value_weight) * reward_z + value_weight * value_z
+
+
 def scalar_score_from_model_output(
     reward: torch.Tensor,
     aux: dict,
     score_mode: str = "reward",
     value_weight: float = 0.5,
 ) -> torch.Tensor:
-    if score_mode not in {"reward", "value", "blend"}:
-        raise ValueError("score_mode must be 'reward', 'value', or 'blend'")
-    if not 0.0 <= value_weight <= 1.0:
-        raise ValueError("value_weight must be in [0, 1]")
+    _validate_score_request(score_mode, value_weight)
 
     if score_mode == "reward":
         return reward
@@ -21,6 +53,10 @@ def scalar_score_from_model_output(
     value = aux["value"]
     if score_mode == "value":
         return value
+    if score_mode == "zscore_blend":
+        return zscore_blend_candidate_scores(
+            reward.squeeze(-1), value.squeeze(-1), value_weight
+        ).unsqueeze(-1)
     return (1.0 - value_weight) * reward + value_weight * value
 
 
@@ -79,6 +115,7 @@ def score_candidate_actions(
 ) -> torch.Tensor:
     if max_pairs_per_forward <= 0:
         raise ValueError("max_pairs_per_forward must be positive")
+    _validate_score_request(score_mode, value_weight)
 
     single_state = block_features.ndim == 2
     if single_state:
@@ -104,6 +141,8 @@ def score_candidate_actions(
     was_training = model.training
     model.eval()
     scores = []
+    rewards = []
+    values = []
     with torch.no_grad():
         if _can_score_geojepa_single_state(model, block_features, global_features, actions):
             out = _score_geojepa_single_state_actions(
@@ -128,6 +167,12 @@ def score_candidate_actions(
                 global_features[idx],
                 flat_actions[start:end],
             )
+            if score_mode == "zscore_blend":
+                if "value" not in aux:
+                    raise ValueError("score_mode requires model aux['value']")
+                rewards.append(reward.squeeze(-1))
+                values.append(aux["value"].squeeze(-1))
+                continue
             score = scalar_score_from_model_output(
                 reward,
                 aux,
@@ -139,7 +184,12 @@ def score_candidate_actions(
     if was_training:
         model.train()
 
-    out = torch.cat(scores, dim=0).reshape(batch_size, n_actions)
+    if score_mode == "zscore_blend":
+        reward_out = torch.cat(rewards, dim=0).reshape(batch_size, n_actions)
+        value_out = torch.cat(values, dim=0).reshape(batch_size, n_actions)
+        out = zscore_blend_candidate_scores(reward_out, value_out, value_weight)
+    else:
+        out = torch.cat(scores, dim=0).reshape(batch_size, n_actions)
     if single_state:
         return out.squeeze(0)
     return out

@@ -78,7 +78,7 @@ def parse_args():
     parser.add_argument("--model-value-weight", type=float, default=0.5)
     parser.add_argument(
         "--candidate-score-mode",
-        choices=("reward", "value", "blend"),
+        choices=("reward", "value", "blend", "zscore_blend"),
         default="value",
         help="Candidate filter score used only by selector=value_filter.",
     )

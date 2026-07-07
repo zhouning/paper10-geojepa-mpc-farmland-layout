@@ -266,6 +266,31 @@ def test_adapter_candidate_selector_can_score_by_value_head():
     np.testing.assert_allclose(scores, np.array([20.0, 15.0], dtype=np.float32))
 
 
+def test_adapter_candidate_selector_can_zscore_blend_scale_mismatched_scores():
+    selector = make_adapter_candidate_selector(
+        ActionRewardValueAdapter(),
+        score_mode="zscore_blend",
+        value_weight=0.8,
+    )
+    env = TinyValueEnv()
+    valid = np.array([0, 1, 2], dtype=np.int64)
+
+    actions, scores = selector(
+        env,
+        env._get_block_features(),
+        env._get_global_features(),
+        valid,
+        2,
+        np.random.default_rng(37),
+    )
+
+    np.testing.assert_array_equal(actions, np.array([0, 2], dtype=np.int64))
+    np.testing.assert_allclose(
+        scores,
+        np.array([0.5509, 0.2985], dtype=np.float32),
+        atol=1e-4,
+    )
+
 def test_frontier_random_candidate_selector_mixes_scored_frontier_and_random_actions():
     selector = make_frontier_random_candidate_selector(
         ActionScoreAdapter(),
