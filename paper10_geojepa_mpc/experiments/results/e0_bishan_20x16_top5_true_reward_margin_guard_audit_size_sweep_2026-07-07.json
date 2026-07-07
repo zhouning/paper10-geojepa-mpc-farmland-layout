@@ -1,0 +1,188 @@
+{
+    "setting":  {
+                    "environment":  "Bishan E0, prepared under D:\\test",
+                    "checkpoint":  "e0_frontier_random050_value_head_20x16_h5_seed44_top5/value_head_seed3044.pt",
+                    "candidate_score_mode":  "blend",
+                    "candidate_value_weight":  0.1,
+                    "top_k":  50,
+                    "execution_policy":  "margin_true_reward_guard",
+                    "true_reward_switch_margin":  1,
+                    "audit_random_sample":  0
+                },
+    "short_10step":  [
+                         {
+                             "name":  "baseline",
+                             "audit_size":  "none",
+                             "total_reward_mean":  14.1053902143,
+                             "delta_vs_baseline":  0,
+                             "seed_wins_vs_baseline":  0,
+                             "seed_rewards":  [
+                                                  9.7063741941,
+                                                  16.3140164618,
+                                                  14.7417385894,
+                                                  15.5221409549,
+                                                  14.2426808714
+                                              ],
+                             "switches":  0,
+                             "audited_states":  5,
+                             "audit_action_count_mean":  0,
+                             "true_reward_time_sec_mean":  0,
+                             "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_short_rollout_blend010_seeds0-4_10step_2026-07-07.json"
+                         },
+                         {
+                             "name":  "audit3x3",
+                             "audit_size":  "3x3",
+                             "total_reward_mean":  16.1640015649,
+                             "delta_vs_baseline":  2.0586113506,
+                             "seed_wins_vs_baseline":  4,
+                             "seed_rewards":  [
+                                                  20.8977259773,
+                                                  16.4465292767,
+                                                  16.5100755278,
+                                                  15.7666974467,
+                                                  11.198979596
+                                              ],
+                             "switches":  17,
+                             "audited_states":  50,
+                             "audit_action_count_mean":  4.02,
+                             "true_reward_time_sec_mean":  0.255087056,
+                             "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_true_reward_margin_guard_m100_audit3x3_blend010_seeds0-4_10step_2026-07-07.json"
+                         },
+                         {
+                             "name":  "audit5x5",
+                             "audit_size":  "5x5",
+                             "total_reward_mean":  18.1827526435,
+                             "delta_vs_baseline":  4.0773624292,
+                             "seed_wins_vs_baseline":  5,
+                             "seed_rewards":  [
+                                                  20.8977259773,
+                                                  21.3708118774,
+                                                  16.5100755278,
+                                                  15.7666974467,
+                                                  16.3684523883
+                                              ],
+                             "switches":  19,
+                             "audited_states":  50,
+                             "audit_action_count_mean":  6.22,
+                             "true_reward_time_sec_mean":  0.381856618,
+                             "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_true_reward_margin_guard_m100_audit5x5_blend010_seeds0-4_10step_2026-07-07.json"
+                         },
+                         {
+                             "name":  "audit7x7",
+                             "audit_size":  "7x7",
+                             "total_reward_mean":  19.1802432541,
+                             "delta_vs_baseline":  5.0748530398,
+                             "seed_wins_vs_baseline":  5,
+                             "seed_rewards":  [
+                                                  20.8977259773,
+                                                  21.3708118774,
+                                                  21.4975285809,
+                                                  15.7666974467,
+                                                  16.3684523883
+                                              ],
+                             "switches":  20,
+                             "audited_states":  50,
+                             "audit_action_count_mean":  8.42,
+                             "true_reward_time_sec_mean":  0.503174138,
+                             "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_true_reward_margin_guard_m100_audit7x7_blend010_seeds0-4_10step_2026-07-07.json"
+                         },
+                         {
+                             "name":  "audit10x10",
+                             "audit_size":  "10x10",
+                             "total_reward_mean":  19.4159894139,
+                             "delta_vs_baseline":  5.3105991995,
+                             "seed_wins_vs_baseline":  5,
+                             "seed_rewards":  [
+                                                  21.9445623166,
+                                                  20.8555274623,
+                                                  21.4975285809,
+                                                  16.7745645201,
+                                                  16.0077641893
+                                              ],
+                             "switches":  28,
+                             "audited_states":  50,
+                             "audit_action_count_mean":  11.08,
+                             "true_reward_time_sec_mean":  0.638042616,
+                             "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_true_reward_margin_guard_m100_blend010_seeds0-4_10step_2026-07-07.json"
+                         }
+                     ],
+    "long_100step":  [
+                         {
+                             "name":  "baseline",
+                             "audit_size":  "none",
+                             "total_reward_mean":  69.4705460425,
+                             "delta_vs_baseline":  0,
+                             "seed_wins_vs_baseline":  0,
+                             "seed_rewards":  [
+                                                  67.7134969354,
+                                                  70.2252087804,
+                                                  69.7218379674,
+                                                  69.824503063,
+                                                  69.8676834664
+                                              ],
+                             "switches":  0,
+                             "audited_states":  5,
+                             "audit_action_count_mean":  0,
+                             "true_reward_time_sec_mean":  0,
+                             "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_blend010_h5_k50_seeds0-4_100step_consolidated_2026-07-07.json"
+                         },
+                         {
+                             "name":  "audit5x5",
+                             "audit_size":  "5x5",
+                             "total_reward_mean":  72.9160254168,
+                             "delta_vs_baseline":  3.4454793743,
+                             "seed_wins_vs_baseline":  4,
+                             "seed_rewards":  [
+                                                  72.692041732,
+                                                  76.4548352296,
+                                                  79.83843458,
+                                                  63.0763530881,
+                                                  72.5184624545
+                                              ],
+                             "switches":  52,
+                             "audited_states":  500,
+                             "audit_action_count_mean":  6.202,
+                             "true_reward_time_sec_mean":  0.3700275404,
+                             "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_true_reward_margin_guard_m100_audit5x5_blend010_seeds0-4_100step_2026-07-07.json"
+                         },
+                         {
+                             "name":  "audit7x7",
+                             "audit_size":  "7x7",
+                             "total_reward_mean":  74.1136507802,
+                             "delta_vs_baseline":  4.6431047377,
+                             "seed_wins_vs_baseline":  4,
+                             "seed_rewards":  [
+                                                  67.6308359213,
+                                                  76.5019334294,
+                                                  76.351168551,
+                                                  72.5604036811,
+                                                  77.5239123181
+                                              ],
+                             "switches":  56,
+                             "audited_states":  500,
+                             "audit_action_count_mean":  8.318,
+                             "true_reward_time_sec_mean":  0.6436069824,
+                             "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_true_reward_margin_guard_m100_audit7x7_blend010_seeds0-4_100step_2026-07-07.json"
+                         },
+                         {
+                             "name":  "audit10x10",
+                             "audit_size":  "10x10",
+                             "total_reward_mean":  71.874536126,
+                             "delta_vs_baseline":  2.4039900835,
+                             "seed_wins_vs_baseline":  4,
+                             "seed_rewards":  [
+                                                  69.65352658,
+                                                  66.3350618821,
+                                                  78.9864536166,
+                                                  72.2618629693,
+                                                  72.135775582
+                                              ],
+                             "switches":  63,
+                             "audited_states":  500,
+                             "audit_action_count_mean":  11.304,
+                             "true_reward_time_sec_mean":  0.6320558082,
+                             "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_true_reward_margin_guard_m100_blend010_seeds0-4_100step_2026-07-07.json"
+                         }
+                     ],
+    "decision":  "Use audit7x7 as the reward-leading variant and audit5x5 as the lower-cost positive variant; do not shrink to audit3x3 for long-horizon escalation."
+}
