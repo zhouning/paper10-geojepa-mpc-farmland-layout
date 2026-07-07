@@ -1,0 +1,308 @@
+{
+    "setting":  {
+                    "environment":  "Bishan E0, prepared under D:\\test",
+                    "candidate_score_mode":  "blend",
+                    "candidate_value_weight":  0.1,
+                    "top_k":  50,
+                    "audit_top_reward":  7,
+                    "audit_top_candidate":  7,
+                    "audit_random_sample":  0,
+                    "execution_policy":  "margin_true_reward_guard"
+                },
+    "short_10step_margin_gate":  [
+                                     {
+                                         "name":  "baseline",
+                                         "margin":  null,
+                                         "mean_reward":  14.1053902143,
+                                         "delta_vs_baseline":  0,
+                                         "seed_wins":  null,
+                                         "seed_rewards":  [
+                                                              9.7063741941,
+                                                              16.3140164618,
+                                                              14.7417385894,
+                                                              15.5221409549,
+                                                              14.2426808714
+                                                          ],
+                                         "seed_deltas":  {
+
+                                                         },
+                                         "switches":  0,
+                                         "audited_states":  5,
+                                         "audit_action_count_mean":  0,
+                                         "true_reward_time_sec_mean":  0,
+                                         "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_short_rollout_blend010_seeds0-4_10step_2026-07-07.json"
+                                     },
+                                     {
+                                         "name":  "m075",
+                                         "margin":  0.75,
+                                         "mean_reward":  17.9460858353,
+                                         "delta_vs_baseline":  3.840695621,
+                                         "seed_wins":  5,
+                                         "seed_rewards":  [
+                                                              21.2673066731,
+                                                              17.2725984102,
+                                                              17.232882028,
+                                                              16.7493828362,
+                                                              17.2082592288
+                                                          ],
+                                         "seed_deltas":  [
+                                                             11.560932479,
+                                                             0.9585819484,
+                                                             2.4911434387,
+                                                             1.2272418814,
+                                                             2.9655783574
+                                                         ],
+                                         "switches":  32,
+                                         "audited_states":  50,
+                                         "audit_action_count_mean":  8.38,
+                                         "true_reward_time_sec_mean":  0.541754076,
+                                         "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_true_reward_margin_guard_m075_audit7x7_blend010_seeds0-4_10step_2026-07-07.json"
+                                     },
+                                     {
+                                         "name":  "m100",
+                                         "margin":  1,
+                                         "mean_reward":  19.1802432541,
+                                         "delta_vs_baseline":  5.0748530398,
+                                         "seed_wins":  5,
+                                         "seed_rewards":  [
+                                                              20.8977259773,
+                                                              21.3708118774,
+                                                              21.4975285809,
+                                                              15.7666974467,
+                                                              16.3684523883
+                                                          ],
+                                         "seed_deltas":  [
+                                                             11.1913517832,
+                                                             5.0567954156,
+                                                             6.7557899915,
+                                                             0.2445564918,
+                                                             2.1257715169
+                                                         ],
+                                         "switches":  20,
+                                         "audited_states":  50,
+                                         "audit_action_count_mean":  8.42,
+                                         "true_reward_time_sec_mean":  0.503174138,
+                                         "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_true_reward_margin_guard_m100_audit7x7_blend010_seeds0-4_10step_2026-07-07.json"
+                                     },
+                                     {
+                                         "name":  "m125",
+                                         "margin":  1.25,
+                                         "mean_reward":  19.1802432541,
+                                         "delta_vs_baseline":  5.0748530398,
+                                         "seed_wins":  5,
+                                         "seed_rewards":  [
+                                                              20.8977259773,
+                                                              21.3708118774,
+                                                              21.4975285809,
+                                                              15.7666974467,
+                                                              16.3684523883
+                                                          ],
+                                         "seed_deltas":  [
+                                                             11.1913517832,
+                                                             5.0567954156,
+                                                             6.7557899915,
+                                                             0.2445564918,
+                                                             2.1257715169
+                                                         ],
+                                         "switches":  20,
+                                         "audited_states":  50,
+                                         "audit_action_count_mean":  8.42,
+                                         "true_reward_time_sec_mean":  0.493629952,
+                                         "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_true_reward_margin_guard_m125_audit7x7_blend010_seeds0-4_10step_2026-07-07.json"
+                                     },
+                                     {
+                                         "name":  "m150",
+                                         "margin":  1.5,
+                                         "mean_reward":  19.4507180267,
+                                         "delta_vs_baseline":  5.3453278124,
+                                         "seed_wins":  5,
+                                         "seed_rewards":  [
+                                                              20.8977259773,
+                                                              21.3708118774,
+                                                              21.4975285809,
+                                                              15.7666974467,
+                                                              17.7208262514
+                                                          ],
+                                         "seed_deltas":  [
+                                                             11.1913517832,
+                                                             5.0567954156,
+                                                             6.7557899915,
+                                                             0.2445564918,
+                                                             3.47814538
+                                                         ],
+                                         "switches":  20,
+                                         "audited_states":  50,
+                                         "audit_action_count_mean":  8.42,
+                                         "true_reward_time_sec_mean":  0.506743974,
+                                         "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_true_reward_margin_guard_m150_audit7x7_blend010_seeds0-4_10step_2026-07-07.json"
+                                     }
+                                 ],
+    "long_100step_margin_gate_seeds0_4":  [
+                                              {
+                                                  "name":  "baseline",
+                                                  "margin":  null,
+                                                  "mean_reward":  69.4705460425,
+                                                  "delta_vs_baseline":  0,
+                                                  "seed_wins":  null,
+                                                  "seed_rewards":  [
+                                                                       67.7134969354,
+                                                                       70.2252087804,
+                                                                       69.7218379674,
+                                                                       69.824503063,
+                                                                       69.8676834664
+                                                                   ],
+                                                  "seed_deltas":  {
+
+                                                                  },
+                                                  "switches":  0,
+                                                  "audited_states":  5,
+                                                  "audit_action_count_mean":  0,
+                                                  "true_reward_time_sec_mean":  0,
+                                                  "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_blend010_h5_k50_seeds0-4_100step_consolidated_2026-07-07.json"
+                                              },
+                                              {
+                                                  "name":  "m100",
+                                                  "margin":  1,
+                                                  "mean_reward":  74.1136507802,
+                                                  "delta_vs_baseline":  4.6431047377,
+                                                  "seed_wins":  4,
+                                                  "seed_rewards":  [
+                                                                       67.6308359213,
+                                                                       76.5019334294,
+                                                                       76.351168551,
+                                                                       72.5604036811,
+                                                                       77.5239123181
+                                                                   ],
+                                                  "seed_deltas":  [
+                                                                      -0.0826610141,
+                                                                      6.276724649,
+                                                                      6.6293305836,
+                                                                      2.7359006181,
+                                                                      7.6562288517
+                                                                  ],
+                                                  "switches":  56,
+                                                  "audited_states":  500,
+                                                  "audit_action_count_mean":  8.318,
+                                                  "true_reward_time_sec_mean":  0.6436069824,
+                                                  "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_true_reward_margin_guard_m100_audit7x7_blend010_seeds0-4_100step_2026-07-07.json"
+                                              },
+                                              {
+                                                  "name":  "m125",
+                                                  "margin":  1.25,
+                                                  "mean_reward":  71.9740964434,
+                                                  "delta_vs_baseline":  2.5035504009,
+                                                  "seed_wins":  4,
+                                                  "seed_rewards":  [
+                                                                       69.443151946,
+                                                                       69.5961021578,
+                                                                       74.8974456219,
+                                                                       70.5403189529,
+                                                                       75.3934635384
+                                                                   ],
+                                                  "seed_deltas":  [
+                                                                      1.7296550106,
+                                                                      -0.6291066226,
+                                                                      5.1756076545,
+                                                                      0.7158158899,
+                                                                      5.5257800719
+                                                                  ],
+                                                  "switches":  46,
+                                                  "audited_states":  500,
+                                                  "audit_action_count_mean":  8.232,
+                                                  "true_reward_time_sec_mean":  0.4790117232,
+                                                  "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_true_reward_margin_guard_m125_audit7x7_blend010_seeds0-4_100step_2026-07-07.json"
+                                              },
+                                              {
+                                                  "name":  "m150",
+                                                  "margin":  1.5,
+                                                  "mean_reward":  71.9223839949,
+                                                  "delta_vs_baseline":  2.4518379524,
+                                                  "seed_wins":  5,
+                                                  "seed_rewards":  [
+                                                                       68.295956214,
+                                                                       76.2398728014,
+                                                                       72.9083926113,
+                                                                       70.5403189529,
+                                                                       71.6273793948
+                                                                   ],
+                                                  "seed_deltas":  [
+                                                                      0.5824592786,
+                                                                      6.014664021,
+                                                                      3.1865546439,
+                                                                      0.7158158899,
+                                                                      1.7596959284
+                                                                  ],
+                                                  "switches":  49,
+                                                  "audited_states":  500,
+                                                  "audit_action_count_mean":  8.21,
+                                                  "true_reward_time_sec_mean":  0.5003022562,
+                                                  "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_true_reward_margin_guard_m150_audit7x7_blend010_seeds0-4_100step_2026-07-07.json"
+                                              }
+                                          ],
+    "robustness_100step_seeds0_9":  [
+                                        {
+                                            "name":  "baseline",
+                                            "margin":  null,
+                                            "mean_reward":  68.8014935795,
+                                            "delta_vs_baseline":  0,
+                                            "seed_wins":  null,
+                                            "seed_rewards":  [
+                                                                 67.7134969354,
+                                                                 70.2252087804,
+                                                                 69.7218379674,
+                                                                 69.824503063,
+                                                                 69.8676834664,
+                                                                 70.9024958632,
+                                                                 71.392775661,
+                                                                 62.6649757151,
+                                                                 64.8928481157,
+                                                                 70.8091102278
+                                                             ],
+                                            "seed_deltas":  {
+
+                                                            },
+                                            "switches":  0,
+                                            "audited_states":  1000,
+                                            "audit_action_count_mean":  1,
+                                            "true_reward_time_sec_mean":  0.0799356367,
+                                            "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_value_filter_blend010_selectedaudit_seeds0-9_100step_2026-07-07.json"
+                                        },
+                                        {
+                                            "name":  "m150",
+                                            "margin":  1.5,
+                                            "mean_reward":  73.064902354,
+                                            "delta_vs_baseline":  4.2634087744,
+                                            "seed_wins":  10,
+                                            "seed_rewards":  [
+                                                                 68.295956214,
+                                                                 76.2398728014,
+                                                                 72.9083926113,
+                                                                 70.5403189529,
+                                                                 71.6273793948,
+                                                                 70.9053767038,
+                                                                 72.2492843117,
+                                                                 76.3130997646,
+                                                                 75.7725727838,
+                                                                 75.7967700016
+                                                             ],
+                                            "seed_deltas":  [
+                                                                0.5824592786,
+                                                                6.014664021,
+                                                                3.1865546439,
+                                                                0.7158158899,
+                                                                1.7596959284,
+                                                                0.0028808405,
+                                                                0.8565086507,
+                                                                13.6481240495,
+                                                                10.8797246681,
+                                                                4.9876597738
+                                                            ],
+                                            "switches":  92,
+                                            "audited_states":  1000,
+                                            "audit_action_count_mean":  8.192,
+                                            "true_reward_time_sec_mean":  0.4894076451,
+                                            "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_true_reward_margin_guard_m150_audit7x7_blend010_seeds0-9_100step_2026-07-07.json"
+                                        }
+                                    ],
+    "decision":  "Use audit7x7 margin=1.50 as the consistency-leading 10-seed robust variant; retain margin=1.00 as the initial 5-seed reward-leading ablation."
+}
