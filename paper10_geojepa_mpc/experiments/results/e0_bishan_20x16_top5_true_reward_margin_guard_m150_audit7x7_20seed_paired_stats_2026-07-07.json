@@ -1,0 +1,179 @@
+{
+  "baseline_mean_reward": 65.8876435268697,
+  "bootstrap_95ci_delta": [
+    4.164250399042407,
+    8.450127940841853
+  ],
+  "candidate_guard_summary": {
+    "audited_states": 2000,
+    "mean_audit_action_count": 8.1905,
+    "mean_true_reward_time_sec": 0.47900214314993356,
+    "selected_is_audit_true_best_rate": 0.061,
+    "selected_true_reward_regret_mean": 0.8885403665844224,
+    "switch_rate": 0.0855,
+    "switches": 171
+  },
+  "candidate_mean_reward": 72.17733781116401,
+  "losses": 0,
+  "max_delta": 15.445442724083257,
+  "mean_delta": 6.289694284294315,
+  "median_delta": 5.501161897382168,
+  "min_delta": 0.0028808405276095073,
+  "n": 20,
+  "normal_approx_95ci_delta": [
+    4.0725573157606485,
+    8.506831252827983
+  ],
+  "sample_std_delta": 5.05884589496846,
+  "seed_deltas": [
+    {
+      "baseline_reward": 67.7134969354234,
+      "candidate_reward": 68.29595621404711,
+      "delta": 0.5824592786237162,
+      "seed": 0
+    },
+    {
+      "baseline_reward": 70.2252087804031,
+      "candidate_reward": 76.23987280140675,
+      "delta": 6.014664021003654,
+      "seed": 1
+    },
+    {
+      "baseline_reward": 69.7218379673849,
+      "candidate_reward": 72.90839261127506,
+      "delta": 3.1865546438901617,
+      "seed": 2
+    },
+    {
+      "baseline_reward": 69.82450306303002,
+      "candidate_reward": 70.54031895291071,
+      "delta": 0.7158158898806875,
+      "seed": 3
+    },
+    {
+      "baseline_reward": 69.86768346643231,
+      "candidate_reward": 71.62737939479145,
+      "delta": 1.759695928359136,
+      "seed": 4
+    },
+    {
+      "baseline_reward": 70.90249586322844,
+      "candidate_reward": 70.90537670375605,
+      "delta": 0.0028808405276095073,
+      "seed": 5
+    },
+    {
+      "baseline_reward": 71.3927756609839,
+      "candidate_reward": 72.24928431170348,
+      "delta": 0.8565086507195758,
+      "seed": 6
+    },
+    {
+      "baseline_reward": 62.66497571506744,
+      "candidate_reward": 76.31309976456434,
+      "delta": 13.6481240494969,
+      "seed": 7
+    },
+    {
+      "baseline_reward": 64.8928481156507,
+      "candidate_reward": 75.77257278375441,
+      "delta": 10.87972466810372,
+      "seed": 8
+    },
+    {
+      "baseline_reward": 70.80911022782803,
+      "candidate_reward": 75.79677000158871,
+      "delta": 4.987659773760683,
+      "seed": 9
+    },
+    {
+      "baseline_reward": 55.99662386017679,
+      "candidate_reward": 71.44206658426005,
+      "delta": 15.445442724083257,
+      "seed": 10
+    },
+    {
+      "baseline_reward": 62.318121622296246,
+      "candidate_reward": 75.17754969268681,
+      "delta": 12.859428070390564,
+      "seed": 11
+    },
+    {
+      "baseline_reward": 62.49165435330258,
+      "candidate_reward": 72.6975512125328,
+      "delta": 10.205896859230222,
+      "seed": 12
+    },
+    {
+      "baseline_reward": 62.46483924148782,
+      "candidate_reward": 68.56868731787979,
+      "delta": 6.103848076391969,
+      "seed": 13
+    },
+    {
+      "baseline_reward": 65.1950626955254,
+      "candidate_reward": 73.7734328372213,
+      "delta": 8.578370141695913,
+      "seed": 14
+    },
+    {
+      "baseline_reward": 67.81087627755106,
+      "candidate_reward": 69.4317727892873,
+      "delta": 1.620896511736234,
+      "seed": 15
+    },
+    {
+      "baseline_reward": 62.91740313423198,
+      "candidate_reward": 75.11925536435388,
+      "delta": 12.201852230121894,
+      "seed": 16
+    },
+    {
+      "baseline_reward": 59.779839700958455,
+      "candidate_reward": 69.95904071650942,
+      "delta": 10.179201015550966,
+      "seed": 17
+    },
+    {
+      "baseline_reward": 67.488823138178,
+      "candidate_reward": 68.87872591148913,
+      "delta": 1.389902773311121,
+      "seed": 18
+    },
+    {
+      "baseline_reward": 63.274690718253304,
+      "candidate_reward": 67.84965025726163,
+      "delta": 4.574959539008326,
+      "seed": 19
+    }
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "sources": {
+    "baseline": "paper10_geojepa_mpc/experiments/results/e0_bishan_20x16_top5_value_filter_blend010_selectedaudit_seeds0-19_100step_2026-07-07.json",
+    "candidate": "paper10_geojepa_mpc/experiments/results/e0_bishan_20x16_top5_true_reward_margin_guard_m150_audit7x7_blend010_seeds0-19_100step_2026-07-07.json"
+  },
+  "standard_error_delta": 1.1311923308845238,
+  "ties": 0,
+  "wins": 20
+}
