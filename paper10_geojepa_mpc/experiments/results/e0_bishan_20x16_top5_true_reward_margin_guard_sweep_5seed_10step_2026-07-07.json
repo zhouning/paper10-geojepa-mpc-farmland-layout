@@ -1,0 +1,120 @@
+{
+    "baseline":  {
+                     "name":  "blend_w0p10_value_filter_10step",
+                     "total_reward_mean":  14.1053902143,
+                     "seed_rewards":  [
+                                          9.7063741941,
+                                          16.3140164618,
+                                          14.7417385894,
+                                          15.5221409549,
+                                          14.2426808714
+                                      ],
+                     "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_short_rollout_blend010_seeds0-4_10step_2026-07-07.json"
+                 },
+    "sweep":  [
+                  {
+                      "name":  "pure_guard_m000",
+                      "true_reward_switch_margin":  0,
+                      "total_reward_mean":  13.9578354621,
+                      "delta_vs_baseline":  -0.1475547522,
+                      "seed_wins_vs_baseline":  1,
+                      "switches":  46,
+                      "audited_states":  50,
+                      "seed_rewards":  [
+                                           14.0318519816,
+                                           14.0318519816,
+                                           14.0318519816,
+                                           14.0318519816,
+                                           13.6617693842
+                                       ],
+                      "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_true_reward_guard_blend010_seeds0-4_10step_2026-07-07.json"
+                  },
+                  {
+                      "name":  "margin_m075",
+                      "true_reward_switch_margin":  0.75,
+                      "total_reward_mean":  14.7605341136,
+                      "delta_vs_baseline":  0.6551438993,
+                      "seed_wins_vs_baseline":  3,
+                      "switches":  37,
+                      "audited_states":  50,
+                      "seed_rewards":  [
+                                           12.985876567,
+                                           17.1398190517,
+                                           13.0495046628,
+                                           13.8003571954,
+                                           16.8271130909
+                                       ],
+                      "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_true_reward_margin_guard_m075_blend010_seeds0-4_10step_2026-07-07.json"
+                  },
+                  {
+                      "name":  "margin_m100",
+                      "true_reward_switch_margin":  1,
+                      "total_reward_mean":  19.4159894139,
+                      "delta_vs_baseline":  5.3105991995,
+                      "seed_wins_vs_baseline":  5,
+                      "switches":  28,
+                      "audited_states":  50,
+                      "seed_rewards":  [
+                                           21.9445623166,
+                                           20.8555274623,
+                                           21.4975285809,
+                                           16.7745645201,
+                                           16.0077641893
+                                       ],
+                      "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_true_reward_margin_guard_m100_blend010_seeds0-4_10step_2026-07-07.json"
+                  },
+                  {
+                      "name":  "margin_m125",
+                      "true_reward_switch_margin":  1.25,
+                      "total_reward_mean":  17.3827743148,
+                      "delta_vs_baseline":  3.2773841005,
+                      "seed_wins_vs_baseline":  4,
+                      "switches":  24,
+                      "audited_states":  50,
+                      "seed_rewards":  [
+                                           20.96011652,
+                                           12.1296971598,
+                                           21.4975285809,
+                                           16.3187651239,
+                                           16.0077641893
+                                       ],
+                      "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_true_reward_margin_guard_m125_blend010_seeds0-4_10step_2026-07-07.json"
+                  },
+                  {
+                      "name":  "margin_m150",
+                      "true_reward_switch_margin":  1.5,
+                      "total_reward_mean":  17.4087296199,
+                      "delta_vs_baseline":  3.3033394056,
+                      "seed_wins_vs_baseline":  3,
+                      "switches":  24,
+                      "audited_states":  50,
+                      "seed_rewards":  [
+                                           20.96011652,
+                                           12.1296971598,
+                                           21.4975285809,
+                                           15.3608330779,
+                                           17.095472761
+                                       ],
+                      "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_true_reward_margin_guard_m150_blend010_seeds0-4_10step_2026-07-07.json"
+                  },
+                  {
+                      "name":  "margin_m200",
+                      "true_reward_switch_margin":  2,
+                      "total_reward_mean":  15.0754431183,
+                      "delta_vs_baseline":  0.970052904,
+                      "seed_wins_vs_baseline":  4,
+                      "switches":  15,
+                      "audited_states":  50,
+                      "seed_rewards":  [
+                                           11.0673103868,
+                                           13.4284990208,
+                                           16.8814000727,
+                                           15.7666974467,
+                                           18.2333086645
+                                       ],
+                      "source":  "paper10_geojepa_mpc\\experiments\\results\\e0_bishan_20x16_top5_true_reward_margin_guard_m200_blend010_seeds0-4_10step_2026-07-07.json"
+                  }
+              ],
+    "selected_candidate":  "margin_m100",
+    "decision":  "Promote margin_true_reward_guard with true_reward_switch_margin=1.0 to the next long-horizon gate; do not promote pure audit_true_best."
+}

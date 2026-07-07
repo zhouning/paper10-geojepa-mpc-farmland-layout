@@ -1,4 +1,4 @@
-﻿import argparse
+import argparse
 import json
 from pathlib import Path
 import sys
@@ -171,12 +171,28 @@ def action_audit_metrics(
     }
 
 
-def choose_execution_action(metrics: dict, execution_policy: str) -> int:
+def choose_execution_action(
+    metrics: dict,
+    execution_policy: str,
+    true_reward_switch_margin: float = 0.0,
+) -> int:
     if execution_policy == "value_filter":
         return int(metrics["selected_action"])
     if execution_policy == "audit_true_best":
         return int(metrics["audit_best_action"])
-    raise ValueError("execution_policy must be 'value_filter' or 'audit_true_best'")
+    if execution_policy == "margin_true_reward_guard":
+        improvement = (
+            float(metrics["audit_best_true_reward"])
+            - float(metrics["selected_true_reward"])
+        )
+        if improvement >= float(true_reward_switch_margin):
+            return int(metrics["audit_best_action"])
+        return int(metrics["selected_action"])
+    raise ValueError(
+        "execution_policy must be 'value_filter', 'audit_true_best', "
+        "or 'margin_true_reward_guard'"
+    )
+
 
 def summarize_action_audit_rows(rows: list[dict]) -> dict:
     if not rows:
@@ -278,9 +294,10 @@ def parse_args():
     parser.add_argument("--candidate-reward-reserve", type=int, default=0)
     parser.add_argument(
         "--execution-policy",
-        choices=("value_filter", "audit_true_best"),
+        choices=("value_filter", "audit_true_best", "margin_true_reward_guard"),
         default="value_filter",
     )
+    parser.add_argument("--true-reward-switch-margin", type=float, default=0.0)
     parser.add_argument(
         "--random-continuation-mode",
         choices=("independent", "common"),
@@ -388,9 +405,14 @@ def _run_seed(env, adapter, args, seed: int) -> dict:
         )
         rows.append(audit_row)
 
-        execution_action = choose_execution_action(audit_row, args.execution_policy)
+        execution_action = choose_execution_action(
+            audit_row,
+            args.execution_policy,
+            true_reward_switch_margin=float(args.true_reward_switch_margin),
+        )
         audit_row["execution_action"] = int(execution_action)
         audit_row["execution_policy"] = args.execution_policy
+        audit_row["true_reward_switch_margin"] = float(args.true_reward_switch_margin)
         _, reward, terminated, truncated, info = env.step(int(execution_action))
         total_reward += float(reward)
         mpc_info["n_base_valid"] = int(base_mask.sum())
@@ -453,6 +475,7 @@ def main() -> None:
         "candidate_value_weight": float(args.candidate_value_weight),
         "candidate_reward_reserve": int(args.candidate_reward_reserve),
         "execution_policy": args.execution_policy,
+        "true_reward_switch_margin": float(args.true_reward_switch_margin),
         "random_continuation_mode": args.random_continuation_mode,
         "stable_candidate_order": bool(args.stable_candidate_order),
         "elapsed_sec": perf_counter() - started,

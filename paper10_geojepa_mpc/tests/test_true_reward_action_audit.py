@@ -1,4 +1,4 @@
-﻿import numpy as np
+import numpy as np
 
 from paper10_geojepa_mpc.experiments.true_reward_action_audit import (
     action_audit_metrics,
@@ -66,3 +66,28 @@ def test_choose_execution_action_supports_value_filter_and_audit_true_best():
     assert choose_execution_action(metrics, "value_filter") == 22
     assert choose_execution_action(metrics, "audit_true_best") == 21
 
+
+def test_choose_execution_action_supports_margin_true_reward_guard():
+    metrics = {
+        "selected_action": 22,
+        "selected_true_reward": 1.0,
+        "audit_best_action": 21,
+        "audit_best_true_reward": 2.4,
+    }
+
+    assert (
+        choose_execution_action(
+            metrics,
+            "margin_true_reward_guard",
+            true_reward_switch_margin=1.5,
+        )
+        == 22
+    )
+    assert (
+        choose_execution_action(
+            metrics,
+            "margin_true_reward_guard",
+            true_reward_switch_margin=1.0,
+        )
+        == 21
+    )
