@@ -5078,6 +5078,10 @@ def check_paper10_true_reward_guard_readiness_current(root: Path) -> CheckResult
         "not final submission readiness",
         "Do not claim a universal fixed switch margin.",
         "Do not claim direct 50-state Bishan scale-up success.",
+        "20 / 20",
+        "## Primary Paired Statistics",
+        "bootstrap 95% CI lower",
+        "switch rate",
     ]
     for token in required_audit_tokens:
         if token not in audit_text:
@@ -5091,14 +5095,19 @@ def check_paper10_true_reward_guard_readiness_current(root: Path) -> CheckResult
         ("primary_guard", "setting"): "bishan_20x16_top5",
         ("primary_guard", "audit_set"): "audit7x7",
         ("primary_guard", "switch_margin"): 1.5,
-        ("primary_guard", "n_seeds"): 10,
-        ("primary_guard", "seed_wins"): 10,
+        ("primary_guard", "n_seeds"): 20,
+        ("primary_guard", "seed_wins"): 20,
+        ("primary_paired_stats", "n"): 20,
+        ("primary_paired_stats", "wins"): 20,
+        ("primary_paired_stats", "losses"): 0,
+        ("primary_paired_stats", "ties"): 0,
         ("small_scale_guard", "setting"): "bishan_10x12_top4",
         ("small_scale_guard", "audit_set"): "rewardtop7",
         ("small_scale_guard", "switch_margin"): 1.6,
         ("small_scale_guard", "n_seeds"): 5,
         ("small_scale_guard", "seed_wins"): 5,
         ("claim_gates", "primary_algorithm_candidate_supported"): True,
+        ("claim_gates", "primary_paired_statistics_supported"): True,
         ("claim_gates", "small_scale_consistency_supported"): True,
         ("claim_gates", "setting_specific_margin_required"): True,
         ("claim_gates", "universal_fixed_margin_supported"): False,
@@ -5131,6 +5140,21 @@ def check_paper10_true_reward_guard_readiness_current(root: Path) -> CheckResult
     if float(primary.get("min_seed_delta_vs_baseline", 0.0)) <= 0.0:
         missing_tokens.append(
             f"{PAPER10_TRUE_REWARD_GUARD_READINESS_JSON}: primary min seed delta is not positive"
+        )
+
+    primary_stats = payload.get("primary_paired_stats", {})
+    primary_ci = primary_stats.get("bootstrap_95ci_delta", [0.0, 0.0])
+    if float(primary_stats.get("mean_delta", 0.0)) <= 0.0:
+        missing_tokens.append(
+            f"{PAPER10_TRUE_REWARD_GUARD_READINESS_JSON}: primary paired mean delta is not positive"
+        )
+    if float(primary_stats.get("min_delta", 0.0)) <= 0.0:
+        missing_tokens.append(
+            f"{PAPER10_TRUE_REWARD_GUARD_READINESS_JSON}: primary paired min delta is not positive"
+        )
+    if len(primary_ci) != 2 or float(primary_ci[0]) <= 0.0:
+        missing_tokens.append(
+            f"{PAPER10_TRUE_REWARD_GUARD_READINESS_JSON}: primary paired bootstrap CI lower is not positive"
         )
 
     small = payload.get("small_scale_guard", {})

@@ -13,7 +13,7 @@ from paper10_geojepa_mpc.experiments.true_reward_guard_readiness import (
 RESULTS = Path("paper10_geojepa_mpc") / "experiments" / "results"
 PRIMARY_20X16 = (
     RESULTS
-    / "e0_bishan_20x16_top5_true_reward_margin_guard_m150_audit7x7_vs_blend010_10seed_100step_comparison_2026-07-07.json"
+    / "e0_bishan_20x16_top5_true_reward_margin_guard_m150_audit7x7_vs_blend010_20seed_100step_comparison_2026-07-07.json"
 )
 SMALL_10X12 = (
     RESULTS
@@ -22,11 +22,7 @@ SMALL_10X12 = (
 
 
 def test_build_readiness_audit_promotes_20x16_guard_without_universal_margin_claim():
-    audit = build_true_reward_guard_readiness_audit(
-        primary_comparison_path=PRIMARY_20X16,
-        small_scale_stats_path=SMALL_10X12,
-        output_date="2026-07-08",
-    )
+    audit = build_true_reward_guard_readiness_audit(output_date="2026-07-08")
 
     assert audit["status"] == "source-derived true-reward guard readiness audit"
     assert audit["source_boundary"] == {
@@ -36,16 +32,28 @@ def test_build_readiness_audit_promotes_20x16_guard_without_universal_margin_cla
         "source": "tracked JSON result artifacts only",
     }
 
+    assert audit["source_provenance"]["primary_20x16_comparison"].endswith(
+        "20seed_100step_comparison_2026-07-07.json"
+    )
+
     primary = audit["primary_guard"]
     assert primary["setting"] == "bishan_20x16_top5"
     assert primary["audit_set"] == "audit7x7"
     assert primary["switch_margin"] == 1.5
-    assert primary["seed_wins"] == 10
-    assert primary["n_seeds"] == 10
-    assert primary["candidate_mean_reward"] == pytest.approx(73.0649023539798)
-    assert primary["baseline_mean_reward"] == pytest.approx(68.80149357954322)
-    assert primary["mean_delta_vs_baseline"] == pytest.approx(4.263408774436584)
+    assert primary["seed_wins"] == 20
+    assert primary["n_seeds"] == 20
+    assert primary["candidate_mean_reward"] == pytest.approx(72.17733781116401)
+    assert primary["baseline_mean_reward"] == pytest.approx(65.8876435268697)
+    assert primary["mean_delta_vs_baseline"] == pytest.approx(6.289694284294313)
     assert primary["min_seed_delta_vs_baseline"] == pytest.approx(0.0028808405276095073)
+
+    stats = audit["primary_paired_stats"]
+    assert stats["n"] == 20
+    assert stats["wins"] == 20
+    assert stats["losses"] == 0
+    assert stats["mean_delta"] == pytest.approx(6.289694284294315)
+    assert stats["bootstrap_95ci_delta"][0] == pytest.approx(4.164250399042407)
+    assert stats["candidate_guard_summary"]["switch_rate"] == pytest.approx(0.0855)
 
     small = audit["small_scale_guard"]
     assert small["setting"] == "bishan_10x12_top4"
@@ -65,11 +73,7 @@ def test_build_readiness_audit_promotes_20x16_guard_without_universal_margin_cla
 
 
 def test_readiness_markdown_reports_evidence_and_negative_guardrails():
-    audit = build_true_reward_guard_readiness_audit(
-        primary_comparison_path=PRIMARY_20X16,
-        small_scale_stats_path=SMALL_10X12,
-        output_date="2026-07-08",
-    )
+    audit = build_true_reward_guard_readiness_audit(output_date="2026-07-08")
 
     text = true_reward_guard_readiness_markdown(audit)
 
@@ -77,7 +81,10 @@ def test_readiness_markdown_reports_evidence_and_negative_guardrails():
     assert "Status: source-derived true-reward guard readiness audit." in text
     assert "`audit7x7 margin=1.50`" in text
     assert "`rewardtop7 margin=1.60`" in text
-    assert "10 / 10" in text
+    assert "20 / 20" in text
+    assert "## Primary Paired Statistics" in text
+    assert "bootstrap 95% CI lower" in text
+    assert "switch rate" in text
     assert "Do not claim a universal fixed switch margin." in text
     assert "Do not claim direct 50-state Bishan scale-up success." in text
     assert "not final submission readiness" in text

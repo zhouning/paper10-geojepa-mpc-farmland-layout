@@ -9,7 +9,8 @@ This is an algorithm-readiness evidence boundary, not final submission readiness
 
 ## Source Provenance
 
-- Primary 20x16/top5 comparison: `paper10_geojepa_mpc/experiments/results/e0_bishan_20x16_top5_true_reward_margin_guard_m150_audit7x7_vs_blend010_10seed_100step_comparison_2026-07-07.json`
+- Primary 20x16/top5 comparison: `paper10_geojepa_mpc/experiments/results/e0_bishan_20x16_top5_true_reward_margin_guard_m150_audit7x7_vs_blend010_20seed_100step_comparison_2026-07-07.json`
+- Primary 20x16/top5 paired statistics: `paper10_geojepa_mpc/experiments/results/e0_bishan_20x16_top5_true_reward_margin_guard_m150_audit7x7_20seed_paired_stats_2026-07-07.json`
 - Small-scale 10x12/top4 statistics: `paper10_geojepa_mpc/experiments/results/e0_bishan_10x12_top4_true_reward_margin_guard_m160_rewardtop7_5seed_paired_stats_2026-07-07.json`
 
 ## Primary Guard Candidate
@@ -18,12 +19,25 @@ The current Paper10 primary algorithm candidate is `audit7x7 margin=1.50` for Bi
 
 | metric | value |
 |---|---:|
-| baseline mean reward | 68.8015 |
-| guard mean reward | 73.0649 |
-| mean delta vs baseline | 4.2634 |
-| seed wins | 10 / 10 |
+| baseline mean reward | 65.8876 |
+| guard mean reward | 72.1773 |
+| mean delta vs baseline | 6.2897 |
+| seed wins | 20 / 20 |
 | min seed delta | 0.0029 |
-| max seed delta | 13.6481 |
+| max seed delta | 15.4454 |
+
+## Primary Paired Statistics
+
+| metric | value |
+|---|---:|
+| paired seeds | 20 |
+| wins / losses / ties | 20 / 0 / 0 |
+| mean delta | 6.2897 |
+| median delta | 5.5012 |
+| bootstrap 95% CI lower | 4.1643 |
+| bootstrap 95% CI upper | 8.4501 |
+| switch rate | 0.0855 |
+| selected true-reward regret mean | 0.8885 |
 
 ## Small-Scale Consistency Guard
 
@@ -43,6 +57,7 @@ The supporting small-scale guard is `rewardtop7 margin=1.60` for Bishan 10x12/to
 | gate | status |
 |---|---|
 | primary algorithm candidate supported | True |
+| primary paired statistics supported | True |
 | small-scale consistency supported | True |
 | setting-specific margin required | True |
 | universal fixed margin supported | False |

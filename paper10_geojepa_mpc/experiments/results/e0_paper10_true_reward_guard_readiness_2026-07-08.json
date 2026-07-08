@@ -3,6 +3,7 @@
     "source-derived true-reward guard readiness audit",
     "primary 20x16/top5 guard candidate",
     "setting-specific switch margin",
+    "20-seed paired bootstrap CI lower above zero",
     "10x12/top4 small-scale consistency support",
     "not final submission readiness"
   ],
@@ -18,6 +19,7 @@
     "direct_50state_scaleup_supported": false,
     "final_submission_readiness_supported": false,
     "primary_algorithm_candidate_supported": true,
+    "primary_paired_statistics_supported": true,
     "robust_transfer_superiority_supported": false,
     "setting_specific_margin_required": true,
     "small_scale_consistency_supported": true,
@@ -27,20 +29,20 @@
   "primary_guard": {
     "algorithm": "true_reward_margin_guard",
     "audit_set": "audit7x7",
-    "baseline_mean_reward": 68.80149357954322,
-    "baseline_name": "blend_w0p10_value_filter_selectedaudit_100step_seeds0-9",
-    "candidate_mean_reward": 73.0649023539798,
-    "candidate_name": "blend_w0p10_margin_guard_m150_audit7x7_100step_seeds0-9",
-    "max_seed_delta_vs_baseline": 13.6481240494969,
-    "mean_delta_vs_baseline": 4.263408774436584,
+    "baseline_mean_reward": 65.8876435268697,
+    "baseline_name": "blend_w0p10_value_filter_selectedaudit_100step_seeds0-19",
+    "candidate_mean_reward": 72.17733781116401,
+    "candidate_name": "blend_w0p10_margin_guard_m150_audit7x7_100step_seeds0-19",
+    "max_seed_delta_vs_baseline": 15.445442724083257,
+    "mean_delta_vs_baseline": 6.289694284294313,
     "min_seed_delta_vs_baseline": 0.0028808405276095073,
-    "n_seeds": 10,
+    "n_seeds": 20,
     "secondary_metric_deltas": {
-      "baimu_area_change_ha_mean": -3.304651591110229,
-      "cont_change_mean": 0.0012307066392045936,
-      "mean_score_time_sec": -0.0004882791982963679,
-      "mean_select_time_sec": 0.0008832186990766766,
-      "slope_change_pct_mean": -0.0037574268105413644
+      "baimu_area_change_ha_mean": -8.925453599560853,
+      "cont_change_mean": 0.000536527067917715,
+      "mean_score_time_sec": -0.000469351098872721,
+      "mean_select_time_sec": 0.00058392139946227,
+      "slope_change_pct_mean": -0.008898128482914824
     },
     "seed_deltas": [
       {
@@ -112,12 +114,113 @@
         "seed": 9,
         "slope_change_pct_delta": 0.008912156637223223,
         "total_reward_delta": 4.987659773760683
+      },
+      {
+        "baimu_area_change_ha_delta": -34.368199118882416,
+        "cont_change_delta": -0.00106796857121072,
+        "seed": 10,
+        "slope_change_pct_delta": -0.06769831403088977,
+        "total_reward_delta": 15.445442724083257
+      },
+      {
+        "baimu_area_change_ha_delta": -2.615552298450467,
+        "cont_change_delta": 0.002797060543646701,
+        "seed": 11,
+        "slope_change_pct_delta": 0.04663258941645143,
+        "total_reward_delta": 12.859428070390564
+      },
+      {
+        "baimu_area_change_ha_delta": 0.1535300485014659,
+        "cont_change_delta": -0.00015256693874432514,
+        "seed": 12,
+        "slope_change_pct_delta": -0.002182654028640707,
+        "total_reward_delta": 10.205896859230222
+      },
+      {
+        "baimu_area_change_ha_delta": 5.123129387873405,
+        "cont_change_delta": 0.001729091972435981,
+        "seed": 13,
+        "slope_change_pct_delta": -0.03006592655049589,
+        "total_reward_delta": 6.103848076391969
+      },
+      {
+        "baimu_area_change_ha_delta": 18.329868123114125,
+        "cont_change_delta": 0.0025936379586544156,
+        "seed": 14,
+        "slope_change_pct_delta": -0.05455545765932501,
+        "total_reward_delta": 8.578370141695913
+      },
+      {
+        "baimu_area_change_ha_delta": -68.8808886710465,
+        "cont_change_delta": -0.004068451699849707,
+        "seed": 15,
+        "slope_change_pct_delta": -0.026565192736601295,
+        "total_reward_delta": 1.620896511736234
+      },
+      {
+        "baimu_area_change_ha_delta": -14.568667365533116,
+        "cont_change_delta": -0.002898771836143066,
+        "seed": 16,
+        "slope_change_pct_delta": 0.002710804750541529,
+        "total_reward_delta": 12.201852230121894
+      },
+      {
+        "baimu_area_change_ha_delta": -58.25932230177523,
+        "cont_change_delta": 0.00010171129249636479,
+        "seed": 17,
+        "slope_change_pct_delta": -0.07762474607910974,
+        "total_reward_delta": 10.179201015550966
+      },
+      {
+        "baimu_area_change_ha_delta": -56.97805325583815,
+        "cont_change_delta": -0.001322246802450966,
+        "seed": 18,
+        "slope_change_pct_delta": -0.018743396856741645,
+        "total_reward_delta": 1.389902773311121
+      },
+      {
+        "baimu_area_change_ha_delta": 66.60159937192202,
+        "cont_change_delta": 0.0007119790474736654,
+        "seed": 19,
+        "slope_change_pct_delta": 0.08770399222192848,
+        "total_reward_delta": 4.574959539008326
       }
     ],
     "seed_losses": 0,
-    "seed_wins": 10,
+    "seed_wins": 20,
     "setting": "bishan_20x16_top5",
     "switch_margin": 1.5
+  },
+  "primary_paired_stats": {
+    "baseline_mean_reward": 65.8876435268697,
+    "bootstrap_95ci_delta": [
+      4.164250399042407,
+      8.450127940841853
+    ],
+    "candidate_guard_summary": {
+      "audited_states": 2000,
+      "mean_audit_action_count": 8.1905,
+      "mean_true_reward_time_sec": 0.47900214314993356,
+      "selected_is_audit_true_best_rate": 0.061,
+      "selected_true_reward_regret_mean": 0.8885403665844224,
+      "switch_rate": 0.0855,
+      "switches": 171
+    },
+    "candidate_mean_reward": 72.17733781116401,
+    "losses": 0,
+    "max_delta": 15.445442724083257,
+    "mean_delta": 6.289694284294315,
+    "median_delta": 5.501161897382168,
+    "min_delta": 0.0028808405276095073,
+    "n": 20,
+    "normal_approx_95ci_delta": [
+      4.0725573157606485,
+      8.506831252827983
+    ],
+    "sample_std_delta": 5.05884589496846,
+    "standard_error_delta": 1.1311923308845238,
+    "ties": 0,
+    "wins": 20
   },
   "small_scale_guard": {
     "algorithm": "true_reward_margin_guard",
@@ -177,7 +280,8 @@
     "source": "tracked JSON result artifacts only"
   },
   "source_provenance": {
-    "primary_20x16_comparison": "paper10_geojepa_mpc/experiments/results/e0_bishan_20x16_top5_true_reward_margin_guard_m150_audit7x7_vs_blend010_10seed_100step_comparison_2026-07-07.json",
+    "primary_20x16_comparison": "paper10_geojepa_mpc/experiments/results/e0_bishan_20x16_top5_true_reward_margin_guard_m150_audit7x7_vs_blend010_20seed_100step_comparison_2026-07-07.json",
+    "primary_20x16_paired_stats": "paper10_geojepa_mpc/experiments/results/e0_bishan_20x16_top5_true_reward_margin_guard_m150_audit7x7_20seed_paired_stats_2026-07-07.json",
     "small_scale_10x12_stats": "paper10_geojepa_mpc/experiments/results/e0_bishan_10x12_top4_true_reward_margin_guard_m160_rewardtop7_5seed_paired_stats_2026-07-07.json"
   },
   "status": "source-derived true-reward guard readiness audit"
