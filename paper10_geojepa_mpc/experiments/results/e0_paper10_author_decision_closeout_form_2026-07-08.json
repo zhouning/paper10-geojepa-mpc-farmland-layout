@@ -12,7 +12,7 @@
   },
   "submission_state": {
     "formal_submission_blocked": true,
-    "status_reason": "one author decision provided; other author decisions unresolved",
+    "status_reason": "author provided repository reviewer link and data/code publication boundary; formal submission remains blocked by named licence terms, restricted DLTB controlled-access routing, reviewer-link browser test, and final backfill",
     "preflight_pass_does_not_mean_submission_ready": true,
     "repository_reviewer_link_provided": true,
     "repository_reviewer_link_verified_for_browser_review": false
@@ -83,10 +83,10 @@
     {
       "field": "code_licence",
       "label": "code licence",
-      "status": "unresolved",
+      "status": "public_code_allowed_pending_named_software_licence",
       "author_input_required": true,
       "blocking_before_formal_submission": true,
-      "recommended_default": "Select a named software licence only after confirming all included code can be licensed by the authors.",
+      "recommended_default": "Public code release is allowed; select a named software licence for licensable code and scripts before final archive metadata.",
       "acceptable_closeout": [
         "named open-source software licence",
         "institution-approved restricted code-use statement"
@@ -105,15 +105,24 @@
         "MANIFEST.md",
         "e0_data_access_and_rights_decision_register_2026-06-09.md",
         "archive metadata"
+      ],
+      "provided_input": {
+        "code_can_be_public": true,
+        "named_software_licence": "pending_author_or_institution_selection"
+      },
+      "remaining_closeout": [
+        "select the named software licence or institution-approved code-use statement",
+        "add or update repository licence metadata without applying it to restricted DLTB data",
+        "backfill MANIFEST and archive metadata with the licence scope"
       ]
     },
     {
       "field": "generated_data_and_checkpoint_model_weight_rights",
       "label": "generated-data and checkpoint/model-weight rights",
-      "status": "unresolved",
+      "status": "public_release_allowed_except_sensitive_original_dltb_pending_named_rights_terms",
       "author_input_required": true,
       "blocking_before_formal_submission": true,
-      "recommended_default": "Assign rights terms by artifact family and keep generated outputs separate from restricted raw geospatial inputs.",
+      "recommended_default": "Public release is allowed for generated non-DLTB outputs, source tables, checkpoints, and model weights after selecting named rights terms and confirming no restricted original DLTB content is embedded.",
       "acceptable_closeout": [
         "named data licence for shareable derived outputs",
         "separate model-weight or checkpoint rights statement",
@@ -133,15 +142,25 @@
         "e0_data_code_availability_draft_2026-06-09.md",
         "e0_archive_metadata_templates_2026-06-09.md",
         "archive metadata"
+      ],
+      "provided_input": {
+        "non_dltb_artifacts_can_be_public": true,
+        "original_dltb_excluded_from_public_terms": true,
+        "named_data_or_model_rights_terms": "pending_author_or_institution_selection"
+      },
+      "remaining_closeout": [
+        "select named data/model-weight rights terms for shareable outputs",
+        "confirm generated artifacts do not embed original Bishan or Dongxing DLTB records",
+        "backfill Data and Code Availability and archive metadata"
       ]
     },
     {
       "field": "full_bishan_tool2_access_route",
       "label": "full Bishan Tool2 route",
-      "status": "unresolved",
-      "author_input_required": true,
+      "status": "derived_tool2_public_release_allowed_pending_dltb_leakage_check_and_deposit",
+      "author_input_required": false,
       "blocking_before_formal_submission": true,
-      "recommended_default": "Use controlled-access metadata if redistribution rights are uncertain.",
+      "recommended_default": "Treat full Bishan Tool2 transition and pairwise files as shareable derived artifacts only after a DLTB-leakage check; keep original Bishan DLTB geospatial inputs restricted.",
       "acceptable_closeout": [
         "public DOI if redistribution rights exist",
         "controlled-access repository record",
@@ -164,15 +183,24 @@
         "e0_data_code_availability_draft_2026-06-09.md",
         "e0_data_access_and_rights_decision_register_2026-06-09.md",
         "final manuscript"
+      ],
+      "provided_input": {
+        "derived_tool2_public_release_allowed": true,
+        "public_release_scope": "tool2 transitions/pairwise artifacts only after DLTB-leakage check; excludes original Bishan DLTB geospatial inputs"
+      },
+      "remaining_closeout": [
+        "run and record a DLTB-leakage check before public deposit",
+        "deposit derived Tool2 files in the selected archive if clean",
+        "record exact archive identifier, checksum, and reviewer route"
       ]
     },
     {
       "field": "gpkg_root_geospatial_input_access_route",
       "label": "GPKG-root geospatial route",
-      "status": "unresolved",
+      "status": "restricted_sensitive_original_bishan_dltb_controlled_access_required",
       "author_input_required": true,
       "blocking_before_formal_submission": true,
-      "recommended_default": "Use the same route family as full Bishan where possible, while naming the exact GPKG-root file families.",
+      "recommended_default": "Do not publicly redistribute original Bishan DLTB/GPKG-root geospatial inputs; use controlled-access or institution/data-owner routing with public metadata if journal review requires access.",
       "acceptable_closeout": [
         "public DOI if rights allow",
         "controlled-access metadata record",
@@ -194,15 +222,25 @@
         "REPRODUCIBILITY.md",
         "e0_data_code_availability_draft_2026-06-09.md",
         "final manuscript"
+      ],
+      "provided_input": {
+        "original_bishan_dltb_can_be_public": false,
+        "restriction_reason": "sensitive original Bishan DLTB data",
+        "derived_non_dltb_outputs_can_be_public": true
+      },
+      "remaining_closeout": [
+        "name the responsible owner or access body for restricted Bishan DLTB inputs",
+        "record eligibility, review criteria, and data-use/no-redistribution terms",
+        "define reviewer access route if the target journal requires raw DLTB inspection"
       ]
     },
     {
       "field": "dongxing_neijiang_prepared_data_access_route",
       "label": "Dongxing/Neijiang prepared-data route",
-      "status": "unresolved",
+      "status": "split_route_original_dongxing_dltb_restricted_derived_non_dltb_public_pending_leakage_check_and_controlled_route",
       "author_input_required": true,
       "blocking_before_formal_submission": true,
-      "recommended_default": "Use controlled-access metadata unless the prepared external-region products can be redistributed.",
+      "recommended_default": "Publicly release Dongxing/Neijiang derived non-DLTB summaries and source data, but keep original Dongxing DLTB inputs restricted and define controlled access if full rerun inputs are required.",
       "acceptable_closeout": [
         "public DOI if rights allow",
         "controlled-access repository record",
@@ -225,15 +263,25 @@
         "e0_data_access_and_rights_decision_register_2026-06-09.md",
         "e0_source_data_map_with_dongxing_2026-06-11.md",
         "final manuscript"
+      ],
+      "provided_input": {
+        "original_dongxing_dltb_can_be_public": false,
+        "derived_non_dltb_outputs_can_be_public": true,
+        "restriction_reason": "sensitive original Dongxing DLTB data"
+      },
+      "remaining_closeout": [
+        "split Dongxing/Neijiang prepared artifacts into public derived outputs and restricted original-DLTB inputs",
+        "run and record a DLTB-leakage check for any public prepared artifacts",
+        "name the controlled-access owner/body and reviewer route for restricted Dongxing DLTB inputs if required"
       ]
     },
     {
       "field": "reviewer_data_access",
       "label": "reviewer data access",
-      "status": "unresolved",
+      "status": "partially_closed_public_code_and_derived_artifacts_pending_restricted_dltb_reviewer_route_and_browser_test",
       "author_input_required": true,
       "blocking_before_formal_submission": true,
-      "recommended_default": "Give reviewers a tested repository-supported private link or controlled-access route for every non-public dataset required beyond smoke verification.",
+      "recommended_default": "Use the 4open reviewer link for public code and derived non-DLTB artifacts after independent browser testing; route restricted original DLTB access only through an approved controlled process.",
       "acceptable_closeout": [
         "public downloads",
         "repository private reviewer links",
@@ -255,6 +303,16 @@
         "e0_archive_release_and_doi_backfill_checklist_2026-06-09.md",
         "reviewer instructions",
         "final manuscript"
+      ],
+      "provided_input": {
+        "public_reviewer_scope": "code and derived non-DLTB artifacts",
+        "restricted_reviewer_scope": "original Bishan and Dongxing DLTB inputs",
+        "anonymous_reviewer_link": "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/"
+      },
+      "remaining_closeout": [
+        "test the 4open link from a non-author browser session",
+        "record whether reviewers can inspect restricted DLTB inputs through editor-mediated or institutional controlled access",
+        "backfill reviewer instructions and final Data and Code Availability wording"
       ]
     },
     {
@@ -360,5 +418,15 @@
     "check_method": "curl.exe -L --max-time 20 -I",
     "observed_result": "URL reached 4open and redirected to /api/repo/geojepa-mpc-farmland-layout-8552/file/; unauthenticated command-line API follow-up returned 401 Unauthorized.",
     "interpretation": "The provided 4open route exists, but reviewer-facing browser access still requires an independent non-author browser-session test before formal submission."
+  },
+  "author_input_recorded": {
+    "data_and_code_publication_boundary": {
+      "source": "author clarification on 2026-07-08",
+      "code_can_be_public": true,
+      "original_bishan_dltb_can_be_public": false,
+      "original_dongxing_dltb_can_be_public": false,
+      "non_dltb_artifacts_can_be_public": true,
+      "interpretation": "Code and non-DLTB artifacts may be public. Original Bishan and Dongxing DLTB inputs are sensitive and must not be publicly redistributed."
+    }
   }
 }

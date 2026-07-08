@@ -1448,6 +1448,70 @@ def test_author_decision_closeout_form_accepts_provided_anonymous_link(tmp_path)
     assert repository["final_backfill_required"] is True
 
 
+def test_author_decision_closeout_form_records_public_code_and_restricted_dltb_boundary(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+
+    result = check_paper10_author_decision_closeout_form_current(fixture)
+
+    assert result.name == "paper10_author_decision_closeout_form_current"
+    assert result.ok is True
+
+    payload = json.loads(
+        (fixture / PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON).read_text(
+            encoding="utf-8"
+        )
+    )
+    boundary = payload["author_input_recorded"]["data_and_code_publication_boundary"]
+    assert boundary["code_can_be_public"] is True
+    assert boundary["original_bishan_dltb_can_be_public"] is False
+    assert boundary["original_dongxing_dltb_can_be_public"] is False
+    assert boundary["non_dltb_artifacts_can_be_public"] is True
+
+    fields = {
+        field["field"]: field
+        for field in payload["author_decision_closeout_fields"]
+    }
+    assert fields["code_licence"]["status"] == (
+        "public_code_allowed_pending_named_software_licence"
+    )
+    assert fields["generated_data_and_checkpoint_model_weight_rights"]["status"] == (
+        "public_release_allowed_except_sensitive_original_dltb_pending_named_rights_terms"
+    )
+    assert fields["full_bishan_tool2_access_route"]["status"] == (
+        "derived_tool2_public_release_allowed_pending_dltb_leakage_check_and_deposit"
+    )
+    assert fields["gpkg_root_geospatial_input_access_route"]["status"] == (
+        "restricted_sensitive_original_bishan_dltb_controlled_access_required"
+    )
+    assert fields["dongxing_neijiang_prepared_data_access_route"]["status"] == (
+        "split_route_original_dongxing_dltb_restricted_derived_non_dltb_public_pending_leakage_check_and_controlled_route"
+    )
+    assert fields["reviewer_data_access"]["status"] == (
+        "partially_closed_public_code_and_derived_artifacts_pending_restricted_dltb_reviewer_route_and_browser_test"
+    )
+
+
+def test_author_decision_closeout_form_rejects_public_original_dltb_route(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    payload_path = fixture / PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    boundary = payload["author_input_recorded"]["data_and_code_publication_boundary"]
+    boundary["original_bishan_dltb_can_be_public"] = True
+    boundary["original_dongxing_dltb_can_be_public"] = True
+    for field in payload["author_decision_closeout_fields"]:
+        if field["field"] == "gpkg_root_geospatial_input_access_route":
+            field["status"] = "public_original_dltb_allowed"
+        if field["field"] == "dongxing_neijiang_prepared_data_access_route":
+            field["status"] = "public_original_dongxing_dltb_allowed"
+    payload_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    result = check_paper10_author_decision_closeout_form_current(fixture)
+
+    assert result.name == "paper10_author_decision_closeout_form_current"
+    assert result.ok is False
+    assert "original DLTB public release is not allowed" in result.details
+
+
 def test_author_decision_closeout_form_preflight_rejects_ready_to_submit_claim(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
     closeout = fixture / PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_MD

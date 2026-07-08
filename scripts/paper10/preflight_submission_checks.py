@@ -5318,6 +5318,10 @@ def check_paper10_author_decision_closeout_form_current(root: Path) -> CheckResu
         "statistical reporting policy",
         "Main Figure 1 / journal export rules",
         "available upon request",
+        "code can be public",
+        "non-DLTB artifacts can be public",
+        "original Bishan DLTB data must not be public",
+        "original Dongxing DLTB data must not be public",
         "Do not use this form as submission approval.",
         "Do not claim direct 50-state Bishan scale-up success.",
         "Do not claim robust Bishan-to-Dongxing transfer superiority.",
@@ -5347,7 +5351,11 @@ def check_paper10_author_decision_closeout_form_current(root: Path) -> CheckResu
         ("source_boundary", "submission_approval"): False,
         ("source_boundary", "author_decisions_invented"): False,
         ("submission_state", "formal_submission_blocked"): True,
-        ("submission_state", "status_reason"): "one author decision provided; other author decisions unresolved",
+        ("submission_state", "status_reason"): (
+            "author provided repository reviewer link and data/code publication boundary; "
+            "formal submission remains blocked by named licence terms, restricted DLTB "
+            "controlled-access routing, reviewer-link browser test, and final backfill"
+        ),
         ("submission_state", "repository_reviewer_link_provided"): True,
         ("submission_state", "repository_reviewer_link_verified_for_browser_review"): False,
         ("submission_state", "preflight_pass_does_not_mean_submission_ready"): True,
@@ -5412,6 +5420,41 @@ def check_paper10_author_decision_closeout_form_current(root: Path) -> CheckResu
                 f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: "
                 f"link_access_check.{key}"
             )
+
+    expected_author_boundary = {
+        "code_can_be_public": True,
+        "original_bishan_dltb_can_be_public": False,
+        "original_dongxing_dltb_can_be_public": False,
+        "non_dltb_artifacts_can_be_public": True,
+    }
+    author_input_recorded = payload.get("author_input_recorded")
+    if not isinstance(author_input_recorded, dict):
+        missing_tokens.append(
+            f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: author_input_recorded"
+        )
+        author_input_recorded = {}
+    author_boundary = author_input_recorded.get("data_and_code_publication_boundary")
+    if not isinstance(author_boundary, dict):
+        missing_tokens.append(
+            f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: "
+            "author_input_recorded.data_and_code_publication_boundary"
+        )
+        author_boundary = {}
+    for key, expected in expected_author_boundary.items():
+        observed = author_boundary.get(key)
+        if observed != expected:
+            missing_tokens.append(
+                f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: "
+                f"author_input_recorded.data_and_code_publication_boundary.{key}={observed}"
+            )
+    if (
+        author_boundary.get("original_bishan_dltb_can_be_public") is True
+        or author_boundary.get("original_dongxing_dltb_can_be_public") is True
+    ):
+        missing_tokens.append(
+            f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: "
+            "original DLTB public release is not allowed"
+        )
     expected_fields = [
         "repository_doi_or_anonymous_reviewer_link",
         "code_licence",
@@ -5439,6 +5482,39 @@ def check_paper10_author_decision_closeout_form_current(root: Path) -> CheckResu
             f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: "
             f"author_decision_closeout_fields={observed_fields}"
         )
+    expected_field_statuses = {
+        "repository_doi_or_anonymous_reviewer_link": (
+            "provided_pending_external_browser_test_and_backfill",
+            False,
+        ),
+        "code_licence": (
+            "public_code_allowed_pending_named_software_licence",
+            True,
+        ),
+        "generated_data_and_checkpoint_model_weight_rights": (
+            "public_release_allowed_except_sensitive_original_dltb_pending_named_rights_terms",
+            True,
+        ),
+        "full_bishan_tool2_access_route": (
+            "derived_tool2_public_release_allowed_pending_dltb_leakage_check_and_deposit",
+            False,
+        ),
+        "gpkg_root_geospatial_input_access_route": (
+            "restricted_sensitive_original_bishan_dltb_controlled_access_required",
+            True,
+        ),
+        "dongxing_neijiang_prepared_data_access_route": (
+            "split_route_original_dongxing_dltb_restricted_derived_non_dltb_public_pending_leakage_check_and_controlled_route",
+            True,
+        ),
+        "reviewer_data_access": (
+            "partially_closed_public_code_and_derived_artifacts_pending_restricted_dltb_reviewer_route_and_browser_test",
+            True,
+        ),
+        "citation_policy": ("unresolved", True),
+        "statistical_reporting_policy": ("unresolved", True),
+        "main_figure_1_and_journal_export_rules": ("unresolved", True),
+    }
     for field in fields:
         if not isinstance(field, dict):
             missing_tokens.append(
@@ -5447,11 +5523,19 @@ def check_paper10_author_decision_closeout_form_current(root: Path) -> CheckResu
             )
             continue
         name = field.get("field")
-        expected_status = "unresolved"
-        expected_author_input_required = True
-        if name == "repository_doi_or_anonymous_reviewer_link":
-            expected_status = "provided_pending_external_browser_test_and_backfill"
-            expected_author_input_required = False
+        expected_status, expected_author_input_required = expected_field_statuses.get(
+            name,
+            ("unresolved", True),
+        )
+        status = str(field.get("status", ""))
+        if name in {
+            "gpkg_root_geospatial_input_access_route",
+            "dongxing_neijiang_prepared_data_access_route",
+        } and "public_original_dltb" in status.lower():
+            missing_tokens.append(
+                f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: "
+                "original DLTB public release is not allowed"
+            )
         for key, expected in (
             ("status", expected_status),
             ("author_input_required", expected_author_input_required),
