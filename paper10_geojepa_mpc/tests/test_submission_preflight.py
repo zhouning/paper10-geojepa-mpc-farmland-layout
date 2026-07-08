@@ -14,6 +14,7 @@ from scripts.paper10.preflight_submission_checks import (
     CEUS_STAGE3_MANUSCRIPT_REFRAME,
     check_citation_keys_resolve,
     check_paper10_ceus_baseline_inference_hardening_current,
+    check_paper10_post_guard_experiment_closure_refresh_current,
     check_paper10_submission_readiness_boundary_current,
     check_paper10_true_reward_guard_readiness_current,
     check_original_vision_validation_registry_current,
@@ -71,6 +72,8 @@ from scripts.paper10.preflight_submission_checks import (
     PAPER10_CEUS_HIGHLIGHTS,
     PAPER10_TRUE_REWARD_GUARD_READINESS_JSON,
     PAPER10_TRUE_REWARD_GUARD_READINESS_MD,
+    PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_JSON,
+    PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_MD,
     PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
@@ -174,6 +177,10 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     PAPER10_CEUS_HIGHLIGHTS,
     PAPER10_TRUE_REWARD_GUARD_READINESS_MD,
     PAPER10_TRUE_REWARD_GUARD_READINESS_JSON,
+    PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_MD,
+    PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_JSON,
+    RESULTS / "e0_paper10_experiment_freeze_audit_2026-06-27.md",
+    RESULTS / "e0_paper10_experiment_closure_register_2026-06-27.md",
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON,
     RESULTS / "e0_archive_release_and_doi_backfill_checklist_2026-06-09.md",
@@ -334,6 +341,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "paper10_ceus_baseline_inference_hardening_current" in payload["passed_checks"]
     assert "paper10_ceus_clean_main_manuscript_draft_current" in payload["passed_checks"]
     assert "paper10_true_reward_guard_readiness_current" in payload["passed_checks"]
+    assert "paper10_post_guard_experiment_closure_refresh_current" in payload["passed_checks"]
     assert "paper10_anchor_raw_rollout_consistency_audit_current" in payload["passed_checks"]
     assert "original_vision_validation_registry_current" in payload["passed_checks"]
 
@@ -1293,6 +1301,66 @@ def test_submission_preflight_minimal_fixture_reports_missing_true_reward_guard_
     details = check_details(payload, "paper10_true_reward_guard_readiness_current")
     assert "missing Paper10 true-reward guard readiness files" in details
     assert str(PAPER10_TRUE_REWARD_GUARD_READINESS_MD) in details
+
+
+def test_submission_preflight_minimal_fixture_reports_missing_post_guard_closure_refresh(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    (fixture / PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_MD).unlink()
+
+    result, payload = run_submission_preflight_json(fixture)
+
+    assert result.returncode == 1
+    assert payload["ok"] is False
+    assert "paper10_post_guard_experiment_closure_refresh_current" in payload["failed_checks"]
+    details = check_details(payload, "paper10_post_guard_experiment_closure_refresh_current")
+    assert "missing Paper10 post-guard experiment-closure refresh files" in details
+    assert str(PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_MD) in details
+
+
+def test_post_guard_closure_refresh_preflight_requires_rewardtop7_guard(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    payload_path = fixture / PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_JSON
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    payload["primary_guard"]["audit_set"] = "audit7x7"
+    payload_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    result = check_paper10_post_guard_experiment_closure_refresh_current(fixture)
+
+    assert result.name == "paper10_post_guard_experiment_closure_refresh_current"
+    assert result.ok is False
+    assert "primary_guard.audit_set=audit7x7" in result.details
+
+
+def test_post_guard_closure_refresh_preflight_rejects_final_submission_ready_claim(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    refresh = fixture / PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_MD
+    refresh.write_text(
+        refresh.read_text(encoding="utf-8")
+        + "\n\nThe paper is ready for final submission.\n",
+        encoding="utf-8",
+    )
+
+    result = check_paper10_post_guard_experiment_closure_refresh_current(fixture)
+
+    assert result.name == "paper10_post_guard_experiment_closure_refresh_current"
+    assert result.ok is False
+    assert "forbidden post-guard closure refresh wording" in result.details
+    assert "ready for final submission" in result.details
+
+
+def test_post_guard_closure_refresh_preflight_allows_negative_guardrails(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    refresh = fixture / PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_MD
+    refresh.write_text(
+        refresh.read_text(encoding="utf-8")
+        + "\n\nDo not claim direct 50-state Bishan scale-up success.\n",
+        encoding="utf-8",
+    )
+
+    result = check_paper10_post_guard_experiment_closure_refresh_current(fixture)
+
+    assert result.name == "paper10_post_guard_experiment_closure_refresh_current"
+    assert result.ok is True
 
 
 def test_true_reward_guard_readiness_preflight_rejects_universal_margin_claim(tmp_path):

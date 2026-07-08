@@ -215,6 +215,12 @@ PAPER10_TRUE_REWARD_GUARD_READINESS_MD = (
 PAPER10_TRUE_REWARD_GUARD_READINESS_JSON = (
     RESULTS / "e0_paper10_true_reward_guard_readiness_2026-07-08.json"
 )
+PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_MD = (
+    RESULTS / "e0_paper10_post_guard_experiment_closure_refresh_2026-07-08.md"
+)
+PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_JSON = (
+    RESULTS / "e0_paper10_post_guard_experiment_closure_refresh_2026-07-08.json"
+)
 PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD = (
     RESULTS / "e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md"
 )
@@ -338,6 +344,10 @@ REQUIRED_PATHS = (
     PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_ASSEMBLY_DRAFT,
     PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT,
     PAPER10_CEUS_HIGHLIGHTS,
+    PAPER10_TRUE_REWARD_GUARD_READINESS_MD,
+    PAPER10_TRUE_REWARD_GUARD_READINESS_JSON,
+    PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_MD,
+    PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_JSON,
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD,
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON,
     PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD,
@@ -457,6 +467,15 @@ class CheckResult:
 
 def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
+
+
+def nested_value(payload: dict, keys: tuple[str, ...]):
+    value = payload
+    for key in keys:
+        if not isinstance(value, dict) or key not in value:
+            return None
+        value = value[key]
+    return value
 
 
 def iter_markdown_files(root: Path) -> list[Path]:
@@ -5082,6 +5101,158 @@ def check_paper10_ceus_baseline_inference_hardening_current(root: Path) -> Check
 
 
 
+def check_paper10_post_guard_experiment_closure_refresh_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_MD,
+        PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_JSON,
+        PAPER10_TRUE_REWARD_GUARD_READINESS_MD,
+        PAPER10_TRUE_REWARD_GUARD_READINESS_JSON,
+        PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD,
+        PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON,
+        RESULTS / "e0_paper10_experiment_freeze_audit_2026-06-27.md",
+        RESULTS / "e0_paper10_experiment_closure_register_2026-06-27.md",
+        PAPER10_SUBMISSION_READINESS_BOUNDARY,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_post_guard_experiment_closure_refresh_current",
+            False,
+            "missing Paper10 post-guard experiment-closure refresh files: "
+            + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_MD)
+    try:
+        payload = json.loads(
+            read_text(root / PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_JSON)
+        )
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_post_guard_experiment_closure_refresh_current",
+            False,
+            f"{PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    required_tokens = [
+        "Paper10 post-guard experiment-closure refresh",
+        "Status: post_guard_experiment_closure_refresh",
+        "source-derived; no rollout or training rerun",
+        "rewardtop7 margin=1.50",
+        "72.1918",
+        "65.8876",
+        "6.3041",
+        "20 / 20",
+        "4.1401",
+        "7.7605",
+        "8.1905",
+        PAPER10_TRUE_REWARD_GUARD_READINESS_JSON.name,
+        PAPER10_TRUE_REWARD_GUARD_READINESS_MD.name,
+        PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON.name,
+        PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD.name,
+        "e0_paper10_experiment_freeze_audit_2026-06-27.md",
+        "e0_paper10_experiment_closure_register_2026-06-27.md",
+        PAPER10_SUBMISSION_READINESS_BOUNDARY.name,
+        "closure update, not a new experiment",
+        "not final submission readiness",
+        "Do not claim a universal fixed switch margin.",
+        "Do not claim direct 50-state Bishan scale-up success.",
+        "Do not claim robust Bishan-to-Dongxing transfer superiority.",
+        "Do not claim deployment-ready cadastral planning.",
+    ]
+    for token in required_tokens:
+        if token not in text:
+            missing_tokens.append(
+                f"{PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_MD}: {token}"
+            )
+
+    expected_values = {
+        ("date",): "2026-07-08",
+        ("status",): "post_guard_experiment_closure_refresh",
+        ("source_boundary", "new_experimental_claim"): False,
+        ("source_boundary", "reran_rollouts"): False,
+        ("source_boundary", "reran_training"): False,
+        ("primary_guard", "audit_set"): "rewardtop7",
+        ("primary_guard", "switch_margin"): 1.5,
+        ("primary_guard", "n_seeds"): 20,
+        ("primary_guard", "guard_mean_reward"): 72.19178534319884,
+        ("primary_guard", "baseline_mean_reward"): 65.8876435268697,
+        ("primary_guard", "mean_delta_vs_baseline"): 6.304141816329158,
+        ("primary_guard", "seed_wins"): 20,
+        ("primary_guard", "bootstrap_95ci_delta_lower"): 4.140109129548553,
+        ("primary_guard", "mean_audit_action_count"): 7.7605,
+        ("primary_guard", "dual7x7_mean_audit_action_count"): 8.1905,
+        ("closure_decision", "default_next_phase"): "bounded_manuscript_assembly",
+        ("closure_decision", "resume_broad_algorithm_redesign"): False,
+        ("closure_decision", "historical_june_records_mutated"): False,
+        ("submission_boundary", "status"): "not_submission_ready",
+        ("claim_locks", "direct_50state_scaleup_supported"): False,
+        ("claim_locks", "robust_transfer_superiority_supported"): False,
+        ("claim_locks", "deployment_ready_supported"): False,
+        ("claim_locks", "universal_fixed_margin_supported"): False,
+        ("claim_locks", "final_submission_readiness_supported"): False,
+    }
+    for keys, expected in expected_values.items():
+        observed = nested_value(payload, keys)
+        if observed != expected:
+            missing_tokens.append(
+                f"{PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_JSON}: "
+                f"{'.'.join(keys)}={observed}"
+            )
+
+    blockers = nested_value(payload, ("submission_boundary", "open_blockers"))
+    if not isinstance(blockers, list):
+        missing_tokens.append(
+            f"{PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_JSON}: "
+            "submission_boundary.open_blockers"
+        )
+        blockers = []
+    for blocker in (
+        "repository DOI or anonymous reviewer link",
+        "code licence",
+        "generated-data rights and checkpoint or model-weight rights",
+        "full Bishan Tool2 data access route",
+        "GPKG-root geospatial input access route",
+        "Dongxing/Neijiang prepared-data access route",
+        "citation policy for local-only sources, preprints, and final reference style",
+        "statistical reporting policy for descriptive results versus hypothesis tests",
+        "Main Figure 1 final schematic artwork and journal-specific figure/table export rules",
+    ):
+        if blocker not in blockers:
+            missing_tokens.append(
+                f"{PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_JSON}: "
+                f"submission_boundary.open_blockers.{blocker}"
+            )
+
+    hits = []
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if is_post_guard_closure_refresh_positive_overclaim(line):
+            hits.append(
+                f"{PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_MD}:{line_no}: "
+                f"{line.strip()}"
+            )
+    if hits:
+        return CheckResult(
+            "paper10_post_guard_experiment_closure_refresh_current",
+            False,
+            "forbidden post-guard closure refresh wording: " + " | ".join(hits),
+        )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_post_guard_experiment_closure_refresh_current",
+            False,
+            "Paper10 post-guard experiment-closure refresh gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_post_guard_experiment_closure_refresh_current",
+        True,
+        "Paper10 post-guard experiment-closure refresh is current and bounded",
+    )
+
+
 def check_paper10_true_reward_guard_readiness_current(root: Path) -> CheckResult:
     required_files = [
         PAPER10_TRUE_REWARD_GUARD_READINESS_MD,
@@ -6248,6 +6419,42 @@ def check_paper10_manuscript_text_table_consistency_audit_current(root: Path) ->
     )
 
 
+POST_GUARD_NEGATIVE_GUARDRAIL = re.compile(
+    r"\b("
+    r"do not|does not|not supported|insufficient|cannot|must not|should not"
+    r"|not final|false|no-go|not_submission_ready|blocked|unresolved"
+    r")\b",
+    re.IGNORECASE,
+)
+POST_GUARD_CLAUSE_SPLIT_PATTERN = re.compile(r"[;.!?]+")
+POST_GUARD_FORBIDDEN_TARGETS = (
+    re.compile(r"\buniversal fixed switch margin\b", re.IGNORECASE),
+    re.compile(r"\bdirect 50[- ]state Bishan scale[- ]up success\b", re.IGNORECASE),
+    re.compile(
+        r"\brobust Bishan[- ]to[- ]Dongxing transfer superiority\b",
+        re.IGNORECASE,
+    ),
+    re.compile(r"\bdeployment-ready cadastral planning\b", re.IGNORECASE),
+    re.compile(r"\bfinal submission-ready\b", re.IGNORECASE),
+    re.compile(r"\bready for final submission\b", re.IGNORECASE),
+    re.compile(r"\bready to submit\b", re.IGNORECASE),
+)
+
+
+def is_post_guard_closure_refresh_positive_overclaim(line: str) -> bool:
+    for clause in (
+        clause.strip()
+        for clause in POST_GUARD_CLAUSE_SPLIT_PATTERN.split(line)
+    ):
+        if not clause:
+            continue
+        if POST_GUARD_NEGATIVE_GUARDRAIL.search(clause):
+            continue
+        if any(target.search(clause) for target in POST_GUARD_FORBIDDEN_TARGETS):
+            return True
+    return False
+
+
 TRUE_REWARD_GUARD_NEGATIVE_GUARDRAIL = re.compile(
     r"\b("
     r"do not|does not|not supported|insufficient|cannot|must not|should not"
@@ -6518,6 +6725,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_real_env_longhorizon_confirmatory_audit_current,
     check_paper10_ceus_baseline_inference_hardening_current,
     check_paper10_true_reward_guard_readiness_current,
+    check_paper10_post_guard_experiment_closure_refresh_current,
     check_paper10_ceus_clean_main_manuscript_draft_current,
     check_paper10_anchor_raw_rollout_consistency_audit_current,
     check_original_vision_validation_registry_current,

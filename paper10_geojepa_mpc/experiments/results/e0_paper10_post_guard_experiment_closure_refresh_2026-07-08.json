@@ -1,0 +1,57 @@
+{
+  "claim_locks": {
+    "deployment_ready_supported": false,
+    "direct_50state_scaleup_supported": false,
+    "final_submission_readiness_supported": false,
+    "robust_transfer_superiority_supported": false,
+    "universal_fixed_margin_supported": false
+  },
+  "closure_decision": {
+    "default_next_phase": "bounded_manuscript_assembly",
+    "historical_june_records_mutated": false,
+    "resume_broad_algorithm_redesign": false
+  },
+  "date": "2026-07-08",
+  "primary_guard": {
+    "audit_set": "rewardtop7",
+    "baseline_mean_reward": 65.8876435268697,
+    "bootstrap_95ci_delta_lower": 4.140109129548553,
+    "dual7x7_mean_audit_action_count": 8.1905,
+    "guard_mean_reward": 72.19178534319884,
+    "mean_audit_action_count": 7.7605,
+    "mean_delta_vs_baseline": 6.304141816329158,
+    "n_seeds": 20,
+    "seed_wins": 20,
+    "switch_margin": 1.5
+  },
+  "source_boundary": {
+    "new_experimental_claim": false,
+    "reran_rollouts": false,
+    "reran_training": false,
+    "source": "tracked Paper10 guard and closure artifacts only"
+  },
+  "source_files": {
+    "closure_register_md": "paper10_geojepa_mpc/experiments/results/e0_paper10_experiment_closure_register_2026-06-27.md",
+    "experiment_freeze_md": "paper10_geojepa_mpc/experiments/results/e0_paper10_experiment_freeze_audit_2026-06-27.md",
+    "submission_boundary_md": "paper10_geojepa_mpc/experiments/results/e0_paper10_submission_readiness_boundary_2026-06-26.md",
+    "table_freeze_json": "paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_result_tables_freeze_2026-06-19.json",
+    "table_freeze_md": "paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_result_tables_freeze_2026-06-19.md",
+    "true_reward_guard_json": "paper10_geojepa_mpc/experiments/results/e0_paper10_true_reward_guard_readiness_2026-07-08.json",
+    "true_reward_guard_md": "paper10_geojepa_mpc/experiments/results/e0_paper10_true_reward_guard_readiness_2026-07-08.md"
+  },
+  "status": "post_guard_experiment_closure_refresh",
+  "submission_boundary": {
+    "open_blockers": [
+      "repository DOI or anonymous reviewer link",
+      "code licence",
+      "generated-data rights and checkpoint or model-weight rights",
+      "full Bishan Tool2 data access route",
+      "GPKG-root geospatial input access route",
+      "Dongxing/Neijiang prepared-data access route",
+      "citation policy for local-only sources, preprints, and final reference style",
+      "statistical reporting policy for descriptive results versus hypothesis tests",
+      "Main Figure 1 final schematic artwork and journal-specific figure/table export rules"
+    ],
+    "status": "not_submission_ready"
+  }
+}
