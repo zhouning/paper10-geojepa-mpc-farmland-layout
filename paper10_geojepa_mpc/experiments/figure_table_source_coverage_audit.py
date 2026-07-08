@@ -164,6 +164,8 @@ FIGURE_TABLE_CONTRACTS = [
             _results("e0_paper10_manuscript_result_tables_freeze_2026-06-19.json"),
             _results("e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.md"),
             _results("e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json"),
+            _results("e0_paper10_true_reward_guard_readiness_2026-07-08.md"),
+            _results("e0_paper10_true_reward_guard_readiness_2026-07-08.json"),
         ],
         "generation_scripts": [],
         "generation_status": "frozen_table_available",
@@ -174,6 +176,8 @@ FIGURE_TABLE_CONTRACTS = [
         "claim_boundaries": [
             "Table 1 of the freeze is the only positive Bishan performance anchor",
             "Stage 3 rows are boundary evidence",
+            "Algorithm-readiness addendum records the current true-reward guard evidence",
+            "setting-specific guard only; not final submission readiness",
         ],
     },
     {

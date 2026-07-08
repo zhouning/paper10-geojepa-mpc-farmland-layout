@@ -181,13 +181,17 @@
       "allowed_claims": [
         "Table 1 is the only positive Bishan performance anchor",
         "Stage 3 rows are boundary evidence",
-        "diagnostic near-pass must not be pooled"
+        "diagnostic near-pass must not be pooled",
+        "Algorithm-readiness addendum is current true-reward guard evidence",
+        "setting-specific guard only"
       ],
-      "draft_caption": "Journal-neutral draft caption: frozen matched-baseline table reports the positive Bishan anchor and Stage 3 boundary rows using tracked Stage 3 and raw-rollout consistency evidence.",
+      "draft_caption": "Journal-neutral draft caption: frozen matched-baseline table reports the positive Bishan anchor and Stage 3 boundary rows using tracked Stage 3 and raw-rollout consistency evidence. Algorithm-readiness addendum records the current true-reward guard evidence: mean reward 72.1773 versus 65.8876, delta 6.2897, seed wins 20 / 20, and bootstrap 95% CI lower 4.1643.",
       "final_artwork_status": "preview_available",
       "forbidden_claims": [
         "Do not rewrite Stage 3 boundary rows as direct 50-state Bishan scale-up success.",
-        "Do not add unsupported comparison-testing wording to the frozen table."
+        "Do not add unsupported comparison-testing wording to the frozen table.",
+        "Do not treat the guard addendum as final submission readiness.",
+        "Do not claim a universal fixed switch margin."
       ],
       "generation_scripts": [],
       "generation_status": "frozen_table_available",
@@ -198,7 +202,9 @@
         "paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_result_tables_freeze_2026-06-19.md",
         "paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_result_tables_freeze_2026-06-19.json",
         "paper10_geojepa_mpc/experiments/results/e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.md",
-        "paper10_geojepa_mpc/experiments/results/e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json"
+        "paper10_geojepa_mpc/experiments/results/e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json",
+        "paper10_geojepa_mpc/experiments/results/e0_paper10_true_reward_guard_readiness_2026-07-08.md",
+        "paper10_geojepa_mpc/experiments/results/e0_paper10_true_reward_guard_readiness_2026-07-08.json"
       ],
       "unresolved_manuscript_fields": [
         "rounding",

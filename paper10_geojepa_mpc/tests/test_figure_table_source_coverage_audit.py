@@ -59,6 +59,11 @@ def test_build_figure_table_source_coverage_audit_maps_all_blueprint_items():
     assert FRONTIER_PLOT_SCRIPT.relative_to(ROOT).as_posix() in items["Main Figure 2"]["generation_scripts"]
     assert (RESULTS / "e0_frontier_random050_seedwise_rewards_2026-06-09.csv").relative_to(ROOT).as_posix() in items["Main Figure 2"]["source_files"]
 
+    assert not any(
+        "true_reward_guard_readiness" in source
+        for source in items["Main Figure 3"]["source_files"]
+    )
+
     assert items["Main Figure 4"]["source_coverage_pass"] is True
     assert DONGXING_PLOT_SCRIPT.relative_to(ROOT).as_posix() in items["Main Figure 4"]["generation_scripts"]
     assert "robust Bishan-to-Dongxing transfer superiority" in " ".join(
@@ -67,7 +72,11 @@ def test_build_figure_table_source_coverage_audit_maps_all_blueprint_items():
 
     assert items["Main Table 2"]["source_coverage_pass"] is True
     assert (RESULTS / "e0_paper10_manuscript_result_tables_freeze_2026-06-19.md").relative_to(ROOT).as_posix() in items["Main Table 2"]["source_files"]
+    assert (RESULTS / "e0_paper10_true_reward_guard_readiness_2026-07-08.md").relative_to(ROOT).as_posix() in items["Main Table 2"]["source_files"]
+    assert (RESULTS / "e0_paper10_true_reward_guard_readiness_2026-07-08.json").relative_to(ROOT).as_posix() in items["Main Table 2"]["source_files"]
     assert "matched-baseline rollout comparison" in items["Main Table 2"]["manuscript_job"]
+    assert "Algorithm-readiness addendum" in " ".join(items["Main Table 2"]["claim_boundaries"])
+    assert "setting-specific guard only" in " ".join(items["Main Table 2"]["claim_boundaries"])
 
     assert all(row["missing_source_files"] == [] for row in payload["items"])
     assert all(row["source_coverage_pass"] is True for row in payload["items"])
@@ -87,6 +96,9 @@ def test_markdown_report_records_figure_table_blockers_without_overclaiming():
     assert "Main Figure 4" in text
     assert "robust Bishan-to-Dongxing transfer superiority is not supported" in text
     assert "direct 50-state Bishan scale-up success" in text
+    assert "Algorithm-readiness addendum" in text
+    assert "setting-specific guard only" in text
+    assert "e0_paper10_true_reward_guard_readiness_2026-07-08.json" in text
     assert "statistically significant" not in text.lower()
     assert "p value" not in text.lower()
 

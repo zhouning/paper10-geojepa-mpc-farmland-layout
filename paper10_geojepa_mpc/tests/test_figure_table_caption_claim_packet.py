@@ -82,6 +82,18 @@ def test_build_caption_claim_packet_maps_all_items_with_bounded_claims():
     assert "Stage 3 rows are boundary evidence" in " ".join(
         items["Main Table 2"]["allowed_claims"]
     )
+    assert "Algorithm-readiness addendum" in items["Main Table 2"]["draft_caption"]
+    assert "72.1773" in items["Main Table 2"]["draft_caption"]
+    assert "65.8876" in items["Main Table 2"]["draft_caption"]
+    assert "6.2897" in items["Main Table 2"]["draft_caption"]
+    assert "20 / 20" in items["Main Table 2"]["draft_caption"]
+    assert "4.1643" in items["Main Table 2"]["draft_caption"]
+    assert "setting-specific guard only" in " ".join(
+        items["Main Table 2"]["allowed_claims"]
+    )
+    assert "Do not treat the guard addendum as final submission readiness." in " ".join(
+        items["Main Table 2"]["forbidden_claims"]
+    )
 
     assert all(row["source_coverage_pass"] is True for row in payload["items"])
     assert all(row["draft_caption"].strip() for row in payload["items"])
@@ -108,6 +120,10 @@ def test_caption_claim_packet_keeps_journal_and_submission_boundaries():
     assert "direct 50-state Bishan scale-up success" in text
     assert "robust Bishan-to-Dongxing transfer superiority" in text
     assert "diagnostic near-pass must not be pooled" in text
+    assert "Algorithm-readiness addendum" in text
+    assert "72.1773" in text
+    assert "20 / 20" in text
+    assert "setting-specific guard only" in text
     assert "statistically significant" not in text.lower()
     assert "p value" not in text.lower()
     assert "p-value" not in text.lower()

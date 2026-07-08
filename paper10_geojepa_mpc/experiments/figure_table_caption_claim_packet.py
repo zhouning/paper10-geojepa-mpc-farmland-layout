@@ -47,6 +47,11 @@ def _anchor_rows(result_tables: dict) -> tuple[dict, dict]:
 def _stage3_rows(result_tables: dict) -> list[dict]:
     return result_tables["tables"]["table_stage3_boundary"]
 
+def _guard_addendum_row(result_tables: dict) -> dict:
+    rows = result_tables["tables"].get("table_true_reward_guard_readiness", [])
+    if len(rows) != 1:
+        raise ValueError("Expected exactly one true-reward guard readiness row")
+    return rows[0]
 
 def _source_item(source_coverage: dict, item: str) -> dict:
     matches = [row for row in source_coverage["items"] if row["item"] == item]
@@ -90,6 +95,7 @@ def _base_packet_row(source_row: dict, *, placement: str, caption: str, allowed:
 
 def _build_item_rows(source_coverage: dict, result_tables: dict) -> list[dict]:
     baseline, anchor = _anchor_rows(result_tables)
+    guard = _guard_addendum_row(result_tables)
     stage3 = _stage3_rows(result_tables)
     stage3_caption = "; ".join(
         f"{row['run_name']} mean {_fmt(row['mean_reward'])} "
@@ -218,16 +224,26 @@ def _build_item_rows(source_coverage: dict, result_tables: dict) -> list[dict]:
             caption=(
                 "Journal-neutral draft caption: frozen matched-baseline table "
                 "reports the positive Bishan anchor and Stage 3 boundary rows "
-                "using tracked Stage 3 and raw-rollout consistency evidence."
+                "using tracked Stage 3 and raw-rollout consistency evidence. "
+                "Algorithm-readiness addendum records the current true-reward "
+                f"guard evidence: mean reward {_fmt(guard['guard_mean_reward'])} "
+                f"versus {_fmt(guard['baseline_mean_reward'])}, delta "
+                f"{_fmt(guard['mean_delta_vs_baseline'])}, seed wins "
+                f"{guard['seed_wins']} / {guard['n_seeds']}, and bootstrap "
+                f"95% CI lower {_fmt(guard['bootstrap_95ci_delta_lower'])}."
             ),
             allowed=[
                 "Table 1 is the only positive Bishan performance anchor",
                 "Stage 3 rows are boundary evidence",
                 "diagnostic near-pass must not be pooled",
+                "Algorithm-readiness addendum is current true-reward guard evidence",
+                "setting-specific guard only",
             ],
             forbidden=[
                 "Do not rewrite Stage 3 boundary rows as direct 50-state Bishan scale-up success.",
                 "Do not add unsupported comparison-testing wording to the frozen table.",
+                "Do not treat the guard addendum as final submission readiness.",
+                "Do not claim a universal fixed switch margin.",
             ],
         ),
         _base_packet_row(

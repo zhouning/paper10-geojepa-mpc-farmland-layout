@@ -2871,6 +2871,8 @@ def check_paper10_figure_table_source_coverage_audit_current(root: Path) -> Chec
     required_files = [
         PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
         PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON,
+        PAPER10_TRUE_REWARD_GUARD_READINESS_MD,
+        PAPER10_TRUE_REWARD_GUARD_READINESS_JSON,
         FORMAL_MANUSCRIPT_ASSEMBLY_BLUEPRINT,
         INTEGRATED_FIGURE_TABLE_NUMBERING_FREEZE,
         INTEGRATED_DONGXING_SOURCE_DATA_MAP,
@@ -2939,6 +2941,9 @@ def check_paper10_figure_table_source_coverage_audit_current(root: Path) -> Chec
         "frozen_table_available",
         "direct 50-state Bishan scale-up success",
         "robust Bishan-to-Dongxing transfer superiority is not supported",
+        "Algorithm-readiness addendum",
+        "setting-specific guard only",
+        "e0_paper10_true_reward_guard_readiness_2026-07-08.json",
         "PASS does not mean the formal manuscript is ready for submission",
         "paper10_geojepa_mpc.experiments.figure_table_source_coverage_audit",
     ]
@@ -3042,6 +3047,14 @@ def check_paper10_figure_table_source_coverage_audit_current(root: Path) -> Chec
         ],
         "Main Table 2": [
             "paper10_geojepa_mpc/experiments/results/e0_paper10_manuscript_result_tables_freeze_2026-06-19.md",
+            "paper10_geojepa_mpc/experiments/results/e0_paper10_true_reward_guard_readiness_2026-07-08.md",
+            "paper10_geojepa_mpc/experiments/results/e0_paper10_true_reward_guard_readiness_2026-07-08.json",
+        ],
+    }
+    expected_item_tokens = {
+        "Main Table 2": [
+            "Algorithm-readiness addendum records the current true-reward guard evidence",
+            "setting-specific guard only; not final submission readiness",
         ],
     }
     for item_name in expected_items:
@@ -3070,6 +3083,18 @@ def check_paper10_figure_table_source_coverage_audit_current(root: Path) -> Chec
                 missing_tokens.append(
                     f"{PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON}: "
                     f"{item_name}.{required_path}"
+                )
+        combined = " ".join(
+            [
+                " ".join(row.get("source_files", [])),
+                " ".join(row.get("claim_boundaries", [])),
+            ]
+        )
+        for token in expected_item_tokens.get(item_name, []):
+            if token not in combined:
+                missing_tokens.append(
+                    f"{PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON}: "
+                    f"{item_name}.{token}"
                 )
 
     blockers = payload.get("submission_blockers")
@@ -3124,6 +3149,7 @@ def check_paper10_figure_table_caption_claim_packet_current(root: Path) -> Check
         PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON,
         PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON,
         PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON,
+        PAPER10_TRUE_REWARD_GUARD_READINESS_JSON,
         Path("README.md"),
         MANIFEST,
         DATA_AVAILABILITY,
@@ -3184,6 +3210,10 @@ def check_paper10_figure_table_caption_claim_packet_current(root: Path) -> Check
         "direct 50-state Bishan scale-up success",
         "robust Bishan-to-Dongxing transfer superiority",
         "diagnostic near-pass must not be pooled",
+        "Algorithm-readiness addendum",
+        "setting-specific guard only",
+        "Do not treat the guard addendum as final submission readiness.",
+        "Do not claim a universal fixed switch margin.",
         "paper10_geojepa_mpc.experiments.figure_table_caption_claim_packet",
     ]
     for token in required_text_tokens:
@@ -3273,6 +3303,16 @@ def check_paper10_figure_table_caption_claim_packet_current(root: Path) -> Check
         "Main Table 2": [
             "Table 1 is the only positive Bishan performance anchor",
             "Stage 3 rows are boundary evidence",
+            "Algorithm-readiness addendum",
+            "72.1773",
+            "65.8876",
+            "6.2897",
+            "20 / 20",
+            "4.1643",
+            "setting-specific guard only",
+            "Do not treat the guard addendum as final submission readiness.",
+            "Do not claim a universal fixed switch margin.",
+            "e0_paper10_true_reward_guard_readiness_2026-07-08.json",
         ],
         "Main Table 3": [
             "return-label scaling is descriptive calibration evidence",
@@ -3318,6 +3358,7 @@ def check_paper10_figure_table_caption_claim_packet_current(root: Path) -> Check
                 " ".join(row.get("allowed_claims", [])),
                 " ".join(row.get("forbidden_claims", [])),
                 " ".join(row.get("unresolved_manuscript_fields", [])),
+                " ".join(row.get("source_files", [])),
             ]
         )
         for token in required_item_tokens.get(item_name, []):
