@@ -80,6 +80,7 @@ def _guard_addendum_tokens(table_freeze_payload: dict) -> dict:
         "mean_delta_vs_baseline": _fmt(row["mean_delta_vs_baseline"]),
         "seed_wins": f"{row['seed_wins']} / {row['n_seeds']}",
         "bootstrap_95ci_delta_lower": _fmt(row["bootstrap_95ci_delta_lower"]),
+        "mean_audit_action_count": _fmt(row.get("mean_audit_action_count", 0.0)),
         "legacy_text_required": False,
     }
 
@@ -267,6 +268,8 @@ def markdown_report(payload: dict) -> str:
                 f"{expected['algorithm_readiness_addendum']['seed_wins']}; "
                 "bootstrap 95% CI lower "
                 f"{expected['algorithm_readiness_addendum']['bootstrap_95ci_delta_lower']}; "
+                "mean audited actions "
+                f"{expected['algorithm_readiness_addendum']['mean_audit_action_count']}; "
                 "not required in legacy text until manuscript refresh |"
             ),
             f"| boundary guardrails | {', '.join(_boundary_tokens())} |",

@@ -83,11 +83,12 @@ def test_build_caption_claim_packet_maps_all_items_with_bounded_claims():
         items["Main Table 2"]["allowed_claims"]
     )
     assert "Algorithm-readiness addendum" in items["Main Table 2"]["draft_caption"]
-    assert "72.1773" in items["Main Table 2"]["draft_caption"]
+    assert "72.1918" in items["Main Table 2"]["draft_caption"]
     assert "65.8876" in items["Main Table 2"]["draft_caption"]
-    assert "6.2897" in items["Main Table 2"]["draft_caption"]
+    assert "6.3041" in items["Main Table 2"]["draft_caption"]
     assert "20 / 20" in items["Main Table 2"]["draft_caption"]
-    assert "4.1643" in items["Main Table 2"]["draft_caption"]
+    assert "4.1401" in items["Main Table 2"]["draft_caption"]
+    assert "7.7605" in items["Main Table 2"]["draft_caption"]
     assert "setting-specific guard only" in " ".join(
         items["Main Table 2"]["allowed_claims"]
     )
@@ -121,7 +122,7 @@ def test_caption_claim_packet_keeps_journal_and_submission_boundaries():
     assert "robust Bishan-to-Dongxing transfer superiority" in text
     assert "diagnostic near-pass must not be pooled" in text
     assert "Algorithm-readiness addendum" in text
-    assert "72.1773" in text
+    assert "72.1918" in text
     assert "20 / 20" in text
     assert "setting-specific guard only" in text
     assert "statistically significant" not in text.lower()

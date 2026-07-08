@@ -116,7 +116,7 @@ def _true_reward_guard_table(true_reward_guard_payload: dict) -> list[dict]:
     guard_stats = stats["candidate_guard_summary"]
     return [
         {
-            "row_id": "true_reward_margin_guard_m150_audit7x7_20seed",
+            "row_id": f"true_reward_margin_guard_m150_{primary['audit_set']}_20seed",
             "setting": primary["setting"],
             "audit_set": primary["audit_set"],
             "switch_margin": _as_float(primary["switch_margin"]),
@@ -128,6 +128,10 @@ def _true_reward_guard_table(true_reward_guard_payload: dict) -> list[dict]:
             "bootstrap_95ci_delta_lower": _as_float(stats["bootstrap_95ci_delta"][0]),
             "bootstrap_95ci_delta_upper": _as_float(stats["bootstrap_95ci_delta"][1]),
             "switch_rate": _as_float(guard_stats["switch_rate"]),
+            "mean_audit_action_count": _as_float(guard_stats["mean_audit_action_count"]),
+            "dual7x7_mean_audit_action_count": _as_float(
+                stats.get("dual7x7_guard_summary", {}).get("mean_audit_action_count", 0.0)
+            ),
             "interpretation": (
                 "current primary algorithm-readiness candidate; "
                 "setting-specific guard only"
@@ -374,13 +378,13 @@ def markdown_report(payload: dict) -> str:
             "",
             "## Algorithm-readiness addendum: current true-reward guard",
             "",
-            "| row | baseline mean | guard mean | mean delta | seed wins | bootstrap 95% CI lower | switch rate | interpretation |",
-            "|---|---:|---:|---:|---:|---:|---:|---|",
+            "| row | baseline mean | guard mean | mean delta | seed wins | bootstrap 95% CI lower | mean audited actions | switch rate | interpretation |",
+            "|---|---:|---:|---:|---:|---:|---:|---:|---|",
         ]
     )
     for row in guard_table:
         lines.append(
-            "| {row_id} | {baseline} | {guard} | {delta} | {wins} / {n} | {ci_lower} | {switch_rate} | {interpretation} |".format(
+            "| {row_id} | {baseline} | {guard} | {delta} | {wins} / {n} | {ci_lower} | {audit_actions} | {switch_rate} | {interpretation} |".format(
                 row_id=row["row_id"],
                 baseline=_fmt(row["baseline_mean_reward"]),
                 guard=_fmt(row["guard_mean_reward"]),
@@ -388,6 +392,7 @@ def markdown_report(payload: dict) -> str:
                 wins=row["seed_wins"],
                 n=row["n_seeds"],
                 ci_lower=_fmt(row["bootstrap_95ci_delta_lower"]),
+                audit_actions=_fmt(row["mean_audit_action_count"]),
                 switch_rate=_fmt(row["switch_rate"]),
                 interpretation=row["interpretation"],
             )

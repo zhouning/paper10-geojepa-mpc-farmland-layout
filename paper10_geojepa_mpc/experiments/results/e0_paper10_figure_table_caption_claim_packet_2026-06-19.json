@@ -185,7 +185,7 @@
         "Algorithm-readiness addendum is current true-reward guard evidence",
         "setting-specific guard only"
       ],
-      "draft_caption": "Journal-neutral draft caption: frozen matched-baseline table reports the positive Bishan anchor and Stage 3 boundary rows using tracked Stage 3 and raw-rollout consistency evidence. Algorithm-readiness addendum records the current true-reward guard evidence: mean reward 72.1773 versus 65.8876, delta 6.2897, seed wins 20 / 20, and bootstrap 95% CI lower 4.1643.",
+      "draft_caption": "Journal-neutral draft caption: frozen matched-baseline table reports the positive Bishan anchor and Stage 3 boundary rows using tracked Stage 3 and raw-rollout consistency evidence. Algorithm-readiness addendum records the current true-reward guard evidence: mean reward 72.1918 versus 65.8876, delta 6.3041, seed wins 20 / 20, and bootstrap 95% CI lower 4.1401, with mean audited actions 7.7605.",
       "final_artwork_status": "preview_available",
       "forbidden_claims": [
         "Do not rewrite Stage 3 boundary rows as direct 50-state Bishan scale-up success.",

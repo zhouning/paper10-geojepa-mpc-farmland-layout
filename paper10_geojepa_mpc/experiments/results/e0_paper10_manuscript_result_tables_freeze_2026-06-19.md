@@ -42,9 +42,9 @@ raw-rollout consistency: PASS
 
 ## Algorithm-readiness addendum: current true-reward guard
 
-| row | baseline mean | guard mean | mean delta | seed wins | bootstrap 95% CI lower | switch rate | interpretation |
-|---|---:|---:|---:|---:|---:|---:|---|
-| true_reward_margin_guard_m150_audit7x7_20seed | 65.8876 | 72.1773 | 6.2897 | 20 / 20 | 4.1643 | 0.0855 | current primary algorithm-readiness candidate; setting-specific guard only |
+| row | baseline mean | guard mean | mean delta | seed wins | bootstrap 95% CI lower | mean audited actions | switch rate | interpretation |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| true_reward_margin_guard_m150_rewardtop7_20seed | 65.8876 | 72.1918 | 6.3041 | 20 / 20 | 4.1401 | 7.7605 | 0.0860 | current primary algorithm-readiness candidate; setting-specific guard only |
 
 ## Interpretation boundary
 

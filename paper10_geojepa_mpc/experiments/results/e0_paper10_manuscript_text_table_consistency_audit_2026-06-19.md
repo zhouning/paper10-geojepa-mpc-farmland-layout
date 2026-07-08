@@ -27,7 +27,7 @@ overall consistency: PASS
 | matched baseline sample std | 7.2246 |
 | Stage 3 confirmatory means | 64.2960, 66.2544 |
 | diagnostic near-pass mean | 67.4913 |
-| algorithm-readiness addendum | guard 72.1773 vs baseline 65.8876; delta 6.2897; seed wins 20 / 20; bootstrap 95% CI lower 4.1643; not required in legacy text until manuscript refresh |
+| algorithm-readiness addendum | guard 72.1918 vs baseline 65.8876; delta 6.3041; seed wins 20 / 20; bootstrap 95% CI lower 4.1401; mean audited actions 7.7605; not required in legacy text until manuscript refresh |
 | boundary guardrails | must not be pooled, direct 50-state Bishan scale-up success, robust Bishan-to-Dongxing transfer superiority |
 
 ## Document audit

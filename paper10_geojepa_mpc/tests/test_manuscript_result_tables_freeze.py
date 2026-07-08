@@ -83,15 +83,17 @@ def test_build_manuscript_result_tables_freeze_derives_tables_from_audited_sourc
     guard_table = payload["tables"]["table_true_reward_guard_readiness"]
     assert len(guard_table) == 1
     guard = guard_table[0]
-    assert guard["row_id"] == "true_reward_margin_guard_m150_audit7x7_20seed"
+    assert guard["row_id"] == "true_reward_margin_guard_m150_rewardtop7_20seed"
     assert guard["setting"] == "bishan_20x16_top5"
     assert guard["baseline_mean_reward"] == pytest.approx(65.8876435268697)
-    assert guard["guard_mean_reward"] == pytest.approx(72.17733781116401)
-    assert guard["mean_delta_vs_baseline"] == pytest.approx(6.289694284294315)
+    assert guard["guard_mean_reward"] == pytest.approx(72.19178534319884)
+    assert guard["mean_delta_vs_baseline"] == pytest.approx(6.304141816329158)
     assert guard["seed_wins"] == 20
     assert guard["n_seeds"] == 20
-    assert guard["bootstrap_95ci_delta_lower"] == pytest.approx(4.164250399042407)
-    assert guard["switch_rate"] == pytest.approx(0.0855)
+    assert guard["bootstrap_95ci_delta_lower"] == pytest.approx(4.140109129548553)
+    assert guard["switch_rate"] == pytest.approx(0.086)
+    assert guard["mean_audit_action_count"] == pytest.approx(7.7605)
+    assert guard["dual7x7_mean_audit_action_count"] == pytest.approx(8.1905)
     assert "setting-specific guard" in guard["interpretation"]
 
     claim_table = payload["tables"]["table_claim_status"]
@@ -126,11 +128,12 @@ def test_markdown_report_freezes_claim_bounded_manuscript_tables():
         "64.2960",
         "66.2544",
         "67.4913",
-        "72.1773",
+        "72.1918",
         "65.8876",
-        "6.2897",
+        "6.3041",
         "20 / 20",
-        "4.1643",
+        "4.1401",
+        "7.7605",
     ]:
         assert token in text
     assert "boundary evidence" in text

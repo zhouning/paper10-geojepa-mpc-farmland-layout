@@ -11,11 +11,11 @@ from typing import Any
 RESULTS = Path("paper10_geojepa_mpc") / "experiments" / "results"
 DEFAULT_PRIMARY_COMPARISON = (
     RESULTS
-    / "e0_bishan_20x16_top5_true_reward_margin_guard_m150_audit7x7_vs_blend010_20seed_100step_comparison_2026-07-07.json"
+    / "e0_bishan_20x16_top5_true_reward_margin_guard_m150_rewardtop7_vs_blend010_20seed_100step_comparison_2026-07-07.json"
 )
 DEFAULT_PRIMARY_STATS = (
     RESULTS
-    / "e0_bishan_20x16_top5_true_reward_margin_guard_m150_audit7x7_20seed_paired_stats_2026-07-07.json"
+    / "e0_bishan_20x16_top5_true_reward_margin_guard_m150_rewardtop7_20seed_paired_stats_2026-07-07.json"
 )
 DEFAULT_SMALL_SCALE_STATS = (
     RESULTS
@@ -33,6 +33,16 @@ def _load_json(path: str | Path) -> dict[str, Any]:
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
+def _audit_set_from_name(name: str) -> str:
+    if "rewardtop7" in name:
+        return "rewardtop7"
+    if "audit7x7" in name:
+        return "audit7x7"
+    if "audit5x5" in name:
+        return "audit5x5"
+    return "unknown"
+
+
 def _primary_guard_summary(payload: dict[str, Any]) -> dict[str, Any]:
     seed_rows = payload["seed_deltas"]
     seed_deltas = [float(row["total_reward_delta"]) for row in seed_rows]
@@ -45,7 +55,7 @@ def _primary_guard_summary(payload: dict[str, Any]) -> dict[str, Any]:
     return {
         "setting": "bishan_20x16_top5",
         "algorithm": "true_reward_margin_guard",
-        "audit_set": "audit7x7",
+        "audit_set": _audit_set_from_name(payload["candidate"]["name"]),
         "switch_margin": 1.5,
         "baseline_name": payload["baseline"]["name"],
         "candidate_name": payload["candidate"]["name"],
@@ -78,19 +88,56 @@ def _primary_guard_summary(payload: dict[str, Any]) -> dict[str, Any]:
         ],
     }
 
-def _primary_paired_stats_summary(payload: dict[str, Any]) -> dict[str, Any]:
-    guard_summary = payload["candidate_guard_summary"]
+def _guard_stats_summary(guard_summary: dict[str, Any]) -> dict[str, Any]:
     return {
-        "n": int(payload["n"]),
-        "wins": int(payload["wins"]),
-        "losses": int(payload["losses"]),
-        "ties": int(payload["ties"]),
+        "audited_states": int(guard_summary["audited_states"]),
+        "switches": int(guard_summary["switches"]),
+        "switch_rate": float(guard_summary["switch_rate"]),
+        "mean_audit_action_count": float(guard_summary["mean_audit_action_count"]),
+        "selected_is_audit_true_best_rate": float(
+            guard_summary["selected_is_audit_true_best_rate"]
+        ),
+        "selected_true_reward_regret_mean": float(
+            guard_summary["selected_true_reward_regret_mean"]
+        ),
+        "mean_true_reward_time_sec": float(
+            guard_summary["mean_true_reward_time_sec"]
+        ),
+    }
+
+
+def _primary_paired_stats_summary(payload: dict[str, Any]) -> dict[str, Any]:
+    n = int(payload["n"])
+    wins = int(payload.get("wins", payload.get("wins_vs_baseline")))
+    losses = int(payload.get("losses", payload.get("losses_vs_baseline")))
+    ties = int(payload.get("ties", payload.get("ties_vs_baseline", n - wins - losses)))
+    result = {
+        "n": n,
+        "wins": wins,
+        "losses": losses,
+        "ties": ties,
         "baseline_mean_reward": float(payload["baseline_mean_reward"]),
         "candidate_mean_reward": float(payload["candidate_mean_reward"]),
-        "mean_delta": float(payload["mean_delta"]),
-        "median_delta": float(payload["median_delta"]),
-        "min_delta": float(payload["min_delta"]),
-        "max_delta": float(payload["max_delta"]),
+        "mean_delta": float(
+            payload["mean_delta"]
+            if "mean_delta" in payload
+            else payload["mean_delta_vs_baseline"]
+        ),
+        "median_delta": float(
+            payload["median_delta"]
+            if "median_delta" in payload
+            else payload["median_delta_vs_baseline"]
+        ),
+        "min_delta": float(
+            payload["min_delta"]
+            if "min_delta" in payload
+            else payload["min_delta_vs_baseline"]
+        ),
+        "max_delta": float(
+            payload["max_delta"]
+            if "max_delta" in payload
+            else payload["max_delta_vs_baseline"]
+        ),
         "sample_std_delta": float(payload["sample_std_delta"]),
         "standard_error_delta": float(payload["standard_error_delta"]),
         "bootstrap_95ci_delta": [
@@ -101,22 +148,24 @@ def _primary_paired_stats_summary(payload: dict[str, Any]) -> dict[str, Any]:
             float(payload["normal_approx_95ci_delta"][0]),
             float(payload["normal_approx_95ci_delta"][1]),
         ],
-        "candidate_guard_summary": {
-            "audited_states": int(guard_summary["audited_states"]),
-            "switches": int(guard_summary["switches"]),
-            "switch_rate": float(guard_summary["switch_rate"]),
-            "mean_audit_action_count": float(guard_summary["mean_audit_action_count"]),
-            "selected_is_audit_true_best_rate": float(
-                guard_summary["selected_is_audit_true_best_rate"]
-            ),
-            "selected_true_reward_regret_mean": float(
-                guard_summary["selected_true_reward_regret_mean"]
-            ),
-            "mean_true_reward_time_sec": float(
-                guard_summary["mean_true_reward_time_sec"]
-            ),
-        },
+        "candidate_guard_summary": _guard_stats_summary(
+            payload["candidate_guard_summary"]
+        ),
     }
+    if "dual7x7_guard_summary" in payload:
+        result.update(
+            {
+                "dual7x7_mean_reward": float(payload["dual7x7_mean_reward"]),
+                "mean_delta_vs_dual7x7": float(payload["mean_delta_vs_dual7x7"]),
+                "wins_vs_dual7x7": int(payload["wins_vs_dual7x7"]),
+                "losses_vs_dual7x7": int(payload["losses_vs_dual7x7"]),
+                "ties_vs_dual7x7": int(payload["ties_vs_dual7x7"]),
+                "dual7x7_guard_summary": _guard_stats_summary(
+                    payload["dual7x7_guard_summary"]
+                ),
+            }
+        )
+    return result
 
 def _small_scale_guard_summary(payload: dict[str, Any]) -> dict[str, Any]:
     seed_rows = payload["seed_deltas"]
@@ -212,8 +261,9 @@ def build_true_reward_guard_readiness_audit(
         },
         "allowed_language": [
             "source-derived true-reward guard readiness audit",
-            "primary 20x16/top5 guard candidate",
+            "primary 20x16/top5 simplified rewardtop7 guard candidate",
             "setting-specific switch margin",
+            "reward-only top7 simplification",
             "20-seed paired bootstrap CI lower above zero",
             "10x12/top4 small-scale consistency support",
             "not final submission readiness",
@@ -252,7 +302,7 @@ def true_reward_guard_readiness_markdown(audit: dict[str, Any]) -> str:
         "",
         "## Primary Guard Candidate",
         "",
-        f"The current Paper10 primary algorithm candidate is `audit7x7 margin=1.50` for Bishan 20x16/top5.",
+        f"The current Paper10 primary algorithm candidate is `rewardtop7 margin=1.50` for Bishan 20x16/top5.",
         "",
         "| metric | value |",
         "|---|---:|",
@@ -275,6 +325,17 @@ def true_reward_guard_readiness_markdown(audit: dict[str, Any]) -> str:
         f"| bootstrap 95% CI upper | {stats['bootstrap_95ci_delta'][1]:.4f} |",
         f"| switch rate | {guard_stats['switch_rate']:.4f} |",
         f"| selected true-reward regret mean | {guard_stats['selected_true_reward_regret_mean']:.4f} |",
+        "",
+        "## Rewardtop7 Simplification Boundary",
+        "",
+        "The primary guard is the simplified robust default: it audits the rollout-selected action plus model-reward top7 actions, not the extra blend-top7 path.",
+        "",
+        "| metric | value |",
+        "|---|---:|",
+        f"| mean audited actions | {guard_stats['mean_audit_action_count']:.4f} |",
+        f"| dual7x7 mean audited actions | {stats.get('dual7x7_guard_summary', {}).get('mean_audit_action_count', 0.0):.4f} |",
+        f"| mean delta vs dual7x7 | {stats.get('mean_delta_vs_dual7x7', 0.0):.4f} |",
+        f"| wins / losses / ties vs dual7x7 | {stats.get('wins_vs_dual7x7', 0)} / {stats.get('losses_vs_dual7x7', 0)} / {stats.get('ties_vs_dual7x7', 0)} |",
         "",
         "## Small-Scale Consistency Guard",
         "",
@@ -304,7 +365,7 @@ def true_reward_guard_readiness_markdown(audit: dict[str, Any]) -> str:
         "",
         "## Interpretation Boundary",
         "",
-        "Use this audit to treat the 2026-07-07 true-reward margin guard as the current algorithm-readiness candidate for Paper10 Bishan experiments.",
+        "Use this audit to treat the 2026-07-07 reward-only top7 true-reward margin guard as the current simplified robust default for Paper10 Bishan experiments.",
         "The evidence supports a setting-specific guard, not a universal margin or a general scale-up result.",
         "",
         "Do not claim a universal fixed switch margin.",

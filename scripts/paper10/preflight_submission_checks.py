@@ -3304,11 +3304,12 @@ def check_paper10_figure_table_caption_claim_packet_current(root: Path) -> Check
             "Table 1 is the only positive Bishan performance anchor",
             "Stage 3 rows are boundary evidence",
             "Algorithm-readiness addendum",
-            "72.1773",
+            "72.1918",
             "65.8876",
-            "6.2897",
+            "6.3041",
             "20 / 20",
-            "4.1643",
+            "4.1401",
+            "7.7605",
             "setting-specific guard only",
             "Do not treat the guard addendum as final submission readiness.",
             "Do not claim a universal fixed switch margin.",
@@ -5118,7 +5119,7 @@ def check_paper10_true_reward_guard_readiness_current(root: Path) -> CheckResult
     required_audit_tokens = [
         "Paper10 true-reward guard readiness audit",
         "source-derived true-reward guard readiness audit",
-        "`audit7x7 margin=1.50`",
+        "`rewardtop7 margin=1.50`",
         "`rewardtop7 margin=1.60`",
         "not final submission readiness",
         "Do not claim a universal fixed switch margin.",
@@ -5127,6 +5128,8 @@ def check_paper10_true_reward_guard_readiness_current(root: Path) -> CheckResult
         "## Primary Paired Statistics",
         "bootstrap 95% CI lower",
         "switch rate",
+        "simplified robust default",
+        "mean audited actions",
     ]
     for token in required_audit_tokens:
         if token not in audit_text:
@@ -5138,7 +5141,7 @@ def check_paper10_true_reward_guard_readiness_current(root: Path) -> CheckResult
         ("source_boundary", "reran_rollouts"): False,
         ("source_boundary", "algorithm_redesign_performed"): False,
         ("primary_guard", "setting"): "bishan_20x16_top5",
-        ("primary_guard", "audit_set"): "audit7x7",
+        ("primary_guard", "audit_set"): "rewardtop7",
         ("primary_guard", "switch_margin"): 1.5,
         ("primary_guard", "n_seeds"): 20,
         ("primary_guard", "seed_wins"): 20,
@@ -5805,7 +5808,7 @@ def check_paper10_manuscript_result_tables_freeze_current(root: Path) -> CheckRe
         "Stage 3 confirmatory 50-state rows beat the matched baseline | not supported",
         "Dongxing/Neijiang return-label scaling | supported descriptively",
         "robust transfer superiority | not supported",
-        "true_reward_margin_guard_m150_audit7x7_20seed | 65.8876 | 72.1773 | 6.2897 | 20 / 20 | 4.1643 | 0.0855 | current primary algorithm-readiness candidate; setting-specific guard only",
+        "true_reward_margin_guard_m150_rewardtop7_20seed | 65.8876 | 72.1918 | 6.3041 | 20 / 20 | 4.1401 | 7.7605 | 0.0860 | current primary algorithm-readiness candidate; setting-specific guard only",
         "--true-reward-guard-json",
         "paper10_geojepa_mpc.experiments.manuscript_result_tables_freeze",
     ]
@@ -5971,17 +5974,19 @@ def check_paper10_manuscript_result_tables_freeze_current(root: Path) -> CheckRe
         )
         guard_table = []
     expected_guard_row = {
-        "row_id": "true_reward_margin_guard_m150_audit7x7_20seed",
+        "row_id": "true_reward_margin_guard_m150_rewardtop7_20seed",
         "setting": "bishan_20x16_top5",
-        "audit_set": "audit7x7",
+        "audit_set": "rewardtop7",
         "switch_margin": 1.5,
         "baseline_mean_reward": 65.8876435268697,
-        "guard_mean_reward": 72.17733781116401,
-        "mean_delta_vs_baseline": 6.289694284294315,
+        "guard_mean_reward": 72.19178534319884,
+        "mean_delta_vs_baseline": 6.304141816329158,
         "seed_wins": 20,
         "n_seeds": 20,
-        "bootstrap_95ci_delta_lower": 4.164250399042407,
-        "switch_rate": 0.0855,
+        "bootstrap_95ci_delta_lower": 4.140109129548553,
+        "switch_rate": 0.086,
+        "mean_audit_action_count": 7.7605,
+        "dual7x7_mean_audit_action_count": 8.1905,
         "interpretation": "current primary algorithm-readiness candidate; setting-specific guard only",
     }
     if guard_table:
@@ -6124,11 +6129,12 @@ def check_paper10_manuscript_text_table_consistency_audit_current(root: Path) ->
         ("expected_tokens", "anchor_std"): "1.0004",
         ("expected_tokens", "baseline_std"): "7.2246",
         ("expected_tokens", "diagnostic_near_pass_mean"): "67.4913",
-        ("expected_tokens", "algorithm_readiness_addendum", "guard_mean_reward"): "72.1773",
+        ("expected_tokens", "algorithm_readiness_addendum", "guard_mean_reward"): "72.1918",
         ("expected_tokens", "algorithm_readiness_addendum", "baseline_mean_reward"): "65.8876",
-        ("expected_tokens", "algorithm_readiness_addendum", "mean_delta_vs_baseline"): "6.2897",
+        ("expected_tokens", "algorithm_readiness_addendum", "mean_delta_vs_baseline"): "6.3041",
         ("expected_tokens", "algorithm_readiness_addendum", "seed_wins"): "20 / 20",
-        ("expected_tokens", "algorithm_readiness_addendum", "bootstrap_95ci_delta_lower"): "4.1643",
+        ("expected_tokens", "algorithm_readiness_addendum", "bootstrap_95ci_delta_lower"): "4.1401",
+        ("expected_tokens", "algorithm_readiness_addendum", "mean_audit_action_count"): "7.7605",
         ("expected_tokens", "algorithm_readiness_addendum", "legacy_text_required"): False,
     }
     for path_keys, expected in expected_values.items():

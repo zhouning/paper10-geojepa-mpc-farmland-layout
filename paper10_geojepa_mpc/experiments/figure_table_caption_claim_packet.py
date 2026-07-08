@@ -230,7 +230,8 @@ def _build_item_rows(source_coverage: dict, result_tables: dict) -> list[dict]:
                 f"versus {_fmt(guard['baseline_mean_reward'])}, delta "
                 f"{_fmt(guard['mean_delta_vs_baseline'])}, seed wins "
                 f"{guard['seed_wins']} / {guard['n_seeds']}, and bootstrap "
-                f"95% CI lower {_fmt(guard['bootstrap_95ci_delta_lower'])}."
+                f"95% CI lower {_fmt(guard['bootstrap_95ci_delta_lower'])}, "
+                f"with mean audited actions {_fmt(guard['mean_audit_action_count'])}."
             ),
             allowed=[
                 "Table 1 is the only positive Bishan performance anchor",

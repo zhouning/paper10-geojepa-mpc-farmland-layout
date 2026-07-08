@@ -118,19 +118,21 @@
     ],
     "table_true_reward_guard_readiness": [
       {
-        "audit_set": "audit7x7",
+        "audit_set": "rewardtop7",
         "baseline_mean_reward": 65.8876435268697,
-        "bootstrap_95ci_delta_lower": 4.164250399042407,
-        "bootstrap_95ci_delta_upper": 8.450127940841853,
-        "guard_mean_reward": 72.17733781116401,
+        "bootstrap_95ci_delta_lower": 4.140109129548553,
+        "bootstrap_95ci_delta_upper": 8.50555044466635,
+        "dual7x7_mean_audit_action_count": 8.1905,
+        "guard_mean_reward": 72.19178534319884,
         "interpretation": "current primary algorithm-readiness candidate; setting-specific guard only",
-        "mean_delta_vs_baseline": 6.289694284294315,
+        "mean_audit_action_count": 7.7605,
+        "mean_delta_vs_baseline": 6.304141816329158,
         "n_seeds": 20,
-        "row_id": "true_reward_margin_guard_m150_audit7x7_20seed",
+        "row_id": "true_reward_margin_guard_m150_rewardtop7_20seed",
         "seed_wins": 20,
         "setting": "bishan_20x16_top5",
         "switch_margin": 1.5,
-        "switch_rate": 0.0855
+        "switch_rate": 0.086
       }
     ]
   }

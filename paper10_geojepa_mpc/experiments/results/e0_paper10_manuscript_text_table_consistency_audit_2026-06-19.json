@@ -115,10 +115,11 @@
   "expected_tokens": {
     "algorithm_readiness_addendum": {
       "baseline_mean_reward": "65.8876",
-      "bootstrap_95ci_delta_lower": "4.1643",
-      "guard_mean_reward": "72.1773",
+      "bootstrap_95ci_delta_lower": "4.1401",
+      "guard_mean_reward": "72.1918",
       "legacy_text_required": false,
-      "mean_delta_vs_baseline": "6.2897",
+      "mean_audit_action_count": "7.7605",
+      "mean_delta_vs_baseline": "6.3041",
       "seed_wins": "20 / 20"
     },
     "anchor_delta": "1.9269",
