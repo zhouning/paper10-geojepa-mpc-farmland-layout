@@ -106,6 +106,16 @@ paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_baseline_inference_harde
 - `e0_paper10_ceus_baseline_inference_hardening_2026-07-06.md`: source-derived
   CEUS baseline and inference wording audit; no rollout or training is rerun.
 
+Use the current true-reward guard readiness audit before changing the primary
+algorithm candidate, switch-margin wording, or 2026-07-07 guard evidence boundary:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_true_reward_guard_readiness_2026-07-08.md
+```
+
+- `e0_paper10_true_reward_guard_readiness_2026-07-08.md`: source-derived
+  algorithm-readiness audit; no rollout, training, or post-hoc experiment rerun is performed.
+
 Generate draft integrated Dongxing Figure 4 and Figure 5 previews from tracked
 CSV source data:
 

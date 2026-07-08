@@ -104,6 +104,16 @@ see:
 paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_baseline_inference_hardening_2026-07-06.md
 ```
 
+For the current algorithm-readiness boundary for the 2026-07-07 true-reward
+margin guard evidence, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_true_reward_guard_readiness_2026-07-08.md
+```
+
+This algorithm-readiness boundary does not close repository DOI, licence,
+full-data access, controlled-access, or final submission-readiness decisions.
+
 For the current CEUS baseline-hardened manuscript assembly, formal-output
 readiness audit, conversion patch, and separate highlights file, see:
 

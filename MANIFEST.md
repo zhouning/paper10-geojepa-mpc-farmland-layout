@@ -96,6 +96,13 @@ data needed for smoke verification.
   source-derived CEUS baseline and inference hardening audit that locks mixed
   seed-wise wording, diagnostic-only sign-test interpretation, secondary-metric
   tradeoffs and no-overclaim gates for the next CEUS manuscript pass.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_true_reward_guard_readiness_2026-07-08.md`:
+  source-derived algorithm-readiness audit for the 2026-07-07 true-reward
+  margin guard evidence, promoting 20x16/top5 `audit7x7 margin=1.50` as
+  the current primary guard candidate and 10x12/top4 `rewardtop7 margin=1.60`
+  as setting-specific consistency support while preserving no-overclaim gates.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_true_reward_guard_readiness_2026-07-08.json`:
+  machine-readable source for the true-reward guard readiness preflight check.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_baseline_hardened_manuscript_patch_2026-07-06.md`:
   bounded manuscript patch for the next CEUS assembly pass.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_baseline_hardened_manuscript_assembly_draft_2026-07-06.md`:

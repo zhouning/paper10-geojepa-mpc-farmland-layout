@@ -54,6 +54,15 @@ as the current CEUS baseline and inference hardening audit. It fixes matched
 Paper9 versus value-filter wording, keeps the 5-seed result descriptive and
 mixed seed-wise, and prevents uniform or inferential superiority claims.
 
+Use
+`paper10_geojepa_mpc/experiments/results/e0_paper10_true_reward_guard_readiness_2026-07-08.md`
+as the current algorithm-readiness boundary for the 2026-07-07 true-reward
+margin guard evidence. It promotes Bishan 20x16/top5 `audit7x7 margin=1.50`
+as the current primary guard candidate and 10x12/top4 `rewardtop7 margin=1.60`
+as setting-specific consistency support, while blocking universal-margin,
+50-state scale-up, transfer-superiority, deployment-ready, and final-submission
+claims.
+
 The previous 10x12/h5 top-4 pilot remains packaged as the direct baseline. Its
 recorded 100-step seeds 0-4 mean total reward is `65.2566` with sample standard
 deviation `5.0037`.

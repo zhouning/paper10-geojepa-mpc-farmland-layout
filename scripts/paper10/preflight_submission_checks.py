@@ -209,6 +209,12 @@ PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT = (
 PAPER10_CEUS_HIGHLIGHTS = (
     RESULTS / "e0_paper10_ceus_highlights_2026-07-06.txt"
 )
+PAPER10_TRUE_REWARD_GUARD_READINESS_MD = (
+    RESULTS / "e0_paper10_true_reward_guard_readiness_2026-07-08.md"
+)
+PAPER10_TRUE_REWARD_GUARD_READINESS_JSON = (
+    RESULTS / "e0_paper10_true_reward_guard_readiness_2026-07-08.json"
+)
 PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD = (
     RESULTS / "e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md"
 )
@@ -5029,6 +5035,133 @@ def check_paper10_ceus_baseline_inference_hardening_current(root: Path) -> Check
     )
 
 
+
+def check_paper10_true_reward_guard_readiness_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_TRUE_REWARD_GUARD_READINESS_MD,
+        PAPER10_TRUE_REWARD_GUARD_READINESS_JSON,
+        README,
+        MANIFEST,
+        REPRODUCIBILITY,
+        DATA_AVAILABILITY,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_true_reward_guard_readiness_current",
+            False,
+            "missing Paper10 true-reward guard readiness files: "
+            + ", ".join(missing),
+        )
+
+    audit_text = read_text(root / PAPER10_TRUE_REWARD_GUARD_READINESS_MD)
+    try:
+        payload = json.loads(read_text(root / PAPER10_TRUE_REWARD_GUARD_READINESS_JSON))
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_true_reward_guard_readiness_current",
+            False,
+            f"{PAPER10_TRUE_REWARD_GUARD_READINESS_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    for doc in (README, MANIFEST, REPRODUCIBILITY, DATA_AVAILABILITY):
+        doc_text = read_text(root / doc)
+        if PAPER10_TRUE_REWARD_GUARD_READINESS_MD.name not in doc_text:
+            missing_tokens.append(f"{doc}: {PAPER10_TRUE_REWARD_GUARD_READINESS_MD.name}")
+
+    required_audit_tokens = [
+        "Paper10 true-reward guard readiness audit",
+        "source-derived true-reward guard readiness audit",
+        "`audit7x7 margin=1.50`",
+        "`rewardtop7 margin=1.60`",
+        "not final submission readiness",
+        "Do not claim a universal fixed switch margin.",
+        "Do not claim direct 50-state Bishan scale-up success.",
+    ]
+    for token in required_audit_tokens:
+        if token not in audit_text:
+            missing_tokens.append(f"{PAPER10_TRUE_REWARD_GUARD_READINESS_MD}: {token}")
+
+    expected_values = {
+        ("status",): "source-derived true-reward guard readiness audit",
+        ("source_boundary", "reran_training"): False,
+        ("source_boundary", "reran_rollouts"): False,
+        ("source_boundary", "algorithm_redesign_performed"): False,
+        ("primary_guard", "setting"): "bishan_20x16_top5",
+        ("primary_guard", "audit_set"): "audit7x7",
+        ("primary_guard", "switch_margin"): 1.5,
+        ("primary_guard", "n_seeds"): 10,
+        ("primary_guard", "seed_wins"): 10,
+        ("small_scale_guard", "setting"): "bishan_10x12_top4",
+        ("small_scale_guard", "audit_set"): "rewardtop7",
+        ("small_scale_guard", "switch_margin"): 1.6,
+        ("small_scale_guard", "n_seeds"): 5,
+        ("small_scale_guard", "seed_wins"): 5,
+        ("claim_gates", "primary_algorithm_candidate_supported"): True,
+        ("claim_gates", "small_scale_consistency_supported"): True,
+        ("claim_gates", "setting_specific_margin_required"): True,
+        ("claim_gates", "universal_fixed_margin_supported"): False,
+        ("claim_gates", "direct_50state_scaleup_supported"): False,
+        ("claim_gates", "robust_transfer_superiority_supported"): False,
+        ("claim_gates", "deployment_ready_cadastral_planning_supported"): False,
+        ("claim_gates", "final_submission_readiness_supported"): False,
+    }
+    for path_keys, expected in expected_values.items():
+        value = payload
+        for key in path_keys:
+            if not isinstance(value, dict) or key not in value:
+                missing_tokens.append(
+                    f"{PAPER10_TRUE_REWARD_GUARD_READINESS_JSON}: {'.'.join(path_keys)}"
+                )
+                value = None
+                break
+            value = value[key]
+        if value != expected:
+            missing_tokens.append(
+                f"{PAPER10_TRUE_REWARD_GUARD_READINESS_JSON}: "
+                f"{'.'.join(path_keys)}={value}"
+            )
+
+    primary = payload.get("primary_guard", {})
+    if float(primary.get("mean_delta_vs_baseline", 0.0)) <= 0.0:
+        missing_tokens.append(
+            f"{PAPER10_TRUE_REWARD_GUARD_READINESS_JSON}: primary mean delta is not positive"
+        )
+    if float(primary.get("min_seed_delta_vs_baseline", 0.0)) <= 0.0:
+        missing_tokens.append(
+            f"{PAPER10_TRUE_REWARD_GUARD_READINESS_JSON}: primary min seed delta is not positive"
+        )
+
+    small = payload.get("small_scale_guard", {})
+    if float(small.get("mean_delta_vs_baseline", 0.0)) <= 0.0:
+        missing_tokens.append(
+            f"{PAPER10_TRUE_REWARD_GUARD_READINESS_JSON}: small-scale mean delta is not positive"
+        )
+    if float(small.get("min_seed_delta_vs_baseline", 0.0)) <= 0.0:
+        missing_tokens.append(
+            f"{PAPER10_TRUE_REWARD_GUARD_READINESS_JSON}: small-scale min seed delta is not positive"
+        )
+
+    for line_no, line in enumerate(audit_text.splitlines(), start=1):
+        if is_true_reward_guard_positive_overclaim(line):
+            missing_tokens.append(
+                f"{PAPER10_TRUE_REWARD_GUARD_READINESS_MD}:{line_no}: "
+                f"forbidden true-reward guard wording: {line.strip()}"
+            )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_true_reward_guard_readiness_current",
+            False,
+            "Paper10 true-reward guard readiness gaps: " + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_true_reward_guard_readiness_current",
+        True,
+        "Paper10 true-reward guard readiness audit is current and claim-bounded",
+    )
+
 CEUS_CLEAN_MANUSCRIPT_INTERNAL_SECTIONS = (
     "## Source controls used for this draft",
     "## Terminology Ledger",
@@ -5992,6 +6125,39 @@ def check_paper10_manuscript_text_table_consistency_audit_current(root: Path) ->
     )
 
 
+TRUE_REWARD_GUARD_NEGATIVE_GUARDRAIL = re.compile(
+    r"\b("
+    r"do not|does not|not supported|insufficient|cannot|must not|should not"
+    r"|not final|false|no "
+    r")\b",
+    re.IGNORECASE,
+)
+TRUE_REWARD_GUARD_CLAUSE_SPLIT_PATTERN = re.compile(r"[;.!?]+")
+TRUE_REWARD_GUARD_FORBIDDEN_TARGETS = (
+    re.compile(r"\buniversal fixed switch margin\b", re.IGNORECASE),
+    re.compile(r"\bdirect 50[- ]state Bishan scale[- ]up success\b", re.IGNORECASE),
+    re.compile(
+        r"\brobust Bishan[- ]to[- ]Dongxing transfer superiority\b",
+        re.IGNORECASE,
+    ),
+    re.compile(r"\bdeployment-ready cadastral planning\b", re.IGNORECASE),
+    re.compile(r"\bfinal submission-ready\b", re.IGNORECASE),
+)
+
+
+def is_true_reward_guard_positive_overclaim(line: str) -> bool:
+    for clause in (
+        clause.strip()
+        for clause in TRUE_REWARD_GUARD_CLAUSE_SPLIT_PATTERN.split(line)
+    ):
+        if not clause:
+            continue
+        if TRUE_REWARD_GUARD_NEGATIVE_GUARDRAIL.search(clause):
+            continue
+        if any(target.search(clause) for target in TRUE_REWARD_GUARD_FORBIDDEN_TARGETS):
+            return True
+    return False
+
 CEUS_BASELINE_NEGATIVE_GUARDRAIL = re.compile(
     r"\b("
     r"do not|does not|not supported|insufficient|cannot|must not|should not|no "
@@ -6228,6 +6394,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_real_env_longhorizon_pilot_audit_current,
     check_paper10_real_env_longhorizon_confirmatory_audit_current,
     check_paper10_ceus_baseline_inference_hardening_current,
+    check_paper10_true_reward_guard_readiness_current,
     check_paper10_ceus_clean_main_manuscript_draft_current,
     check_paper10_anchor_raw_rollout_consistency_audit_current,
     check_original_vision_validation_registry_current,

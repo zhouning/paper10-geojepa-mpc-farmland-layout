@@ -15,6 +15,7 @@ from scripts.paper10.preflight_submission_checks import (
     check_citation_keys_resolve,
     check_paper10_ceus_baseline_inference_hardening_current,
     check_paper10_submission_readiness_boundary_current,
+    check_paper10_true_reward_guard_readiness_current,
     check_original_vision_validation_registry_current,
     DATA_ACCESS_RIGHTS_REGISTER,
     DATA_CODE_AVAILABILITY,
@@ -68,6 +69,8 @@ from scripts.paper10.preflight_submission_checks import (
     PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_ASSEMBLY_DRAFT,
     PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT,
     PAPER10_CEUS_HIGHLIGHTS,
+    PAPER10_TRUE_REWARD_GUARD_READINESS_JSON,
+    PAPER10_TRUE_REWARD_GUARD_READINESS_MD,
     PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
@@ -169,6 +172,8 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_ASSEMBLY_DRAFT,
     PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT,
     PAPER10_CEUS_HIGHLIGHTS,
+    PAPER10_TRUE_REWARD_GUARD_READINESS_MD,
+    PAPER10_TRUE_REWARD_GUARD_READINESS_JSON,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON,
     RESULTS / "e0_archive_release_and_doi_backfill_checklist_2026-06-09.md",
@@ -328,6 +333,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "paper10_real_env_longhorizon_confirmatory_audit_current" in payload["passed_checks"]
     assert "paper10_ceus_baseline_inference_hardening_current" in payload["passed_checks"]
     assert "paper10_ceus_clean_main_manuscript_draft_current" in payload["passed_checks"]
+    assert "paper10_true_reward_guard_readiness_current" in payload["passed_checks"]
     assert "paper10_anchor_raw_rollout_consistency_audit_current" in payload["passed_checks"]
     assert "original_vision_validation_registry_current" in payload["passed_checks"]
 
@@ -952,6 +958,7 @@ def test_submission_preflight_current_repository_includes_ceus_clean_main_manusc
     payload = json.loads(result.stdout)
 
     assert "paper10_ceus_clean_main_manuscript_draft_current" in payload["passed_checks"]
+    assert "paper10_true_reward_guard_readiness_current" in payload["passed_checks"]
 
 
 
@@ -1272,6 +1279,38 @@ def test_ceus_clean_main_manuscript_draft_preflight_rejects_unresolved_placehold
     assert result.name == "paper10_ceus_clean_main_manuscript_draft_current"
     assert result.ok is False
     assert "unresolved bracket placeholder" in result.details
+
+
+def test_submission_preflight_minimal_fixture_reports_missing_true_reward_guard_readiness(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    (fixture / PAPER10_TRUE_REWARD_GUARD_READINESS_MD).unlink()
+
+    result, payload = run_submission_preflight_json(fixture)
+
+    assert result.returncode == 1
+    assert payload["ok"] is False
+    assert "paper10_true_reward_guard_readiness_current" in payload["failed_checks"]
+    details = check_details(payload, "paper10_true_reward_guard_readiness_current")
+    assert "missing Paper10 true-reward guard readiness files" in details
+    assert str(PAPER10_TRUE_REWARD_GUARD_READINESS_MD) in details
+
+
+def test_true_reward_guard_readiness_preflight_rejects_universal_margin_claim(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    readiness = fixture / PAPER10_TRUE_REWARD_GUARD_READINESS_MD
+    readiness.write_text(
+        readiness.read_text(encoding="utf-8")
+        + "\n\nThis proves a universal fixed switch margin.\n",
+        encoding="utf-8",
+    )
+
+    result = check_paper10_true_reward_guard_readiness_current(fixture)
+
+    assert result.name == "paper10_true_reward_guard_readiness_current"
+    assert result.ok is False
+    assert "forbidden true-reward guard wording" in result.details
+    assert "This proves a universal fixed switch margin." in result.details
+
 def test_submission_preflight_minimal_fixture_reports_missing_anchor_raw_rollout_consistency_audit(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
     (fixture / PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD).unlink()
