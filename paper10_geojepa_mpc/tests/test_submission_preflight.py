@@ -1445,6 +1445,39 @@ def test_true_reward_guard_readiness_preflight_rejects_universal_margin_claim(tm
     assert "forbidden true-reward guard wording" in result.details
     assert "This proves a universal fixed switch margin." in result.details
 
+
+def test_true_reward_guard_readiness_preflight_allows_20seed_small_scale_losses(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    payload_path = fixture / PAPER10_TRUE_REWARD_GUARD_READINESS_JSON
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    small = payload["small_scale_guard"]
+    small.update(
+        {
+            "n_seeds": 20,
+            "seed_wins": 18,
+            "seed_losses": 2,
+            "mean_delta_vs_baseline": 6.035409141890397,
+            "min_seed_delta_vs_baseline": -0.7662044920856914,
+            "bootstrap_95ci_delta": [3.6257886178706804, 8.620733752864375],
+        }
+    )
+    payload["claim_gates"]["small_scale_consistency_supported"] = True
+    payload_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    readiness = fixture / PAPER10_TRUE_REWARD_GUARD_READINESS_MD
+    text = readiness.read_text(encoding="utf-8")
+    text = text.replace("| seed wins | 5 / 5 |", "| seed wins | 18 / 20 |")
+    text = text.replace(
+        "| min seed delta | 2.1341 |",
+        "| seed losses | 2 / 20 |\n| min seed delta | -0.7662 |",
+    )
+    text += "\nThe 10x12/top4 extension is positive descriptive support with reported seed losses, not every-seed dominance.\n"
+    readiness.write_text(text, encoding="utf-8")
+
+    result = check_paper10_true_reward_guard_readiness_current(fixture)
+
+    assert result.name == "paper10_true_reward_guard_readiness_current"
+    assert result.ok is True
 def test_submission_preflight_minimal_fixture_reports_missing_anchor_raw_rollout_consistency_audit(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
     (fixture / PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD).unlink()

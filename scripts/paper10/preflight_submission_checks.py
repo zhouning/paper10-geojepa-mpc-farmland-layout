@@ -5479,6 +5479,8 @@ def check_paper10_true_reward_guard_readiness_current(root: Path) -> CheckResult
         "Do not claim a universal fixed switch margin.",
         "Do not claim direct 50-state Bishan scale-up success.",
         "20 / 20",
+        "18 / 20",
+        "2 / 20",
         "## Primary Paired Statistics",
         "bootstrap 95% CI lower",
         "switch rate",
@@ -5506,8 +5508,9 @@ def check_paper10_true_reward_guard_readiness_current(root: Path) -> CheckResult
         ("small_scale_guard", "setting"): "bishan_10x12_top4",
         ("small_scale_guard", "audit_set"): "rewardtop7",
         ("small_scale_guard", "switch_margin"): 1.6,
-        ("small_scale_guard", "n_seeds"): 5,
-        ("small_scale_guard", "seed_wins"): 5,
+        ("small_scale_guard", "n_seeds"): 20,
+        ("small_scale_guard", "seed_wins"): 18,
+        ("small_scale_guard", "seed_losses"): 2,
         ("claim_gates", "primary_algorithm_candidate_supported"): True,
         ("claim_gates", "primary_paired_statistics_supported"): True,
         ("claim_gates", "small_scale_consistency_supported"): True,
@@ -5564,9 +5567,14 @@ def check_paper10_true_reward_guard_readiness_current(root: Path) -> CheckResult
         missing_tokens.append(
             f"{PAPER10_TRUE_REWARD_GUARD_READINESS_JSON}: small-scale mean delta is not positive"
         )
-    if float(small.get("min_seed_delta_vs_baseline", 0.0)) <= 0.0:
+    small_ci = small.get("bootstrap_95ci_delta", [0.0, 0.0])
+    if len(small_ci) != 2 or float(small_ci[0]) <= 0.0:
         missing_tokens.append(
-            f"{PAPER10_TRUE_REWARD_GUARD_READINESS_JSON}: small-scale min seed delta is not positive"
+            f"{PAPER10_TRUE_REWARD_GUARD_READINESS_JSON}: small-scale bootstrap CI lower is not positive"
+        )
+    if int(small.get("seed_wins", 0)) <= int(small.get("seed_losses", 0)):
+        missing_tokens.append(
+            f"{PAPER10_TRUE_REWARD_GUARD_READINESS_JSON}: small-scale wins do not exceed losses"
         )
 
     for line_no, line in enumerate(audit_text.splitlines(), start=1):

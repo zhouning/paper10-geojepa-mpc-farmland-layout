@@ -29,7 +29,7 @@ LEGACY_PRIMARY_20X16_STATS = (
 )
 SMALL_10X12 = (
     RESULTS
-    / "e0_bishan_10x12_top4_true_reward_margin_guard_m160_rewardtop7_5seed_paired_stats_2026-07-07.json"
+    / "e0_bishan_10x12_top4_true_reward_margin_guard_m160_rewardtop7_20seed_paired_stats_2026-07-08.json"
 )
 
 
@@ -77,9 +77,12 @@ def test_build_readiness_audit_promotes_20x16_guard_without_universal_margin_cla
     assert small["setting"] == "bishan_10x12_top4"
     assert small["audit_set"] == "rewardtop7"
     assert small["switch_margin"] == 1.6
-    assert small["seed_wins"] == 5
-    assert small["n_seeds"] == 5
-    assert small["mean_delta_vs_baseline"] == pytest.approx(7.02534672003666)
+    assert small["seed_wins"] == 18
+    assert small["seed_losses"] == 2
+    assert small["n_seeds"] == 20
+    assert small["mean_delta_vs_baseline"] == pytest.approx(6.035409141890397)
+    assert small["min_seed_delta_vs_baseline"] == pytest.approx(-0.7662044920856914)
+    assert small["bootstrap_95ci_delta"][0] == pytest.approx(3.6257886178706804)
 
     gates = audit["claim_gates"]
     assert gates["primary_algorithm_candidate_supported"] is True
@@ -117,6 +120,8 @@ def test_readiness_markdown_reports_evidence_and_negative_guardrails():
     assert "`rewardtop7 margin=1.50`" in text
     assert "`rewardtop7 margin=1.60`" in text
     assert "20 / 20" in text
+    assert "18 / 20" in text
+    assert "2 / 20" in text
     assert "## Primary Paired Statistics" in text
     assert "bootstrap 95% CI lower" in text
     assert "switch rate" in text

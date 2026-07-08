@@ -1,0 +1,152 @@
+{
+  "baseline_mean_reward": 66.24950519865644,
+  "bootstrap_95ci_delta": [
+    3.6257886178706804,
+    8.620733752864375
+  ],
+  "candidate_guard_summary": {
+    "audited_states": 2000,
+    "mean_audit_action_count": 7.779,
+    "mean_true_reward_time_sec": 0.46045591230009447,
+    "selected_true_reward_regret_mean": 0.9109774302941769,
+    "switch_rate": 0.0875,
+    "switches": 175
+  },
+  "candidate_mean_reward": 72.28491434054683,
+  "losses": 2,
+  "max_delta": 17.6597947046506,
+  "mean_delta": 6.035409141890397,
+  "median_delta": 3.3491221018955315,
+  "min_delta": -0.7662044920856914,
+  "n": 20,
+  "normal_approx_95ci_delta": [
+    3.4311163195706156,
+    8.639701964210179
+  ],
+  "sample_std_delta": 5.942220187777361,
+  "seed_deltas": [
+    {
+      "baseline_reward": 69.42933604309049,
+      "candidate_reward": 71.56340837696855,
+      "delta_vs_baseline": 2.1340723338780663,
+      "seed": 0
+    },
+    {
+      "baseline_reward": 69.17935442094561,
+      "candidate_reward": 71.94666757673292,
+      "delta_vs_baseline": 2.7673131557873063,
+      "seed": 1
+    },
+    {
+      "baseline_reward": 57.97502674979494,
+      "candidate_reward": 71.87824315831662,
+      "delta_vs_baseline": 13.90321640852168,
+      "seed": 2
+    },
+    {
+      "baseline_reward": 67.4951044486168,
+      "candidate_reward": 71.18754347201917,
+      "delta_vs_baseline": 3.692439023402372,
+      "seed": 3
+    },
+    {
+      "baseline_reward": 62.20419931786771,
+      "candidate_reward": 74.83389199646159,
+      "delta_vs_baseline": 12.629692678593877,
+      "seed": 4
+    },
+    {
+      "baseline_reward": 58.06993963293434,
+      "candidate_reward": 75.72973433758494,
+      "delta_vs_baseline": 17.6597947046506,
+      "seed": 5
+    },
+    {
+      "baseline_reward": 71.00965481652322,
+      "candidate_reward": 70.24345032443753,
+      "delta_vs_baseline": -0.7662044920856914,
+      "seed": 6
+    },
+    {
+      "baseline_reward": 73.01816104637786,
+      "candidate_reward": 72.57807637524837,
+      "delta_vs_baseline": -0.44008467112948324,
+      "seed": 7
+    },
+    {
+      "baseline_reward": 67.84814441221442,
+      "candidate_reward": 70.85394959260312,
+      "delta_vs_baseline": 3.005805180388691,
+      "seed": 8
+    },
+    {
+      "baseline_reward": 64.78871425210482,
+      "candidate_reward": 77.73551119986557,
+      "delta_vs_baseline": 12.946796947760745,
+      "seed": 9
+    },
+    {
+      "baseline_reward": 62.35987368940568,
+      "candidate_reward": 70.1930071958522,
+      "delta_vs_baseline": 7.833133506446522,
+      "seed": 10
+    },
+    {
+      "baseline_reward": 69.41968366355664,
+      "candidate_reward": 75.39556588816195,
+      "delta_vs_baseline": 5.975882224605314,
+      "seed": 11
+    },
+    {
+      "baseline_reward": 62.49264701339965,
+      "candidate_reward": 77.55400278111767,
+      "delta_vs_baseline": 15.061355767718027,
+      "seed": 12
+    },
+    {
+      "baseline_reward": 62.035707976010166,
+      "candidate_reward": 75.12514474146423,
+      "delta_vs_baseline": 13.08943676545406,
+      "seed": 13
+    },
+    {
+      "baseline_reward": 60.602172763427404,
+      "candidate_reward": 62.094595059547935,
+      "delta_vs_baseline": 1.4924222961205302,
+      "seed": 14
+    },
+    {
+      "baseline_reward": 65.72652757856379,
+      "candidate_reward": 66.49125346093489,
+      "delta_vs_baseline": 0.7647258823710956,
+      "seed": 15
+    },
+    {
+      "baseline_reward": 70.48396793402662,
+      "candidate_reward": 71.9845814700183,
+      "delta_vs_baseline": 1.5006135359916755,
+      "seed": 16
+    },
+    {
+      "baseline_reward": 70.78633835703819,
+      "candidate_reward": 71.07523890450888,
+      "delta_vs_baseline": 0.28890054747068916,
+      "seed": 17
+    },
+    {
+      "baseline_reward": 67.95973660142946,
+      "candidate_reward": 69.90653547492391,
+      "delta_vs_baseline": 1.9467988734944583,
+      "seed": 18
+    },
+    {
+      "baseline_reward": 72.10581325580088,
+      "candidate_reward": 77.32788542416829,
+      "delta_vs_baseline": 5.222072168367404,
+      "seed": 19
+    }
+  ],
+  "standard_error_delta": 1.3287208277141742,
+  "ties": 0,
+  "wins": 18
+}

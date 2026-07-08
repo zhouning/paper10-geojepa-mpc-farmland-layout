@@ -11,7 +11,7 @@ This is an algorithm-readiness evidence boundary, not final submission readiness
 
 - Primary 20x16/top5 comparison: `paper10_geojepa_mpc/experiments/results/e0_bishan_20x16_top5_true_reward_margin_guard_m150_rewardtop7_vs_blend010_20seed_100step_comparison_2026-07-07.json`
 - Primary 20x16/top5 paired statistics: `paper10_geojepa_mpc/experiments/results/e0_bishan_20x16_top5_true_reward_margin_guard_m150_rewardtop7_20seed_paired_stats_2026-07-07.json`
-- Small-scale 10x12/top4 statistics: `paper10_geojepa_mpc/experiments/results/e0_bishan_10x12_top4_true_reward_margin_guard_m160_rewardtop7_5seed_paired_stats_2026-07-07.json`
+- Small-scale 10x12/top4 statistics: `paper10_geojepa_mpc/experiments/results/e0_bishan_10x12_top4_true_reward_margin_guard_m160_rewardtop7_20seed_paired_stats_2026-07-08.json`
 
 ## Primary Guard Candidate
 
@@ -56,12 +56,13 @@ The supporting small-scale guard is `rewardtop7 margin=1.60` for Bishan 10x12/to
 
 | metric | value |
 |---|---:|
-| baseline mean reward | 65.2566 |
-| guard mean reward | 72.2820 |
-| mean delta vs baseline | 7.0253 |
-| seed wins | 5 / 5 |
-| min seed delta | 2.1341 |
-| bootstrap 95% CI lower | 2.6990 |
+| baseline mean reward | 66.2495 |
+| guard mean reward | 72.2849 |
+| mean delta vs baseline | 6.0354 |
+| seed wins | 18 / 20 |
+| seed losses | 2 / 20 |
+| min seed delta | -0.7662 |
+| bootstrap 95% CI lower | 3.6258 |
 
 ## Claim Gates
 
@@ -80,6 +81,7 @@ The supporting small-scale guard is `rewardtop7 margin=1.60` for Bishan 10x12/to
 
 Use this audit to treat the 2026-07-07 reward-only top7 true-reward margin guard as the current simplified robust default for Paper10 Bishan experiments.
 The evidence supports a setting-specific guard, not a universal margin or a general scale-up result.
+The 10x12/top4 extension is positive descriptive support with reported seed losses, not every-seed dominance.
 
 Do not claim a universal fixed switch margin.
 Do not claim direct 50-state Bishan scale-up success.

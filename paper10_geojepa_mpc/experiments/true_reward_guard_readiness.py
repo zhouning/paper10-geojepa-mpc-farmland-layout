@@ -19,7 +19,7 @@ DEFAULT_PRIMARY_STATS = (
 )
 DEFAULT_SMALL_SCALE_STATS = (
     RESULTS
-    / "e0_bishan_10x12_top4_true_reward_margin_guard_m160_rewardtop7_5seed_paired_stats_2026-07-07.json"
+    / "e0_bishan_10x12_top4_true_reward_margin_guard_m160_rewardtop7_20seed_paired_stats_2026-07-08.json"
 )
 DEFAULT_OUTPUT_JSON = (
     RESULTS / "e0_paper10_true_reward_guard_readiness_2026-07-08.json"
@@ -167,23 +167,47 @@ def _primary_paired_stats_summary(payload: dict[str, Any]) -> dict[str, Any]:
         )
     return result
 
+def _small_scale_value(payload: dict[str, Any], *keys: str) -> Any:
+    for key in keys:
+        if key in payload:
+            return payload[key]
+    raise KeyError(keys[0])
+
+
 def _small_scale_guard_summary(payload: dict[str, Any]) -> dict[str, Any]:
     seed_rows = payload["seed_deltas"]
-    seed_deltas = [float(row["delta_vs_baseline"]) for row in seed_rows]
+    seed_deltas = []
+    for row in seed_rows:
+        if "delta_vs_baseline" in row:
+            seed_deltas.append(float(row["delta_vs_baseline"]))
+        else:
+            seed_deltas.append(float(row["total_reward_delta"]))
     return {
         "setting": "bishan_10x12_top4",
         "algorithm": "true_reward_margin_guard",
         "audit_set": "rewardtop7",
         "switch_margin": 1.6,
         "n_seeds": int(payload["n"]),
-        "seed_wins": int(payload["wins_vs_baseline"]),
-        "seed_losses": int(payload["losses_vs_baseline"]),
+        "seed_wins": int(_small_scale_value(payload, "wins_vs_baseline", "wins")),
+        "seed_losses": int(_small_scale_value(payload, "losses_vs_baseline", "losses")),
         "baseline_mean_reward": float(payload["baseline_mean_reward"]),
         "candidate_mean_reward": float(payload["candidate_mean_reward"]),
-        "mean_delta_vs_baseline": float(payload["mean_delta_vs_baseline"]),
-        "median_delta_vs_baseline": float(payload["median_delta_vs_baseline"]),
-        "min_seed_delta_vs_baseline": float(min(seed_deltas)),
-        "max_seed_delta_vs_baseline": float(max(seed_deltas)),
+        "mean_delta_vs_baseline": float(
+            _small_scale_value(payload, "mean_delta_vs_baseline", "mean_delta")
+        ),
+        "median_delta_vs_baseline": float(
+            _small_scale_value(payload, "median_delta_vs_baseline", "median_delta")
+        ),
+        "min_seed_delta_vs_baseline": float(
+            _small_scale_value(payload, "min_delta_vs_baseline", "min_delta")
+            if "min_delta_vs_baseline" in payload or "min_delta" in payload
+            else min(seed_deltas)
+        ),
+        "max_seed_delta_vs_baseline": float(
+            _small_scale_value(payload, "max_delta_vs_baseline", "max_delta")
+            if "max_delta_vs_baseline" in payload or "max_delta" in payload
+            else max(seed_deltas)
+        ),
         "bootstrap_95ci_delta": [
             float(payload["bootstrap_95ci_delta"][0]),
             float(payload["bootstrap_95ci_delta"][1]),
@@ -193,12 +217,15 @@ def _small_scale_guard_summary(payload: dict[str, Any]) -> dict[str, Any]:
                 "seed": int(row["seed"]),
                 "baseline_reward": float(row["baseline_reward"]),
                 "candidate_reward": float(row["candidate_reward"]),
-                "delta_vs_baseline": float(row["delta_vs_baseline"]),
+                "delta_vs_baseline": float(
+                    row["delta_vs_baseline"]
+                    if "delta_vs_baseline" in row
+                    else row["total_reward_delta"]
+                ),
             }
             for row in seed_rows
         ],
     }
-
 
 def build_true_reward_guard_readiness_audit(
     *,
@@ -221,8 +248,9 @@ def build_true_reward_guard_readiness_audit(
     )
     small_supported = (
         small["candidate_mean_reward"] > small["baseline_mean_reward"]
-        and small["seed_wins"] == small["n_seeds"]
-        and small["min_seed_delta_vs_baseline"] > 0.0
+        and small["mean_delta_vs_baseline"] > 0.0
+        and small["seed_wins"] > small["seed_losses"]
+        and small["bootstrap_95ci_delta"][0] > 0.0
     )
     primary_stats_supported = (
         primary_stats["wins"] == primary_stats["n"]
@@ -265,7 +293,7 @@ def build_true_reward_guard_readiness_audit(
             "setting-specific switch margin",
             "reward-only top7 simplification",
             "20-seed paired bootstrap CI lower above zero",
-            "10x12/top4 small-scale consistency support",
+            "10x12/top4 20-seed positive descriptive support",
             "not final submission readiness",
         ],
         "blocked_language": [
@@ -347,6 +375,7 @@ def true_reward_guard_readiness_markdown(audit: dict[str, Any]) -> str:
         f"| guard mean reward | {small['candidate_mean_reward']:.4f} |",
         f"| mean delta vs baseline | {small['mean_delta_vs_baseline']:.4f} |",
         f"| seed wins | {small['seed_wins']} / {small['n_seeds']} |",
+        f"| seed losses | {small['seed_losses']} / {small['n_seeds']} |",
         f"| min seed delta | {small['min_seed_delta_vs_baseline']:.4f} |",
         f"| bootstrap 95% CI lower | {small['bootstrap_95ci_delta'][0]:.4f} |",
         "",
@@ -367,6 +396,7 @@ def true_reward_guard_readiness_markdown(audit: dict[str, Any]) -> str:
         "",
         "Use this audit to treat the 2026-07-07 reward-only top7 true-reward margin guard as the current simplified robust default for Paper10 Bishan experiments.",
         "The evidence supports a setting-specific guard, not a universal margin or a general scale-up result.",
+        "The 10x12/top4 extension is positive descriptive support with reported seed losses, not every-seed dominance.",
         "",
         "Do not claim a universal fixed switch margin.",
         "Do not claim direct 50-state Bishan scale-up success.",
