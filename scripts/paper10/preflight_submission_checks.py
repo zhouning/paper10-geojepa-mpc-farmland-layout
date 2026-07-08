@@ -30,6 +30,9 @@ DATA_CODE_AVAILABILITY = RESULTS / "e0_data_code_availability_draft_2026-06-09.m
 DATA_ACCESS_RIGHTS_REGISTER = (
     RESULTS / "e0_data_access_and_rights_decision_register_2026-06-09.md"
 )
+ARCHIVE_METADATA_TEMPLATES = (
+    RESULTS / "e0_archive_metadata_templates_2026-06-09.md"
+)
 SMOKE_PROTOCOL = RESULTS / "e0_reviewer_smoke_replication_protocol_2026-06-09.md"
 SMOKE_LOG = RESULTS / "e0_reviewer_smoke_verification_log_2026-06-10.md"
 INTEGRATED_DONGXING_SCAFFOLD = (
@@ -295,6 +298,7 @@ REQUIRED_PATHS = (
     ARCHIVE_MANIFEST,
     DATA_CODE_AVAILABILITY,
     DATA_ACCESS_RIGHTS_REGISTER,
+    ARCHIVE_METADATA_TEMPLATES,
     SELF_CONTAINED_MANUSCRIPT,
     SMOKE_PROTOCOL,
     SMOKE_LOG,
@@ -1061,8 +1065,9 @@ def check_dongxing_data_availability_routes(root: Path) -> CheckResult:
         (str(DATA_CODE_AVAILABILITY), availability),
         (str(DATA_ACCESS_RIGHTS_REGISTER), rights_register),
     ]:
+        normalized_text = " ".join(text.split())
         for token in required_tokens:
-            if token not in text:
+            if token not in normalized_text:
                 missing_tokens.append(f"{label}: {token}")
 
     local_path_patterns = [
@@ -1083,6 +1088,90 @@ def check_dongxing_data_availability_routes(root: Path) -> CheckResult:
         "dongxing_data_availability_routes",
         True,
         "Data/Code Availability and rights register cover Dongxing public/control access routes",
+    )
+
+
+def check_paper10_data_publication_boundary_backfill_current(root: Path) -> CheckResult:
+    required_files = [
+        DATA_AVAILABILITY,
+        DATA_CODE_AVAILABILITY,
+        DATA_ACCESS_RIGHTS_REGISTER,
+        ARCHIVE_METADATA_TEMPLATES,
+        PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_MD,
+        PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_data_publication_boundary_backfill_current",
+            False,
+            "missing Paper10 data-publication boundary backfill files: "
+            + ", ".join(missing),
+        )
+
+    doc_tokens = {
+        DATA_AVAILABILITY: [
+            "Paper10 author data/code publication boundary",
+            "code can be public",
+            "non-DLTB artifacts can be public",
+            "Original Bishan and Dongxing DLTB inputs are restricted",
+            "4open reviewer link",
+            "named software licence remains pending",
+            "controlled-access route remains pending for restricted original DLTB",
+            PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_MD.name,
+        ],
+        DATA_CODE_AVAILABILITY: [
+            "Paper10 author data/code publication boundary",
+            "code can be public",
+            "non-DLTB artifacts can be public",
+            "Original Bishan and Dongxing DLTB inputs are restricted",
+            "full Bishan Tool2 transition and pairwise files are treated as derived artifacts",
+            "DLTB-leakage check",
+            "original Bishan DLTB inputs are not publicly redistributable",
+            "original Dongxing DLTB inputs are not publicly redistributable",
+            "software licence and generated-output/model-weight rights terms remain pending",
+            "4open reviewer link has been provided but still requires a non-author browser-session test",
+        ],
+        DATA_ACCESS_RIGHTS_REGISTER: [
+            "Author closeout update (2026-07-08)",
+            "code can be public",
+            "non-DLTB artifacts can be public",
+            "Original Bishan and Dongxing DLTB inputs are restricted",
+            "public_code_allowed_pending_named_software_licence",
+            "restricted_sensitive_original_bishan_dltb_controlled_access_required",
+            "split_route_original_dongxing_dltb_restricted_derived_non_dltb_public_pending_leakage_check_and_controlled_route",
+        ],
+        ARCHIVE_METADATA_TEMPLATES: [
+            "Author publication boundary update (2026-07-08)",
+            "code can be public",
+            "non-DLTB artifacts can be public",
+            "Original Bishan and Dongxing DLTB inputs are restricted",
+            "Do not place original Bishan or Dongxing DLTB inputs in Record 1",
+            "DLTB-leakage check",
+            "public_code_allowed_pending_named_software_licence",
+            "restricted_sensitive_original_bishan_dltb_controlled_access_required",
+        ],
+    }
+
+    missing_tokens = []
+    for rel_path, tokens in doc_tokens.items():
+        doc_text = read_text(root / rel_path)
+        normalized_doc = " ".join(doc_text.split())
+        for token in tokens:
+            if token not in normalized_doc:
+                missing_tokens.append(f"{rel_path}: {token}")
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_data_publication_boundary_backfill_current",
+            False,
+            "Paper10 data-publication boundary backfill gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_data_publication_boundary_backfill_current",
+        True,
+        "Paper10 data-publication boundary is backfilled into availability and archive materials",
     )
 
 
@@ -7308,6 +7397,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_true_reward_guard_readiness_current,
     check_paper10_post_guard_experiment_closure_refresh_current,
     check_paper10_author_decision_closeout_form_current,
+    check_paper10_data_publication_boundary_backfill_current,
     check_paper10_post_guard_submission_readiness_refresh_current,
     check_paper10_ceus_clean_main_manuscript_draft_current,
     check_paper10_anchor_raw_rollout_consistency_audit_current,

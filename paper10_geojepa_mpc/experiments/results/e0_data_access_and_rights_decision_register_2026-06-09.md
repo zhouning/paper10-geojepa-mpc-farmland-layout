@@ -32,6 +32,25 @@ The 2026-06-20 Stage 3 50x24 candidate-score sweep did not change any
 data-access route. The tested 50-state rows remain failed diagnostics and do
 not change any data-access route.
 
+## Author closeout update (2026-07-08)
+
+The current author-provided boundary is recorded in
+`e0_paper10_author_decision_closeout_form_2026-07-08.md` and should override
+older ambiguous route options in this register:
+
+- `public_code_allowed_pending_named_software_licence`: code can be public, but
+  the named software licence and repository metadata scope remain pending.
+- non-DLTB artifacts can be public, but generated-output/model-weight rights
+  terms and any needed DLTB-leakage check remain pending.
+- Original Bishan and Dongxing DLTB inputs are restricted and must not be
+  publicly redistributed.
+- `restricted_sensitive_original_bishan_dltb_controlled_access_required`: the
+  GPKG-root route for original Bishan DLTB inputs requires controlled access or
+  an institution/data-owner route if reviewer inspection is required.
+- `split_route_original_dongxing_dltb_restricted_derived_non_dltb_public_pending_leakage_check_and_controlled_route`:
+  Dongxing/Neijiang derived non-DLTB artifacts may be public after leakage
+  checks, while original Dongxing DLTB inputs remain restricted.
+
 ## Decision register
 
 | item | current package status | supports | candidate access route | required author decision | unresolved fields |

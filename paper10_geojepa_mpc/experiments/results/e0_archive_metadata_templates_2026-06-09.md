@@ -33,6 +33,23 @@ Do not use a temporary cloud folder or a personal web link as the final data
 identifier. Use a repository DOI, accession, Handle, ARK, or another stable
 record identifier.
 
+## Author publication boundary update (2026-07-08)
+
+Use this author boundary before completing any archive record:
+
+- `public_code_allowed_pending_named_software_licence`: code can be public, but
+  the named software licence is still pending.
+- non-DLTB artifacts can be public after named rights terms and any required
+  DLTB-leakage check are recorded.
+- Original Bishan and Dongxing DLTB inputs are restricted and must not be
+  publicly redistributed.
+- Do not place original Bishan or Dongxing DLTB inputs in Record 1.
+- Full Bishan Tool2 transition/pairwise artifacts can be prepared as a derived
+  non-DLTB data record only after DLTB-leakage check evidence, checksums, and
+  rights metadata are recorded.
+- `restricted_sensitive_original_bishan_dltb_controlled_access_required` applies
+  to GPKG-root/original Bishan DLTB inputs if reviewer access is required.
+
 ## Record 1: code and packaged E0 evidence archive
 
 Recommended status: public archive, unless anonymous review requires a private

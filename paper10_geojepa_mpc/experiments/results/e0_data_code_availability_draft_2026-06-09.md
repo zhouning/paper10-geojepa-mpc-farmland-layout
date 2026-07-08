@@ -33,6 +33,24 @@ The archive release and DOI or reviewer-link backfill checklist is tracked in
 The current no-go submission blocker decision packet is tracked in
 `paper10_geojepa_mpc/experiments/results/e0_submission_blocker_decision_packet_2026-06-11.md`.
 
+## Paper10 author data/code publication boundary
+
+The 2026-07-08 author closeout clarifies the publication scope for this draft:
+code can be public, and non-DLTB artifacts can be public after named rights
+terms and DLTB-leakage checks are recorded. Original Bishan and Dongxing DLTB
+inputs are restricted. The original Bishan DLTB inputs are not publicly
+redistributable, and the original Dongxing DLTB inputs are not publicly
+redistributable.
+
+The full Bishan Tool2 transition and pairwise files are treated as derived
+artifacts rather than original DLTB inputs, but public deposit still requires a
+DLTB-leakage check, archive checksums, and rights metadata. The 4open reviewer
+link has been provided but still requires a non-author browser-session test.
+The software licence and generated-output/model-weight rights terms remain
+pending, and the controlled-access route remains pending for restricted
+original DLTB inputs if the target journal requires raw-input inspection during
+review.
+
 ## Dataset inventory and access routes
 
 | dataset or artifact family | supports | current location | access route | submission status |
@@ -73,9 +91,10 @@ The full Bishan Tool2 transition and pairwise datasets are not stored directly
 in the Git repository because the binary files are approximately 1.65 GB in
 total. These files are required to rerun full-scale training and real
 environment rollouts from scratch. Before submission, the authors should
-either deposit the full `tool2/` directory in a durable research-data
-repository with a DOI [FULL TOOL2 DOI TO BE ADDED], or provide a controlled
-institutional access route if redistribution is restricted.
+deposit the full `tool2/` directory as derived non-DLTB artifacts in a durable
+research-data repository with a DOI [FULL TOOL2 DOI TO BE ADDED] after a
+DLTB-leakage check, archive checksums, and rights metadata are recorded. This
+does not authorize public redistribution of original Bishan DLTB inputs.
 
 Full real-environment rollouts and label generation also require prepared
 Bishan geospatial inputs, including the parcel/block data and a data root that
@@ -97,11 +116,14 @@ trajectories, pairwise candidate labels, block products, and slope-enriched
 geospatial inputs. The tracked repository contains derived Dongxing summaries,
 tables, and figure source data, but full Dongxing/Neijiang training and
 rollout reproduction requires a separate data record. Before submission, the
-authors should either deposit the prepared Dongxing/Neijiang data in a durable
-repository with a DOI [DONGXING/NEIJIANG DATA DOI TO BE ADDED], or provide a
-controlled-access metadata record that names the responsible data owner,
-request route, eligibility criteria, review process, reviewer access route,
-and data-use or no-redistribution terms [DONGXING/NEIJIANG CONTROLLED-ACCESS RECORD TO BE ADDED].
+authors should split any public Dongxing/Neijiang derived non-DLTB artifacts
+from restricted original Dongxing DLTB inputs. Derived non-DLTB artifacts may be
+deposited in a durable repository with a DOI [DONGXING/NEIJIANG DATA DOI TO BE
+ADDED] after a DLTB-leakage check. Restricted original Dongxing DLTB inputs
+require a controlled-access metadata record that names the responsible data
+owner, request route, eligibility criteria, review process, reviewer access
+route, and data-use or no-redistribution terms [DONGXING/NEIJIANG
+CONTROLLED-ACCESS RECORD TO BE ADDED].
 
 The repository also includes a small smoke dataset under
 `arcgis_toolbox_paper9/_scratch/tool1_smoke/prepared/tool2/`. This smoke data is
@@ -191,7 +213,7 @@ under ignored `reviewer_outputs/` by default.
 
 ## Missing information / risk flags
 
-- No repository DOI, dataset DOI, or anonymous reviewer link is recorded yet.
+- The 4open anonymous reviewer link is recorded in the author closeout form, but non-author browser testing, exact submission-commit mapping, and final archive/manuscript backfill are still pending.
 - Target journal and archive route are not selected yet; availability wording
   may need adjustment after venue choice.
 - Full Bishan Tool2 files and prepared GPKG-root geospatial inputs are external

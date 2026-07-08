@@ -16,6 +16,23 @@ paper10_geojepa_mpc/experiments/results/e0_paper10_submission_readiness_boundary
 
 This boundary does not declare final submission readiness.
 
+## Paper10 author data/code publication boundary
+
+The 2026-07-08 author closeout records the current data/code publication
+boundary in `paper10_geojepa_mpc/experiments/results/e0_paper10_author_decision_closeout_form_2026-07-08.md`:
+
+- code can be public, but the named software licence remains pending;
+- non-DLTB artifacts can be public, subject to named rights terms and
+  DLTB-leakage checks where derived data could expose restricted source
+  content;
+- Original Bishan and Dongxing DLTB inputs are restricted and must not be
+  publicly redistributed;
+- the 4open reviewer link has been provided for code and derived non-DLTB
+  artifacts, but it still requires non-author browser-session testing and final
+  manuscript/archive backfill;
+- the controlled-access route remains pending for restricted original DLTB
+  inputs if the target journal requires raw-input inspection during review.
+
 For the manuscript-facing Data and Code Availability draft that still carries
 the unresolved DOI, licence, and controlled-access backfill, see:
 
