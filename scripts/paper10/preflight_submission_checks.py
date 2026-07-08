@@ -221,6 +221,12 @@ PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_MD = (
 PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_JSON = (
     RESULTS / "e0_paper10_post_guard_experiment_closure_refresh_2026-07-08.json"
 )
+PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD = (
+    RESULTS / "e0_paper10_post_guard_submission_readiness_refresh_2026-07-08.md"
+)
+PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON = (
+    RESULTS / "e0_paper10_post_guard_submission_readiness_refresh_2026-07-08.json"
+)
 PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD = (
     RESULTS / "e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md"
 )
@@ -348,6 +354,8 @@ REQUIRED_PATHS = (
     PAPER10_TRUE_REWARD_GUARD_READINESS_JSON,
     PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_MD,
     PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_JSON,
+    PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD,
+    PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON,
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD,
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON,
     PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD,
@@ -5253,6 +5261,181 @@ def check_paper10_post_guard_experiment_closure_refresh_current(root: Path) -> C
     )
 
 
+def check_paper10_post_guard_submission_readiness_refresh_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD,
+        PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON,
+        PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_MD,
+        PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_JSON,
+        SUBMISSION_BLOCKER_DECISION_PACKET,
+        DATA_ACCESS_RIGHTS_REGISTER,
+        PAPER10_SUBMISSION_READINESS_BOUNDARY,
+        PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_post_guard_submission_readiness_refresh_current",
+            False,
+            "missing Paper10 post-guard submission-readiness refresh files: "
+            + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD)
+    try:
+        payload = json.loads(
+            read_text(root / PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON)
+        )
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_post_guard_submission_readiness_refresh_current",
+            False,
+            f"{PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    required_tokens = [
+        "Paper10 post-guard submission-readiness refresh",
+        "Status: not_submission_ready",
+        "source-derived; no rollout or training rerun; no submission approval",
+        "post-guard bounded algorithm closure is current",
+        "rewardtop7 margin=1.50",
+        "final submission remains blocked",
+        "repository DOI or anonymous reviewer link",
+        "code licence",
+        "generated-data and checkpoint/model-weight rights",
+        "full Bishan Tool2 route",
+        "GPKG-root geospatial route",
+        "Dongxing/Neijiang prepared-data route",
+        "reviewer data access",
+        "citation policy",
+        "statistical reporting policy",
+        "Main Figure 1 / journal export rules",
+        PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_JSON.name,
+        PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_MD.name,
+        SUBMISSION_BLOCKER_DECISION_PACKET.name,
+        DATA_ACCESS_RIGHTS_REGISTER.name,
+        PAPER10_SUBMISSION_READINESS_BOUNDARY.name,
+        PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE.name,
+        "not final submission readiness",
+        "Do not treat this refresh as final submission readiness.",
+        "Do not claim direct 50-state Bishan scale-up success.",
+        "Do not claim robust Bishan-to-Dongxing transfer superiority.",
+        "Do not claim deployment-ready cadastral planning.",
+        "Do not claim a universal fixed switch margin.",
+    ]
+    for token in required_tokens:
+        if token not in text:
+            missing_tokens.append(
+                f"{PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD}: {token}"
+            )
+
+    expected_values = {
+        ("date",): "2026-07-08",
+        ("refresh_type",): "post_guard_submission_readiness_refresh",
+        ("status",): "not_submission_ready",
+        ("source_boundary", "new_experimental_claim"): False,
+        ("source_boundary", "reran_rollouts"): False,
+        ("source_boundary", "reran_training"): False,
+        ("source_boundary", "submission_approval"): False,
+        ("algorithm_state", "post_guard_bounded_algorithm_closure_current"): True,
+        ("algorithm_state", "resume_broad_algorithm_redesign"): False,
+        ("algorithm_state", "primary_guard", "audit_set"): "rewardtop7",
+        ("algorithm_state", "primary_guard", "switch_margin"): 1.5,
+        ("algorithm_state", "primary_guard", "n_seeds"): 20,
+        ("algorithm_state", "primary_guard", "mean_delta_vs_baseline"): 6.304141816329158,
+        ("submission_state", "final_submission_blocked"): True,
+        ("submission_state", "status_reason"): "author decisions unresolved",
+        ("submission_state", "preflight_pass_does_not_mean_submission_ready"): True,
+        ("claim_locks", "final_submission_readiness_supported"): False,
+        ("claim_locks", "direct_50state_scaleup_supported"): False,
+        ("claim_locks", "robust_transfer_superiority_supported"): False,
+        ("claim_locks", "deployment_ready_supported"): False,
+        ("claim_locks", "universal_fixed_margin_supported"): False,
+    }
+    for keys, expected in expected_values.items():
+        observed = nested_value(payload, keys)
+        if observed != expected:
+            missing_tokens.append(
+                f"{PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON}: "
+                f"{'.'.join(keys)}={observed}"
+            )
+
+    expected_fields = [
+        "repository_doi_or_anonymous_reviewer_link",
+        "code_licence",
+        "generated_data_and_checkpoint_model_weight_rights",
+        "full_bishan_tool2_access_route",
+        "gpkg_root_geospatial_input_access_route",
+        "dongxing_neijiang_prepared_data_access_route",
+        "reviewer_data_access",
+        "citation_policy",
+        "statistical_reporting_policy",
+        "main_figure_1_and_journal_export_rules",
+    ]
+    fields = payload.get("author_decision_fields")
+    if not isinstance(fields, list):
+        missing_tokens.append(
+            f"{PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON}: "
+            "author_decision_fields"
+        )
+        fields = []
+    observed_fields = [
+        field.get("field") for field in fields if isinstance(field, dict)
+    ]
+    if observed_fields != expected_fields:
+        missing_tokens.append(
+            f"{PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON}: "
+            f"author_decision_fields={observed_fields}"
+        )
+    for field in fields:
+        if not isinstance(field, dict):
+            missing_tokens.append(
+                f"{PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON}: "
+                "non-dict author_decision_fields row"
+            )
+            continue
+        name = field.get("field")
+        for key, expected in (
+            ("status", "unresolved"),
+            ("must_be_author_supplied", True),
+            ("closeout_required_before_submission", True),
+        ):
+            if field.get(key) != expected:
+                missing_tokens.append(
+                    f"{PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON}: "
+                    f"author_decision_fields.{name}.{key}={field.get(key)}"
+                )
+
+    hits = []
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if is_post_guard_submission_readiness_positive_overclaim(line):
+            hits.append(
+                f"{PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD}:{line_no}: "
+                f"{line.strip()}"
+            )
+    if hits:
+        return CheckResult(
+            "paper10_post_guard_submission_readiness_refresh_current",
+            False,
+            "forbidden post-guard submission-readiness wording: "
+            + " | ".join(hits),
+        )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_post_guard_submission_readiness_refresh_current",
+            False,
+            "Paper10 post-guard submission-readiness refresh gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_post_guard_submission_readiness_refresh_current",
+        True,
+        "Paper10 post-guard submission-readiness refresh is current and no-go guarded",
+    )
+
+
 def check_paper10_true_reward_guard_readiness_current(root: Path) -> CheckResult:
     required_files = [
         PAPER10_TRUE_REWARD_GUARD_READINESS_MD,
@@ -6454,6 +6637,40 @@ def is_post_guard_closure_refresh_positive_overclaim(line: str) -> bool:
             return True
     return False
 
+POST_GUARD_SUBMISSION_NEGATIVE_GUARDRAIL = re.compile(
+    r"\b("
+    r"do not|does not|not supported|insufficient|cannot|must not|should not"
+    r"|not final|false|no-go|not_submission_ready|blocked|unresolved"
+    r"|remains blocked|does not mean"
+    r")\b",
+    re.IGNORECASE,
+)
+POST_GUARD_SUBMISSION_CLAUSE_SPLIT_PATTERN = re.compile(r"[;.!?]+")
+POST_GUARD_SUBMISSION_FORBIDDEN_TARGETS = (
+    re.compile(r"\bfinal submission-ready\b", re.IGNORECASE),
+    re.compile(r"\bready for final submission\b", re.IGNORECASE),
+    re.compile(r"\bready to submit\b", re.IGNORECASE),
+    re.compile(r"\ball blockers closed\b", re.IGNORECASE),
+    re.compile(r"\bsubmission_ready\b", re.IGNORECASE),
+)
+
+
+def is_post_guard_submission_readiness_positive_overclaim(line: str) -> bool:
+    for clause in (
+        clause.strip()
+        for clause in POST_GUARD_SUBMISSION_CLAUSE_SPLIT_PATTERN.split(line)
+    ):
+        if not clause:
+            continue
+        if POST_GUARD_SUBMISSION_NEGATIVE_GUARDRAIL.search(clause):
+            continue
+        if any(
+            target.search(clause)
+            for target in POST_GUARD_SUBMISSION_FORBIDDEN_TARGETS
+        ):
+            return True
+    return False
+
 
 TRUE_REWARD_GUARD_NEGATIVE_GUARDRAIL = re.compile(
     r"\b("
@@ -6726,6 +6943,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_ceus_baseline_inference_hardening_current,
     check_paper10_true_reward_guard_readiness_current,
     check_paper10_post_guard_experiment_closure_refresh_current,
+    check_paper10_post_guard_submission_readiness_refresh_current,
     check_paper10_ceus_clean_main_manuscript_draft_current,
     check_paper10_anchor_raw_rollout_consistency_audit_current,
     check_original_vision_validation_registry_current,

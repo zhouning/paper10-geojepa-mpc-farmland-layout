@@ -1,0 +1,124 @@
+{
+  "algorithm_state": {
+    "post_guard_bounded_algorithm_closure_current": true,
+    "primary_guard": {
+      "audit_set": "rewardtop7",
+      "mean_delta_vs_baseline": 6.304141816329158,
+      "n_seeds": 20,
+      "switch_margin": 1.5
+    },
+    "resume_broad_algorithm_redesign": false
+  },
+  "author_decision_fields": [
+    {
+      "closeout_required_before_submission": true,
+      "field": "repository_doi_or_anonymous_reviewer_link",
+      "label": "repository DOI or anonymous reviewer link",
+      "must_be_author_supplied": true,
+      "required_input": "Archive platform, persistent identifier or anonymous reviewer link, version, access timing, and anonymity status.",
+      "status": "unresolved"
+    },
+    {
+      "closeout_required_before_submission": true,
+      "field": "code_licence",
+      "label": "code licence",
+      "must_be_author_supplied": true,
+      "required_input": "Named software licence or institutional restriction covering only licensable code and scripts.",
+      "status": "unresolved"
+    },
+    {
+      "closeout_required_before_submission": true,
+      "field": "generated_data_and_checkpoint_model_weight_rights",
+      "label": "generated-data and checkpoint/model-weight rights",
+      "must_be_author_supplied": true,
+      "required_input": "Rights terms for generated JSON, Markdown, CSV, NPZ labels, checkpoints, model weights, and shareable source-data files.",
+      "status": "unresolved"
+    },
+    {
+      "closeout_required_before_submission": true,
+      "field": "full_bishan_tool2_access_route",
+      "label": "full Bishan Tool2 route",
+      "must_be_author_supplied": true,
+      "required_input": "Public DOI or controlled-access route for full transitions and pairwise files, including owner, eligibility, and reviewer route.",
+      "status": "unresolved"
+    },
+    {
+      "closeout_required_before_submission": true,
+      "field": "gpkg_root_geospatial_input_access_route",
+      "label": "GPKG-root geospatial route",
+      "must_be_author_supplied": true,
+      "required_input": "Public DOI or controlled-access route for GPKG-root geospatial inputs, block products, and township inputs.",
+      "status": "unresolved"
+    },
+    {
+      "closeout_required_before_submission": true,
+      "field": "dongxing_neijiang_prepared_data_access_route",
+      "label": "Dongxing/Neijiang prepared-data route",
+      "must_be_author_supplied": true,
+      "required_input": "Public DOI or controlled-access route for prepared external-region products, parcel assignments, environment files, and slope-enriched inputs.",
+      "status": "unresolved"
+    },
+    {
+      "closeout_required_before_submission": true,
+      "field": "reviewer_data_access",
+      "label": "reviewer data access",
+      "must_be_author_supplied": true,
+      "required_input": "Whether reviewers receive public downloads, private links, or controlled-access credentials.",
+      "status": "unresolved"
+    },
+    {
+      "closeout_required_before_submission": true,
+      "field": "citation_policy",
+      "label": "citation policy",
+      "must_be_author_supplied": true,
+      "required_input": "Acceptable source types, local-only source replacement route, preprint policy, and final reference style.",
+      "status": "unresolved"
+    },
+    {
+      "closeout_required_before_submission": true,
+      "field": "statistical_reporting_policy",
+      "label": "statistical reporting policy",
+      "must_be_author_supplied": true,
+      "required_input": "Descriptive-only reporting decision or defined tests, comparison groups, multiplicity handling, and precision policy.",
+      "status": "unresolved"
+    },
+    {
+      "closeout_required_before_submission": true,
+      "field": "main_figure_1_and_journal_export_rules",
+      "label": "Main Figure 1 / journal export rules",
+      "must_be_author_supplied": true,
+      "required_input": "Final schematic artwork and journal-specific figure/table count, source-data naming, and PDF/SVG/raster export rules.",
+      "status": "unresolved"
+    }
+  ],
+  "claim_locks": {
+    "deployment_ready_supported": false,
+    "direct_50state_scaleup_supported": false,
+    "final_submission_readiness_supported": false,
+    "robust_transfer_superiority_supported": false,
+    "universal_fixed_margin_supported": false
+  },
+  "date": "2026-07-08",
+  "refresh_type": "post_guard_submission_readiness_refresh",
+  "source_boundary": {
+    "new_experimental_claim": false,
+    "reran_rollouts": false,
+    "reran_training": false,
+    "source": "tracked Paper10 post-guard closure and submission blocker artifacts only",
+    "submission_approval": false
+  },
+  "source_files": {
+    "data_access_rights_register": "paper10_geojepa_mpc/experiments/results/e0_data_access_and_rights_decision_register_2026-06-09.md",
+    "final_export_package": "paper10_geojepa_mpc/experiments/results/e0_paper10_final_figure_table_export_package_2026-06-20.md",
+    "post_guard_closure_json": "paper10_geojepa_mpc/experiments/results/e0_paper10_post_guard_experiment_closure_refresh_2026-07-08.json",
+    "post_guard_closure_md": "paper10_geojepa_mpc/experiments/results/e0_paper10_post_guard_experiment_closure_refresh_2026-07-08.md",
+    "submission_blocker_packet": "paper10_geojepa_mpc/experiments/results/e0_submission_blocker_decision_packet_2026-06-11.md",
+    "submission_boundary_md": "paper10_geojepa_mpc/experiments/results/e0_paper10_submission_readiness_boundary_2026-06-26.md"
+  },
+  "status": "not_submission_ready",
+  "submission_state": {
+    "final_submission_blocked": true,
+    "preflight_pass_does_not_mean_submission_ready": true,
+    "status_reason": "author decisions unresolved"
+  }
+}

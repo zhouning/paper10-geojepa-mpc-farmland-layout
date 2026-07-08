@@ -15,6 +15,7 @@ from scripts.paper10.preflight_submission_checks import (
     check_citation_keys_resolve,
     check_paper10_ceus_baseline_inference_hardening_current,
     check_paper10_post_guard_experiment_closure_refresh_current,
+    check_paper10_post_guard_submission_readiness_refresh_current,
     check_paper10_submission_readiness_boundary_current,
     check_paper10_true_reward_guard_readiness_current,
     check_original_vision_validation_registry_current,
@@ -74,6 +75,8 @@ from scripts.paper10.preflight_submission_checks import (
     PAPER10_TRUE_REWARD_GUARD_READINESS_MD,
     PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_JSON,
     PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_MD,
+    PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON,
+    PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD,
     PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_JSON,
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
@@ -179,6 +182,8 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     PAPER10_TRUE_REWARD_GUARD_READINESS_JSON,
     PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_MD,
     PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_JSON,
+    PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD,
+    PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON,
     RESULTS / "e0_paper10_experiment_freeze_audit_2026-06-27.md",
     RESULTS / "e0_paper10_experiment_closure_register_2026-06-27.md",
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
@@ -342,6 +347,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "paper10_ceus_clean_main_manuscript_draft_current" in payload["passed_checks"]
     assert "paper10_true_reward_guard_readiness_current" in payload["passed_checks"]
     assert "paper10_post_guard_experiment_closure_refresh_current" in payload["passed_checks"]
+    assert "paper10_post_guard_submission_readiness_refresh_current" in payload["passed_checks"]
     assert "paper10_anchor_raw_rollout_consistency_audit_current" in payload["passed_checks"]
     assert "original_vision_validation_registry_current" in payload["passed_checks"]
 
@@ -1360,6 +1366,66 @@ def test_post_guard_closure_refresh_preflight_allows_negative_guardrails(tmp_pat
     result = check_paper10_post_guard_experiment_closure_refresh_current(fixture)
 
     assert result.name == "paper10_post_guard_experiment_closure_refresh_current"
+    assert result.ok is True
+
+
+def test_submission_preflight_minimal_fixture_reports_missing_post_guard_submission_refresh(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    (fixture / PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD).unlink()
+
+    result, payload = run_submission_preflight_json(fixture)
+
+    assert result.returncode == 1
+    assert payload["ok"] is False
+    assert "paper10_post_guard_submission_readiness_refresh_current" in payload["failed_checks"]
+    details = check_details(payload, "paper10_post_guard_submission_readiness_refresh_current")
+    assert "missing Paper10 post-guard submission-readiness refresh files" in details
+    assert str(PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD) in details
+
+
+def test_post_guard_submission_refresh_preflight_requires_no_go_status(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    payload_path = fixture / PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    payload["status"] = "submission_ready"
+    payload_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    result = check_paper10_post_guard_submission_readiness_refresh_current(fixture)
+
+    assert result.name == "paper10_post_guard_submission_readiness_refresh_current"
+    assert result.ok is False
+    assert "status=submission_ready" in result.details
+
+
+def test_post_guard_submission_refresh_preflight_rejects_ready_to_submit_claim(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    refresh = fixture / PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD
+    refresh.write_text(
+        refresh.read_text(encoding="utf-8")
+        + "\n\nThe paper is ready to submit.\n",
+        encoding="utf-8",
+    )
+
+    result = check_paper10_post_guard_submission_readiness_refresh_current(fixture)
+
+    assert result.name == "paper10_post_guard_submission_readiness_refresh_current"
+    assert result.ok is False
+    assert "forbidden post-guard submission-readiness wording" in result.details
+    assert "ready to submit" in result.details
+
+
+def test_post_guard_submission_refresh_preflight_allows_negative_guardrails(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    refresh = fixture / PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD
+    refresh.write_text(
+        refresh.read_text(encoding="utf-8")
+        + "\n\nDo not treat this refresh as final submission readiness.\n",
+        encoding="utf-8",
+    )
+
+    result = check_paper10_post_guard_submission_readiness_refresh_current(fixture)
+
+    assert result.name == "paper10_post_guard_submission_readiness_refresh_current"
     assert result.ok is True
 
 
