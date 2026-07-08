@@ -110,6 +110,30 @@ def _stage3_boundary_table(stage3_payload: dict) -> list[dict]:
         )
     return result
 
+def _true_reward_guard_table(true_reward_guard_payload: dict) -> list[dict]:
+    primary = true_reward_guard_payload["primary_guard"]
+    stats = true_reward_guard_payload["primary_paired_stats"]
+    guard_stats = stats["candidate_guard_summary"]
+    return [
+        {
+            "row_id": "true_reward_margin_guard_m150_audit7x7_20seed",
+            "setting": primary["setting"],
+            "audit_set": primary["audit_set"],
+            "switch_margin": _as_float(primary["switch_margin"]),
+            "baseline_mean_reward": _as_float(primary["baseline_mean_reward"]),
+            "guard_mean_reward": _as_float(primary["candidate_mean_reward"]),
+            "mean_delta_vs_baseline": _as_float(stats["mean_delta"]),
+            "seed_wins": int(stats["wins"]),
+            "n_seeds": int(stats["n"]),
+            "bootstrap_95ci_delta_lower": _as_float(stats["bootstrap_95ci_delta"][0]),
+            "bootstrap_95ci_delta_upper": _as_float(stats["bootstrap_95ci_delta"][1]),
+            "switch_rate": _as_float(guard_stats["switch_rate"]),
+            "interpretation": (
+                "current primary algorithm-readiness candidate; "
+                "setting-specific guard only"
+            ),
+        }
+    ]
 
 def _claim_status_table(claim_audit_payload: dict) -> list[dict]:
     stage3 = claim_audit_payload["stage3"]
@@ -206,6 +230,7 @@ def build_manuscript_result_tables_freeze(
     stage3_payload: dict,
     claim_audit_payload: dict,
     anchor_raw_audit_payload: dict,
+    true_reward_guard_payload: dict,
     *,
     date: str = DATE,
     source_files: dict | None = None,
@@ -219,7 +244,7 @@ def build_manuscript_result_tables_freeze(
             "reran_rollouts": False,
             "interpretation": (
                 "This file freezes manuscript-facing result tables from tracked "
-                "Stage 3, claim-audit, and raw-rollout consistency evidence."
+                "Stage 3, claim-audit, raw-rollout consistency, and true-reward guard readiness evidence."
             ),
         },
         "raw_rollout_consistency": {
@@ -240,6 +265,9 @@ def build_manuscript_result_tables_freeze(
             ),
             "table_stage3_boundary": _stage3_boundary_table(stage3_payload),
             "table_claim_status": _claim_status_table(claim_audit_payload),
+            "table_true_reward_guard_readiness": _true_reward_guard_table(
+                true_reward_guard_payload
+            ),
         },
     }
 
@@ -256,6 +284,7 @@ def markdown_report(payload: dict) -> str:
     anchor_table = payload["tables"]["table_bishan_anchor_vs_matched_baseline"]
     stage3_table = payload["tables"]["table_stage3_boundary"]
     claim_table = payload["tables"]["table_claim_status"]
+    guard_table = payload["tables"]["table_true_reward_guard_readiness"]
     lines = [
         "# Paper10 manuscript result tables freeze",
         "",
@@ -343,16 +372,41 @@ def markdown_report(payload: dict) -> str:
     lines.extend(
         [
             "",
+            "## Algorithm-readiness addendum: current true-reward guard",
+            "",
+            "| row | baseline mean | guard mean | mean delta | seed wins | bootstrap 95% CI lower | switch rate | interpretation |",
+            "|---|---:|---:|---:|---:|---:|---:|---|",
+        ]
+    )
+    for row in guard_table:
+        lines.append(
+            "| {row_id} | {baseline} | {guard} | {delta} | {wins} / {n} | {ci_lower} | {switch_rate} | {interpretation} |".format(
+                row_id=row["row_id"],
+                baseline=_fmt(row["baseline_mean_reward"]),
+                guard=_fmt(row["guard_mean_reward"]),
+                delta=_fmt(row["mean_delta_vs_baseline"]),
+                wins=row["seed_wins"],
+                n=row["n_seeds"],
+                ci_lower=_fmt(row["bootstrap_95ci_delta_lower"]),
+                switch_rate=_fmt(row["switch_rate"]),
+                interpretation=row["interpretation"],
+            )
+        )
+
+    lines.extend(
+        [
+            "",
             "## Interpretation boundary",
             "",
             "- Table 1 is the only positive Bishan performance anchor in this freeze.",
             "- Table 2 is boundary evidence under the matched comparator; the diagnostic near-pass remains separate.",
             "- Table 3 preserves the claim-source audit boundary for Dongxing/Neijiang calibration and transfer wording.",
+            "- The algorithm-readiness addendum is current primary guard evidence and remains a setting-specific guard only.",
             "",
             "## Regeneration command",
             "",
             "```powershell",
-            "D:\\adk\\.venv\\Scripts\\python.exe -m paper10_geojepa_mpc.experiments.manuscript_result_tables_freeze --stage3-json paper10_geojepa_mpc\\experiments\\results\\e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json --claim-audit-json paper10_geojepa_mpc\\experiments\\results\\e0_paper10_claim_source_consistency_audit_2026-06-18.json --anchor-raw-audit-json paper10_geojepa_mpc\\experiments\\results\\e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.json --output-json paper10_geojepa_mpc\\experiments\\results\\e0_paper10_manuscript_result_tables_freeze_2026-06-19.json --output-md paper10_geojepa_mpc\\experiments\\results\\e0_paper10_manuscript_result_tables_freeze_2026-06-19.md",
+            "D:\\adk\\.venv\\Scripts\\python.exe -m paper10_geojepa_mpc.experiments.manuscript_result_tables_freeze --stage3-json paper10_geojepa_mpc\\experiments\\results\\e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json --claim-audit-json paper10_geojepa_mpc\\experiments\\results\\e0_paper10_claim_source_consistency_audit_2026-06-18.json --anchor-raw-audit-json paper10_geojepa_mpc\\experiments\\results\\e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.json --true-reward-guard-json paper10_geojepa_mpc\\experiments\\results\\e0_paper10_true_reward_guard_readiness_2026-07-08.json --output-json paper10_geojepa_mpc\\experiments\\results\\e0_paper10_manuscript_result_tables_freeze_2026-06-19.json --output-md paper10_geojepa_mpc\\experiments\\results\\e0_paper10_manuscript_result_tables_freeze_2026-06-19.md",
             "```",
         ]
     )
@@ -363,6 +417,7 @@ def write_manuscript_result_tables_freeze(
     stage3_json: str | Path,
     claim_audit_json: str | Path,
     anchor_raw_audit_json: str | Path,
+    true_reward_guard_json: str | Path,
     output_json: str | Path,
     output_md: str | Path,
     *,
@@ -371,15 +426,20 @@ def write_manuscript_result_tables_freeze(
     stage3_path = Path(stage3_json)
     claim_path = Path(claim_audit_json)
     anchor_path = Path(anchor_raw_audit_json)
+    true_reward_guard_path = Path(true_reward_guard_json)
     payload = build_manuscript_result_tables_freeze(
         stage3_payload=json.loads(stage3_path.read_text(encoding="utf-8")),
         claim_audit_payload=json.loads(claim_path.read_text(encoding="utf-8")),
         anchor_raw_audit_payload=json.loads(anchor_path.read_text(encoding="utf-8")),
+        true_reward_guard_payload=json.loads(
+            true_reward_guard_path.read_text(encoding="utf-8")
+        ),
         date=date,
         source_files={
             "stage3_json": str(stage3_path),
             "claim_audit_json": str(claim_path),
             "anchor_raw_audit_json": str(anchor_path),
+            "true_reward_guard_json": str(true_reward_guard_path),
         },
     )
 
@@ -401,6 +461,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--stage3-json", required=True)
     parser.add_argument("--claim-audit-json", required=True)
     parser.add_argument("--anchor-raw-audit-json", required=True)
+    parser.add_argument("--true-reward-guard-json", required=True)
     parser.add_argument("--output-json", required=True)
     parser.add_argument("--output-md", required=True)
     parser.add_argument("--date", default=DATE)
@@ -413,6 +474,7 @@ def main() -> None:
         args.stage3_json,
         args.claim_audit_json,
         args.anchor_raw_audit_json,
+        args.true_reward_guard_json,
         args.output_json,
         args.output_md,
         date=args.date,

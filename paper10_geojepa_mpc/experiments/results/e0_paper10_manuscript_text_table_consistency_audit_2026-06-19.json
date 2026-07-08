@@ -113,6 +113,14 @@
     }
   ],
   "expected_tokens": {
+    "algorithm_readiness_addendum": {
+      "baseline_mean_reward": "65.8876",
+      "bootstrap_95ci_delta_lower": "4.1643",
+      "guard_mean_reward": "72.1773",
+      "legacy_text_required": false,
+      "mean_delta_vs_baseline": "6.2897",
+      "seed_wins": "20 / 20"
+    },
     "anchor_delta": "1.9269",
     "anchor_mean": "69.4705",
     "anchor_std": "1.0004",

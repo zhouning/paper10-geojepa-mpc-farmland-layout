@@ -13,6 +13,7 @@ raw-rollout consistency: PASS
 - stage3_json: `paper10_geojepa_mpc\experiments\results\e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json`
 - claim_audit_json: `paper10_geojepa_mpc\experiments\results\e0_paper10_claim_source_consistency_audit_2026-06-18.json`
 - anchor_raw_audit_json: `paper10_geojepa_mpc\experiments\results\e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.json`
+- true_reward_guard_json: `paper10_geojepa_mpc\experiments\results\e0_paper10_true_reward_guard_readiness_2026-07-08.json`
 
 ## Table 1. Bishan anchor versus matched baseline
 
@@ -39,14 +40,21 @@ raw-rollout consistency: PASS
 | Dongxing/Neijiang return-label scaling | supported descriptively | transfer gain 13.7289; scratch gain 15.5214 | Use as calibration or stress-test evidence. |
 | robust transfer superiority | not supported | 50x16 transfer minus scratch -4.1141 | Do not use as a positive transfer claim. |
 
+## Algorithm-readiness addendum: current true-reward guard
+
+| row | baseline mean | guard mean | mean delta | seed wins | bootstrap 95% CI lower | switch rate | interpretation |
+|---|---:|---:|---:|---:|---:|---:|---|
+| true_reward_margin_guard_m150_audit7x7_20seed | 65.8876 | 72.1773 | 6.2897 | 20 / 20 | 4.1643 | 0.0855 | current primary algorithm-readiness candidate; setting-specific guard only |
+
 ## Interpretation boundary
 
 - Table 1 is the only positive Bishan performance anchor in this freeze.
 - Table 2 is boundary evidence under the matched comparator; the diagnostic near-pass remains separate.
 - Table 3 preserves the claim-source audit boundary for Dongxing/Neijiang calibration and transfer wording.
+- The algorithm-readiness addendum is current primary guard evidence and remains a setting-specific guard only.
 
 ## Regeneration command
 
 ```powershell
-D:\adk\.venv\Scripts\python.exe -m paper10_geojepa_mpc.experiments.manuscript_result_tables_freeze --stage3-json paper10_geojepa_mpc\experiments\results\e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json --claim-audit-json paper10_geojepa_mpc\experiments\results\e0_paper10_claim_source_consistency_audit_2026-06-18.json --anchor-raw-audit-json paper10_geojepa_mpc\experiments\results\e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.json --output-json paper10_geojepa_mpc\experiments\results\e0_paper10_manuscript_result_tables_freeze_2026-06-19.json --output-md paper10_geojepa_mpc\experiments\results\e0_paper10_manuscript_result_tables_freeze_2026-06-19.md
+D:\adk\.venv\Scripts\python.exe -m paper10_geojepa_mpc.experiments.manuscript_result_tables_freeze --stage3-json paper10_geojepa_mpc\experiments\results\e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json --claim-audit-json paper10_geojepa_mpc\experiments\results\e0_paper10_claim_source_consistency_audit_2026-06-18.json --anchor-raw-audit-json paper10_geojepa_mpc\experiments\results\e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.json --true-reward-guard-json paper10_geojepa_mpc\experiments\results\e0_paper10_true_reward_guard_readiness_2026-07-08.json --output-json paper10_geojepa_mpc\experiments\results\e0_paper10_manuscript_result_tables_freeze_2026-06-19.json --output-md paper10_geojepa_mpc\experiments\results\e0_paper10_manuscript_result_tables_freeze_2026-06-19.md
 ```

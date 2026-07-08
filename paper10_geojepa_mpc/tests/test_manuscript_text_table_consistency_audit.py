@@ -51,6 +51,13 @@ def test_build_manuscript_text_table_consistency_audit_checks_core_documents():
         "66.2544",
     ]
     assert payload["expected_tokens"]["diagnostic_near_pass_mean"] == "67.4913"
+    guard = payload["expected_tokens"]["algorithm_readiness_addendum"]
+    assert guard["guard_mean_reward"] == "72.1773"
+    assert guard["baseline_mean_reward"] == "65.8876"
+    assert guard["mean_delta_vs_baseline"] == "6.2897"
+    assert guard["seed_wins"] == "20 / 20"
+    assert guard["bootstrap_95ci_delta_lower"] == "4.1643"
+    assert guard["legacy_text_required"] is False
 
     assert [row["document"] for row in payload["documents"]] == [
         str(path) for path in DOCUMENTS
@@ -90,6 +97,12 @@ def test_markdown_report_summarizes_pass_and_claim_boundaries():
         "must not be pooled",
         "robust Bishan-to-Dongxing transfer superiority",
         "direct 50-state Bishan scale-up success",
+        "72.1773",
+        "65.8876",
+        "6.2897",
+        "20 / 20",
+        "4.1643",
+        "algorithm-readiness addendum",
     ]:
         assert token in text
     assert "paper10_geojepa_mpc.experiments.manuscript_text_table_consistency_audit" in text

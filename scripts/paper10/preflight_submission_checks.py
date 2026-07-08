@@ -1700,6 +1700,7 @@ def check_ceus_stage3_manuscript_reframe_current(root: Path) -> CheckResult:
         "66.2544",
         "diagnostic_near_pass",
         "67.4913",
+
         "must not be pooled",
         "Do not claim robust Bishan-to-Dongxing transfer superiority",
         "Do not claim direct 50-state Bishan scale-up success",
@@ -1829,6 +1830,7 @@ def check_ceus_stage3_manuscript_draft_current(root: Path) -> CheckResult:
         "66.2544",
         "diagnostic_near_pass",
         "67.4913",
+
         "must not be pooled",
         "pairwise-only baseline policy remains unresolved",
         "block-level planning-unit abstraction",
@@ -1960,6 +1962,7 @@ def check_paper10_project_proposal_report_current(root: Path) -> CheckResult:
         "64.2960",
         "66.2544",
         "67.4913",
+
         "must not be pooled",
         "direct 50-state Bishan scale-up success",
         "robust Bishan-to-Dongxing transfer superiority",
@@ -2202,6 +2205,7 @@ def check_paper10_formal_manuscript_blueprint_current(root: Path) -> CheckResult
         "64.2960",
         "66.2544",
         "67.4913",
+
         "must not be pooled",
         "matched Paper9 `rank_seed2028`",
         "self-contained Paper10 Methods route",
@@ -5744,9 +5748,11 @@ def check_paper10_manuscript_result_tables_freeze_current(root: Path) -> CheckRe
         "Table 1. Bishan anchor versus matched baseline",
         "Table 2. Stage 3 boundary rows",
         "Table 3. Claim status for manuscript conversion",
+        "Algorithm-readiness addendum: current true-reward guard",
         ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_JSON.name,
         PAPER10_CLAIM_SOURCE_AUDIT_JSON.name,
         PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON.name,
+        PAPER10_TRUE_REWARD_GUARD_READINESS_JSON.name,
         "matched_paper9_rank_seed2028_baseline | 67.5437 | 7.2246",
         "bishan_20x16_top5_frozen_anchor | 69.4705 | 1.0004 | 1.9269 | PASS",
         "frontier_random050_50x16_h5_seed48_f050 | confirmatory_pass | 50 | 16 | 6 | 64.2960",
@@ -5758,6 +5764,8 @@ def check_paper10_manuscript_result_tables_freeze_current(root: Path) -> CheckRe
         "Stage 3 confirmatory 50-state rows beat the matched baseline | not supported",
         "Dongxing/Neijiang return-label scaling | supported descriptively",
         "robust transfer superiority | not supported",
+        "true_reward_margin_guard_m150_audit7x7_20seed | 65.8876 | 72.1773 | 6.2897 | 20 / 20 | 4.1643 | 0.0855 | current primary algorithm-readiness candidate; setting-specific guard only",
+        "--true-reward-guard-json",
         "paper10_geojepa_mpc.experiments.manuscript_result_tables_freeze",
     ]
     for token in required_tokens:
@@ -5914,6 +5922,43 @@ def check_paper10_manuscript_result_tables_freeze_current(root: Path) -> CheckRe
                 f"{claim_id}={claim_status.get(claim_id)}"
             )
 
+    guard_table = tables.get("table_true_reward_guard_readiness")
+    if not isinstance(guard_table, list) or len(guard_table) != 1:
+        missing_tokens.append(
+            f"{PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON}: "
+            "table_true_reward_guard_readiness"
+        )
+        guard_table = []
+    expected_guard_row = {
+        "row_id": "true_reward_margin_guard_m150_audit7x7_20seed",
+        "setting": "bishan_20x16_top5",
+        "audit_set": "audit7x7",
+        "switch_margin": 1.5,
+        "baseline_mean_reward": 65.8876435268697,
+        "guard_mean_reward": 72.17733781116401,
+        "mean_delta_vs_baseline": 6.289694284294315,
+        "seed_wins": 20,
+        "n_seeds": 20,
+        "bootstrap_95ci_delta_lower": 4.164250399042407,
+        "switch_rate": 0.0855,
+        "interpretation": "current primary algorithm-readiness candidate; setting-specific guard only",
+    }
+    if guard_table:
+        row = guard_table[0]
+        for key, expected in expected_guard_row.items():
+            value = row.get(key)
+            if isinstance(expected, float):
+                if not isinstance(value, (int, float)) or abs(float(value) - expected) > 1e-8:
+                    missing_tokens.append(
+                        f"{PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON}: "
+                        f"guard.{key}={value}"
+                    )
+            elif value != expected:
+                missing_tokens.append(
+                    f"{PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_JSON}: "
+                    f"guard.{key}={value}"
+                )
+
     forbidden_50_state = re.compile("|".join(FORBIDDEN_50_STATE_PATTERNS), re.IGNORECASE)
     for line_no, line in enumerate(text.splitlines(), start=1):
         if forbidden_50_state.search(line):
@@ -6014,6 +6059,7 @@ def check_paper10_manuscript_text_table_consistency_audit_current(root: Path) ->
         "7.2246",
         "64.2960, 66.2544",
         "67.4913",
+
         "must not be pooled",
         "direct 50-state Bishan scale-up success",
         "robust Bishan-to-Dongxing transfer superiority",
@@ -6037,6 +6083,12 @@ def check_paper10_manuscript_text_table_consistency_audit_current(root: Path) ->
         ("expected_tokens", "anchor_std"): "1.0004",
         ("expected_tokens", "baseline_std"): "7.2246",
         ("expected_tokens", "diagnostic_near_pass_mean"): "67.4913",
+        ("expected_tokens", "algorithm_readiness_addendum", "guard_mean_reward"): "72.1773",
+        ("expected_tokens", "algorithm_readiness_addendum", "baseline_mean_reward"): "65.8876",
+        ("expected_tokens", "algorithm_readiness_addendum", "mean_delta_vs_baseline"): "6.2897",
+        ("expected_tokens", "algorithm_readiness_addendum", "seed_wins"): "20 / 20",
+        ("expected_tokens", "algorithm_readiness_addendum", "bootstrap_95ci_delta_lower"): "4.1643",
+        ("expected_tokens", "algorithm_readiness_addendum", "legacy_text_required"): False,
     }
     for path_keys, expected in expected_values.items():
         value = payload

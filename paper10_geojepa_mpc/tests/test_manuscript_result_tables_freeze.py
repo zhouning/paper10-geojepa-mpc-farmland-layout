@@ -19,6 +19,9 @@ CLAIM_AUDIT = RESULTS / "e0_paper10_claim_source_consistency_audit_2026-06-18.js
 ANCHOR_RAW_AUDIT = (
     RESULTS / "e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.json"
 )
+TRUE_REWARD_GUARD = (
+    RESULTS / "e0_paper10_true_reward_guard_readiness_2026-07-08.json"
+)
 
 
 def _load(path: Path) -> dict:
@@ -30,6 +33,7 @@ def test_build_manuscript_result_tables_freeze_derives_tables_from_audited_sourc
         stage3_payload=_load(STAGE3),
         claim_audit_payload=_load(CLAIM_AUDIT),
         anchor_raw_audit_payload=_load(ANCHOR_RAW_AUDIT),
+        true_reward_guard_payload=_load(TRUE_REWARD_GUARD),
         date=DATE,
     )
 
@@ -76,6 +80,20 @@ def test_build_manuscript_result_tables_freeze_derives_tables_from_audited_sourc
     assert "boundary evidence" in stage3_table[0]["interpretation"]
     assert "must not be pooled" in stage3_table[2]["interpretation"]
 
+    guard_table = payload["tables"]["table_true_reward_guard_readiness"]
+    assert len(guard_table) == 1
+    guard = guard_table[0]
+    assert guard["row_id"] == "true_reward_margin_guard_m150_audit7x7_20seed"
+    assert guard["setting"] == "bishan_20x16_top5"
+    assert guard["baseline_mean_reward"] == pytest.approx(65.8876435268697)
+    assert guard["guard_mean_reward"] == pytest.approx(72.17733781116401)
+    assert guard["mean_delta_vs_baseline"] == pytest.approx(6.289694284294315)
+    assert guard["seed_wins"] == 20
+    assert guard["n_seeds"] == 20
+    assert guard["bootstrap_95ci_delta_lower"] == pytest.approx(4.164250399042407)
+    assert guard["switch_rate"] == pytest.approx(0.0855)
+    assert "setting-specific guard" in guard["interpretation"]
+
     claim_table = payload["tables"]["table_claim_status"]
     claim_status = {row["claim_id"]: row for row in claim_table}
     assert claim_status["bishan_anchor"]["status"] == "supported"
@@ -90,6 +108,7 @@ def test_markdown_report_freezes_claim_bounded_manuscript_tables():
         stage3_payload=_load(STAGE3),
         claim_audit_payload=_load(CLAIM_AUDIT),
         anchor_raw_audit_payload=_load(ANCHOR_RAW_AUDIT),
+        true_reward_guard_payload=_load(TRUE_REWARD_GUARD),
         date=DATE,
     )
 
@@ -107,11 +126,18 @@ def test_markdown_report_freezes_claim_bounded_manuscript_tables():
         "64.2960",
         "66.2544",
         "67.4913",
+        "72.1773",
+        "65.8876",
+        "6.2897",
+        "20 / 20",
+        "4.1643",
     ]:
         assert token in text
     assert "boundary evidence" in text
     assert "diagnostic near-pass only; must not be pooled" in text
     assert "robust transfer superiority | not supported" in text
+    assert "Algorithm-readiness addendum: current true-reward guard" in text
+    assert "setting-specific guard only" in text
     forbidden = [
         "direct 50-state success",
         "50-state success",
@@ -135,6 +161,7 @@ def test_write_manuscript_result_tables_freeze_writes_json_and_markdown(tmp_path
         stage3_json=STAGE3,
         claim_audit_json=CLAIM_AUDIT,
         anchor_raw_audit_json=ANCHOR_RAW_AUDIT,
+        true_reward_guard_json=TRUE_REWARD_GUARD,
         output_json=output_json,
         output_md=output_md,
         date=DATE,
@@ -145,6 +172,7 @@ def test_write_manuscript_result_tables_freeze_writes_json_and_markdown(tmp_path
     assert str(STAGE3) in payload["source_files"]["stage3_json"]
     assert str(CLAIM_AUDIT) in payload["source_files"]["claim_audit_json"]
     assert str(ANCHOR_RAW_AUDIT) in payload["source_files"]["anchor_raw_audit_json"]
+    assert str(TRUE_REWARD_GUARD) in payload["source_files"]["true_reward_guard_json"]
 
 
 def test_cli_accepts_manuscript_table_freeze_paths(monkeypatch):
@@ -158,6 +186,8 @@ def test_cli_accepts_manuscript_table_freeze_paths(monkeypatch):
             "claim.json",
             "--anchor-raw-audit-json",
             "anchor.json",
+            "--true-reward-guard-json",
+            "guard.json",
             "--output-json",
             "tables.json",
             "--output-md",
@@ -172,6 +202,7 @@ def test_cli_accepts_manuscript_table_freeze_paths(monkeypatch):
     assert args.stage3_json == "stage3.json"
     assert args.claim_audit_json == "claim.json"
     assert args.anchor_raw_audit_json == "anchor.json"
+    assert args.true_reward_guard_json == "guard.json"
     assert args.output_json == "tables.json"
     assert args.output_md == "tables.md"
     assert args.date == "2026-06-19"

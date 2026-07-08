@@ -69,10 +69,24 @@ def _stage3_rows(table_freeze_payload: dict) -> tuple[list[dict], dict]:
         raise ValueError("Expected two confirmatory rows and one diagnostic row")
     return confirmatory, diagnostic[0]
 
+def _guard_addendum_tokens(table_freeze_payload: dict) -> dict:
+    rows = table_freeze_payload["tables"].get("table_true_reward_guard_readiness", [])
+    if len(rows) != 1:
+        raise ValueError("Expected exactly one true-reward guard readiness row")
+    row = rows[0]
+    return {
+        "guard_mean_reward": _fmt(row["guard_mean_reward"]),
+        "baseline_mean_reward": _fmt(row["baseline_mean_reward"]),
+        "mean_delta_vs_baseline": _fmt(row["mean_delta_vs_baseline"]),
+        "seed_wins": f"{row['seed_wins']} / {row['n_seeds']}",
+        "bootstrap_95ci_delta_lower": _fmt(row["bootstrap_95ci_delta_lower"]),
+        "legacy_text_required": False,
+    }
 
 def expected_tokens_from_table_freeze(table_freeze_payload: dict) -> dict:
     baseline, anchor = _anchor_rows(table_freeze_payload)
     confirmatory, diagnostic = _stage3_rows(table_freeze_payload)
+    guard_addendum = _guard_addendum_tokens(table_freeze_payload)
     return {
         "anchor_mean": _fmt(anchor["mean_reward"]),
         "baseline_mean": _fmt(baseline["mean_reward"]),
@@ -87,6 +101,7 @@ def expected_tokens_from_table_freeze(table_freeze_payload: dict) -> dict:
         ],
         "diagnostic_near_pass_mean": _fmt(diagnostic["mean_reward"]),
         "diagnostic_near_pass_delta": _fmt(abs(float(diagnostic["delta_vs_baseline"]))),
+        "algorithm_readiness_addendum": guard_addendum,
     }
 
 
@@ -241,6 +256,19 @@ def markdown_report(payload: dict) -> str:
             f"| matched baseline sample std | {expected['baseline_std']} |",
             f"| Stage 3 confirmatory means | {', '.join(expected['stage3_confirmatory_means'])} |",
             f"| diagnostic near-pass mean | {expected['diagnostic_near_pass_mean']} |",
+            (
+                "| algorithm-readiness addendum | guard "
+                f"{expected['algorithm_readiness_addendum']['guard_mean_reward']} "
+                "vs baseline "
+                f"{expected['algorithm_readiness_addendum']['baseline_mean_reward']}; "
+                "delta "
+                f"{expected['algorithm_readiness_addendum']['mean_delta_vs_baseline']}; "
+                "seed wins "
+                f"{expected['algorithm_readiness_addendum']['seed_wins']}; "
+                "bootstrap 95% CI lower "
+                f"{expected['algorithm_readiness_addendum']['bootstrap_95ci_delta_lower']}; "
+                "not required in legacy text until manuscript refresh |"
+            ),
             f"| boundary guardrails | {', '.join(_boundary_tokens())} |",
             "",
             "## Document audit",

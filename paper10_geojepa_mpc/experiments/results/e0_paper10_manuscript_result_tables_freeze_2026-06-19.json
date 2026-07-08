@@ -6,14 +6,15 @@
     "summary_matches_raw": true
   },
   "source_boundary": {
-    "interpretation": "This file freezes manuscript-facing result tables from tracked Stage 3, claim-audit, and raw-rollout consistency evidence.",
+    "interpretation": "This file freezes manuscript-facing result tables from tracked Stage 3, claim-audit, raw-rollout consistency, and true-reward guard readiness evidence.",
     "new_experimental_claim": false,
     "reran_rollouts": false
   },
   "source_files": {
     "anchor_raw_audit_json": "paper10_geojepa_mpc\\experiments\\results\\e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.json",
     "claim_audit_json": "paper10_geojepa_mpc\\experiments\\results\\e0_paper10_claim_source_consistency_audit_2026-06-18.json",
-    "stage3_json": "paper10_geojepa_mpc\\experiments\\results\\e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json"
+    "stage3_json": "paper10_geojepa_mpc\\experiments\\results\\e0_original_vision_stage3_confirmatory_rollouts_2026-06-18.json",
+    "true_reward_guard_json": "paper10_geojepa_mpc\\experiments\\results\\e0_paper10_true_reward_guard_readiness_2026-07-08.json"
   },
   "status": "source-derived table freeze",
   "tables": {
@@ -113,6 +114,23 @@
         "selected_top_k": 12,
         "states": 50,
         "std_sample": 4.571073257111943
+      }
+    ],
+    "table_true_reward_guard_readiness": [
+      {
+        "audit_set": "audit7x7",
+        "baseline_mean_reward": 65.8876435268697,
+        "bootstrap_95ci_delta_lower": 4.164250399042407,
+        "bootstrap_95ci_delta_upper": 8.450127940841853,
+        "guard_mean_reward": 72.17733781116401,
+        "interpretation": "current primary algorithm-readiness candidate; setting-specific guard only",
+        "mean_delta_vs_baseline": 6.289694284294315,
+        "n_seeds": 20,
+        "row_id": "true_reward_margin_guard_m150_audit7x7_20seed",
+        "seed_wins": 20,
+        "setting": "bishan_20x16_top5",
+        "switch_margin": 1.5,
+        "switch_rate": 0.0855
       }
     ]
   }
