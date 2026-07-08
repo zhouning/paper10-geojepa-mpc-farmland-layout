@@ -221,6 +221,12 @@ PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_MD = (
 PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_JSON = (
     RESULTS / "e0_paper10_post_guard_experiment_closure_refresh_2026-07-08.json"
 )
+PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_MD = (
+    RESULTS / "e0_paper10_author_decision_closeout_form_2026-07-08.md"
+)
+PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON = (
+    RESULTS / "e0_paper10_author_decision_closeout_form_2026-07-08.json"
+)
 PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD = (
     RESULTS / "e0_paper10_post_guard_submission_readiness_refresh_2026-07-08.md"
 )
@@ -354,6 +360,8 @@ REQUIRED_PATHS = (
     PAPER10_TRUE_REWARD_GUARD_READINESS_JSON,
     PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_MD,
     PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_JSON,
+    PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_MD,
+    PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON,
     PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD,
     PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON,
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD,
@@ -5261,6 +5269,214 @@ def check_paper10_post_guard_experiment_closure_refresh_current(root: Path) -> C
     )
 
 
+
+def check_paper10_author_decision_closeout_form_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_MD,
+        PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON,
+        PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD,
+        PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON,
+        SUBMISSION_BLOCKER_DECISION_PACKET,
+        AUTHOR_DECISION_MATRIX,
+        DATA_ACCESS_RIGHTS_REGISTER,
+        PAPER10_SUBMISSION_READINESS_BOUNDARY,
+        PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_author_decision_closeout_form_current",
+            False,
+            "missing Paper10 author-decision closeout form files: "
+            + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_MD)
+    try:
+        payload = json.loads(read_text(root / PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON))
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_author_decision_closeout_form_current",
+            False,
+            f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    required_tokens = [
+        "Paper10 author-decision closeout form",
+        "Status: author_input_required",
+        "source-derived; no rollout or training rerun; no submission approval",
+        "Formal submission remains blocked",
+        "repository DOI or anonymous reviewer link",
+        "code licence",
+        "generated-data and checkpoint/model-weight rights",
+        "full Bishan Tool2 route",
+        "GPKG-root geospatial route",
+        "Dongxing/Neijiang prepared-data route",
+        "reviewer data access",
+        "citation policy",
+        "statistical reporting policy",
+        "Main Figure 1 / journal export rules",
+        "available upon request",
+        "Do not use this form as submission approval.",
+        "Do not claim direct 50-state Bishan scale-up success.",
+        "Do not claim robust Bishan-to-Dongxing transfer superiority.",
+        "Do not claim deployment-ready cadastral planning.",
+        "Do not claim a universal fixed switch margin.",
+        PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON.name,
+        PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD.name,
+        SUBMISSION_BLOCKER_DECISION_PACKET.name,
+        AUTHOR_DECISION_MATRIX.name,
+        DATA_ACCESS_RIGHTS_REGISTER.name,
+        PAPER10_SUBMISSION_READINESS_BOUNDARY.name,
+        PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE.name,
+    ]
+    for token in required_tokens:
+        if token not in text:
+            missing_tokens.append(
+                f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_MD}: {token}"
+            )
+
+    expected_values = {
+        ("date",): "2026-07-08",
+        ("artifact_type",): "paper10_author_decision_closeout_form",
+        ("status",): "author_input_required",
+        ("source_boundary", "new_experimental_claim"): False,
+        ("source_boundary", "reran_rollouts"): False,
+        ("source_boundary", "reran_training"): False,
+        ("source_boundary", "submission_approval"): False,
+        ("source_boundary", "author_decisions_invented"): False,
+        ("submission_state", "formal_submission_blocked"): True,
+        ("submission_state", "status_reason"): "author decisions unresolved",
+        ("submission_state", "preflight_pass_does_not_mean_submission_ready"): True,
+        ("closeout_policy", "do_not_invent_author_decisions"): True,
+        ("closeout_policy", "all_fields_block_submission_until_closed"): True,
+        ("closeout_policy", "use_durable_repository_or_controlled_access_route"): True,
+        ("closeout_policy", "available_upon_request_alone_is_not_acceptable"): True,
+        ("closeout_policy", "do_not_relicense_restricted_geospatial_inputs"): True,
+        ("claim_locks", "final_submission_readiness_supported"): False,
+        ("claim_locks", "direct_50state_scaleup_supported"): False,
+        ("claim_locks", "robust_transfer_superiority_supported"): False,
+        ("claim_locks", "deployment_ready_supported"): False,
+        ("claim_locks", "universal_fixed_margin_supported"): False,
+    }
+    for keys, expected in expected_values.items():
+        observed = nested_value(payload, keys)
+        if observed != expected:
+            missing_tokens.append(
+                f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: "
+                f"{'.'.join(keys)}={observed}"
+            )
+
+    expected_source_files = {
+        "post_guard_submission_readiness_refresh_json": PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON.name,
+        "post_guard_submission_readiness_refresh_md": PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD.name,
+        "submission_blocker_packet": SUBMISSION_BLOCKER_DECISION_PACKET.name,
+        "author_decision_matrix": AUTHOR_DECISION_MATRIX.name,
+        "data_access_rights_register": DATA_ACCESS_RIGHTS_REGISTER.name,
+        "submission_boundary_md": PAPER10_SUBMISSION_READINESS_BOUNDARY.name,
+        "final_export_package": PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE.name,
+    }
+    source_files = payload.get("source_files")
+    if not isinstance(source_files, dict):
+        missing_tokens.append(
+            f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: source_files"
+        )
+        source_files = {}
+    for key, filename in expected_source_files.items():
+        value = source_files.get(key)
+        if not isinstance(value, str) or not value.endswith(filename):
+            missing_tokens.append(
+                f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: "
+                f"source_files.{key}={value}"
+            )
+
+    expected_fields = [
+        "repository_doi_or_anonymous_reviewer_link",
+        "code_licence",
+        "generated_data_and_checkpoint_model_weight_rights",
+        "full_bishan_tool2_access_route",
+        "gpkg_root_geospatial_input_access_route",
+        "dongxing_neijiang_prepared_data_access_route",
+        "reviewer_data_access",
+        "citation_policy",
+        "statistical_reporting_policy",
+        "main_figure_1_and_journal_export_rules",
+    ]
+    fields = payload.get("author_decision_closeout_fields")
+    if not isinstance(fields, list):
+        missing_tokens.append(
+            f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: "
+            "author_decision_closeout_fields"
+        )
+        fields = []
+    observed_fields = [
+        field.get("field") for field in fields if isinstance(field, dict)
+    ]
+    if observed_fields != expected_fields:
+        missing_tokens.append(
+            f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: "
+            f"author_decision_closeout_fields={observed_fields}"
+        )
+    for field in fields:
+        if not isinstance(field, dict):
+            missing_tokens.append(
+                f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: "
+                "non-dict author_decision_closeout_fields row"
+            )
+            continue
+        name = field.get("field")
+        for key, expected in (
+            ("status", "unresolved"),
+            ("author_input_required", True),
+            ("blocking_before_formal_submission", True),
+        ):
+            if field.get(key) != expected:
+                missing_tokens.append(
+                    f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: "
+                    f"author_decision_closeout_fields.{name}.{key}={field.get(key)}"
+                )
+        for key in (
+            "recommended_default",
+            "acceptable_closeout",
+            "not_acceptable",
+            "must_record",
+            "files_to_update_after_closeout",
+        ):
+            value = field.get(key)
+            if not value:
+                missing_tokens.append(
+                    f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: "
+                    f"author_decision_closeout_fields.{name}.{key}"
+                )
+
+    hits = []
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if is_post_guard_submission_readiness_positive_overclaim(line):
+            hits.append(
+                f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_MD}:{line_no}: "
+                f"{line.strip()}"
+            )
+    if hits:
+        return CheckResult(
+            "paper10_author_decision_closeout_form_current",
+            False,
+            "forbidden author-decision closeout wording: " + " | ".join(hits),
+        )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_author_decision_closeout_form_current",
+            False,
+            "Paper10 author-decision closeout form gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_author_decision_closeout_form_current",
+        True,
+        "Paper10 author-decision closeout form is current and no-go guarded",
+    )
+
 def check_paper10_post_guard_submission_readiness_refresh_current(root: Path) -> CheckResult:
     required_files = [
         PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD,
@@ -6951,6 +7167,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_ceus_baseline_inference_hardening_current,
     check_paper10_true_reward_guard_readiness_current,
     check_paper10_post_guard_experiment_closure_refresh_current,
+    check_paper10_author_decision_closeout_form_current,
     check_paper10_post_guard_submission_readiness_refresh_current,
     check_paper10_ceus_clean_main_manuscript_draft_current,
     check_paper10_anchor_raw_rollout_consistency_audit_current,

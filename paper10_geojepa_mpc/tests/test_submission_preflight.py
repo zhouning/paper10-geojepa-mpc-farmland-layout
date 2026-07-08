@@ -14,6 +14,7 @@ from scripts.paper10.preflight_submission_checks import (
     CEUS_STAGE3_MANUSCRIPT_REFRAME,
     check_citation_keys_resolve,
     check_paper10_ceus_baseline_inference_hardening_current,
+    check_paper10_author_decision_closeout_form_current,
     check_paper10_post_guard_experiment_closure_refresh_current,
     check_paper10_post_guard_submission_readiness_refresh_current,
     check_paper10_submission_readiness_boundary_current,
@@ -75,6 +76,8 @@ from scripts.paper10.preflight_submission_checks import (
     PAPER10_TRUE_REWARD_GUARD_READINESS_MD,
     PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_JSON,
     PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_MD,
+    PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON,
+    PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_MD,
     PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON,
     PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD,
     PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD,
@@ -182,6 +185,8 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     PAPER10_TRUE_REWARD_GUARD_READINESS_JSON,
     PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_MD,
     PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_JSON,
+    PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_MD,
+    PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON,
     PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD,
     PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON,
     RESULTS / "e0_paper10_experiment_freeze_audit_2026-06-27.md",
@@ -347,6 +352,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "paper10_ceus_clean_main_manuscript_draft_current" in payload["passed_checks"]
     assert "paper10_true_reward_guard_readiness_current" in payload["passed_checks"]
     assert "paper10_post_guard_experiment_closure_refresh_current" in payload["passed_checks"]
+    assert "paper10_author_decision_closeout_form_current" in payload["passed_checks"]
     assert "paper10_post_guard_submission_readiness_refresh_current" in payload["passed_checks"]
     assert "paper10_anchor_raw_rollout_consistency_audit_current" in payload["passed_checks"]
     assert "original_vision_validation_registry_current" in payload["passed_checks"]
@@ -1381,6 +1387,53 @@ def test_submission_preflight_minimal_fixture_reports_missing_post_guard_submiss
     details = check_details(payload, "paper10_post_guard_submission_readiness_refresh_current")
     assert "missing Paper10 post-guard submission-readiness refresh files" in details
     assert str(PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD) in details
+
+
+def test_submission_preflight_minimal_fixture_reports_missing_author_decision_closeout_form(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    (fixture / PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_MD).unlink()
+
+    result, payload = run_submission_preflight_json(fixture)
+
+    assert result.returncode == 1
+    assert payload["ok"] is False
+    assert "paper10_author_decision_closeout_form_current" in payload["failed_checks"]
+    details = check_details(payload, "paper10_author_decision_closeout_form_current")
+    assert "missing Paper10 author-decision closeout form files" in details
+    assert str(PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_MD) in details
+
+
+def test_author_decision_closeout_form_preflight_requires_author_input_status(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    payload_path = fixture / PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    payload["status"] = "submission_ready"
+    payload["submission_state"]["formal_submission_blocked"] = False
+    payload_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    result = check_paper10_author_decision_closeout_form_current(fixture)
+
+    assert result.name == "paper10_author_decision_closeout_form_current"
+    assert result.ok is False
+    assert "status=submission_ready" in result.details
+    assert "formal_submission_blocked=False" in result.details
+
+
+def test_author_decision_closeout_form_preflight_rejects_ready_to_submit_claim(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    closeout = fixture / PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_MD
+    closeout.write_text(
+        closeout.read_text(encoding="utf-8")
+        + "\n\nThe paper is ready to submit.\n",
+        encoding="utf-8",
+    )
+
+    result = check_paper10_author_decision_closeout_form_current(fixture)
+
+    assert result.name == "paper10_author_decision_closeout_form_current"
+    assert result.ok is False
+    assert "forbidden author-decision closeout wording" in result.details
+    assert "ready to submit" in result.details
 
 
 def test_post_guard_submission_refresh_preflight_requires_no_go_status(tmp_path):

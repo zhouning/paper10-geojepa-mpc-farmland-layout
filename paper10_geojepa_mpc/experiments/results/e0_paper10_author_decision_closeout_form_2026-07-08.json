@@ -1,0 +1,342 @@
+{
+  "date": "2026-07-08",
+  "artifact_type": "paper10_author_decision_closeout_form",
+  "status": "author_input_required",
+  "source_boundary": {
+    "new_experimental_claim": false,
+    "reran_rollouts": false,
+    "reran_training": false,
+    "submission_approval": false,
+    "author_decisions_invented": false,
+    "source": "tracked Paper10 post-guard readiness and blocker artifacts only"
+  },
+  "submission_state": {
+    "formal_submission_blocked": true,
+    "status_reason": "author decisions unresolved",
+    "preflight_pass_does_not_mean_submission_ready": true
+  },
+  "source_files": {
+    "post_guard_submission_readiness_refresh_json": "paper10_geojepa_mpc/experiments/results/e0_paper10_post_guard_submission_readiness_refresh_2026-07-08.json",
+    "post_guard_submission_readiness_refresh_md": "paper10_geojepa_mpc/experiments/results/e0_paper10_post_guard_submission_readiness_refresh_2026-07-08.md",
+    "submission_blocker_packet": "paper10_geojepa_mpc/experiments/results/e0_submission_blocker_decision_packet_2026-06-11.md",
+    "author_decision_matrix": "paper10_geojepa_mpc/experiments/results/e0_paper10_author_decision_matrix_2026-06-18.md",
+    "data_access_rights_register": "paper10_geojepa_mpc/experiments/results/e0_data_access_and_rights_decision_register_2026-06-09.md",
+    "submission_boundary_md": "paper10_geojepa_mpc/experiments/results/e0_paper10_submission_readiness_boundary_2026-06-26.md",
+    "final_export_package": "paper10_geojepa_mpc/experiments/results/e0_paper10_final_figure_table_export_package_2026-06-20.md"
+  },
+  "closeout_policy": {
+    "do_not_invent_author_decisions": true,
+    "all_fields_block_submission_until_closed": true,
+    "use_durable_repository_or_controlled_access_route": true,
+    "available_upon_request_alone_is_not_acceptable": true,
+    "do_not_relicense_restricted_geospatial_inputs": true
+  },
+  "author_decision_closeout_fields": [
+    {
+      "field": "repository_doi_or_anonymous_reviewer_link",
+      "label": "repository DOI or anonymous reviewer link",
+      "status": "unresolved",
+      "author_input_required": true,
+      "blocking_before_formal_submission": true,
+      "recommended_default": "Archive the exact submission commit and use a repository DOI or repository-supported anonymous reviewer link.",
+      "acceptable_closeout": [
+        "public DOI for the exact submission release",
+        "repository-supported anonymous reviewer link",
+        "journal-approved private reviewer route"
+      ],
+      "not_acceptable": [
+        "temporary cloud folder",
+        "personal drive link",
+        "repository URL without release identifier or reviewer route"
+      ],
+      "must_record": [
+        "archive platform",
+        "persistent identifier or reviewer URL",
+        "commit hash",
+        "version date",
+        "access window",
+        "anonymity status"
+      ],
+      "files_to_update_after_closeout": [
+        "DATA_AVAILABILITY.md",
+        "MANIFEST.md",
+        "e0_data_code_availability_draft_2026-06-09.md",
+        "e0_archive_manifest_2026-06-09.csv",
+        "final manuscript"
+      ]
+    },
+    {
+      "field": "code_licence",
+      "label": "code licence",
+      "status": "unresolved",
+      "author_input_required": true,
+      "blocking_before_formal_submission": true,
+      "recommended_default": "Select a named software licence only after confirming all included code can be licensed by the authors.",
+      "acceptable_closeout": [
+        "named open-source software licence",
+        "institution-approved restricted code-use statement"
+      ],
+      "not_acceptable": [
+        "implicit open-source wording",
+        "licence that also claims restricted third-party data"
+      ],
+      "must_record": [
+        "licence name or restriction statement",
+        "scope limited to licensable code and scripts",
+        "repository metadata location"
+      ],
+      "files_to_update_after_closeout": [
+        "LICENCE or LICENSE file if selected",
+        "MANIFEST.md",
+        "e0_data_access_and_rights_decision_register_2026-06-09.md",
+        "archive metadata"
+      ]
+    },
+    {
+      "field": "generated_data_and_checkpoint_model_weight_rights",
+      "label": "generated-data and checkpoint/model-weight rights",
+      "status": "unresolved",
+      "author_input_required": true,
+      "blocking_before_formal_submission": true,
+      "recommended_default": "Assign rights terms by artifact family and keep generated outputs separate from restricted raw geospatial inputs.",
+      "acceptable_closeout": [
+        "named data licence for shareable derived outputs",
+        "separate model-weight or checkpoint rights statement",
+        "restricted-use statement for non-redistributable artifacts"
+      ],
+      "not_acceptable": [
+        "single broad data licence that relicenses raw geospatial inputs",
+        "missing checkpoint or model-weight terms"
+      ],
+      "must_record": [
+        "rights for JSON, Markdown, CSV, and NPZ outputs",
+        "rights for source-data tables",
+        "rights for checkpoints and model weights",
+        "restriction boundary for raw geospatial inputs"
+      ],
+      "files_to_update_after_closeout": [
+        "e0_data_code_availability_draft_2026-06-09.md",
+        "e0_archive_metadata_templates_2026-06-09.md",
+        "archive metadata"
+      ]
+    },
+    {
+      "field": "full_bishan_tool2_access_route",
+      "label": "full Bishan Tool2 route",
+      "status": "unresolved",
+      "author_input_required": true,
+      "blocking_before_formal_submission": true,
+      "recommended_default": "Use controlled-access metadata if redistribution rights are uncertain.",
+      "acceptable_closeout": [
+        "public DOI if redistribution rights exist",
+        "controlled-access repository record",
+        "institutional access route with public metadata"
+      ],
+      "not_acceptable": [
+        "local path only",
+        "informal request-only wording without eligibility or review process"
+      ],
+      "must_record": [
+        "data owner or access body",
+        "restriction reason",
+        "eligible requesters",
+        "review criteria",
+        "reviewer route",
+        "data-use or no-redistribution terms"
+      ],
+      "files_to_update_after_closeout": [
+        "DATA_AVAILABILITY.md",
+        "e0_data_code_availability_draft_2026-06-09.md",
+        "e0_data_access_and_rights_decision_register_2026-06-09.md",
+        "final manuscript"
+      ]
+    },
+    {
+      "field": "gpkg_root_geospatial_input_access_route",
+      "label": "GPKG-root geospatial route",
+      "status": "unresolved",
+      "author_input_required": true,
+      "blocking_before_formal_submission": true,
+      "recommended_default": "Use the same route family as full Bishan where possible, while naming the exact GPKG-root file families.",
+      "acceptable_closeout": [
+        "public DOI if rights allow",
+        "controlled-access metadata record",
+        "institutional access route with reviewer access"
+      ],
+      "not_acceptable": [
+        "claiming full reruns are reproducible from Git alone",
+        "omitting GPKG-root dependencies from Data Availability"
+      ],
+      "must_record": [
+        "DLTB_with_slope.gpkg route",
+        "block products route",
+        "township inputs route",
+        "reviewer access route",
+        "rerun dependency note"
+      ],
+      "files_to_update_after_closeout": [
+        "DATA_AVAILABILITY.md",
+        "REPRODUCIBILITY.md",
+        "e0_data_code_availability_draft_2026-06-09.md",
+        "final manuscript"
+      ]
+    },
+    {
+      "field": "dongxing_neijiang_prepared_data_access_route",
+      "label": "Dongxing/Neijiang prepared-data route",
+      "status": "unresolved",
+      "author_input_required": true,
+      "blocking_before_formal_submission": true,
+      "recommended_default": "Use controlled-access metadata unless the prepared external-region products can be redistributed.",
+      "acceptable_closeout": [
+        "public DOI if rights allow",
+        "controlled-access repository record",
+        "institutional route with public metadata and reviewer access"
+      ],
+      "not_acceptable": [
+        "derived summary CSVs as a substitute for full rerun inputs",
+        "local paths only"
+      ],
+      "must_record": [
+        "prepared block products route",
+        "parcel assignment route",
+        "transition and pairwise file route",
+        "environment wrapper route",
+        "slope-enriched input route",
+        "reviewer access route"
+      ],
+      "files_to_update_after_closeout": [
+        "e0_data_code_availability_draft_2026-06-09.md",
+        "e0_data_access_and_rights_decision_register_2026-06-09.md",
+        "e0_source_data_map_with_dongxing_2026-06-11.md",
+        "final manuscript"
+      ]
+    },
+    {
+      "field": "reviewer_data_access",
+      "label": "reviewer data access",
+      "status": "unresolved",
+      "author_input_required": true,
+      "blocking_before_formal_submission": true,
+      "recommended_default": "Give reviewers a tested repository-supported private link or controlled-access route for every non-public dataset required beyond smoke verification.",
+      "acceptable_closeout": [
+        "public downloads",
+        "repository private reviewer links",
+        "controlled-access credentials approved for review"
+      ],
+      "not_acceptable": [
+        "author-only local paths",
+        "untested private links",
+        "post-acceptance-only deposit promise"
+      ],
+      "must_record": [
+        "which datasets reviewers can access",
+        "route for each restricted dataset",
+        "credential or request procedure",
+        "test outside author account"
+      ],
+      "files_to_update_after_closeout": [
+        "DATA_AVAILABILITY.md",
+        "e0_archive_release_and_doi_backfill_checklist_2026-06-09.md",
+        "reviewer instructions",
+        "final manuscript"
+      ]
+    },
+    {
+      "field": "citation_policy",
+      "label": "citation policy",
+      "status": "unresolved",
+      "author_input_required": true,
+      "blocking_before_formal_submission": true,
+      "recommended_default": "Use verified public sources in manuscript text and keep local-only Paper9 material out unless it becomes public and citable.",
+      "acceptable_closeout": [
+        "verified public-source-only reference policy",
+        "formalized Paper9 public route if available",
+        "target-journal preprint policy recorded"
+      ],
+      "not_acceptable": [
+        "local-only citation key in public manuscript",
+        "unverified reference placeholders"
+      ],
+      "must_record": [
+        "acceptable source types",
+        "preprint policy",
+        "local-only source replacement route",
+        "final reference style"
+      ],
+      "files_to_update_after_closeout": [
+        "e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md",
+        "references/paper10_citation_map_2026-06-09.md",
+        "bibliography files",
+        "final manuscript"
+      ]
+    },
+    {
+      "field": "statistical_reporting_policy",
+      "label": "statistical reporting policy",
+      "status": "unresolved",
+      "author_input_required": true,
+      "blocking_before_formal_submission": true,
+      "recommended_default": "Keep descriptive reporting unless the authors define tests, comparison groups, multiplicity handling, and precision before editing inferential claims.",
+      "acceptable_closeout": [
+        "descriptive-only reporting policy",
+        "predefined inferential analysis plan"
+      ],
+      "not_acceptable": [
+        "inferential superiority wording without committed analysis plan",
+        "post-hoc test language added only in prose"
+      ],
+      "must_record": [
+        "comparison groups",
+        "seed/checkpoint counts",
+        "test choice if any",
+        "multiplicity handling if any",
+        "precision policy"
+      ],
+      "files_to_update_after_closeout": [
+        "e0_integrated_citation_and_statistical_reporting_policy_2026-06-12.md",
+        "Results section",
+        "table captions",
+        "final manuscript"
+      ]
+    },
+    {
+      "field": "main_figure_1_and_journal_export_rules",
+      "label": "Main Figure 1 / journal export rules",
+      "status": "unresolved",
+      "author_input_required": true,
+      "blocking_before_formal_submission": true,
+      "recommended_default": "Preserve the current figure/table numbering freeze and adapt exports only after target journal rules are known.",
+      "acceptable_closeout": [
+        "final Main Figure 1 schematic artwork",
+        "journal-specific figure/table count and format rules",
+        "source-data naming and export format lock"
+      ],
+      "not_acceptable": [
+        "changing numbering without source-data and caption updates",
+        "submitting local preview files as final source data without mapping"
+      ],
+      "must_record": [
+        "Main Figure 1 final artwork status",
+        "figure and table limits",
+        "PDF/SVG/raster requirements",
+        "source-data file names",
+        "supplementary placement rules"
+      ],
+      "files_to_update_after_closeout": [
+        "e0_paper10_final_figure_table_export_package_2026-06-20.md",
+        "figure exports",
+        "source-data maps",
+        "captions",
+        "final manuscript"
+      ]
+    }
+  ],
+  "claim_locks": {
+    "final_submission_readiness_supported": false,
+    "direct_50state_scaleup_supported": false,
+    "robust_transfer_superiority_supported": false,
+    "deployment_ready_supported": false,
+    "universal_fixed_margin_supported": false
+  }
+}
