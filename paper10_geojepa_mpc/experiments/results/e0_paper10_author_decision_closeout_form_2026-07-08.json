@@ -1,7 +1,7 @@
 {
   "date": "2026-07-08",
   "artifact_type": "paper10_author_decision_closeout_form",
-  "status": "author_input_required",
+  "status": "author_input_partially_provided",
   "source_boundary": {
     "new_experimental_claim": false,
     "reran_rollouts": false,
@@ -12,8 +12,10 @@
   },
   "submission_state": {
     "formal_submission_blocked": true,
-    "status_reason": "author decisions unresolved",
-    "preflight_pass_does_not_mean_submission_ready": true
+    "status_reason": "one author decision provided; other author decisions unresolved",
+    "preflight_pass_does_not_mean_submission_ready": true,
+    "repository_reviewer_link_provided": true,
+    "repository_reviewer_link_verified_for_browser_review": false
   },
   "source_files": {
     "post_guard_submission_readiness_refresh_json": "paper10_geojepa_mpc/experiments/results/e0_paper10_post_guard_submission_readiness_refresh_2026-07-08.json",
@@ -35,8 +37,8 @@
     {
       "field": "repository_doi_or_anonymous_reviewer_link",
       "label": "repository DOI or anonymous reviewer link",
-      "status": "unresolved",
-      "author_input_required": true,
+      "status": "provided_pending_external_browser_test_and_backfill",
+      "author_input_required": false,
       "blocking_before_formal_submission": true,
       "recommended_default": "Archive the exact submission commit and use a repository DOI or repository-supported anonymous reviewer link.",
       "acceptable_closeout": [
@@ -63,6 +65,19 @@
         "e0_data_code_availability_draft_2026-06-09.md",
         "e0_archive_manifest_2026-06-09.csv",
         "final manuscript"
+      ],
+      "provided_input": {
+        "anonymous_reviewer_link": "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/",
+        "archive_platform": "anonymous.4open.science",
+        "persistent_identifier_or_reviewer_url": "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/",
+        "anonymity_status": "anonymous reviewer link provided by author"
+      },
+      "external_browser_test_required": true,
+      "final_backfill_required": true,
+      "remaining_closeout": [
+        "test the link in a non-author browser session",
+        "record the exact submission commit represented by the 4open snapshot",
+        "backfill Data and Code Availability, MANIFEST, archive manifest, and final manuscript wording"
       ]
     },
     {
@@ -338,5 +353,12 @@
     "robust_transfer_superiority_supported": false,
     "deployment_ready_supported": false,
     "universal_fixed_margin_supported": false
+  },
+  "link_access_check": {
+    "anonymous_reviewer_link": "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/",
+    "check_date": "2026-07-08",
+    "check_method": "curl.exe -L --max-time 20 -I",
+    "observed_result": "URL reached 4open and redirected to /api/repo/geojepa-mpc-farmland-layout-8552/file/; unauthenticated command-line API follow-up returned 401 Unauthorized.",
+    "interpretation": "The provided 4open route exists, but reviewer-facing browser access still requires an independent non-author browser-session test before formal submission."
   }
 }

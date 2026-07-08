@@ -2,7 +2,7 @@
 
 Date: 2026-07-08
 
-Status: author_input_required
+Status: author_input_partially_provided
 
 Status note: source-derived; no rollout or training rerun; no submission approval.
 
@@ -20,17 +20,25 @@ This closeout form converts the post-guard submission blocker state into an auth
 
 ## Submission state
 
-Formal submission remains blocked. Passing repository preflight means the blocker surface is tracked and guarded; it does not mean the paper has approval for formal submission.
+Formal submission remains blocked. The repository anonymous reviewer link has been provided, but it still requires a non-author browser-session test and final manuscript/archive backfill. Passing repository preflight means the blocker surface is tracked and guarded; it does not mean the paper has approval for formal submission.
 
 ## Use rule
 
 Author-provided closeout must fill the fields below before final manuscript backfill. Do not use temporary cloud folders, personal drive links, local paths, or "available upon request" wording as durable access routes. Do not apply open data terms to restricted geospatial inputs unless the authors hold those rights.
 
+## Author input recorded
+
+- repository DOI or anonymous reviewer link: provided_pending_external_browser_test_and_backfill
+- anonymous reviewer link: https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/
+- command-line access check: `curl.exe -L --max-time 20 -I` reached the 4open route, observed a redirect to `/api/repo/geojepa-mpc-farmland-layout-8552/file/`, and then received `401 Unauthorized` from the unauthenticated API follow-up.
+- interpretation: the 4open route exists, but reviewer-facing browser access still requires an independent non-author browser-session test before formal submission.
+- remaining closeout: record the exact submission commit represented by the 4open snapshot and backfill Data and Code Availability, `MANIFEST.md`, the archive manifest, and final manuscript wording.
+
 ## Author-decision closeout table
 
 | field | status | recommended default | author must provide | not acceptable | files to update after closeout |
 |---|---|---|---|---|---|
-| repository DOI or anonymous reviewer link | unresolved | Archive the exact submission commit and use a repository DOI or repository-supported anonymous reviewer link. | Archive platform; persistent identifier or reviewer URL; commit hash; version date; access window; anonymity status. | Temporary cloud folder; personal drive link; repository URL without release identifier or reviewer route. | `DATA_AVAILABILITY.md`; `MANIFEST.md`; `e0_data_code_availability_draft_2026-06-09.md`; `e0_archive_manifest_2026-06-09.csv`; final manuscript. |
+| repository DOI or anonymous reviewer link | provided_pending_external_browser_test_and_backfill | Anonymous 4open reviewer link provided: `https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/`. | Non-author browser-session test; exact submission commit represented by the 4open snapshot; version date; access window; final Data/Code Availability and archive-manifest backfill. | Treating command-line `401 Unauthorized` API follow-up as reviewer-browser verification; marking this field fully closed before backfill. | `DATA_AVAILABILITY.md`; `MANIFEST.md`; `e0_data_code_availability_draft_2026-06-09.md`; `e0_archive_manifest_2026-06-09.csv`; final manuscript. |
 | code licence | unresolved | Select a named software licence only after confirming all included code can be licensed by the authors. | Licence name or restriction statement; scope limited to licensable code and scripts; repository metadata location. | Implicit open-source wording; licence that also claims restricted third-party data. | `LICENCE` or `LICENSE` file if selected; `MANIFEST.md`; `e0_data_access_and_rights_decision_register_2026-06-09.md`; archive metadata. |
 | generated-data and checkpoint/model-weight rights | unresolved | Assign rights terms by artifact family and keep generated outputs separate from restricted raw geospatial inputs. | Rights for JSON, Markdown, CSV, NPZ outputs, source-data tables, checkpoints, model weights, and raw-geospatial restriction boundary. | Single broad data licence that relicenses raw geospatial inputs; missing checkpoint or model-weight terms. | `e0_data_code_availability_draft_2026-06-09.md`; `e0_archive_metadata_templates_2026-06-09.md`; archive metadata. |
 | full Bishan Tool2 route | unresolved | Use controlled-access metadata if redistribution rights are uncertain. | Data owner or access body; restriction reason; eligible requesters; review criteria; reviewer route; data-use or no-redistribution terms. | Local path only; informal request-only wording without eligibility or review process. | `DATA_AVAILABILITY.md`; `e0_data_code_availability_draft_2026-06-09.md`; `e0_data_access_and_rights_decision_register_2026-06-09.md`; final manuscript. |
@@ -46,7 +54,7 @@ Author-provided closeout must fill the fields below before final manuscript back
 Use this structure when sending author decisions back into the repository:
 
 ```text
-repository DOI or anonymous reviewer link: unresolved / value and route
+repository DOI or anonymous reviewer link: provided_pending_external_browser_test_and_backfill / https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/
 code licence: unresolved / value and scope
 generated-data and checkpoint/model-weight rights: unresolved / value by artifact family
 full Bishan Tool2 route: unresolved / public DOI or controlled-access route

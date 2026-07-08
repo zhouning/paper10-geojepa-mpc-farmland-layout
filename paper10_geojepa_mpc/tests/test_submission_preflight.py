@@ -1419,6 +1419,35 @@ def test_author_decision_closeout_form_preflight_requires_author_input_status(tm
     assert "formal_submission_blocked=False" in result.details
 
 
+def test_author_decision_closeout_form_accepts_provided_anonymous_link(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+
+    result = check_paper10_author_decision_closeout_form_current(fixture)
+
+    assert result.name == "paper10_author_decision_closeout_form_current"
+    assert result.ok is True
+
+    payload = json.loads(
+        (fixture / PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON).read_text(
+            encoding="utf-8"
+        )
+    )
+    fields = {
+        field["field"]: field
+        for field in payload["author_decision_closeout_fields"]
+    }
+    repository = fields["repository_doi_or_anonymous_reviewer_link"]
+    assert repository["status"] == (
+        "provided_pending_external_browser_test_and_backfill"
+    )
+    assert repository["author_input_required"] is False
+    assert repository["provided_input"]["anonymous_reviewer_link"] == (
+        "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/"
+    )
+    assert repository["external_browser_test_required"] is True
+    assert repository["final_backfill_required"] is True
+
+
 def test_author_decision_closeout_form_preflight_rejects_ready_to_submit_claim(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
     closeout = fixture / PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_MD

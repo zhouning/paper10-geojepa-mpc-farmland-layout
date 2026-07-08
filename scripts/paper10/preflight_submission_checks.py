@@ -5304,7 +5304,7 @@ def check_paper10_author_decision_closeout_form_current(root: Path) -> CheckResu
     missing_tokens = []
     required_tokens = [
         "Paper10 author-decision closeout form",
-        "Status: author_input_required",
+        "Status: author_input_partially_provided",
         "source-derived; no rollout or training rerun; no submission approval",
         "Formal submission remains blocked",
         "repository DOI or anonymous reviewer link",
@@ -5340,14 +5340,16 @@ def check_paper10_author_decision_closeout_form_current(root: Path) -> CheckResu
     expected_values = {
         ("date",): "2026-07-08",
         ("artifact_type",): "paper10_author_decision_closeout_form",
-        ("status",): "author_input_required",
+        ("status",): "author_input_partially_provided",
         ("source_boundary", "new_experimental_claim"): False,
         ("source_boundary", "reran_rollouts"): False,
         ("source_boundary", "reran_training"): False,
         ("source_boundary", "submission_approval"): False,
         ("source_boundary", "author_decisions_invented"): False,
         ("submission_state", "formal_submission_blocked"): True,
-        ("submission_state", "status_reason"): "author decisions unresolved",
+        ("submission_state", "status_reason"): "one author decision provided; other author decisions unresolved",
+        ("submission_state", "repository_reviewer_link_provided"): True,
+        ("submission_state", "repository_reviewer_link_verified_for_browser_review"): False,
         ("submission_state", "preflight_pass_does_not_mean_submission_ready"): True,
         ("closeout_policy", "do_not_invent_author_decisions"): True,
         ("closeout_policy", "all_fields_block_submission_until_closed"): True,
@@ -5391,6 +5393,25 @@ def check_paper10_author_decision_closeout_form_current(root: Path) -> CheckResu
                 f"source_files.{key}={value}"
             )
 
+    link_check = payload.get("link_access_check")
+    if not isinstance(link_check, dict):
+        missing_tokens.append(
+            f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: link_access_check"
+        )
+        link_check = {}
+    if link_check.get("anonymous_reviewer_link") != (
+        "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/"
+    ):
+        missing_tokens.append(
+            f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: "
+            f"link_access_check.anonymous_reviewer_link={link_check.get('anonymous_reviewer_link')}"
+        )
+    for key in ("check_method", "observed_result", "interpretation"):
+        if not link_check.get(key):
+            missing_tokens.append(
+                f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: "
+                f"link_access_check.{key}"
+            )
     expected_fields = [
         "repository_doi_or_anonymous_reviewer_link",
         "code_licence",
@@ -5426,15 +5447,50 @@ def check_paper10_author_decision_closeout_form_current(root: Path) -> CheckResu
             )
             continue
         name = field.get("field")
+        expected_status = "unresolved"
+        expected_author_input_required = True
+        if name == "repository_doi_or_anonymous_reviewer_link":
+            expected_status = "provided_pending_external_browser_test_and_backfill"
+            expected_author_input_required = False
         for key, expected in (
-            ("status", "unresolved"),
-            ("author_input_required", True),
+            ("status", expected_status),
+            ("author_input_required", expected_author_input_required),
             ("blocking_before_formal_submission", True),
         ):
             if field.get(key) != expected:
                 missing_tokens.append(
                     f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: "
                     f"author_decision_closeout_fields.{name}.{key}={field.get(key)}"
+                )
+        if name == "repository_doi_or_anonymous_reviewer_link":
+            provided = field.get("provided_input")
+            if not isinstance(provided, dict):
+                missing_tokens.append(
+                    f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: "
+                    "author_decision_closeout_fields.repository.provided_input"
+                )
+                provided = {}
+            if provided.get("anonymous_reviewer_link") != (
+                "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/"
+            ):
+                missing_tokens.append(
+                    f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: "
+                    "author_decision_closeout_fields.repository.anonymous_reviewer_link"
+                )
+            for key, expected in (
+                ("external_browser_test_required", True),
+                ("final_backfill_required", True),
+            ):
+                if field.get(key) != expected:
+                    missing_tokens.append(
+                        f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: "
+                        f"author_decision_closeout_fields.repository.{key}={field.get(key)}"
+                    )
+            remaining = field.get("remaining_closeout")
+            if not isinstance(remaining, list) or not remaining:
+                missing_tokens.append(
+                    f"{PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON}: "
+                    "author_decision_closeout_fields.repository.remaining_closeout"
                 )
         for key in (
             "recommended_default",
