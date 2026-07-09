@@ -195,6 +195,8 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     preflight_checks.PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON,
     preflight_checks.PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_MD,
     preflight_checks.PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_JSON,
+    preflight_checks.PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_MD,
+    preflight_checks.PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_JSON,
     RESULTS / "e0_paper10_experiment_freeze_audit_2026-06-27.md",
     RESULTS / "e0_paper10_experiment_closure_register_2026-06-27.md",
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
@@ -362,6 +364,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "paper10_data_publication_boundary_backfill_current" in payload["passed_checks"]
     assert "paper10_public_release_rights_gate_current" in payload["passed_checks"]
     assert "paper10_dltb_leakage_evidence_audit_current" in payload["passed_checks"]
+    assert "paper10_ceus_confidential_dltb_acceptance_packet_current" in payload["passed_checks"]
     assert "paper10_post_guard_submission_readiness_refresh_current" in payload["passed_checks"]
     assert "paper10_anchor_raw_rollout_consistency_audit_current" in payload["passed_checks"]
     assert "original_vision_validation_registry_current" in payload["passed_checks"]
@@ -1722,6 +1725,53 @@ def test_dltb_leakage_evidence_audit_preflight_rejects_public_original_dltb(tmp_
     assert result.name == "paper10_dltb_leakage_evidence_audit_current"
     assert result.ok is False
     assert "original DLTB public release is not allowed" in result.details
+
+
+def test_ceus_confidential_dltb_acceptance_packet_preflight_accepts_current_boundary():
+    result = preflight_checks.check_paper10_ceus_confidential_dltb_acceptance_packet_current(ROOT)
+
+    assert result.name == "paper10_ceus_confidential_dltb_acceptance_packet_current"
+    assert result.ok is True
+
+
+def test_ceus_confidential_dltb_acceptance_packet_records_submission_text():
+    payload = json.loads(
+        (ROOT / preflight_checks.PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_JSON).read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert payload["artifact_type"] == "paper10_ceus_confidential_dltb_acceptance_packet"
+    assert payload["target_journal"] == "Computers, Environment and Urban Systems"
+    assert payload["journal_data_policy"]["research_data_policy_label"] == "Option B"
+    assert payload["raw_dltb_boundary"]["original_bishan_dltb_external_access"] == (
+        "confidential_no_external_access"
+    )
+    assert payload["raw_dltb_boundary"]["original_dongxing_dltb_external_access"] == (
+        "confidential_no_external_access"
+    )
+    statement = payload["submission_text"]["data_statement"]
+    assert "cannot be provided externally" in statement
+    assert "available upon request" not in statement.lower()
+    assert payload["editor_acceptance"]["target_journal_editor_acceptance_received"] is False
+    assert payload["editor_acceptance"]["author_must_disclose_in_submission_system"] is True
+    assert payload["submission_gate"]["formal_submission_blocked"] is True
+
+
+def test_ceus_confidential_dltb_acceptance_packet_preflight_rejects_premature_editor_acceptance(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    payload_path = fixture / preflight_checks.PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_JSON
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    payload["status"] = "ceus_confidential_dltb_limitation_editor_accepted"
+    payload["editor_acceptance"]["target_journal_editor_acceptance_received"] = True
+    payload["submission_gate"]["formal_submission_blocked"] = False
+    payload_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    result = preflight_checks.check_paper10_ceus_confidential_dltb_acceptance_packet_current(fixture)
+
+    assert result.name == "paper10_ceus_confidential_dltb_acceptance_packet_current"
+    assert result.ok is False
+    assert "target-journal acceptance is not recorded" in result.details
 
 
 def test_author_decision_closeout_form_preflight_rejects_ready_to_submit_claim(tmp_path):

@@ -1,0 +1,75 @@
+{
+  "artifact_type": "paper10_ceus_confidential_dltb_acceptance_packet",
+  "date": "2026-07-09",
+  "status": "ceus_confidential_dltb_acceptance_packet_prepared_not_editor_accepted",
+  "target_journal": "Computers, Environment and Urban Systems",
+  "journal_data_policy": {
+    "publisher": "Elsevier",
+    "research_data_policy_label": "Option B",
+    "guide_for_authors_url": "https://www.elsevier.com/journals/computers-environment-and-urban-systems/0198-9715/guide-for-authors",
+    "checked_date": "2026-07-09",
+    "interpretation": "CEUS encourages research-data deposit/citation when data can be shared and requires a data statement explaining restrictions when data cannot be shared."
+  },
+  "source_boundary": {
+    "source": "author-confirmed DLTB confidentiality boundary, CEUS guide-for-authors check, and tracked Paper10 public-release artifacts",
+    "git_commit_scanned": "dfc9a2334ecd896aa21e9a2b89720cc6bf740fb9",
+    "new_experimental_claim": false,
+    "reran_rollouts": false,
+    "reran_training": false,
+    "submission_approval": false,
+    "author_decisions_invented": false
+  },
+  "raw_dltb_boundary": {
+    "original_bishan_dltb_external_access": "confidential_no_external_access",
+    "original_dongxing_dltb_external_access": "confidential_no_external_access",
+    "original_bishan_dltb_public_release_allowed": false,
+    "original_dongxing_dltb_public_release_allowed": false,
+    "original_dltb_reviewer_access_available": false,
+    "request_based_access_route_available": false,
+    "restriction_reason": "author-confirmed sensitive administrative DLTB data; raw Bishan and Dongxing DLTB cannot be redistributed or externally provided"
+  },
+  "public_compensation_package": {
+    "reviewer_readme_direct_link": "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/README.md",
+    "code_licence": "Apache-2.0",
+    "generated_non_dltb_artifact_terms": "CC0-1.0",
+    "included_materials": [
+      "custom code and tests",
+      "small reviewer smoke dataset",
+      "generated non-DLTB JSON/Markdown/CSV/NPZ outputs",
+      "figure source tables and manuscript table source notes",
+      "model checkpoints and metadata",
+      "DLTB-leakage evidence audit"
+    ],
+    "does_not_replace_raw_dltb_access": true
+  },
+  "submission_text": {
+    "data_statement": "Code, tests, the reviewer smoke dataset, generated non-DLTB outputs, figure source tables, model checkpoints, metadata and verification logs are available through the anonymous reviewer repository at https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/README.md. Code and scripts are licensed under Apache-2.0, and generated non-DLTB outputs and model-weight artifacts are released under CC0-1.0. The original Bishan and Dongxing DLTB inputs are sensitive administrative land-use data and are not publicly redistributable. They cannot be provided externally through public download, reviewer credentials, controlled-access credentials, or informal requests. Full raw-DLTB reruns therefore remain limited to the author-controlled environment. The final archive snapshot, public source-data mapping and DLTB-leakage evidence must be aligned before formal submission.",
+    "cover_letter_disclosure": "We disclose that the original Bishan and Dongxing DLTB inputs used to prepare the real-data experiments are confidential administrative land-use data. These raw inputs cannot be provided externally or redistributed, including to reviewers. To support evaluation, we provide public code, a small reviewer smoke dataset, generated non-DLTB outputs, figure source tables, model checkpoints, metadata, and leakage-evidence records. We ask the editor to assess whether this confidential raw-DLTB limitation is compatible with CEUS review and publication requirements.",
+    "submission_system_research_data_response": "Research data are partly available. Public code, smoke data, generated non-DLTB outputs, source-data tables, model artifacts and metadata are provided in the anonymous repository. Original Bishan and Dongxing DLTB inputs are confidential administrative data and cannot be provided externally; this restriction is disclosed to the editor and in the Data Availability statement.",
+    "contains_request_based_raw_dltb_route": false
+  },
+  "editor_acceptance": {
+    "target_journal_editor_acceptance_received": false,
+    "communication_with_editor_completed": false,
+    "author_must_disclose_in_submission_system": true,
+    "editor_must_decide_whether_limitation_is_acceptable": true
+  },
+  "submission_gate": {
+    "formal_submission_blocked": true,
+    "preflight_pass_does_not_mean_submission_ready": true,
+    "status_reason": "the CEUS disclosure text is prepared, but target-journal acceptance is not recorded and final archive metadata remain open"
+  },
+  "required_before_formal_submission": [
+    "paste the confidential raw-DLTB disclosure into the CEUS submission data statement or cover letter",
+    "obtain or record target-journal/editor acceptance of confidential raw-DLTB non-availability",
+    "backfill the final 4open archive snapshot commit and source-data map",
+    "align the final Data and Code Availability section with the accepted disclosure text",
+    "keep raw Bishan and Dongxing DLTB outside public and reviewer-access archives"
+  ],
+  "claim_locks": {
+    "ceus_disclosure_text_prepared": true,
+    "target_journal_acceptance_recorded": false,
+    "original_dltb_external_access_supported": false,
+    "final_submission_readiness_supported": false
+  }
+}

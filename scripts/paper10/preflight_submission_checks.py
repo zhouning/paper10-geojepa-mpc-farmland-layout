@@ -248,6 +248,12 @@ PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_MD = (
 PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_JSON = (
     RESULTS / "e0_paper10_dltb_leakage_evidence_audit_2026-07-09.json"
 )
+PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_MD = (
+    RESULTS / "e0_paper10_ceus_confidential_dltb_acceptance_packet_2026-07-09.md"
+)
+PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_JSON = (
+    RESULTS / "e0_paper10_ceus_confidential_dltb_acceptance_packet_2026-07-09.json"
+)
 PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD = (
     RESULTS / "e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md"
 )
@@ -385,6 +391,8 @@ REQUIRED_PATHS = (
     PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON,
     PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_MD,
     PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_JSON,
+    PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_MD,
+    PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_JSON,
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD,
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON,
     PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD,
@@ -447,6 +455,7 @@ PUBLIC_SUBMISSION_DOCS = (
     PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD,
     PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_MD,
     PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_MD,
+    PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_MD,
 )
 
 PUBLIC_VAGUE_DATA_ROUTE_PATTERN = re.compile(
@@ -6090,6 +6099,183 @@ def check_paper10_dltb_leakage_evidence_audit_current(root: Path) -> CheckResult
     )
 
 
+def check_paper10_ceus_confidential_dltb_acceptance_packet_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_MD,
+        PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_JSON,
+        PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_MD,
+        PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_JSON,
+        PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_MD,
+        PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON,
+        PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_ceus_confidential_dltb_acceptance_packet_current",
+            False,
+            "missing Paper10 CEUS confidential-DLTB acceptance packet files: "
+            + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_MD)
+    try:
+        payload = json.loads(read_text(root / PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_JSON))
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_ceus_confidential_dltb_acceptance_packet_current",
+            False,
+            f"{PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    normalized_text = " ".join(text.split())
+    required_tokens = [
+        "Paper10 CEUS confidential-DLTB acceptance packet",
+        "Status: ceus_confidential_dltb_acceptance_packet_prepared_not_editor_accepted",
+        "Computers, Environment and Urban Systems",
+        "Elsevier research data policy Option B",
+        "confidential_no_external_access",
+        "cannot be provided externally",
+        "no request-based route for raw DLTB",
+        "Apache-2.0",
+        "CC0-1.0",
+        "public code, a small reviewer smoke dataset",
+        "target-journal acceptance is not recorded",
+        "Formal submission remains blocked",
+        "not final submission approval",
+    ]
+    for token in required_tokens:
+        if token not in normalized_text:
+            missing_tokens.append(
+                f"{PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_MD}: {token}"
+            )
+
+    expected_values = {
+        ("artifact_type",): "paper10_ceus_confidential_dltb_acceptance_packet",
+        ("date",): "2026-07-09",
+        ("status",): "ceus_confidential_dltb_acceptance_packet_prepared_not_editor_accepted",
+        ("target_journal",): "Computers, Environment and Urban Systems",
+        ("journal_data_policy", "publisher"): "Elsevier",
+        ("journal_data_policy", "research_data_policy_label"): "Option B",
+        ("journal_data_policy", "checked_date"): "2026-07-09",
+        ("source_boundary", "git_commit_scanned"): "dfc9a2334ecd896aa21e9a2b89720cc6bf740fb9",
+        ("source_boundary", "new_experimental_claim"): False,
+        ("source_boundary", "reran_rollouts"): False,
+        ("source_boundary", "reran_training"): False,
+        ("source_boundary", "submission_approval"): False,
+        ("source_boundary", "author_decisions_invented"): False,
+        ("raw_dltb_boundary", "original_bishan_dltb_external_access"): "confidential_no_external_access",
+        ("raw_dltb_boundary", "original_dongxing_dltb_external_access"): "confidential_no_external_access",
+        ("raw_dltb_boundary", "original_bishan_dltb_public_release_allowed"): False,
+        ("raw_dltb_boundary", "original_dongxing_dltb_public_release_allowed"): False,
+        ("raw_dltb_boundary", "original_dltb_reviewer_access_available"): False,
+        ("raw_dltb_boundary", "request_based_access_route_available"): False,
+        ("public_compensation_package", "reviewer_readme_direct_link"): "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/README.md",
+        ("public_compensation_package", "code_licence"): "Apache-2.0",
+        ("public_compensation_package", "generated_non_dltb_artifact_terms"): "CC0-1.0",
+        ("public_compensation_package", "does_not_replace_raw_dltb_access"): True,
+        ("submission_text", "contains_request_based_raw_dltb_route"): False,
+        ("editor_acceptance", "target_journal_editor_acceptance_received"): False,
+        ("editor_acceptance", "communication_with_editor_completed"): False,
+        ("editor_acceptance", "author_must_disclose_in_submission_system"): True,
+        ("editor_acceptance", "editor_must_decide_whether_limitation_is_acceptable"): True,
+        ("submission_gate", "formal_submission_blocked"): True,
+        ("submission_gate", "preflight_pass_does_not_mean_submission_ready"): True,
+        ("claim_locks", "ceus_disclosure_text_prepared"): True,
+        ("claim_locks", "target_journal_acceptance_recorded"): False,
+        ("claim_locks", "original_dltb_external_access_supported"): False,
+        ("claim_locks", "final_submission_readiness_supported"): False,
+    }
+    for keys, expected in expected_values.items():
+        observed = nested_value(payload, keys)
+        if observed != expected:
+            missing_tokens.append(
+                f"{PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_JSON}: "
+                f"{'.'.join(keys)}={observed}"
+            )
+
+    for keys in (
+        ("submission_text", "data_statement"),
+        ("submission_text", "cover_letter_disclosure"),
+        ("submission_text", "submission_system_research_data_response"),
+    ):
+        observed = nested_value(payload, keys)
+        if not isinstance(observed, str) or "cannot be provided externally" not in observed:
+            missing_tokens.append(
+                f"{PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_JSON}: "
+                f"{'.'.join(keys)} missing external-access restriction"
+            )
+        if isinstance(observed, str) and "available upon request" in observed.lower():
+            missing_tokens.append(
+                f"{PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_JSON}: "
+                f"{'.'.join(keys)} uses vague request wording"
+            )
+
+    required_before = payload.get("required_before_formal_submission")
+    if not isinstance(required_before, list) or len(required_before) < 5:
+        missing_tokens.append(
+            f"{PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_JSON}: required_before_formal_submission"
+        )
+    else:
+        for token in (
+            "target-journal/editor acceptance",
+            "final 4open archive snapshot",
+            "keep raw Bishan and Dongxing DLTB outside",
+        ):
+            if not any(token in item for item in required_before):
+                missing_tokens.append(
+                    f"{PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_JSON}: required_before_formal_submission missing {token}"
+                )
+
+    if payload.get("status") != "ceus_confidential_dltb_acceptance_packet_prepared_not_editor_accepted":
+        missing_tokens.append(
+            f"{PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_JSON}: target-journal acceptance is not recorded"
+        )
+    if nested_value(payload, ("editor_acceptance", "target_journal_editor_acceptance_received")) is not False:
+        missing_tokens.append(
+            f"{PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_JSON}: target-journal acceptance is not recorded"
+        )
+    if nested_value(payload, ("submission_gate", "formal_submission_blocked")) is not True:
+        missing_tokens.append(
+            f"{PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_JSON}: formal_submission_blocked=False"
+        )
+    if (
+        nested_value(payload, ("raw_dltb_boundary", "original_bishan_dltb_external_access")) != "confidential_no_external_access"
+        or nested_value(payload, ("raw_dltb_boundary", "original_dongxing_dltb_external_access")) != "confidential_no_external_access"
+        or nested_value(payload, ("raw_dltb_boundary", "request_based_access_route_available")) is not False
+    ):
+        missing_tokens.append(
+            f"{PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_JSON}: original DLTB external access is not allowed"
+        )
+
+    hits = []
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if is_post_guard_submission_readiness_positive_overclaim(line):
+            hits.append(
+                f"{PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_MD}:{line_no}: {line.strip()}"
+            )
+    if hits:
+        return CheckResult(
+            "paper10_ceus_confidential_dltb_acceptance_packet_current",
+            False,
+            "forbidden CEUS confidential-DLTB acceptance wording: " + " | ".join(hits),
+        )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_ceus_confidential_dltb_acceptance_packet_current",
+            False,
+            "Paper10 CEUS confidential-DLTB acceptance packet gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_ceus_confidential_dltb_acceptance_packet_current",
+        True,
+        "Paper10 CEUS confidential-DLTB acceptance packet is current and no-go guarded",
+    )
+
+
 def check_paper10_post_guard_submission_readiness_refresh_current(root: Path) -> CheckResult:
     required_files = [
         PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD,
@@ -7790,6 +7976,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_data_publication_boundary_backfill_current,
     check_paper10_public_release_rights_gate_current,
     check_paper10_dltb_leakage_evidence_audit_current,
+    check_paper10_ceus_confidential_dltb_acceptance_packet_current,
     check_paper10_post_guard_submission_readiness_refresh_current,
     check_paper10_ceus_clean_main_manuscript_draft_current,
     check_paper10_anchor_raw_rollout_consistency_audit_current,
