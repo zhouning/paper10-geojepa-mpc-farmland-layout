@@ -21,14 +21,14 @@ Short title: Monitor-gated GeoJEPA-MPC for farmland planning
 Submit `e0_paper10_ceus_highlights_2026-07-06.txt` as the separate editable highlights file.
 
 - Monitor gates control value-label escalation for farmland layout planning.
-- Bishan 20x16/top5 gives a descriptive matched 5-seed reward anchor.
-- Value filtering wins 3/5 seeds, so superiority remains descriptive.
-- Executable masks prevent invalid zero-swap rollout behavior.
+- True-reward guard is the primary Bishan algorithm result.
+- Bishan guard wins 20/20 seeds with positive bootstrap CI.
+- Old 5-seed value-filter anchor remains descriptive background.
 - Stage 3 and Dongxing tests define scale and calibration boundaries.
 
 ## Abstract
 
-Constrained farmland layout planning requires sequential spatial decisions for which local feasibility and finite-horizon value can diverge. We present a monitor-gated GeoJEPA-MPC workflow that generates finite-horizon value labels, screens label quality before value-head training and enforces executable actions during rollout. In Bishan, the 20x16/top5 value filter was evaluated against the matched `rank_seed2028` comparator under the same H=5, K=50 and executable-mask protocol. Across seeds 0-4, mean 100-step reward was 69.4705 for the value-filter policy and 67.5437 for the comparator, with sample standard deviation 1.0004 versus 7.2246. The seed-wise outcome was mixed: value filtering won 3/5 seeds and lost seeds 0 and 4, so the result is reported descriptively. Removing the executable mask reduced mean reward to 40.3515 and produced 100 zero-swap steps and 98 negative zero-swap steps, identifying executable masking as necessary for valid rollout behavior under the current protocol. An ungated top-4 control did not separate from the gated anchor, so the monitor gate is framed as label-quality evidence control rather than a separately proven online reward-gain mechanism. Stage 3 50-state rows, a 50x24 candidate-score sweep and Dongxing/Neijiang stress tests further bound the claim to calibrated planning support, not broad scale-up, transfer superiority or operational cadastral deployment.
+Constrained farmland layout planning requires sequential spatial decisions for which local feasibility and finite-horizon value can diverge. We present a monitor-gated GeoJEPA-MPC workflow that generates finite-horizon value labels, screens label quality before value-head training and enforces executable actions during rollout. In Bishan, the CEUS review-response experiment package `e0_paper10_ceus_review_response_experiment_package_2026-07-09` promotes a 20-seed rewardtop7 true-reward margin guard as the primary algorithm result. The true-reward margin guard reached 72.1918 mean reward versus 65.8876 for the value-filter baseline, with paired mean delta 6.3041, bootstrap 95% CI 4.1401 to 8.5056 and wins on 20/20 seeds. The previous 5-seed value-filter anchor remains descriptive only: 69.4705 versus 67.5437 mean reward, 3/5 wins and diagnostic-only two-sided sign-test readout was 1.0000. Removing the executable mask reduced mean reward to 40.3515 and produced 100 zero-swap steps and 98 negative zero-swap steps. The monitor gate is therefore framed as label-quality evidence control, while Stage 3 and Dongxing/Neijiang stress tests bound the claim against broad scale-up, transfer superiority or operational cadastral deployment.
 
 ## Keywords
 
@@ -44,7 +44,7 @@ Value functions can improve candidate selection, but value labels create a quali
 
 We evaluate a monitor-gated GeoJEPA-MPC workflow for constrained farmland layout planning. The workflow generates finite-horizon return labels for candidate block actions, applies monitor gates to check candidate regret, candidate overlap and one-step reward alignment, trains a value filter only for accepted label sets, and enforces feasibility with executable masks and paired inference during rollout. This is a soft training and hard inference design. Reward and count penalties shape rankings during training, while hard masks and deterministic paired swaps enforce executable actions.
 
-The evidence ladder is deliberately bounded. Bishan provides the primary positive result: a monitor-selected 20x16/top5 value-label setting improved descriptive mean reward and reduced seed-level reward variation under a matched protocol. Stage 3 then tested whether authorized 50-state value-label rows could support a stronger scale claim. They completed value-filter rollouts but remained below the matched comparator. Dongxing/Neijiang provides second-region calibration and stress-test evidence, but mixed transfer-versus-scratch outcomes prevent a transfer-superiority claim.
+The evidence ladder is deliberately bounded. Bishan now provides the primary positive result through the CEUS review-response experiment package: a 20-seed rewardtop7 true-reward margin guard improved reward over the value-filter baseline in the 20x16/top5 setting while keeping secondary planning metrics mixed. Stage 3 then tested whether authorized 50-state value-label rows could support a stronger scale claim. They completed value-filter rollouts but remained below the matched comparator. Dongxing/Neijiang provides second-region calibration and stress-test evidence, but mixed transfer-versus-scratch outcomes prevent a transfer-superiority claim.
 
 ## 2. Materials and methods
 
@@ -98,13 +98,15 @@ The primary reported outcome is 100-step rollout total reward. Secondary reporte
 
 The monitor gate selected trainable Bishan value-label targets before value-head training. The 10x12/horizon-5 seed43 pilot selected top-4, with candidate regret 0.4923, candidate overlap 0.5000 and one-step regret 1.2916. The 20x16/horizon-5 seed44 row selected top-5, with candidate regret 0.1877, candidate overlap 0.6300 and one-step regret 2.4626. These diagnostics supported using the 20x16/top5 labels for the primary Bishan value-filter test.
 
-### 3.2 Bishan 20x16/top5 produced a descriptive matched 5-seed reward anchor
+### 3.2 Bishan 20x16/top5 true-reward guard produced the primary 20-seed result
 
-The baseline-hardened Bishan 20x16/top5 comparison is the strongest performance evidence. Across locked seeds 0-4, value-filter mean reward was 69.4705 compared with 67.5437 for the matched `rank_seed2028` comparator. Sample standard deviation was lower for the value-filter policy, 1.0004 versus 7.2246. The paired mean delta was 1.9269 reward units.
+The CEUS review-response experiment package `e0_paper10_ceus_review_response_experiment_package_2026-07-09` makes the 20-seed rewardtop7 true-reward margin guard the current primary Bishan algorithm result. Under the Bishan 20x16/top5 protocol, the true-reward margin guard reached 72.1918 mean reward compared with 65.8876 for the value-filter baseline. The paired mean delta was 6.3041 reward units, with bootstrap 95% CI 4.1401 to 8.5056. The guard won 20/20 paired seeds, and the minimum seed-level delta remained positive at 0.0029.
 
-The seed-level outcome was mixed. Paired reward deltas were -3.2408, 3.6137, 8.4242, 9.0620 and -8.2248 for seeds 0-4. The value filter therefore won 3/5 seeds and lost seeds 0 and 4. The diagnostic-only two-sided sign-test readout was 1.0000. This pattern supports a descriptive mean reward and lower-variation statement under the tested protocol. It does not support a claim that the value filter improved every seed or established inferential superiority.
+The guard is algorithmic rather than purely textual: after value-filter selection, it audits the selected action plus the model-reward top7 actions and switches only when the audited best true reward exceeds the selected action by the setting-specific margin 1.50. Across 2000 audited states it switched 172 times, for a switch rate of 0.0860. The simplified rewardtop7 audit used 7.7605 mean audited actions, lower than the dual7x7 diagnostic path at 8.1905 mean audited actions.
 
-Secondary metrics were also mixed. Relative to the matched comparator, mean slope-change difference was 0.0138 and mean baimu-area-change difference was 4.5905 ha, while mean contiguity-change difference was -0.0003. The safest interpretation is reward-centered: the value-filter anchor improved mean reward and reduced reward variation under the implemented reward definition, while final planning indicators did not all move in the same favorable direction.
+The previous baseline-hardened value-filter comparison is retained as historical descriptive context, not as the primary claim. Across locked seeds 0-4, value-filter mean reward was 69.4705 compared with 67.5437 for the matched `rank_seed2028` comparator. The value filter won 3/5 seeds and lost seeds 0 and 4; the diagnostic-only two-sided sign-test readout was 1.0000. This older pattern does not support a claim that the value filter improved every seed or established inferential superiority.
+
+Secondary metrics for the guard remain mixed. Relative to the value-filter baseline, mean contiguity-change difference was 0.0007, while mean slope-change difference was -0.0063 and mean baimu-area-change difference was -6.6666 ha. The safest interpretation is reward-centered: the guard improves the primary reward evidence, but final planning indicators do not all move in the same favorable direction.
 
 ### 3.3 Stage 3 defined the 50-state boundary
 
@@ -136,9 +138,9 @@ The Dongxing low-label stress test further bounds the transfer claim. At 5 label
 
 ## 4. Discussion
 
-The baseline-hardened evidence narrows the paper, but it makes the manuscript more defensible. The supported contribution is not broad value-filter superiority across seeds, regions or label scales. The supported contribution is an evidence-controlled workflow that records when a value-label setting is usable, when executable constraints are essential and when additional label scale does not improve the matched comparator.
+The review-response experiment package narrows the paper while strengthening its primary algorithm evidence. The supported contribution is not broad value-filter superiority across seeds, regions or label scales. The supported contribution is an evidence-controlled workflow that records when a value-label setting is usable, when executable constraints are essential, and when a true-reward margin guard improves the primary reward outcome under a bounded protocol.
 
-The Bishan 20x16/top5 anchor combines a higher descriptive mean reward with lower seed-level reward variation. It is also bounded because the seed-level evidence is mixed. Seed0 and seed4 losses prevent a uniform seed-wise statement. The diagnostic-only sign-test readout of 1.0000 also prevents inferential wording. This framing lets reviewers see where the evidence starts and stops.
+The Bishan 20x16/top5 result is now centered on the 20-seed rewardtop7 true-reward margin guard, which reached 72.1918 mean reward versus 65.8876 for the value-filter baseline and won all 20 paired seeds. The old 5-seed value-filter anchor remains useful because it explains the predecessor policy and matched comparator context, but its 3/5 seed-wise outcome and diagnostic-only sign-test readout of 1.0000 prevent it from carrying the primary claim.
 
 The mechanism ablation clarifies which part of the workflow is indispensable. The executable mask is necessary for valid rollout behavior under the current environment. Without it, the planner produced widespread zero-swap behavior and sharply lower reward. The monitor gate plays a different role. It controls which value labels are allowed to become manuscript-facing training evidence, but the current ablation does not isolate it as an independent online reward mechanism.
 
@@ -154,11 +156,11 @@ Several limitations remain for interpretation. First, the current evidence is tw
 
 ## 5. Conclusion
 
-Paper10 supports monitor-gated value labels and executable masks as a bounded GeoJEPA-MPC workflow for constrained farmland layout planning. The validated Bishan 20x16/top5 policy provides a descriptive matched 5-seed reward anchor, and the mechanism packet shows that executable masks are necessary for valid rollouts. The mixed seed-wise outcome, Stage 3 boundary rows, candidate-score sweep and Dongxing/Neijiang stress tests prevent stronger claims about uniform superiority, larger-label improvement, transfer superiority or operational cadastral deployment. The CEUS manuscript should therefore present the work as a reproducible evidence-control and planning-support workflow with explicit boundaries.
+Paper10 supports monitor-gated value labels, executable masks and a setting-specific true-reward margin guard as a bounded GeoJEPA-MPC workflow for constrained farmland layout planning. The primary Bishan 20x16/top5 result is the 20-seed rewardtop7 guard, which improves mean reward over the value-filter baseline with a positive bootstrap interval while leaving secondary planning indicators mixed. The legacy 5-seed value-filter anchor, Stage 3 boundary rows, candidate-score sweep and Dongxing/Neijiang stress tests prevent stronger claims about universal margins, 50-state scale-up, transfer superiority or operational cadastral deployment. These boundaries mean the result is not broad scale-up, transfer superiority or operational cadastral deployment. The CEUS manuscript should therefore present the work as a reproducible evidence-control and planning-support workflow with explicit boundaries.
 
 ## Data and Code Availability
 
-This CEUS-facing statement is updated by `e0_paper10_ceus_submission_policy_verification_2026-07-09.md`. The reviewer-facing repository route is the author-confirmed 4open README.md direct link: `https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/README.md`. The current GitHub submission-preparation commit anchor is `92a10620d8832bacae4fbeda1fdb5708b265d139`. The author checked the 4open page on 2026-07-09 and reported no visible exact snapshot identifier, version identifier or commit hash; this GitHub commit is therefore a submission-preparation anchor, not proof of the exact 4open snapshot. Under the checked CEUS/Elsevier Research Data Policy Option B route, the confidential raw-DLTB limitation is disclosed in this section and does not require pre-submission editor acceptance before the manuscript can be submitted for review.
+This CEUS-facing statement is updated by `e0_paper10_ceus_submission_policy_verification_2026-07-09.md`, and the algorithm/experiment hierarchy is locked by `e0_paper10_ceus_review_response_experiment_package_2026-07-09.md`. The reviewer-facing repository route is the author-confirmed 4open README.md direct link: `https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/README.md`. The current GitHub submission-preparation commit anchor is `92a10620d8832bacae4fbeda1fdb5708b265d139`. The author checked the 4open page on 2026-07-09 and reported no visible exact snapshot identifier, version identifier or commit hash; this GitHub commit is therefore a submission-preparation anchor, not proof of the exact 4open snapshot. Under the checked CEUS/Elsevier Research Data Policy Option B route, the confidential raw-DLTB limitation is disclosed in this section and does not require pre-submission editor acceptance before the manuscript can be submitted for review.
 
 The repository package contains custom code, tests, scripts, the small reviewer smoke dataset, generated value-label files, monitor outputs, rollout summaries, figure-ready CSV source data, manuscript table source notes, saved checkpoints and metadata needed to inspect the reported Bishan 10x12/top4, Bishan 20x16/top5, Bishan Stage 3 boundary and Dongxing summary results. Code and scripts are licensed under Apache-2.0 in `LICENSE`. Generated non-DLTB JSON, Markdown, CSV, NPZ outputs, source-data tables, checkpoints and model-weight artifacts are released under CC0-1.0.
 
@@ -196,7 +198,7 @@ Reference list source files for the clean draft are `references/paper10_verified
 
 Figure 1. Monitor-gated GeoJEPA-MPC workflow for farmland layout planning. The schematic should show finite-horizon value-label generation, monitor-gate checks, value-head training, executable-mask rollout and claim-boundary recording.
 
-Figure 2. Bishan 20x16/top5 matched 5-seed reward anchor. The figure should report the value-filter and matched comparator rewards under H=5, K=50, executable-mask and seeds 0-4, and it should show the mixed seed-wise outcome.
+Figure 2. Bishan 20x16/top5 true-reward margin guard result. The figure should report the 20-seed rewardtop7 guard and value-filter baseline rewards, the 6.3041 paired mean delta, bootstrap 95% CI 4.1401 to 8.5056, 20/20 seed wins and the mixed secondary-metric boundary.
 
 Figure 3. Bishan Stage 3 boundary rows and candidate-score sweep. The figure should show that authorized 50-state rows and the later 50x24 sweep remained below the matched comparator under the reported rollout settings.
 
@@ -208,7 +210,7 @@ Supplementary Figure S1. Dongxing/Neijiang low-label transfer stress test at 5, 
 
 Table 1. Bishan monitor-selected value-label gates for the 10x12/top4 and 20x16/top5 settings.
 
-Table 2. Bishan matched 5-seed rollout comparison for the 20x16/top5 value-filter policy and the matched comparator.
+Table 2. Bishan 20-seed true-reward margin guard and legacy value-filter anchor. The table should show the guard as the primary result and retain the 5-seed value-filter comparison as historical descriptive context.
 
 Table 3. Dongxing/Neijiang return-label scaling summary for transfer and scratch families.
 

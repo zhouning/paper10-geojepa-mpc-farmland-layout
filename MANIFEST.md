@@ -108,11 +108,18 @@ data needed for smoke verification.
   tradeoffs and no-overclaim gates for the next CEUS manuscript pass.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_true_reward_guard_readiness_2026-07-08.md`:
   source-derived algorithm-readiness audit for the 2026-07-07 true-reward
-  margin guard evidence, promoting 20x16/top5 `audit7x7 margin=1.50` as
+  margin guard evidence, promoting 20x16/top5 `rewardtop7 margin=1.50` as
   the current primary guard candidate and 10x12/top4 `rewardtop7 margin=1.60`
   as setting-specific consistency support while preserving no-overclaim gates.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_true_reward_guard_readiness_2026-07-08.json`:
   machine-readable source for the true-reward guard readiness preflight check.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_review_response_experiment_package_2026-07-09.md`:
+  CEUS review-response algorithm experiment package promoting the 20-seed
+  `rewardtop7 margin=1.50` true-reward guard as the primary Bishan algorithm
+  evidence and demoting the old 5-seed value-filter result to descriptive
+  background.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_review_response_experiment_package_2026-07-09.json`:
+  machine-readable source for the CEUS review-response experiment preflight check.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_public_release_rights_gate_2026-07-09.md`:
   current public-release rights gate recording Apache-2.0 for code, CC0-1.0
   for generated non-DLTB data/model artifacts, confidential_no_external_access

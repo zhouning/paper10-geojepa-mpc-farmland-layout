@@ -156,6 +156,12 @@ PAPER10_MECHANISM_ABLATION_PACKET_MD = (
 PAPER10_MECHANISM_ABLATION_PACKET_JSON = (
     RESULTS / "e0_paper10_mechanism_ablation_packet_2026-06-20.json"
 )
+PAPER10_CEUS_MECHANISM_CLAIM_AUDIT_MD = (
+    RESULTS / "e0_paper10_ceus_mechanism_claim_audit_2026-06-27.md"
+)
+PAPER10_CEUS_MECHANISM_CLAIM_AUDIT_JSON = (
+    RESULTS / "e0_paper10_ceus_mechanism_claim_audit_2026-06-27.json"
+)
 PAPER10_MONITOR_GATED_TOP5_JSON = (
     RESULTS / "e0_value_label_monitor_frontier_random050_20x16_h5_seed44_top5.json"
 )
@@ -232,6 +238,12 @@ PAPER10_CEUS_BASELINE_HARDENING_MD = (
 )
 PAPER10_CEUS_BASELINE_HARDENING_JSON = (
     RESULTS / "e0_paper10_ceus_baseline_inference_hardening_2026-07-06.json"
+)
+PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_MD = (
+    RESULTS / "e0_paper10_ceus_review_response_experiment_package_2026-07-09.md"
+)
+PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_JSON = (
+    RESULTS / "e0_paper10_ceus_review_response_experiment_package_2026-07-09.json"
 )
 PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH = (
     RESULTS / "e0_paper10_ceus_baseline_hardened_manuscript_patch_2026-07-06.md"
@@ -392,6 +404,8 @@ REQUIRED_PATHS = (
     PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_JSON,
     PAPER10_MECHANISM_ABLATION_PACKET_MD,
     PAPER10_MECHANISM_ABLATION_PACKET_JSON,
+    PAPER10_CEUS_MECHANISM_CLAIM_AUDIT_MD,
+    PAPER10_CEUS_MECHANISM_CLAIM_AUDIT_JSON,
     PAPER10_MONITOR_GATED_TOP5_JSON,
     PAPER10_MONITOR_UNGATED_TOP4_JSON,
     PAPER10_MECHANISM_FULL_GATED_MASKED_JSON,
@@ -417,6 +431,8 @@ REQUIRED_PATHS = (
     PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_JSON,
     PAPER10_CEUS_BASELINE_HARDENING_MD,
     PAPER10_CEUS_BASELINE_HARDENING_JSON,
+    PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_MD,
+    PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_JSON,
     PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH,
     PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_ASSEMBLY_DRAFT,
     PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT,
@@ -5794,6 +5810,172 @@ def check_paper10_ceus_baseline_inference_hardening_current(root: Path) -> Check
 
 
 
+
+def check_paper10_ceus_review_response_experiment_package_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_MD,
+        PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_JSON,
+        PAPER10_TRUE_REWARD_GUARD_READINESS_JSON,
+        PAPER10_CEUS_BASELINE_HARDENING_JSON,
+        PAPER10_CEUS_MECHANISM_CLAIM_AUDIT_JSON,
+        README,
+        MANIFEST,
+        REPRODUCIBILITY,
+        DATA_AVAILABILITY,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_ceus_review_response_experiment_package_current",
+            False,
+            "missing Paper10 CEUS review-response experiment package files: "
+            + ", ".join(missing),
+        )
+
+    package_text = read_text(root / PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_MD)
+    try:
+        payload = json.loads(
+            read_text(root / PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_JSON)
+        )
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_ceus_review_response_experiment_package_current",
+            False,
+            f"{PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    package_name = PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_MD.name
+    for doc in (README, MANIFEST, REPRODUCIBILITY, DATA_AVAILABILITY):
+        doc_text = read_text(root / doc)
+        if package_name not in doc_text:
+            missing_tokens.append(f"{doc}: {package_name}")
+
+    required_text_tokens = [
+        "Paper10 CEUS review-response algorithm experiment package",
+        "Status: ceus_review_response_algorithm_experiment_package",
+        "`rewardtop7 margin=1.50`",
+        "true-reward margin guard",
+        "20 / 20",
+        "72.1918",
+        "65.8876",
+        "6.3041",
+        "4.1401",
+        "8.5056",
+        "historical descriptive anchor, not the primary claim",
+        "diagnostic sign-test p=1.0000",
+        "reward_primary_secondary_mixed",
+        "monitor gate as evidence control",
+        "Do not claim uniform secondary-metric improvement.",
+        "Do not claim direct 50-state Bishan scale-up success.",
+        "Do not claim robust Bishan-to-Dongxing transfer superiority.",
+    ]
+    for token in required_text_tokens:
+        if token not in package_text:
+            missing_tokens.append(
+                f"{PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_MD}: {token}"
+            )
+
+    expected_values = {
+        ("status",): "ceus_review_response_algorithm_experiment_package",
+        ("source_boundary", "reran_training"): False,
+        ("source_boundary", "reran_rollouts"): False,
+        ("source_boundary", "algorithm_reselection_from_tracked_evidence"): True,
+        ("source_boundary", "reviewer_driven_claim_reclassification"): True,
+        ("primary_algorithm_evidence", "algorithm"): "true_reward_margin_guard",
+        ("primary_algorithm_evidence", "setting"): "bishan_20x16_top5",
+        ("primary_algorithm_evidence", "audit_set"): "rewardtop7",
+        ("primary_algorithm_evidence", "switch_margin"): 1.5,
+        ("primary_algorithm_evidence", "n_seeds"): 20,
+        ("primary_algorithm_evidence", "seed_wins"): 20,
+        ("primary_algorithm_evidence", "seed_losses"): 0,
+        ("legacy_value_filter_anchor", "role"): "historical_descriptive_anchor_not_primary",
+        ("legacy_value_filter_anchor", "n_seeds"): 5,
+        ("legacy_value_filter_anchor", "candidate_win_count"): 3,
+        ("legacy_value_filter_anchor", "candidate_loss_count"): 2,
+        ("legacy_value_filter_anchor", "primary_claim_allowed"): False,
+        ("secondary_metric_assessment", "classification"): "reward_primary_secondary_mixed",
+        ("mechanism_boundary", "monitor_gate_direct_reward_gain_supported"): False,
+        ("mechanism_boundary", "monitor_gate_evidence_control_supported"): True,
+        ("mechanism_boundary", "executable_mask_necessity_supported"): True,
+        ("claim_gates", "primary_guard_confirmatory_20seed_supported"): True,
+        ("claim_gates", "old_5seed_value_filter_primary_claim_blocked"): True,
+        ("claim_gates", "secondary_metrics_uniformly_aligned"): False,
+        ("claim_gates", "monitor_gate_online_reward_gain_supported"): False,
+        ("claim_gates", "direct_50state_scaleup_supported"): False,
+        ("claim_gates", "robust_transfer_superiority_supported"): False,
+        ("claim_gates", "submission_story_should_use_guard_as_primary"): True,
+    }
+    for path_keys, expected in expected_values.items():
+        value = payload
+        for key in path_keys:
+            if not isinstance(value, dict) or key not in value:
+                missing_tokens.append(
+                    f"{PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_JSON}: {'.'.join(path_keys)}"
+                )
+                value = None
+                break
+            value = value[key]
+        if value != expected:
+            missing_tokens.append(
+                f"{PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_JSON}: "
+                f"{'.'.join(path_keys)}={value}"
+            )
+
+    legacy = payload.get("legacy_value_filter_anchor", {})
+    if legacy.get("primary_claim_allowed") is not False:
+        missing_tokens.append(
+            f"{PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_JSON}: "
+            "old_5seed_value_filter_primary_claim_blocked failed"
+        )
+
+    primary = payload.get("primary_algorithm_evidence", {})
+    ci = primary.get("bootstrap_95ci_delta", [0.0, 0.0])
+    numeric_checks = [
+        ("primary mean delta", primary.get("mean_delta_vs_baseline", 0.0) > 0.0),
+        ("primary min seed delta", primary.get("min_seed_delta_vs_baseline", 0.0) > 0.0),
+        ("primary bootstrap CI lower", len(ci) == 2 and ci[0] > 0.0),
+        (
+            "primary guard mean reward",
+            abs(float(primary.get("guard_mean_reward", 0.0)) - 72.19178534319884) < 1e-8,
+        ),
+        (
+            "primary baseline mean reward",
+            abs(float(primary.get("baseline_mean_reward", 0.0)) - 65.8876435268697) < 1e-8,
+        ),
+    ]
+    for label, ok in numeric_checks:
+        if not ok:
+            missing_tokens.append(
+                f"{PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_JSON}: {label} failed"
+            )
+
+    for line_no, line in enumerate(package_text.splitlines(), start=1):
+        if is_true_reward_guard_positive_overclaim(line):
+            missing_tokens.append(
+                f"{PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_MD}:{line_no}: "
+                f"forbidden true-reward guard wording: {line.strip()}"
+            )
+        if is_ceus_baseline_positive_overclaim(line):
+            missing_tokens.append(
+                f"{PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_MD}:{line_no}: "
+                f"forbidden baseline overclaim: {line.strip()}"
+            )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_ceus_review_response_experiment_package_current",
+            False,
+            "Paper10 CEUS review-response experiment package gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_ceus_review_response_experiment_package_current",
+        True,
+        "Paper10 CEUS review-response experiment package is current and claim-bounded",
+    )
+
+
 def check_paper10_post_guard_experiment_closure_refresh_current(root: Path) -> CheckResult:
     required_files = [
         PAPER10_POST_GUARD_EXPERIMENT_CLOSURE_REFRESH_MD,
@@ -7209,12 +7391,12 @@ CEUS_CLEAN_MANUSCRIPT_PENDING_AUTHOR_SECTIONS = (
 
 CEUS_CLEAN_MANUSCRIPT_REQUIRED_CAPTIONS = (
     "Figure 1. Monitor-gated GeoJEPA-MPC workflow for farmland layout planning",
-    "Figure 2. Bishan 20x16/top5 matched 5-seed reward anchor",
+    "Figure 2. Bishan 20x16/top5 true-reward margin guard result",
     "Figure 3. Bishan Stage 3 boundary rows and candidate-score sweep",
     "Figure 4. Dongxing/Neijiang return-label scaling",
     "Supplementary Figure S1. Dongxing/Neijiang low-label transfer stress test",
     "Table 1. Bishan monitor-selected value-label gates",
-    "Table 2. Bishan matched 5-seed rollout comparison",
+    "Table 2. Bishan 20-seed true-reward margin guard and legacy value-filter anchor",
     "Table 3. Dongxing/Neijiang return-label scaling summary",
     "Supplementary Table S1. Stage 3 seed-level rollout rewards",
     "Supplementary Table S2. Dongxing/Neijiang low-label transfer stress-test summary",
@@ -7318,6 +7500,10 @@ def check_paper10_ceus_clean_main_manuscript_draft_current(root: Path) -> CheckR
         "no request-based route for raw DLTB",
         "Pending author decision",
         "diagnostic-only two-sided sign-test readout was 1.0000",
+        "e0_paper10_ceus_review_response_experiment_package_2026-07-09",
+        "20-seed rewardtop7 true-reward margin guard",
+        "true-reward margin guard reached 72.1918 mean reward",
+        "bootstrap 95% CI 4.1401 to 8.5056",
         "does not support a claim that the value filter improved every seed or established inferential superiority",
         "not broad scale-up, transfer superiority or operational cadastral deployment",
     ]
@@ -8543,6 +8729,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_real_env_longhorizon_pilot_audit_current,
     check_paper10_real_env_longhorizon_confirmatory_audit_current,
     check_paper10_ceus_baseline_inference_hardening_current,
+    check_paper10_ceus_review_response_experiment_package_current,
     check_paper10_true_reward_guard_readiness_current,
     check_paper10_post_guard_experiment_closure_refresh_current,
     check_paper10_author_decision_closeout_form_current,

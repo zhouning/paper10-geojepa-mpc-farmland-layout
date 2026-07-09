@@ -1,0 +1,119 @@
+{
+  "blocked_language": [
+    "the 5-seed value-filter anchor is the strongest Paper10 result",
+    "uniform secondary-metric improvement",
+    "direct monitor-gate online reward gain",
+    "direct 50-state Bishan scale-up success",
+    "robust Bishan-to-Dongxing transfer superiority",
+    "deployment-ready cadastral planning"
+  ],
+  "claim_gates": {
+    "all_primary_seeds_improve": true,
+    "bootstrap_ci_lower_positive": true,
+    "deployment_ready_cadastral_planning_supported": false,
+    "direct_50state_scaleup_supported": false,
+    "executable_mask_necessity_supported": true,
+    "monitor_gate_evidence_control_supported": true,
+    "monitor_gate_online_reward_gain_supported": false,
+    "old_5seed_value_filter_primary_claim_blocked": true,
+    "primary_guard_confirmatory_20seed_supported": true,
+    "primary_guard_promoted_to_main_algorithm_candidate": true,
+    "robust_transfer_superiority_supported": false,
+    "secondary_metrics_uniformly_aligned": false,
+    "submission_story_should_use_guard_as_primary": true
+  },
+  "date": "2026-07-09",
+  "legacy_value_filter_anchor": {
+    "allowed_role": "historical descriptive anchor and comparator context",
+    "baseline_mean_reward": 67.5436698503176,
+    "candidate_loss_count": 2,
+    "candidate_mean_reward": 69.47054604253475,
+    "candidate_win_count": 3,
+    "n_seeds": 5,
+    "paired_mean_delta": 1.9268761922171436,
+    "primary_claim_allowed": false,
+    "role": "historical_descriptive_anchor_not_primary",
+    "setting": "bishan_20x16_top5",
+    "sign_test_p_value": 1.0
+  },
+  "manuscript_sync_actions": [
+    "Make the 20-seed rewardtop7 true-reward margin guard the primary Bishan algorithm result.",
+    "Move the 5-seed value-filter result to historical descriptive anchor and comparator context.",
+    "Report secondary planning metrics as mixed rather than uniformly improved.",
+    "Frame the monitor gate as evidence control, not direct online reward gain."
+  ],
+  "mechanism_boundary": {
+    "allowed_monitor_language": "monitor gate as evidence control",
+    "direct_monitor_gate_reward_gain_status": "not_supported_equal_reward",
+    "executable_mask_necessity_supported": true,
+    "executable_mask_status": "supported",
+    "monitor_gate_direct_reward_gain_supported": false,
+    "monitor_gate_evidence_control_supported": true,
+    "no_mask_negative_zero_swap_steps": 98.0,
+    "no_mask_zero_swap_steps": 100.0,
+    "ungated_reward_delta_vs_full": 0.0
+  },
+  "primary_algorithm_evidence": {
+    "algorithm": "true_reward_margin_guard",
+    "algorithmic_change_relative_to_clean_draft": "promote the tracked true-reward margin guard over the old 5-seed value-filter anchor as the primary Bishan algorithm evidence",
+    "audit_action_count_delta_vs_dual7x7": -0.4299999999999997,
+    "audit_set": "rewardtop7",
+    "audited_states": 2000,
+    "baseline_mean_reward": 65.8876435268697,
+    "baseline_name": "blend_w0p10_value_filter_selectedaudit_100step_seeds0-19",
+    "bootstrap_95ci_delta": [
+      4.140109129548553,
+      8.50555044466635
+    ],
+    "dual7x7_mean_audit_action_count": 8.1905,
+    "guard_mean_reward": 72.19178534319884,
+    "guard_name": "blend_w0p10_margin_guard_m150_rewardtop7_100step_seeds0-19",
+    "max_seed_delta_vs_baseline": 15.445442724083257,
+    "mean_audit_action_count": 7.7605,
+    "mean_delta_vs_baseline": 6.304141816329158,
+    "min_seed_delta_vs_baseline": 0.0028808405276095073,
+    "n_seeds": 20,
+    "seed_losses": 0,
+    "seed_wins": 20,
+    "selected_true_reward_regret_mean": 0.8904121200617146,
+    "setting": "bishan_20x16_top5",
+    "switch_margin": 1.5,
+    "switch_rate": 0.086,
+    "switches": 172
+  },
+  "secondary_metric_assessment": {
+    "aligned_metrics": [
+      "cont_change_mean"
+    ],
+    "classification": "reward_primary_secondary_mixed",
+    "deltas_vs_value_filter_baseline": {
+      "baimu_area_change_ha_mean": -6.666585678316352,
+      "cont_change_mean": 0.0006585806189131974,
+      "slope_change_pct_mean": -0.006298036617702563
+    },
+    "interpretation": "The guard is reward-positive under the confirmatory metric, but secondary planning metrics are not uniformly aligned.",
+    "metric_direction": {
+      "baimu_area_change_ha_mean": "higher_is_better",
+      "cont_change_mean": "higher_is_better",
+      "slope_change_pct_mean": "higher_is_better"
+    },
+    "neutral_metrics": [],
+    "tradeoff_metrics": [
+      "baimu_area_change_ha_mean",
+      "slope_change_pct_mean"
+    ]
+  },
+  "source_boundary": {
+    "algorithm_reselection_from_tracked_evidence": true,
+    "reran_rollouts": false,
+    "reran_training": false,
+    "reviewer_driven_claim_reclassification": true,
+    "source": "tracked Paper10 guard, baseline, and mechanism artifacts only"
+  },
+  "source_files": {
+    "baseline_hardening_json": "paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_baseline_inference_hardening_2026-07-06.json",
+    "mechanism_audit_json": "paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_mechanism_claim_audit_2026-06-27.json",
+    "true_reward_guard_json": "paper10_geojepa_mpc/experiments/results/e0_paper10_true_reward_guard_readiness_2026-07-08.json"
+  },
+  "status": "ceus_review_response_algorithm_experiment_package"
+}

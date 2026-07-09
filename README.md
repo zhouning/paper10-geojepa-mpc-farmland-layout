@@ -57,11 +57,19 @@ mixed seed-wise, and prevents uniform or inferential superiority claims.
 Use
 `paper10_geojepa_mpc/experiments/results/e0_paper10_true_reward_guard_readiness_2026-07-08.md`
 as the current algorithm-readiness boundary for the 2026-07-07 true-reward
-margin guard evidence. It promotes Bishan 20x16/top5 `audit7x7 margin=1.50`
+margin guard evidence. It promotes Bishan 20x16/top5 `rewardtop7 margin=1.50`
 as the current primary guard candidate and 10x12/top4 `rewardtop7 margin=1.60`
 as setting-specific consistency support, while blocking universal-margin,
 50-state scale-up, transfer-superiority, deployment-ready, and final-submission
 claims.
+
+Use
+`paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_review_response_experiment_package_2026-07-09.md`
+as the CEUS review-response algorithm experiment package. It promotes the
+20-seed `rewardtop7 margin=1.50` true-reward guard as the manuscript-facing
+primary Bishan algorithm result (72.1918 versus 65.8876 mean reward; paired
+delta 6.3041; bootstrap 95% CI 4.1401 to 8.5056; 20/20 seed wins) and demotes
+the old 5-seed value-filter result to historical descriptive anchor.
 
 The previous 10x12/h5 top-4 pilot remains packaged as the direct baseline. Its
 recorded 100-step seeds 0-4 mean total reward is `65.2566` with sample standard
@@ -125,6 +133,8 @@ Paper-facing writing assets are tracked under
 - `e0_paper10_ceus_mechanism_claim_audit_2026-06-27.md`
 - `e0_paper10_ceus_review_optimization_register_2026-06-27.md`
 - `e0_paper10_ceus_baseline_inference_hardening_2026-07-06.md`
+- `e0_paper10_ceus_review_response_experiment_package_2026-07-09.md`
+- `e0_paper10_ceus_review_response_experiment_package_2026-07-09.json`
 - `e0_paper10_ceus_baseline_hardened_manuscript_patch_2026-07-06.md`
 - `e0_paper10_ceus_baseline_hardened_manuscript_assembly_draft_2026-07-06.md`
 - `e0_paper10_formal_output_readiness_audit_2026-07-06.md`

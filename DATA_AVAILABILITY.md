@@ -144,7 +144,14 @@ margin guard evidence, see:
 paper10_geojepa_mpc/experiments/results/e0_paper10_true_reward_guard_readiness_2026-07-08.md
 ```
 
-This algorithm-readiness boundary does not close repository DOI, licence,
+For the CEUS review-response algorithm experiment package that promotes the
+20-seed true-reward guard as the manuscript-facing primary Bishan result, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_review_response_experiment_package_2026-07-09.md
+```
+
+This algorithm-readiness and review-response boundary does not close repository DOI, licence,
 full-data access, controlled-access, or final submission-readiness decisions.
 
 For the current CEUS baseline-hardened manuscript assembly, formal-output

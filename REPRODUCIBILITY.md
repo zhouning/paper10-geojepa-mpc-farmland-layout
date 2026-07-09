@@ -116,6 +116,16 @@ paper10_geojepa_mpc/experiments/results/e0_paper10_true_reward_guard_readiness_2
 - `e0_paper10_true_reward_guard_readiness_2026-07-08.md`: source-derived
   algorithm-readiness audit; no rollout, training, or post-hoc experiment rerun is performed.
 
+Use the CEUS review-response experiment package before changing the paper-facing
+primary algorithm result or reverting to the old 5-seed value-filter anchor:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_review_response_experiment_package_2026-07-09.md
+```
+
+- `e0_paper10_ceus_review_response_experiment_package_2026-07-09.md`: source-derived
+  algorithm/experiment hierarchy lock; no rollout or training is rerun.
+
 Generate draft integrated Dongxing Figure 4 and Figure 5 previews from tracked
 CSV source data:
 

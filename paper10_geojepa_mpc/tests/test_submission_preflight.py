@@ -14,6 +14,7 @@ from scripts.paper10.preflight_submission_checks import (
     CEUS_STAGE3_MANUSCRIPT_REFRAME,
     check_citation_keys_resolve,
     check_paper10_ceus_baseline_inference_hardening_current,
+    check_paper10_ceus_review_response_experiment_package_current,
     check_paper10_author_decision_closeout_form_current,
     check_paper10_post_guard_experiment_closure_refresh_current,
     check_paper10_post_guard_submission_readiness_refresh_current,
@@ -61,6 +62,8 @@ from scripts.paper10.preflight_submission_checks import (
     PAPER10_REAL_ENV_SMOKE_BOUNDARY_AUDIT_MD,
     PAPER10_CEUS_REALDATA_LONGHORIZON_PROTOCOL,
     PAPER10_CEUS_REVIEW_OPTIMIZATION_REGISTER,
+    PAPER10_CEUS_MECHANISM_CLAIM_AUDIT_MD,
+    PAPER10_CEUS_MECHANISM_CLAIM_AUDIT_JSON,
     PAPER10_REAL_ENV_SMOKE_JSON,
     PAPER10_REAL_ENV_SMOKE_MD,
     PAPER10_REAL_ENV_LONGHORIZON_PILOT_AUDIT_JSON,
@@ -68,6 +71,8 @@ from scripts.paper10.preflight_submission_checks import (
     PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_JSON,
     PAPER10_CEUS_BASELINE_HARDENING_MD,
     PAPER10_CEUS_BASELINE_HARDENING_JSON,
+    PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_MD,
+    PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_JSON,
     PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH,
     PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_ASSEMBLY_DRAFT,
     PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT,
@@ -182,12 +187,16 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     PAPER10_REAL_ENV_SMOKE_JSON,
     PAPER10_CEUS_REALDATA_LONGHORIZON_PROTOCOL,
     PAPER10_CEUS_REVIEW_OPTIMIZATION_REGISTER,
+    PAPER10_CEUS_MECHANISM_CLAIM_AUDIT_MD,
+    PAPER10_CEUS_MECHANISM_CLAIM_AUDIT_JSON,
     PAPER10_REAL_ENV_LONGHORIZON_PILOT_AUDIT_MD,
     PAPER10_REAL_ENV_LONGHORIZON_PILOT_AUDIT_JSON,
     PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD,
     PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_JSON,
     PAPER10_CEUS_BASELINE_HARDENING_MD,
     PAPER10_CEUS_BASELINE_HARDENING_JSON,
+    PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_MD,
+    PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_JSON,
     PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH,
     PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_ASSEMBLY_DRAFT,
     PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT,
@@ -368,6 +377,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "paper10_real_env_longhorizon_pilot_audit_current" in payload["passed_checks"]
     assert "paper10_real_env_longhorizon_confirmatory_audit_current" in payload["passed_checks"]
     assert "paper10_ceus_baseline_inference_hardening_current" in payload["passed_checks"]
+    assert "paper10_ceus_review_response_experiment_package_current" in payload["passed_checks"]
     assert "paper10_ceus_clean_main_manuscript_draft_current" in payload["passed_checks"]
     assert "paper10_true_reward_guard_readiness_current" in payload["passed_checks"]
     assert "paper10_post_guard_experiment_closure_refresh_current" in payload["passed_checks"]
@@ -913,6 +923,7 @@ def test_submission_preflight_current_repository_includes_ceus_baseline_hardenin
     payload = json.loads(result.stdout)
 
     assert "paper10_ceus_baseline_inference_hardening_current" in payload["passed_checks"]
+    assert "paper10_ceus_review_response_experiment_package_current" in payload["passed_checks"]
 
 
 def test_submission_preflight_minimal_fixture_reports_missing_ceus_baseline_hardening(tmp_path):
@@ -2461,3 +2472,47 @@ def test_ceus_submission_policy_verification_closes_external_policy_blockers():
     assert payload["policy_findings"]["figure1_pdf_vector_available"] is True
     assert payload["policy_findings"]["figure1_png_width_px"] == 3870
     assert payload["remaining_submission_system_fields"]["author_declarations"] == "fill_in_submission_system"
+
+
+def test_submission_preflight_minimal_fixture_reports_missing_ceus_review_response_package(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    (fixture / PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_MD).unlink()
+
+    _, payload = run_submission_preflight_json(fixture)
+
+    assert payload["ok"] is False
+    assert "paper10_ceus_review_response_experiment_package_current" in payload["failed_checks"]
+    details = check_details(payload, "paper10_ceus_review_response_experiment_package_current")
+    assert str(PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_MD) in details
+
+
+def test_ceus_review_response_package_preflight_rejects_legacy_anchor_as_primary(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    path = fixture / PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_JSON
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["legacy_value_filter_anchor"]["primary_claim_allowed"] = True
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+
+    result = check_paper10_ceus_review_response_experiment_package_current(fixture)
+
+    assert result.name == "paper10_ceus_review_response_experiment_package_current"
+    assert result.ok is False
+    assert "old_5seed_value_filter_primary_claim_blocked" in result.details
+
+
+def test_ceus_clean_main_manuscript_draft_preflight_requires_guard_primary_result(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT
+    draft.write_text(
+        draft.read_text(encoding="utf-8").replace(
+            "true-reward margin guard reached 72.1918 mean reward",
+            "value-filter policy reached 69.4705 mean reward",
+        ),
+        encoding="utf-8",
+    )
+
+    result = preflight_checks.check_paper10_ceus_clean_main_manuscript_draft_current(fixture)
+
+    assert result.name == "paper10_ceus_clean_main_manuscript_draft_current"
+    assert result.ok is False
+    assert "true-reward margin guard reached 72.1918 mean reward" in result.details

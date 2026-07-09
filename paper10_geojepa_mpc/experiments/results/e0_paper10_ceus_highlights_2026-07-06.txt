@@ -1,5 +1,5 @@
 Monitor gates control value-label escalation for farmland layout planning.
-Bishan 20x16/top5 gives a descriptive matched 5-seed reward anchor.
-Value filtering wins 3/5 seeds, so superiority remains descriptive.
-Executable masks prevent invalid zero-swap rollout behavior.
+True-reward guard is the primary Bishan algorithm result.
+Bishan guard wins 20/20 seeds with positive bootstrap CI.
+Old 5-seed value-filter anchor remains descriptive background.
 Stage 3 and Dongxing tests define scale and calibration boundaries.
