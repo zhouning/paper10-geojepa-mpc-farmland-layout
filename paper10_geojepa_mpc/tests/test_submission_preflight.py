@@ -147,6 +147,13 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
     preflight_checks.PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_MD,
     preflight_checks.PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_JSON,
+    preflight_checks.PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_MD,
+    preflight_checks.PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_JSON,
+    preflight_checks.PAPER10_MAIN_FIGURE1_FINAL_SVG,
+    preflight_checks.PAPER10_MAIN_FIGURE1_FINAL_PDF,
+    preflight_checks.PAPER10_MAIN_FIGURE1_FINAL_PNG,
+    Path("scripts") / "paper10" / "plot_main_figure1_workflow.py",
+    RESULTS / "e0_paper10_main_figure1_artwork_preview_2026-06-27.md",
     PAPER10_SUBMISSION_READINESS_BOUNDARY,
     PAPER10_FORMAL_MANUSCRIPT_DRAFT,
     PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT,
@@ -349,6 +356,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "paper10_figure_table_source_coverage_audit_current" in payload["passed_checks"]
     assert "paper10_final_figure_table_export_package_current" in payload["passed_checks"]
     assert "paper10_archive_source_data_closeout_current" in payload["passed_checks"]
+    assert "paper10_main_figure1_final_artwork_closeout_current" in payload["passed_checks"]
     assert "paper10_submission_readiness_boundary_current" in payload["passed_checks"]
     assert "paper10_manuscript_result_tables_freeze_current" in payload["passed_checks"]
     assert "paper10_manuscript_text_table_consistency_audit_current" in payload["passed_checks"]
@@ -1832,7 +1840,7 @@ def test_archive_source_data_closeout_records_record1_fair_and_no_go_boundaries(
     assert payload["record1_public_package"]["archive_metadata_templates_current"] is True
     assert payload["fair_metadata_audit"]["record1_has_public_metadata"] is True
     assert payload["fair_metadata_audit"]["data_cite_fields_prepared"] is True
-    assert payload["unresolved_submission_fields"]["main_figure_1_final_artwork"] == "pending_artwork"
+    assert payload["resolved_submission_fields"]["main_figure_1_final_artwork"] == "exported_final_candidate"
     assert payload["unresolved_submission_fields"]["target_journal_editor_acceptance"] == "not_recorded"
     assert payload["unresolved_submission_fields"]["exact_4open_snapshot_identifier"] == "not_visible_on_platform"
     assert payload["submission_gate"]["formal_submission_blocked"] is True
@@ -2352,3 +2360,84 @@ def test_submission_preflight_reports_vague_public_data_route_wording(tmp_path):
     }["public_data_route_wording_specific"]
     assert "README.md:1" in details
     assert "available upon reasonable request" in details
+
+
+def test_main_figure1_final_artwork_closeout_preflight_accepts_current_boundary():
+    result = preflight_checks.check_paper10_main_figure1_final_artwork_closeout_current(ROOT)
+
+    assert result.name == "paper10_main_figure1_final_artwork_closeout_current"
+    assert result.ok is True
+
+
+def test_main_figure1_final_artwork_closeout_records_assets_and_no_go_boundaries():
+    payload = json.loads(
+        (
+            ROOT
+            / preflight_checks.PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_JSON
+        ).read_text(encoding="utf-8")
+    )
+
+    assert payload["artifact_type"] == "paper10_main_figure1_final_artwork_closeout"
+    assert payload["status"] == "final_artwork_candidate_exported_not_submission_ready"
+    assert payload["target_journal"] == "Computers, Environment and Urban Systems"
+    assert payload["backend"] == "python_matplotlib"
+    assert payload["variant"] == "final"
+    assert payload["assets"]["svg"] == str(
+        preflight_checks.PAPER10_MAIN_FIGURE1_FINAL_SVG.as_posix()
+    )
+    assert payload["assets"]["pdf"] == str(
+        preflight_checks.PAPER10_MAIN_FIGURE1_FINAL_PDF.as_posix()
+    )
+    assert payload["assets"]["png"] == str(
+        preflight_checks.PAPER10_MAIN_FIGURE1_FINAL_PNG.as_posix()
+    )
+    for asset_path in payload["assets"].values():
+        assert (ROOT / asset_path).exists()
+
+    assert payload["asset_qa"]["preview_title_removed"] is True
+    assert payload["asset_qa"]["source_footer_removed"] is True
+    assert payload["asset_qa"]["svg_contains_final_reporting_note"] is True
+    assert payload["asset_qa"]["png_non_white_bbox"] == [115, 199, 3806, 1776]
+    assert payload["claim_locks"]["main_figure_1_artwork_candidate_exported"] is True
+    assert payload["claim_locks"]["new_experimental_evidence_created"] is False
+    assert payload["submission_gate"]["formal_submission_blocked"] is True
+
+
+def test_main_figure1_final_artwork_closeout_rejects_preview_title_leakage(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    svg_path = fixture / preflight_checks.PAPER10_MAIN_FIGURE1_FINAL_SVG
+    svg_text = svg_path.read_text(encoding="utf-8")
+    svg_path.write_text(
+        svg_text + "\n<!-- Monitor-gated GeoJEPA-MPC value filtering workflow -->\n",
+        encoding="utf-8",
+    )
+
+    result = preflight_checks.check_paper10_main_figure1_final_artwork_closeout_current(
+        fixture
+    )
+
+    assert result.name == "paper10_main_figure1_final_artwork_closeout_current"
+    assert result.ok is False
+    assert "preview-only text" in result.details
+
+def test_main_figure1_final_artwork_closeout_rejects_svg_hygiene_regression(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    svg_path = fixture / preflight_checks.PAPER10_MAIN_FIGURE1_FINAL_SVG
+    svg_text = svg_path.read_text(encoding="utf-8")
+    svg_path.write_text(
+        svg_text.replace(
+            "<dc:date>2026-07-09</dc:date>",
+            "<dc:date>2026-07-09T00:00:00</dc:date>",
+        )
+        + "  \n",
+        encoding="utf-8",
+    )
+
+    result = preflight_checks.check_paper10_main_figure1_final_artwork_closeout_current(
+        fixture
+    )
+
+    assert result.name == "paper10_main_figure1_final_artwork_closeout_current"
+    assert result.ok is False
+    assert "deterministic SVG date metadata" in result.details
+    assert "SVG trailing whitespace" in result.details

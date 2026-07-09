@@ -4,7 +4,7 @@
   "status": "archive_source_data_closeout_prepared_not_submission_ready",
   "target_journal": "Computers, Environment and Urban Systems",
   "source_boundary": {
-    "source": "tracked archive manifest, metadata templates, source-data map, final figure/table export package, rights gate, DLTB leakage audit, and CEUS confidential-DLTB packet",
+    "source": "tracked archive manifest, metadata templates, source-data map, final figure/table export package, Main Figure 1 final artwork closeout, rights gate, DLTB leakage audit, and CEUS confidential-DLTB packet",
     "git_commit_scanned": "3df9429fb8785539020aa7c7dbce1c925ca18d9b",
     "new_experimental_claim": false,
     "reran_rollouts": false,
@@ -16,6 +16,7 @@
     "archive_metadata_templates": "paper10_geojepa_mpc/experiments/results/e0_archive_metadata_templates_2026-06-09.md",
     "source_data_map": "paper10_geojepa_mpc/experiments/results/e0_source_data_map_with_dongxing_2026-06-11.md",
     "final_figure_table_export_package": "paper10_geojepa_mpc/experiments/results/e0_paper10_final_figure_table_export_package_2026-06-20.md",
+    "main_figure1_final_artwork_closeout": "paper10_geojepa_mpc/experiments/results/e0_paper10_main_figure1_final_artwork_closeout_2026-07-09.md",
     "code_licence": "Apache-2.0",
     "generated_non_dltb_rights": "CC0-1.0",
     "source_data_map_current": true,
@@ -25,7 +26,7 @@
     "record1_excludes_original_dongxing_dltb": true
   },
   "figure_table_source_data_alignment": {
-    "main_figure_1": "workflow schematic source map recorded; final artwork pending",
+    "main_figure_1": "final artwork candidate exported; SVG/PDF/PNG tracked; journal file-format confirmation remains open",
     "main_figure_2": "export_ready; source coverage recorded",
     "main_figure_3": "export_ready; source coverage recorded",
     "main_figure_4": "export_ready; Dongxing return-label source CSV recorded",
@@ -33,7 +34,8 @@
     "main_tables_1_3": "export_ready under tracked source tables",
     "caption_claim_packet_current": true,
     "source_coverage_audit_current": true,
-    "numbering_freeze_current": true
+    "numbering_freeze_current": true,
+    "main_figure1_final_artwork_closeout_current": true
   },
   "fair_metadata_audit": {
     "record1_has_public_metadata": true,
@@ -45,8 +47,10 @@
     "original_dltb_not_relicensed": true,
     "public_record_metadata_can_remain_public_if_raw_dltb_restricted": true
   },
+  "resolved_submission_fields": {
+    "main_figure_1_final_artwork": "exported_final_candidate"
+  },
   "unresolved_submission_fields": {
-    "main_figure_1_final_artwork": "pending_artwork",
     "target_journal_editor_acceptance": "not_recorded",
     "exact_4open_snapshot_identifier": "not_visible_on_platform",
     "final_public_archive_identifier": "anonymous_readme_direct_link_only",
@@ -56,10 +60,10 @@
   "submission_gate": {
     "formal_submission_blocked": true,
     "preflight_pass_does_not_mean_submission_ready": true,
-    "status_reason": "Record 1 metadata and source-data mapping are aligned, but Main Figure 1 artwork, CEUS/editor acceptance of confidential raw-DLTB non-availability, exact 4open snapshot visibility, final journal file-format conversion, and declarations remain open."
+    "status_reason": "Record 1 metadata and source-data mapping are aligned and Main Figure 1 final artwork candidate is exported, but CEUS/editor acceptance of confidential raw-DLTB non-availability, exact 4open snapshot visibility, final public archive identifier or reviewer-link metadata, final journal file-format confirmation, and declarations remain open."
   },
   "required_before_formal_submission": [
-    "finish Main Figure 1 final artwork and export format",
+    "confirm Main Figure 1 journal file-format and dimension fit in the CEUS submission system",
     "record CEUS/editor acceptance of confidential raw-DLTB non-availability",
     "keep the visible-snapshot limitation disclosed because 4open exposes no exact snapshot identifier",
     "backfill final public archive identifier or reviewer-link metadata in the submission system",
@@ -68,8 +72,9 @@
   "claim_locks": {
     "archive_source_data_closeout_prepared": true,
     "record1_public_metadata_aligned": true,
+    "main_figure_1_artwork_candidate_exported": true,
     "final_submission_readiness_supported": false,
-    "main_figure_1_artwork_complete": false,
+    "main_figure_1_artwork_complete": true,
     "target_journal_acceptance_recorded": false,
     "exact_4open_snapshot_identifier_backfilled": false
   }

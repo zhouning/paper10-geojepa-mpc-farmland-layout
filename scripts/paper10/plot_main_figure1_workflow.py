@@ -7,7 +7,11 @@ from typing import Iterable
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT_DIR = ROOT / "reviewer_outputs/paper10_main_figure1_workflow"
+DEFAULT_FINAL_OUTPUT_DIR = (
+    ROOT / "paper10_geojepa_mpc/experiments/results/ceus_submission_assets/main_figure1_workflow"
+)
 OUTPUT_STEM = "main_figure1_workflow"
+FINAL_OUTPUT_STEM = "figure_1_monitor_gated_geojepa_mpc_workflow"
 
 
 COLORS = {
@@ -35,6 +39,7 @@ def _configure_matplotlib() -> None:
             "font.family": "sans-serif",
             "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans", "sans-serif"],
             "svg.fonttype": "none",
+            "svg.hashsalt": "paper10_main_figure1_workflow",
             "pdf.fonttype": 42,
             "font.size": 7,
             "axes.spines.right": False,
@@ -58,7 +63,18 @@ def _save_figure(
         save_kwargs = {"bbox_inches": "tight", "facecolor": "white"}
         if fmt in {"png", "tiff"}:
             save_kwargs["dpi"] = 600
+        if fmt == "svg":
+            save_kwargs["metadata"] = {"Date": "2026-07-09"}
+        elif fmt == "pdf":
+            save_kwargs["metadata"] = {"CreationDate": None, "ModDate": None}
         fig.savefig(path, **save_kwargs)
+        if fmt == "svg":
+            svg_text = path.read_text(encoding="utf-8")
+            cleaned_svg = "\n".join(line.rstrip() for line in svg_text.splitlines())
+            if svg_text.endswith(("\n", "\r")):
+                cleaned_svg += "\n"
+            if cleaned_svg != svg_text:
+                path.write_text(cleaned_svg, encoding="utf-8")
         output_paths.append(path)
     return output_paths
 
@@ -259,37 +275,54 @@ def _callout(
     )
 
 
-def plot_workflow(output_dir: Path, formats: Iterable[str]) -> list[Path]:
+def plot_workflow(
+    output_dir: Path,
+    formats: Iterable[str],
+    variant: str = "preview",
+) -> list[Path]:
     import matplotlib.pyplot as plt
 
+    if variant not in {"preview", "final"}:
+        raise ValueError(f"unsupported Figure 1 variant: {variant}")
+
+    is_final = variant == "final"
     _configure_matplotlib()
-    fig, ax = plt.subplots(figsize=(7.4, 4.55))
+    fig_size = (7.2, 4.0) if is_final else (7.4, 4.55)
+    fig, ax = plt.subplots(figsize=fig_size)
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.axis("off")
 
-    ax.text(
-        0.03,
-        0.955,
-        "Monitor-gated GeoJEPA-MPC value filtering workflow",
-        fontsize=11.2,
-        fontweight="bold",
-        color=COLORS["ink"],
-        va="top",
-    )
-    ax.text(
-        0.03,
-        0.912,
-        "Only monitor-passing labels train the value head; failed labels remain diagnostics and claim-boundary evidence.",
-        fontsize=7.2,
-        color=COLORS["muted"],
-        va="top",
-    )
+    if not is_final:
+        ax.text(
+            0.03,
+            0.955,
+            "Monitor-gated GeoJEPA-MPC value filtering workflow",
+            fontsize=11.2,
+            fontweight="bold",
+            color=COLORS["ink"],
+            va="top",
+        )
+        ax.text(
+            0.03,
+            0.912,
+            "Only monitor-passing labels train the value head; failed labels remain diagnostics and claim-boundary evidence.",
+            fontsize=7.2,
+            color=COLORS["muted"],
+            va="top",
+        )
 
-    panel_y = 0.61
+    panel_y = 0.675 if is_final else 0.61
     panel_h = 0.235
     panel_w = 0.154
     xs = [0.03, 0.224, 0.418, 0.612, 0.806]
+    panel_labels = [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+    ] if is_final else ["1a", "1b", "1c", "1d", "1e"]
 
     _box(
         ax,
@@ -297,7 +330,7 @@ def plot_workflow(output_dir: Path, formats: Iterable[str]) -> list[Path]:
         (panel_w, panel_h),
         COLORS["environment"],
         COLORS["accent"],
-        "1a",
+        panel_labels[0],
         "Constrained task",
         ["Bishan grid state", "executable swap mask", "valid parcel actions"],
     )
@@ -309,7 +342,7 @@ def plot_workflow(output_dir: Path, formats: Iterable[str]) -> list[Path]:
         (panel_w, panel_h),
         COLORS["candidate"],
         "#b7791f",
-        "1b",
+        panel_labels[1],
         "Candidate proposal",
         ["rank checkpoint", "frontier_random050", "scores valid actions"],
     )
@@ -321,7 +354,7 @@ def plot_workflow(output_dir: Path, formats: Iterable[str]) -> list[Path]:
         (panel_w, panel_h),
         COLORS["label"],
         "#4d7c0f",
-        "1c",
+        panel_labels[2],
         "Label generation",
         ["multi-step returns", "one-step rewards", "candidate scores"],
     )
@@ -333,7 +366,7 @@ def plot_workflow(output_dir: Path, formats: Iterable[str]) -> list[Path]:
         (panel_w, panel_h),
         COLORS["monitor"],
         "#7e22ce",
-        "1d",
+        panel_labels[3],
         "Monitor gate",
         ["candidate regret", "candidate overlap", "one-step regret"],
     )
@@ -345,7 +378,7 @@ def plot_workflow(output_dir: Path, formats: Iterable[str]) -> list[Path]:
         (panel_w, panel_h),
         COLORS["pass"],
         COLORS["pass_edge"],
-        "1e",
+        panel_labels[4],
         "Value-filtered MPC",
         ["decision=continue", "train value head", "selector=value_filter", "100-step rollouts"],
     )
@@ -355,7 +388,7 @@ def plot_workflow(output_dir: Path, formats: Iterable[str]) -> list[Path]:
         end = (xs[index + 1] - 0.01, panel_y + panel_h * 0.55)
         _arrow(ax, start, end)
 
-    stop_xy = (0.60, 0.245)
+    stop_xy = (0.60, 0.31 if is_final else 0.245)
     stop_size = (0.29, 0.18)
     _box(
         ax,
@@ -387,7 +420,7 @@ def plot_workflow(output_dir: Path, formats: Iterable[str]) -> list[Path]:
 
     _callout(
         ax,
-        (0.03, 0.345),
+        (0.03, 0.43 if is_final else 0.345),
         (0.36, 0.15),
         "Hard constraints",
         [
@@ -397,7 +430,7 @@ def plot_workflow(output_dir: Path, formats: Iterable[str]) -> list[Path]:
     )
     _callout(
         ax,
-        (0.03, 0.17),
+        (0.03, 0.245 if is_final else 0.17),
         (0.45, 0.14),
         "Manuscript boundary",
         [
@@ -407,7 +440,7 @@ def plot_workflow(output_dir: Path, formats: Iterable[str]) -> list[Path]:
     )
     _callout(
         ax,
-        (0.60, 0.075),
+        (0.60, 0.12 if is_final else 0.075),
         (0.35, 0.105),
         "Reporting policy",
         [
@@ -416,16 +449,18 @@ def plot_workflow(output_dir: Path, formats: Iterable[str]) -> list[Path]:
         ],
     )
 
-    ax.text(
-        0.03,
-        0.04,
-        "Source modules: value_label_generation.py | value_label_monitor.py | run_e0_value_head_train.py | run_e0_env_rollout_smoke.py",
-        fontsize=5.8,
-        color=COLORS["muted"],
-        va="bottom",
-    )
+    if not is_final:
+        ax.text(
+            0.03,
+            0.04,
+            "Source modules: value_label_generation.py | value_label_monitor.py | run_e0_value_head_train.py | run_e0_env_rollout_smoke.py",
+            fontsize=5.8,
+            color=COLORS["muted"],
+            va="bottom",
+        )
 
-    paths = _save_figure(fig, output_dir, OUTPUT_STEM, formats)
+    stem = FINAL_OUTPUT_STEM if is_final else OUTPUT_STEM
+    paths = _save_figure(fig, output_dir, stem, formats)
     plt.close(fig)
     return paths
 
@@ -434,7 +469,13 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Create the Paper10 Main Figure 1 workflow schematic preview."
     )
-    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
+    parser.add_argument(
+        "--variant",
+        choices=["preview", "final"],
+        default="preview",
+        help="Export the reviewer preview or the title-free final artwork candidate.",
+    )
+    parser.add_argument("--output-dir", type=Path, default=None)
     parser.add_argument(
         "--formats",
         nargs="+",
@@ -447,7 +488,12 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    output_paths = plot_workflow(args.output_dir, args.formats)
+    output_dir = (
+        args.output_dir
+        if args.output_dir is not None
+        else DEFAULT_FINAL_OUTPUT_DIR if args.variant == "final" else DEFAULT_OUTPUT_DIR
+    )
+    output_paths = plot_workflow(output_dir, args.formats, args.variant)
     for path in output_paths:
         print(path)
 

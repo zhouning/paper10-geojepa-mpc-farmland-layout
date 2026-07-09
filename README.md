@@ -116,6 +116,10 @@ Paper-facing writing assets are tracked under
 - `e0_paper10_formal_manuscript_draft_2026-06-20.md`
 - `e0_paper10_bounded_manuscript_assembly_draft_2026-06-27.md`
 - `e0_paper10_main_figure1_artwork_preview_2026-06-27.md`
+- `e0_paper10_main_figure1_final_artwork_closeout_2026-07-09.md`
+- `ceus_submission_assets/main_figure1_workflow/figure_1_monitor_gated_geojepa_mpc_workflow.svg`
+- `ceus_submission_assets/main_figure1_workflow/figure_1_monitor_gated_geojepa_mpc_workflow.pdf`
+- `ceus_submission_assets/main_figure1_workflow/figure_1_monitor_gated_geojepa_mpc_workflow.png`
 - `e0_paper10_target_journal_fit_assessment_2026-06-27.md`
 - `e0_paper10_ceus_monitor_threshold_sensitivity_2026-06-27.md`
 - `e0_paper10_ceus_mechanism_claim_audit_2026-06-27.md`
@@ -261,9 +265,12 @@ conversion. It removes internal handoff and claim-lock material from the main
 body while preserving the no-go submission boundary.
 Use
 `paper10_geojepa_mpc/experiments/results/e0_paper10_main_figure1_artwork_preview_2026-06-27.md`
-as the current Main Figure 1 workflow-artwork preview record. It documents the
-generated schematic and keeps final journal dimensions, caption length, and
-selected export-package decisions open.
+as the Main Figure 1 workflow-artwork preview record. Use
+`paper10_geojepa_mpc/experiments/results/e0_paper10_main_figure1_final_artwork_closeout_2026-07-09.md`
+as the current Main Figure 1 final artwork candidate closeout. It records the
+tracked SVG/PDF/PNG assets and keeps final journal file-format confirmation,
+archive identifier backfill, declarations, and confidential-DLTB acceptance open
+before formal submission.
 Use
 `paper10_geojepa_mpc/experiments/results/e0_paper10_target_journal_fit_assessment_2026-06-27.md`
 as the current target-journal route assessment. It recommends a CEUS-first
@@ -288,6 +295,12 @@ Generate the Main Figure 1 workflow preview:
 
 ```powershell
 .\.venv\Scripts\python.exe scripts/paper10/plot_main_figure1_workflow.py
+```
+
+Regenerate the tracked Main Figure 1 final artwork candidate:
+
+```powershell
+.\.venv\Scripts\python.exe scripts/paper10/plot_main_figure1_workflow.py --variant final --formats svg pdf png
 ```
 
 Generate draft integrated Dongxing Figure 4 and Figure 5 previews from tracked
@@ -401,8 +414,9 @@ Use
 `paper10_geojepa_mpc/experiments/results/e0_paper10_figure_table_source_coverage_audit_2026-06-19.md`
 as the current figure/table source coverage audit before treating the formal
 manuscript figure and table assembly map as source-covered. It records source
-coverage only; final artwork, dimensions, placement, captions and exports
-remain submission blockers.
+coverage only. Main Figure 1 final artwork is superseded by the
+2026-07-09 final-artwork closeout; final journal dimensions, placement,
+captions and export-system confirmation remain submission blockers.
 Use
 `paper10_geojepa_mpc/experiments/results/e0_paper10_figure_table_caption_claim_packet_2026-06-19.md`
 as the current figure/table caption-claim packet before drafting figure/table

@@ -108,6 +108,27 @@ PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_MD = (
 PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_JSON = (
     RESULTS / "e0_paper10_archive_source_data_closeout_2026-07-09.json"
 )
+PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_MD = (
+    RESULTS / "e0_paper10_main_figure1_final_artwork_closeout_2026-07-09.md"
+)
+PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_JSON = (
+    RESULTS / "e0_paper10_main_figure1_final_artwork_closeout_2026-07-09.json"
+)
+PAPER10_MAIN_FIGURE1_FINAL_ASSET_DIR = (
+    RESULTS / "ceus_submission_assets" / "main_figure1_workflow"
+)
+PAPER10_MAIN_FIGURE1_FINAL_SVG = (
+    PAPER10_MAIN_FIGURE1_FINAL_ASSET_DIR
+    / "figure_1_monitor_gated_geojepa_mpc_workflow.svg"
+)
+PAPER10_MAIN_FIGURE1_FINAL_PDF = (
+    PAPER10_MAIN_FIGURE1_FINAL_ASSET_DIR
+    / "figure_1_monitor_gated_geojepa_mpc_workflow.pdf"
+)
+PAPER10_MAIN_FIGURE1_FINAL_PNG = (
+    PAPER10_MAIN_FIGURE1_FINAL_ASSET_DIR
+    / "figure_1_monitor_gated_geojepa_mpc_workflow.png"
+)
 PAPER10_SUBMISSION_READINESS_BOUNDARY = (
     RESULTS / "e0_paper10_submission_readiness_boundary_2026-06-26.md"
 )
@@ -353,6 +374,11 @@ REQUIRED_PATHS = (
     PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
     PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_MD,
     PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_JSON,
+    PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_MD,
+    PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_JSON,
+    PAPER10_MAIN_FIGURE1_FINAL_SVG,
+    PAPER10_MAIN_FIGURE1_FINAL_PDF,
+    PAPER10_MAIN_FIGURE1_FINAL_PNG,
     PAPER10_SUBMISSION_READINESS_BOUNDARY,
     PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_MD,
     PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_JSON,
@@ -450,6 +476,8 @@ PUBLIC_SUBMISSION_DOCS = (
     PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
     PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_MD,
     PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_JSON,
+    PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_MD,
+    PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_JSON,
     PAPER10_SUBMISSION_READINESS_BOUNDARY,
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
     PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD,
@@ -3592,6 +3620,10 @@ def check_paper10_figure_table_caption_claim_packet_current(root: Path) -> Check
 def check_paper10_final_figure_table_export_package_current(root: Path) -> CheckResult:
     required_files = [
         PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
+        PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_MD,
+        PAPER10_MAIN_FIGURE1_FINAL_SVG,
+        PAPER10_MAIN_FIGURE1_FINAL_PDF,
+        PAPER10_MAIN_FIGURE1_FINAL_PNG,
         PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
         PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD,
         PAPER10_REAL_ENV_LONGHORIZON_CONFIRMATORY_AUDIT_MD,
@@ -3623,6 +3655,9 @@ def check_paper10_final_figure_table_export_package_current(root: Path) -> Check
         INTEGRATED_DONGXING_FIGURE_PLAN.name,
         SUBMISSION_BLOCKER_DECISION_PACKET.name,
         "reviewer_outputs/",
+        "e0_paper10_main_figure1_final_artwork_closeout_2026-07-09.md",
+        "ceus_submission_assets/main_figure1_workflow/",
+        "exported_final_candidate",
         "Do not change claim wording",
         "does not create new experimental evidence",
         "does not change the manuscript claim boundary",
@@ -3634,7 +3669,7 @@ def check_paper10_final_figure_table_export_package_current(root: Path) -> Check
             )
 
     expected_rows = {
-        "Main Figure 1": "pending_artwork",
+        "Main Figure 1": "exported_final_candidate",
         "Main Figure 2": "export_ready",
         "Main Figure 3": "export_ready",
         "Main Figure 4": "export_ready",
@@ -3689,6 +3724,11 @@ def check_paper10_archive_source_data_closeout_current(root: Path) -> CheckResul
     required_files = [
         PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_MD,
         PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_JSON,
+        PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_MD,
+        PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_JSON,
+        PAPER10_MAIN_FIGURE1_FINAL_SVG,
+        PAPER10_MAIN_FIGURE1_FINAL_PDF,
+        PAPER10_MAIN_FIGURE1_FINAL_PNG,
         ARCHIVE_MANIFEST,
         ARCHIVE_METADATA_TEMPLATES,
         INTEGRATED_DONGXING_SOURCE_DATA_MAP,
@@ -3727,7 +3767,8 @@ def check_paper10_archive_source_data_closeout_current(root: Path) -> CheckResul
         "FAIR and DataCite closeout",
         "DataCite fields prepared",
         "Main Figure 1",
-        "pending_artwork",
+        "exported_final_candidate",
+        "e0_paper10_main_figure1_final_artwork_closeout_2026-07-09.md",
         "Supplementary Figure S1",
         "not_visible_on_platform",
         "confidential_no_external_access",
@@ -3753,13 +3794,16 @@ def check_paper10_archive_source_data_closeout_current(root: Path) -> CheckResul
         ("record1_public_package", "code_licence"): "Apache-2.0",
         ("record1_public_package", "generated_non_dltb_rights"): "CC0-1.0",
         ("record1_public_package", "source_data_map_current"): True,
+        ("record1_public_package", "main_figure1_final_artwork_closeout"): "paper10_geojepa_mpc/experiments/results/e0_paper10_main_figure1_final_artwork_closeout_2026-07-09.md",
         ("record1_public_package", "archive_metadata_templates_current"): True,
         ("record1_public_package", "record1_has_code_tests_smoke_data_outputs_tables_checkpoints_metadata"): True,
         ("record1_public_package", "record1_excludes_original_bishan_dltb"): True,
         ("record1_public_package", "record1_excludes_original_dongxing_dltb"): True,
+        ("figure_table_source_data_alignment", "main_figure_1"): "final artwork candidate exported; SVG/PDF/PNG tracked; journal file-format confirmation remains open",
         ("figure_table_source_data_alignment", "caption_claim_packet_current"): True,
         ("figure_table_source_data_alignment", "source_coverage_audit_current"): True,
         ("figure_table_source_data_alignment", "numbering_freeze_current"): True,
+        ("figure_table_source_data_alignment", "main_figure1_final_artwork_closeout_current"): True,
         ("fair_metadata_audit", "record1_has_public_metadata"): True,
         ("fair_metadata_audit", "data_cite_fields_prepared"): True,
         ("fair_metadata_audit", "identifier_or_reviewer_link_recorded"): True,
@@ -3768,7 +3812,7 @@ def check_paper10_archive_source_data_closeout_current(root: Path) -> CheckResul
         ("fair_metadata_audit", "restricted_raw_dltb_boundary_recorded"): True,
         ("fair_metadata_audit", "original_dltb_not_relicensed"): True,
         ("fair_metadata_audit", "public_record_metadata_can_remain_public_if_raw_dltb_restricted"): True,
-        ("unresolved_submission_fields", "main_figure_1_final_artwork"): "pending_artwork",
+        ("resolved_submission_fields", "main_figure_1_final_artwork"): "exported_final_candidate",
         ("unresolved_submission_fields", "target_journal_editor_acceptance"): "not_recorded",
         ("unresolved_submission_fields", "exact_4open_snapshot_identifier"): "not_visible_on_platform",
         ("unresolved_submission_fields", "final_public_archive_identifier"): "anonymous_readme_direct_link_only",
@@ -3778,8 +3822,9 @@ def check_paper10_archive_source_data_closeout_current(root: Path) -> CheckResul
         ("submission_gate", "preflight_pass_does_not_mean_submission_ready"): True,
         ("claim_locks", "archive_source_data_closeout_prepared"): True,
         ("claim_locks", "record1_public_metadata_aligned"): True,
+        ("claim_locks", "main_figure_1_artwork_candidate_exported"): True,
         ("claim_locks", "final_submission_readiness_supported"): False,
-        ("claim_locks", "main_figure_1_artwork_complete"): False,
+        ("claim_locks", "main_figure_1_artwork_complete"): True,
         ("claim_locks", "target_journal_acceptance_recorded"): False,
         ("claim_locks", "exact_4open_snapshot_identifier_backfilled"): False,
     }
@@ -3841,6 +3886,175 @@ def check_paper10_archive_source_data_closeout_current(root: Path) -> CheckResul
         "paper10_archive_source_data_closeout_current",
         True,
         "Paper10 archive/source-data closeout is current and no-go guarded",
+    )
+
+
+
+def check_paper10_main_figure1_final_artwork_closeout_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_MD,
+        PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_JSON,
+        PAPER10_MAIN_FIGURE1_FINAL_SVG,
+        PAPER10_MAIN_FIGURE1_FINAL_PDF,
+        PAPER10_MAIN_FIGURE1_FINAL_PNG,
+        Path("scripts") / "paper10" / "plot_main_figure1_workflow.py",
+        RESULTS / "e0_paper10_main_figure1_artwork_preview_2026-06-27.md",
+        PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
+        PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_main_figure1_final_artwork_closeout_current",
+            False,
+            "missing Paper10 Main Figure 1 final artwork closeout files: "
+            + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_MD)
+    try:
+        payload = json.loads(
+            read_text(root / PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_JSON)
+        )
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_main_figure1_final_artwork_closeout_current",
+            False,
+            f"{PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_JSON}: invalid JSON: {exc}",
+        )
+
+    svg_text = read_text(root / PAPER10_MAIN_FIGURE1_FINAL_SVG)
+    normalized_text = " ".join(text.split())
+    missing_tokens = []
+    required_tokens = [
+        "Paper10 Main Figure 1 final artwork closeout",
+        "Status: final_artwork_candidate_exported_not_submission_ready",
+        "Backend: Python/matplotlib",
+        "workflow artwork, not a new experiment",
+        "exported_final_candidate",
+        "supersedes the earlier `pending_artwork` status for Main Figure 1 only",
+        "Formal submission remains blocked",
+        "not final submission approval",
+    ]
+    for token in required_tokens:
+        if token not in normalized_text:
+            missing_tokens.append(
+                f"{PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_MD}: {token}"
+            )
+
+    expected_values = {
+        ("artifact_type",): "paper10_main_figure1_final_artwork_closeout",
+        ("date",): "2026-07-09",
+        ("status",): "final_artwork_candidate_exported_not_submission_ready",
+        ("target_journal",): "Computers, Environment and Urban Systems",
+        ("backend",): "python_matplotlib",
+        ("variant",): "final",
+        ("source_boundary", "script"): "scripts/paper10/plot_main_figure1_workflow.py",
+        ("source_boundary", "new_experimental_claim"): False,
+        ("source_boundary", "reran_rollouts"): False,
+        ("source_boundary", "reran_training"): False,
+        ("source_boundary", "claim_boundary_changed"): False,
+        ("source_boundary", "submission_approval"): False,
+        ("assets", "svg"): PAPER10_MAIN_FIGURE1_FINAL_SVG.as_posix(),
+        ("assets", "pdf"): PAPER10_MAIN_FIGURE1_FINAL_PDF.as_posix(),
+        ("assets", "png"): PAPER10_MAIN_FIGURE1_FINAL_PNG.as_posix(),
+        ("asset_qa", "png_size"): [3870, 1968],
+        ("asset_qa", "png_non_white_bbox"): [115, 199, 3806, 1776],
+        ("asset_qa", "preview_title_removed"): True,
+        ("asset_qa", "source_footer_removed"): True,
+        ("asset_qa", "svg_contains_final_reporting_note"): True,
+        ("asset_qa", "panel_labels_lowercase"): True,
+        ("asset_qa", "caption_title_externalized"): True,
+        ("asset_qa", "python_backend_exclusive"): True,
+        ("claim_locks", "main_figure_1_artwork_candidate_exported"): True,
+        ("claim_locks", "supersedes_pending_artwork_for_main_figure_1"): True,
+        ("claim_locks", "new_experimental_evidence_created"): False,
+        ("claim_locks", "claim_boundary_changed"): False,
+        ("claim_locks", "final_submission_readiness_supported"): False,
+        ("unresolved_submission_fields", "target_journal_editor_acceptance"): "not_recorded",
+        ("unresolved_submission_fields", "exact_4open_snapshot_identifier"): "not_visible_on_platform",
+        ("unresolved_submission_fields", "final_public_archive_identifier"): "anonymous_readme_direct_link_only",
+        ("unresolved_submission_fields", "final_journal_dimensions_and_file_formats"): "not_finalized",
+        ("unresolved_submission_fields", "final_declarations"): "pending_author_decision",
+        ("submission_gate", "formal_submission_blocked"): True,
+        ("submission_gate", "preflight_pass_does_not_mean_submission_ready"): True,
+    }
+    for keys, expected in expected_values.items():
+        observed = nested_value(payload, keys)
+        if observed != expected:
+            missing_tokens.append(
+                f"{PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_JSON}: "
+                f"{'.'.join(keys)}={observed}"
+            )
+
+    byte_expectations = {
+        "svg_bytes": PAPER10_MAIN_FIGURE1_FINAL_SVG,
+        "pdf_bytes": PAPER10_MAIN_FIGURE1_FINAL_PDF,
+        "png_bytes": PAPER10_MAIN_FIGURE1_FINAL_PNG,
+    }
+    for key, rel_path in byte_expectations.items():
+        observed = nested_value(payload, ("asset_qa", key))
+        actual = (root / rel_path).stat().st_size
+        if observed != actual:
+            missing_tokens.append(
+                f"{PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_JSON}: "
+                f"asset_qa.{key}={observed}, actual={actual}"
+            )
+
+    required_svg_tokens = [
+        "Constrained task",
+        "Monitor gate",
+        "decision=continue",
+        "Stop as diagnostics",
+        "No training on failed labels",
+        "selector=value_filter",
+        "workflow artwork, not a new experiment",
+    ]
+    for token in required_svg_tokens:
+        if token not in svg_text:
+            missing_tokens.append(f"{PAPER10_MAIN_FIGURE1_FINAL_SVG}: {token}")
+
+    forbidden_svg_tokens = [
+        "Monitor-gated GeoJEPA-MPC value filtering workflow",
+        "Only monitor-passing labels train the value head",
+        "Source modules:",
+        ">1a<",
+    ]
+    for token in forbidden_svg_tokens:
+        if token in svg_text:
+            missing_tokens.append(
+                f"{PAPER10_MAIN_FIGURE1_FINAL_SVG}: preview-only text {token}"
+            )
+
+    if "<dc:date>2026-07-09</dc:date>" not in svg_text:
+        missing_tokens.append(
+            f"{PAPER10_MAIN_FIGURE1_FINAL_SVG}: deterministic SVG date metadata"
+        )
+    if any(line != line.rstrip() for line in svg_text.splitlines()):
+        missing_tokens.append(
+            f"{PAPER10_MAIN_FIGURE1_FINAL_SVG}: SVG trailing whitespace"
+        )
+
+    if payload.get("status") == "submission_ready":
+        missing_tokens.append(
+            f"{PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_JSON}: not final submission approval"
+        )
+    if nested_value(payload, ("submission_gate", "formal_submission_blocked")) is not True:
+        missing_tokens.append(
+            f"{PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_JSON}: not final submission approval"
+        )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_main_figure1_final_artwork_closeout_current",
+            False,
+            "Paper10 Main Figure 1 final artwork closeout gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_main_figure1_final_artwork_closeout_current",
+        True,
+        "Paper10 Main Figure 1 final artwork closeout is current and no-go guarded",
     )
 
 
@@ -8142,6 +8356,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_figure_table_caption_claim_packet_current,
     check_paper10_final_figure_table_export_package_current,
     check_paper10_archive_source_data_closeout_current,
+    check_paper10_main_figure1_final_artwork_closeout_current,
     check_paper10_submission_readiness_boundary_current,
     check_paper10_manuscript_result_tables_freeze_current,
     check_paper10_manuscript_text_table_consistency_audit_current,

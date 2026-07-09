@@ -71,9 +71,18 @@ data needed for smoke verification.
   current bounded manuscript assembly draft carrying the 2026-06-20
   formal draft into the 2026-06-27 freeze and closure boundary.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_main_figure1_artwork_preview_2026-06-27.md`:
-  current Main Figure 1 workflow-artwork preview record, documenting the
-  reproducible schematic script, ignored local PNG/SVG/PDF outputs, and the
-  remaining journal-specific figure/export decisions.
+  Main Figure 1 workflow-artwork preview record, documenting the reproducible
+  schematic script and ignored local PNG/SVG/PDF preview outputs.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_main_figure1_final_artwork_closeout_2026-07-09.md`:
+  current Main Figure 1 final artwork candidate closeout, recording tracked
+  SVG/PDF/PNG exports and preserving the no-go submission gate.
+- `paper10_geojepa_mpc/experiments/results/ceus_submission_assets/main_figure1_workflow/figure_1_monitor_gated_geojepa_mpc_workflow.svg`:
+  tracked editable SVG final artwork candidate for Main Figure 1.
+- `paper10_geojepa_mpc/experiments/results/ceus_submission_assets/main_figure1_workflow/figure_1_monitor_gated_geojepa_mpc_workflow.pdf`:
+  tracked PDF final artwork candidate for Main Figure 1.
+- `paper10_geojepa_mpc/experiments/results/ceus_submission_assets/main_figure1_workflow/figure_1_monitor_gated_geojepa_mpc_workflow.png`:
+  tracked high-resolution PNG preview for the Main Figure 1 final artwork
+  candidate.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_target_journal_fit_assessment_2026-06-27.md`:
   current target-journal route assessment, recommending CEUS first under the
   frozen claim boundary and documenting conditional EMS, CEA, SAT, AI in
@@ -410,8 +419,9 @@ data needed for smoke verification.
   writes generated figure files under ignored `reviewer_outputs/` by default.
 - `scripts/paper10/plot_main_figure1_workflow.py`:
   offline plotting script for the Main Figure 1 monitor-gated workflow
-  schematic preview; writes generated PNG/SVG/PDF files under ignored
-  `reviewer_outputs/` by default.
+  schematic. The default preview writes PNG/SVG/PDF files under ignored
+  `reviewer_outputs/`; `--variant final --formats svg pdf png` regenerates
+  the tracked CEUS final artwork candidate assets.
 - `scripts/paper10/plot_integrated_dongxing_figures.py`:
   offline plotting script for integrated Dongxing Figure 4 and Figure 5
   previews from tracked CSV source data.

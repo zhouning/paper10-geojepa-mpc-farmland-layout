@@ -1,0 +1,64 @@
+{
+    "artifact_type":  "paper10_main_figure1_final_artwork_closeout",
+    "date":  "2026-07-09",
+    "status":  "final_artwork_candidate_exported_not_submission_ready",
+    "target_journal":  "Computers, Environment and Urban Systems",
+    "backend":  "python_matplotlib",
+    "variant":  "final",
+    "source_boundary":  {
+                            "script":  "scripts/paper10/plot_main_figure1_workflow.py",
+                            "preview_record":  "paper10_geojepa_mpc/experiments/results/e0_paper10_main_figure1_artwork_preview_2026-06-27.md",
+                            "source_coverage_audit":  "paper10_geojepa_mpc/experiments/results/e0_paper10_figure_table_source_coverage_audit_2026-06-19.md",
+                            "git_commit_scanned_before_closeout":  "218e964029ca842e7f3099978290987b23288fc2",
+                            "new_experimental_claim":  false,
+                            "reran_rollouts":  false,
+                            "reran_training":  false,
+                            "claim_boundary_changed":  false,
+                            "submission_approval":  false
+                        },
+    "assets":  {
+                   "svg":  "paper10_geojepa_mpc/experiments/results/ceus_submission_assets/main_figure1_workflow/figure_1_monitor_gated_geojepa_mpc_workflow.svg",
+                   "pdf":  "paper10_geojepa_mpc/experiments/results/ceus_submission_assets/main_figure1_workflow/figure_1_monitor_gated_geojepa_mpc_workflow.pdf",
+                   "png":  "paper10_geojepa_mpc/experiments/results/ceus_submission_assets/main_figure1_workflow/figure_1_monitor_gated_geojepa_mpc_workflow.png"
+               },
+    "asset_qa":  {
+                     "png_size":  [
+                                      3870,
+                                      1968
+                                  ],
+                     "png_non_white_bbox":  [
+                                                115,
+                                                199,
+                                                3806,
+                                                1776
+                                            ],
+                     "png_bytes":  587836,
+                     "svg_bytes":  29817,
+                     "pdf_bytes":  49954,
+                     "preview_title_removed":  true,
+                     "source_footer_removed":  true,
+                     "svg_contains_final_reporting_note":  true,
+                     "panel_labels_lowercase":  true,
+                     "caption_title_externalized":  true,
+                     "python_backend_exclusive":  true
+                 },
+    "claim_locks":  {
+                        "main_figure_1_artwork_candidate_exported":  true,
+                        "supersedes_pending_artwork_for_main_figure_1":  true,
+                        "new_experimental_evidence_created":  false,
+                        "claim_boundary_changed":  false,
+                        "final_submission_readiness_supported":  false
+                    },
+    "unresolved_submission_fields":  {
+                                         "target_journal_editor_acceptance":  "not_recorded",
+                                         "exact_4open_snapshot_identifier":  "not_visible_on_platform",
+                                         "final_public_archive_identifier":  "anonymous_readme_direct_link_only",
+                                         "final_journal_dimensions_and_file_formats":  "not_finalized",
+                                         "final_declarations":  "pending_author_decision"
+                                     },
+    "submission_gate":  {
+                            "formal_submission_blocked":  true,
+                            "preflight_pass_does_not_mean_submission_ready":  true,
+                            "status_reason":  "Main Figure 1 final artwork candidate is exported, but CEUS/editor acceptance of confidential raw-DLTB non-availability, 4open snapshot visibility, final archive identifier or reviewer-link metadata, journal-specific file-format confirmation and declarations remain open."
+                        }
+}
