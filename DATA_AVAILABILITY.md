@@ -27,9 +27,9 @@ for public-release rights:
 - Original Bishan and Dongxing DLTB inputs are confidential, cannot be publicly
   redistributed, and cannot be shared externally through public download,
   private reviewer link, controlled-access credentials, or informal request;
-- the 4open reviewer link has been provided for code and derived non-DLTB
-  artifacts, but it still requires non-author browser-session testing and final
-  manuscript/archive backfill;
+- the 4open README.md direct reviewer link has been author-confirmed available
+  for code and derived non-DLTB artifacts; exact snapshot and final
+  manuscript/archive backfill remain required;
 - DLTB-leakage check evidence remains required before any new public deposit of
   derived Tool2 or Dongxing/Neijiang non-DLTB artifacts.
 
@@ -43,7 +43,7 @@ paper10_geojepa_mpc/experiments/results/e0_data_code_availability_draft_2026-06-
 For the current public-release rights gate, which records that code and
 Apache-2.0 code licensing and CC0-1.0 generated-artifact rights are
 recorded, while confidential original DLTB non-availability, DLTB-leakage
-checks, 4open browser testing, and final backfill still block formal submission, see:
+checks, exact snapshot backfill, target-journal acceptance, and final manuscript/archive backfill still block formal submission, see:
 
 ```text
 paper10_geojepa_mpc/experiments/results/e0_paper10_public_release_rights_gate_2026-07-09.md

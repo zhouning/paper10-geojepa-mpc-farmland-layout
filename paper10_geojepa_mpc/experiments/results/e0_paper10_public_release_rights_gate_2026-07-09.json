@@ -1,80 +1,87 @@
 {
-  "artifact_type": "paper10_public_release_rights_gate",
-  "claim_locks": {
-    "all_licence_and_rights_blockers_closed": false,
-    "final_submission_readiness_supported": false,
-    "licence_and_generated_rights_blockers_closed": true,
-    "original_dltb_public_release_supported": false,
-    "reviewer_browser_link_verified": false
-  },
-  "data_boundary": {
-    "derived_non_dltb_public_release_allowed_after_leakage_check": true,
-    "derived_tool2_leakage_check_completed": false,
-    "dongxing_derived_leakage_check_completed": false,
-    "original_bishan_dltb_access_route": "confidential_no_external_access",
-    "original_bishan_dltb_public_release_allowed": false,
-    "original_dongxing_dltb_access_route": "confidential_no_external_access",
-    "original_dongxing_dltb_public_release_allowed": false,
-    "restricted_dltb_controlled_access_route_selected": false,
-    "restricted_dltb_external_access_available": false
-  },
-  "date": "2026-07-09",
-  "licence_state": {
-    "code_can_be_public": true,
-    "code_licence_name": "Apache-2.0",
-    "named_software_licence_selected": true,
-    "repository_licence_file_present": true,
-    "required_closeout": [
-      "select named software licence or institution-approved code-use statement",
-      "add repository licence metadata without applying it to restricted DLTB inputs",
-      "backfill MANIFEST and archive metadata"
-    ],
-    "scope_limited_to_licensable_code_and_scripts": true
-  },
-  "repository_snapshot": {
-    "anonymous_reviewer_link": "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/",
-    "archive_platform": "anonymous.4open.science",
-    "command_line_access_check": {
-      "date": "2026-07-09",
-      "method": "curl.exe -L --max-time 30 -I and curl.exe -L --max-time 30 GET from the local workspace",
-      "observed_redirect_status": "302 Found",
-      "observed_followup_status": "401 Unauthorized",
-      "observed_get_body": "{\"error\":\"not_connected\"}",
-      "interpretation": "The 4open route is not verified for reviewer-browser use; formal submission remains blocked until a non-author browser session loads the repository file listing.",
-      "reviewer_browser_verification_closed": false
-    },
-    "exact_submission_commit_backfilled": false,
-    "non_author_browser_test_completed": false
-  },
-  "required_before_formal_submission": [
-    "backfill Apache-2.0 code licence and CC0-1.0 generated-artifact terms into final materials",
-    "record that original Bishan and Dongxing DLTB inputs are confidential with no external access route",
-    "record DLTB-leakage check evidence for public derived artifacts",
-    "test the 4open reviewer link from a non-author browser session",
-    "record the exact submission snapshot represented by the 4open link",
-    "confirm target-journal acceptance of the confidential raw-DLTB limitation",
-    "backfill final Data and Code Availability, archive metadata, and manuscript wording"
-  ],
-  "rights_state": {
-    "checkpoint_model_weight_rights_selected": true,
-    "checkpoint_model_weight_rights_terms": "CC0-1.0",
-    "generated_output_rights_terms": "CC0-1.0",
-    "must_not_relicense_restricted_dltb": true,
-    "named_generated_output_rights_selected": true,
-    "non_dltb_artifacts_can_be_public": true
-  },
-  "source_boundary": {
-    "author_decisions_invented": false,
-    "new_experimental_claim": false,
-    "reran_rollouts": false,
-    "reran_training": false,
-    "source": "author update on 2026-07-09 plus tracked Paper10 rights artifacts",
-    "submission_approval": false
-  },
-  "status": "public_release_rights_closed_restricted_data_no_go",
-  "submission_blockers": {
-    "formal_submission_blocked": true,
-    "preflight_pass_does_not_mean_submission_ready": true,
-    "status_reason": "code licence and generated-output/model rights are now named, but confidential original DLTB data cannot be externally provided; DLTB-leakage checks, 4open browser test, exact snapshot backfill, and final archive/manuscript wording remain open"
-  }
+    "artifact_type":  "paper10_public_release_rights_gate",
+    "claim_locks":  {
+                        "all_licence_and_rights_blockers_closed":  false,
+                        "final_submission_readiness_supported":  false,
+                        "licence_and_generated_rights_blockers_closed":  true,
+                        "original_dltb_public_release_supported":  false,
+                        "reviewer_browser_link_verified":  false,
+                        "reviewer_readme_direct_link_author_confirmed":  true,
+                        "reviewer_link_blocker_closed_by_author_confirmation":  true
+                    },
+    "data_boundary":  {
+                          "derived_non_dltb_public_release_allowed_after_leakage_check":  true,
+                          "derived_tool2_leakage_check_completed":  false,
+                          "dongxing_derived_leakage_check_completed":  false,
+                          "original_bishan_dltb_access_route":  "confidential_no_external_access",
+                          "original_bishan_dltb_public_release_allowed":  false,
+                          "original_dongxing_dltb_access_route":  "confidential_no_external_access",
+                          "original_dongxing_dltb_public_release_allowed":  false,
+                          "restricted_dltb_controlled_access_route_selected":  false,
+                          "restricted_dltb_external_access_available":  false
+                      },
+    "date":  "2026-07-09",
+    "licence_state":  {
+                          "code_can_be_public":  true,
+                          "code_licence_name":  "Apache-2.0",
+                          "named_software_licence_selected":  true,
+                          "repository_licence_file_present":  true,
+                          "required_closeout":  [
+                                                    "select named software licence or institution-approved code-use statement",
+                                                    "add repository licence metadata without applying it to restricted DLTB inputs",
+                                                    "backfill MANIFEST and archive metadata"
+                                                ],
+                          "scope_limited_to_licensable_code_and_scripts":  true
+                      },
+    "repository_snapshot":  {
+                                "anonymous_reviewer_link":  "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/",
+                                "archive_platform":  "anonymous.4open.science",
+                                "command_line_access_check":  {
+                                                                  "date":  "2026-07-09",
+                                                                  "method":  "curl.exe -L --max-time 30 -I and curl.exe -L --max-time 30 GET from the local workspace",
+                                                                  "observed_redirect_status":  "302 Found",
+                                                                  "observed_followup_status":  "401 Unauthorized",
+                                                                  "observed_get_body":  "{\"error\":\"not_connected\"}",
+                                                                  "interpretation":  "The root route command-line API follow-up returned 401/not_connected, but this did not test and does not invalidate the README.md direct reviewer link, which the author confirmed available on 2026-07-09.",
+                                                                  "reviewer_browser_verification_closed":  false,
+                                                                  "scope":  "root URL and redirected API path only, not the README.md direct reviewer link",
+                                                                  "readme_direct_link_invalidated":  false
+                                                              },
+                                "exact_submission_commit_backfilled":  false,
+                                "non_author_browser_test_completed":  false,
+                                "anonymous_readme_direct_link":  "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/README.md",
+                                "author_confirmed_readme_direct_link_available":  true,
+                                "author_confirmation_date":  "2026-07-09"
+                            },
+    "required_before_formal_submission":  [
+                                              "backfill Apache-2.0 code licence and CC0-1.0 generated-artifact terms into final materials",
+                                              "record that original Bishan and Dongxing DLTB inputs are confidential with no external access route",
+                                              "record DLTB-leakage check evidence for public derived artifacts",
+                                              "record the author-confirmed 4open README.md direct reviewer link in final materials",
+                                              "record the exact submission snapshot represented by the 4open link",
+                                              "confirm target-journal acceptance of the confidential raw-DLTB limitation",
+                                              "backfill final Data and Code Availability, archive metadata, and manuscript wording"
+                                          ],
+    "rights_state":  {
+                         "checkpoint_model_weight_rights_selected":  true,
+                         "checkpoint_model_weight_rights_terms":  "CC0-1.0",
+                         "generated_output_rights_terms":  "CC0-1.0",
+                         "must_not_relicense_restricted_dltb":  true,
+                         "named_generated_output_rights_selected":  true,
+                         "non_dltb_artifacts_can_be_public":  true
+                     },
+    "source_boundary":  {
+                            "author_decisions_invented":  false,
+                            "new_experimental_claim":  false,
+                            "reran_rollouts":  false,
+                            "reran_training":  false,
+                            "source":  "author update on 2026-07-09 plus tracked Paper10 rights artifacts",
+                            "submission_approval":  false
+                        },
+    "status":  "public_release_rights_closed_restricted_data_no_go",
+    "submission_blockers":  {
+                                "formal_submission_blocked":  true,
+                                "preflight_pass_does_not_mean_submission_ready":  true,
+                                "status_reason":  "code licence, generated-output/model rights, and the 4open README.md direct reviewer link are now recorded; confidential original DLTB data cannot be externally provided, and DLTB-leakage checks, exact snapshot backfill, target-journal acceptance, and final archive/manuscript wording remain open"
+                            }
 }

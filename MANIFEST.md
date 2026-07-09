@@ -107,8 +107,9 @@ data needed for smoke verification.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_public_release_rights_gate_2026-07-09.md`:
   current public-release rights gate recording Apache-2.0 for code, CC0-1.0
   for generated non-DLTB data/model artifacts, confidential_no_external_access
-  for original Bishan and Dongxing DLTB inputs, and remaining 4open browser
-  testing, leakage-check, journal-acceptance and final-backfill blockers.
+  for original Bishan and Dongxing DLTB inputs, the author-confirmed 4open
+  README.md direct reviewer link, and remaining leakage-check,
+  journal-acceptance and final-backfill blockers.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_public_release_rights_gate_2026-07-09.json`:
   machine-readable source for the public-release rights gate preflight check.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_baseline_hardened_manuscript_patch_2026-07-06.md`:

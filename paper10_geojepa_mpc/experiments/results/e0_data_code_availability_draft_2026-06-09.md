@@ -46,9 +46,9 @@ credentials, or informal request.
 The full Bishan Tool2 transition and pairwise files are treated as derived
 artifacts rather than original DLTB inputs, but any new public deposit still
 requires a DLTB-leakage check, archive checksums, and rights metadata. The
-4open reviewer link has been provided but still requires a non-author
-browser-session test. The final manuscript must disclose that no external raw
-DLTB access route is available.
+4open README.md direct reviewer link has been author-confirmed available for
+code and derived non-DLTB artifacts. The final manuscript must disclose that no
+external raw DLTB access route is available.
 
 ## Dataset inventory and access routes
 
@@ -212,7 +212,7 @@ under ignored `reviewer_outputs/` by default.
 
 ## Missing information / risk flags
 
-- The 4open anonymous reviewer link is recorded in the author closeout form, but non-author browser testing, exact submission-commit mapping, and final archive/manuscript backfill are still pending.
+- The 4open README.md direct reviewer link is author-confirmed available; exact submission-commit mapping and final archive/manuscript backfill are still pending.
 - Target journal and archive route are not selected yet; availability wording
   may need adjustment after venue choice.
 - Full Bishan Tool2 files and prepared GPKG-root geospatial inputs are external

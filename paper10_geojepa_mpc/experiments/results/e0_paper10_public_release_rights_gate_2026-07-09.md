@@ -41,13 +41,15 @@ Dongxing/Neijiang derived non-DLTB artifacts remain public-deposit candidates
 under CC0-1.0 only after DLTB-leakage check evidence, checksums, and archive
 metadata are recorded.
 
-The 4open reviewer link is recorded for code and derived non-DLTB artifacts,
-but non-author browser-session testing and exact snapshot backfill remain
-pending. A 2026-07-09 command-line access check using `curl.exe -L --max-time
-30 -I` observed `302 Found` from the entry URL followed by `401 Unauthorized`
-from the redirected API path, and `curl.exe -L --max-time 30` returned
-`{"error":"not_connected"}`. This does not close reviewer-browser
-verification and must not be treated as non-author browser-session testing.
+The 4open README.md direct reviewer link is recorded for code and derived
+non-DLTB artifacts and was author-confirmed available on 2026-07-09:
+`https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/README.md`.
+A 2026-07-09 command-line check of the root URL using `curl.exe -L --max-time
+30 -I` observed `302 Found` followed by `401 Unauthorized` from the redirected
+API path, and `curl.exe -L --max-time 30` returned
+`{"error":"not_connected"}`. This root-link API result does not invalidate the
+README.md direct link; the remaining repository action is exact snapshot
+backfill.
 
 ## Current gates
 
@@ -58,7 +60,7 @@ verification and must not be treated as non-author browser-session testing.
 | original Bishan DLTB | confidential_no_external_access | Do not place in public archives or reviewer links; disclose that no external raw-data access is available. |
 | original Dongxing DLTB | confidential_no_external_access | Do not place in public archives or reviewer links; disclose that no external raw-data access is available. |
 | derived Tool2 artifacts | CC0-1.0 public candidate after leakage check | Deposit only after DLTB-leakage check, checksums, and rights metadata. |
-| 4open reviewer link | provided_pending_non_author_browser_test | Verify outside the author account and backfill the exact represented snapshot. |
+| 4open reviewer link | README.md direct link author-confirmed available | Root-link command-line API follow-up returned 401, but the author-confirmed README.md direct link is the reviewer-facing route; backfill the exact represented snapshot. |
 
 ## Required before formal submission
 
@@ -69,8 +71,8 @@ verification and must not be treated as non-author browser-session testing.
    external raw-data access route is available.
 3. Record DLTB-leakage check evidence before any new public deposit of derived
    Tool2 or Dongxing/Neijiang non-DLTB artifacts.
-4. Test the 4open reviewer link from a non-author browser session and backfill
-   the exact snapshot represented by that link.
+4. Record the author-confirmed 4open README.md direct reviewer link in final
+   materials and backfill the exact snapshot represented by that link.
 5. Decide whether the target journal will accept the confidential raw-DLTB
    limitation with public code, smoke data, generated artifacts, and metadata.
 6. Backfill final Data and Code Availability, `MANIFEST.md`, archive metadata,
@@ -81,6 +83,6 @@ verification and must not be treated as non-author browser-session testing.
 Do not use this gate as submission approval.
 Do not apply Apache-2.0 or CC0-1.0 to original Bishan or Dongxing DLTB inputs.
 Do not claim original DLTB data are available to reviewers externally.
-Do not claim the 4open link has been reviewer-browser verified until it is
-tested outside the author account.
+Do not treat the root-link command-line API 401 as invalidating the
+author-confirmed README.md direct reviewer link.
 Do not claim all submission blockers are closed.

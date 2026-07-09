@@ -1581,20 +1581,25 @@ def test_public_release_rights_gate_records_apache2_cc0_and_confidential_dltb():
     )
 
 
-def test_public_release_rights_gate_records_4open_curl_failure_and_keeps_browser_unverified():
+def test_public_release_rights_gate_records_readme_link_author_confirmation():
     payload = json.loads(
         (ROOT / preflight_checks.PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON).read_text(
             encoding="utf-8"
         )
     )
 
-    check = payload["repository_snapshot"]["command_line_access_check"]
-    assert check["date"] == "2026-07-09"
-    assert check["observed_redirect_status"] == "302 Found"
+    snapshot = payload["repository_snapshot"]
+    assert snapshot["anonymous_readme_direct_link"] == (
+        "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/README.md"
+    )
+    assert snapshot["author_confirmed_readme_direct_link_available"] is True
+    assert snapshot["author_confirmation_date"] == "2026-07-09"
+    check = snapshot["command_line_access_check"]
     assert check["observed_followup_status"] == "401 Unauthorized"
     assert check["observed_get_body"] == '{"error":"not_connected"}'
-    assert payload["repository_snapshot"]["non_author_browser_test_completed"] is False
-    assert payload["claim_locks"]["reviewer_browser_link_verified"] is False
+    assert check["readme_direct_link_invalidated"] is False
+    assert payload["claim_locks"]["reviewer_link_blocker_closed_by_author_confirmation"] is True
+    assert "4open browser test" not in payload["submission_blockers"]["status_reason"]
 
 def test_public_release_rights_gate_preflight_rejects_submission_ready_status(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
