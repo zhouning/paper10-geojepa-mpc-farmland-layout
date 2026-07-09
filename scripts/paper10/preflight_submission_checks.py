@@ -242,6 +242,12 @@ PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_MD = (
 PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON = (
     RESULTS / "e0_paper10_public_release_rights_gate_2026-07-09.json"
 )
+PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_MD = (
+    RESULTS / "e0_paper10_dltb_leakage_evidence_audit_2026-07-09.md"
+)
+PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_JSON = (
+    RESULTS / "e0_paper10_dltb_leakage_evidence_audit_2026-07-09.json"
+)
 PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD = (
     RESULTS / "e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md"
 )
@@ -377,6 +383,8 @@ REQUIRED_PATHS = (
     PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON,
     PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_MD,
     PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON,
+    PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_MD,
+    PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_JSON,
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD,
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON,
     PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD,
@@ -438,6 +446,7 @@ PUBLIC_SUBMISSION_DOCS = (
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD,
     PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD,
     PAPER10_MANUSCRIPT_TEXT_TABLE_CONSISTENCY_AUDIT_MD,
+    PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_MD,
 )
 
 PUBLIC_VAGUE_DATA_ROUTE_PATTERN = re.compile(
@@ -5910,6 +5919,177 @@ def check_paper10_public_release_rights_gate_current(root: Path) -> CheckResult:
         "Paper10 public-release rights gate is current and no-go guarded",
     )
 
+def check_paper10_dltb_leakage_evidence_audit_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_MD,
+        PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_JSON,
+        PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_MD,
+        PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON,
+        PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT,
+        DATA_AVAILABILITY,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_dltb_leakage_evidence_audit_current",
+            False,
+            "missing Paper10 DLTB leakage evidence audit files: "
+            + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_MD)
+    try:
+        payload = json.loads(read_text(root / PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_JSON))
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_dltb_leakage_evidence_audit_current",
+            False,
+            f"{PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    normalized_text = " ".join(text.split())
+    required_tokens = [
+        "Paper10 DLTB leakage evidence audit",
+        "Status: tracked_public_package_leakage_evidence_recorded_final_archive_pending",
+        "Computers, Environment and Urban Systems",
+        "Elsevier",
+        "Option B",
+        "Apache-2.0",
+        "CC0-1.0",
+        "confidential_no_external_access",
+        "tracked public package contains no original Bishan or Dongxing DLTB payload",
+        "contains no GPKG/GDB/SHP/DBF/PRJ/CPG geospatial source payloads",
+        "small reviewer smoke Tool2 files",
+        "exact 4open submission snapshot",
+        "DLTB-leakage content review",
+        "Original DLTB public release is not allowed",
+        "Formal submission remains blocked",
+        "not final submission approval",
+    ]
+    for token in required_tokens:
+        if token not in normalized_text:
+            missing_tokens.append(f"{PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_MD}: {token}")
+
+    expected_values = {
+        ("artifact_type",): "paper10_dltb_leakage_evidence_audit",
+        ("date",): "2026-07-09",
+        ("status",): "tracked_public_package_leakage_evidence_recorded_final_archive_pending",
+        ("target_journal",): "Computers, Environment and Urban Systems",
+        ("journal_data_policy", "publisher"): "Elsevier",
+        ("journal_data_policy", "research_data_policy_label"): "Option B",
+        ("journal_data_policy", "checked_date"): "2026-07-09",
+        ("source_boundary", "git_commit_scanned"): "81eee5a729d994559cd4f81ee76f856747fe0dea",
+        ("source_boundary", "new_experimental_claim"): False,
+        ("source_boundary", "reran_rollouts"): False,
+        ("source_boundary", "reran_training"): False,
+        ("source_boundary", "submission_approval"): False,
+        ("source_boundary", "author_decisions_invented"): False,
+        ("rights_terms", "code"): "Apache-2.0",
+        ("rights_terms", "generated_non_dltb_artifacts"): "CC0-1.0",
+        ("rights_terms", "checkpoint_model_weights"): "CC0-1.0",
+        ("rights_terms", "must_not_relicense_original_dltb"): True,
+        ("raw_dltb_boundary", "original_bishan_dltb_external_access"): "confidential_no_external_access",
+        ("raw_dltb_boundary", "original_dongxing_dltb_external_access"): "confidential_no_external_access",
+        ("raw_dltb_boundary", "original_bishan_dltb_public_release_allowed"): False,
+        ("raw_dltb_boundary", "original_dongxing_dltb_public_release_allowed"): False,
+        ("raw_dltb_boundary", "original_dltb_reviewer_access_available"): False,
+        ("public_package_evidence", "reviewer_readme_direct_link"): "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/README.md",
+        ("public_package_evidence", "tracked_public_package_contains_original_dltb"): False,
+        ("public_package_evidence", "tracked_public_package_contains_geospatial_source_payloads"): False,
+        ("public_package_evidence", "small_reviewer_smoke_tool2_files_are_not_full_bishan_tool2"): True,
+        ("public_package_evidence", "full_bishan_tool2_public_deposit_leakage_check_completed"): False,
+        ("public_package_evidence", "dongxing_derived_public_deposit_leakage_check_completed"): False,
+        ("public_package_evidence", "final_4open_snapshot_backfill_required"): True,
+        ("public_package_evidence", "final_archive_checksum_backfill_required"): True,
+        ("submission_gate", "formal_submission_blocked"): True,
+        ("submission_gate", "preflight_pass_does_not_mean_submission_ready"): True,
+        ("claim_locks", "tracked_public_package_leakage_evidence_recorded"): True,
+        ("claim_locks", "final_archive_leakage_evidence_recorded"): False,
+        ("claim_locks", "original_dltb_public_release_supported"): False,
+        ("claim_locks", "derived_public_deposit_supported_without_leakage_review"): False,
+        ("claim_locks", "final_submission_readiness_supported"): False,
+    }
+    for keys, expected in expected_values.items():
+        observed = nested_value(payload, keys)
+        if observed != expected:
+            missing_tokens.append(
+                f"{PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_JSON}: "
+                f"{'.'.join(keys)}={observed}"
+            )
+
+    for keys in (
+        ("public_package_evidence", "tracked_original_dltb_path_matches"),
+        ("public_package_evidence", "tracked_geospatial_source_payload_matches"),
+    ):
+        observed = nested_value(payload, keys)
+        if observed != []:
+            missing_tokens.append(
+                f"{PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_JSON}: "
+                f"{'.'.join(keys)}={observed}"
+            )
+
+    if payload.get("status") == "submission_ready":
+        missing_tokens.append(
+            f"{PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_JSON}: status=submission_ready"
+        )
+    if nested_value(payload, ("submission_gate", "formal_submission_blocked")) is False:
+        missing_tokens.append(
+            f"{PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_JSON}: formal_submission_blocked=False"
+        )
+    if (
+        nested_value(payload, ("raw_dltb_boundary", "original_bishan_dltb_public_release_allowed")) is True
+        or nested_value(payload, ("raw_dltb_boundary", "original_dongxing_dltb_public_release_allowed")) is True
+        or nested_value(payload, ("public_package_evidence", "tracked_public_package_contains_original_dltb")) is True
+        or nested_value(payload, ("raw_dltb_boundary", "original_bishan_dltb_external_access")) != "confidential_no_external_access"
+        or nested_value(payload, ("raw_dltb_boundary", "original_dongxing_dltb_external_access")) != "confidential_no_external_access"
+    ):
+        missing_tokens.append(
+            f"{PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_JSON}: original DLTB public release is not allowed"
+        )
+
+    required_before = payload.get("required_before_formal_submission")
+    if not isinstance(required_before, list) or len(required_before) < 5:
+        missing_tokens.append(
+            f"{PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_JSON}: required_before_formal_submission"
+        )
+    else:
+        for token in (
+            "exact 4open submission snapshot",
+            "DLTB-leakage content review",
+            "target-journal acceptance",
+        ):
+            if not any(token in item for item in required_before):
+                missing_tokens.append(
+                    f"{PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_JSON}: required_before_formal_submission missing {token}"
+                )
+
+    hits = []
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if is_post_guard_submission_readiness_positive_overclaim(line):
+            hits.append(
+                f"{PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_MD}:{line_no}: {line.strip()}"
+            )
+    if hits:
+        return CheckResult(
+            "paper10_dltb_leakage_evidence_audit_current",
+            False,
+            "forbidden DLTB leakage audit wording: " + " | ".join(hits),
+        )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_dltb_leakage_evidence_audit_current",
+            False,
+            "Paper10 DLTB leakage evidence audit gaps: " + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_dltb_leakage_evidence_audit_current",
+        True,
+        "Paper10 DLTB leakage evidence audit is current and no-go guarded",
+    )
+
+
 def check_paper10_post_guard_submission_readiness_refresh_current(root: Path) -> CheckResult:
     required_files = [
         PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD,
@@ -7609,6 +7789,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_author_decision_closeout_form_current,
     check_paper10_data_publication_boundary_backfill_current,
     check_paper10_public_release_rights_gate_current,
+    check_paper10_dltb_leakage_evidence_audit_current,
     check_paper10_post_guard_submission_readiness_refresh_current,
     check_paper10_ceus_clean_main_manuscript_draft_current,
     check_paper10_anchor_raw_rollout_consistency_audit_current,

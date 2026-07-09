@@ -1,0 +1,74 @@
+{
+  "artifact_type": "paper10_dltb_leakage_evidence_audit",
+  "date": "2026-07-09",
+  "status": "tracked_public_package_leakage_evidence_recorded_final_archive_pending",
+  "target_journal": "Computers, Environment and Urban Systems",
+  "journal_data_policy": {
+    "publisher": "Elsevier",
+    "research_data_policy_label": "Option B",
+    "guide_for_authors_url": "https://www.elsevier.com/journals/computers-environment-and-urban-systems/0198-9715/guide-for-authors",
+    "checked_date": "2026-07-09",
+    "interpretation": "CEUS encourages repository deposit, data citation/linking, and a statement explaining why data cannot be shared. Paper10 must disclose confidential raw-DLTB non-availability."
+  },
+  "source_boundary": {
+    "source": "tracked Paper10 public-release package, rights gate, author DLTB confidentiality decision, and local git path scan",
+    "git_commit_scanned": "81eee5a729d994559cd4f81ee76f856747fe0dea",
+    "new_experimental_claim": false,
+    "reran_rollouts": false,
+    "reran_training": false,
+    "submission_approval": false,
+    "author_decisions_invented": false
+  },
+  "rights_terms": {
+    "code": "Apache-2.0",
+    "generated_non_dltb_artifacts": "CC0-1.0",
+    "checkpoint_model_weights": "CC0-1.0",
+    "must_not_relicense_original_dltb": true
+  },
+  "raw_dltb_boundary": {
+    "original_bishan_dltb_external_access": "confidential_no_external_access",
+    "original_dongxing_dltb_external_access": "confidential_no_external_access",
+    "original_bishan_dltb_public_release_allowed": false,
+    "original_dongxing_dltb_public_release_allowed": false,
+    "original_dltb_reviewer_access_available": false,
+    "restriction_reason": "author-confirmed sensitive original DLTB data; raw Bishan and Dongxing DLTB cannot be publicly redistributed or externally provided"
+  },
+  "public_package_evidence": {
+    "scope": "tracked repository paths at the scanned Git commit plus the author-confirmed reviewer README route; not a final 4open snapshot proof",
+    "reviewer_readme_direct_link": "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/README.md",
+    "path_scan_command": "git ls-files | rg -n -i \"(^|/)(dltb|.*dltb.*|.*\\.gpkg|.*\\.gdb|.*\\.shp|.*\\.dbf|.*\\.prj|.*\\.cpg)$|dongxing|neijiang|tool2|transitions\\.npz|pairwise\\.npz\"",
+    "tracked_public_package_contains_original_dltb": false,
+    "tracked_public_package_contains_geospatial_source_payloads": false,
+    "tracked_original_dltb_path_matches": [],
+    "tracked_geospatial_source_payload_matches": [],
+    "expected_non_dltb_positive_path_families": [
+      "arcgis_toolbox_paper9/_scratch/tool1_smoke/prepared/tool2 reviewer smoke files",
+      "paper10_geojepa_mpc/experiments/results Dongxing derived CSV/JSON/Markdown summaries",
+      "paper10_geojepa_mpc code, tests, checkpoints, value-label outputs, source-data tables and manuscript audits"
+    ],
+    "small_reviewer_smoke_tool2_files_are_not_full_bishan_tool2": true,
+    "full_bishan_tool2_public_deposit_leakage_check_completed": false,
+    "dongxing_derived_public_deposit_leakage_check_completed": false,
+    "final_4open_snapshot_backfill_required": true,
+    "final_archive_checksum_backfill_required": true
+  },
+  "submission_gate": {
+    "formal_submission_blocked": true,
+    "preflight_pass_does_not_mean_submission_ready": true,
+    "status_reason": "tracked-package leakage evidence is recorded, but final 4open snapshot backfill, independent DLTB-leakage content review for any public derived deposits, target-journal acceptance of confidential raw-DLTB non-availability, and final archive metadata remain open"
+  },
+  "required_before_formal_submission": [
+    "backfill the exact 4open submission snapshot commit represented by the reviewer link",
+    "run and record an independent DLTB-leakage content review on the final public archive snapshot",
+    "record checksums for any public derived Tool2, Dongxing, or Neijiang artifacts deposited outside Git",
+    "confirm CEUS/target-journal acceptance of confidential raw-DLTB non-availability",
+    "align the final Data and Code Availability statement with the accepted archive snapshot"
+  ],
+  "claim_locks": {
+    "tracked_public_package_leakage_evidence_recorded": true,
+    "final_archive_leakage_evidence_recorded": false,
+    "original_dltb_public_release_supported": false,
+    "derived_public_deposit_supported_without_leakage_review": false,
+    "final_submission_readiness_supported": false
+  }
+}

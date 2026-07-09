@@ -193,6 +193,8 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON,
     preflight_checks.PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_MD,
     preflight_checks.PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON,
+    preflight_checks.PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_MD,
+    preflight_checks.PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_JSON,
     RESULTS / "e0_paper10_experiment_freeze_audit_2026-06-27.md",
     RESULTS / "e0_paper10_experiment_closure_register_2026-06-27.md",
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
@@ -359,6 +361,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "paper10_author_decision_closeout_form_current" in payload["passed_checks"]
     assert "paper10_data_publication_boundary_backfill_current" in payload["passed_checks"]
     assert "paper10_public_release_rights_gate_current" in payload["passed_checks"]
+    assert "paper10_dltb_leakage_evidence_audit_current" in payload["passed_checks"]
     assert "paper10_post_guard_submission_readiness_refresh_current" in payload["passed_checks"]
     assert "paper10_anchor_raw_rollout_consistency_audit_current" in payload["passed_checks"]
     assert "original_vision_validation_registry_current" in payload["passed_checks"]
@@ -1670,6 +1673,53 @@ def test_public_release_rights_gate_preflight_rejects_public_original_dltb(tmp_p
     result = preflight_checks.check_paper10_public_release_rights_gate_current(fixture)
 
     assert result.name == "paper10_public_release_rights_gate_current"
+    assert result.ok is False
+    assert "original DLTB public release is not allowed" in result.details
+
+
+def test_dltb_leakage_evidence_audit_preflight_accepts_current_boundary():
+    result = preflight_checks.check_paper10_dltb_leakage_evidence_audit_current(ROOT)
+
+    assert result.name == "paper10_dltb_leakage_evidence_audit_current"
+    assert result.ok is True
+
+
+def test_dltb_leakage_evidence_audit_records_ceus_and_confidential_raw_dltb():
+    payload = json.loads(
+        (ROOT / preflight_checks.PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_JSON).read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert payload["artifact_type"] == "paper10_dltb_leakage_evidence_audit"
+    assert payload["target_journal"] == "Computers, Environment and Urban Systems"
+    assert payload["rights_terms"]["code"] == "Apache-2.0"
+    assert payload["rights_terms"]["generated_non_dltb_artifacts"] == "CC0-1.0"
+    assert payload["raw_dltb_boundary"]["original_bishan_dltb_external_access"] == (
+        "confidential_no_external_access"
+    )
+    assert payload["raw_dltb_boundary"]["original_dongxing_dltb_external_access"] == (
+        "confidential_no_external_access"
+    )
+    assert payload["public_package_evidence"]["tracked_public_package_contains_original_dltb"] is False
+    assert payload["public_package_evidence"]["reviewer_readme_direct_link"] == (
+        "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/README.md"
+    )
+    assert payload["public_package_evidence"]["final_4open_snapshot_backfill_required"] is True
+    assert payload["submission_gate"]["formal_submission_blocked"] is True
+
+
+def test_dltb_leakage_evidence_audit_preflight_rejects_public_original_dltb(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    payload_path = fixture / preflight_checks.PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_JSON
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    payload["raw_dltb_boundary"]["original_bishan_dltb_external_access"] = "public_repository"
+    payload["public_package_evidence"]["tracked_public_package_contains_original_dltb"] = True
+    payload_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    result = preflight_checks.check_paper10_dltb_leakage_evidence_audit_current(fixture)
+
+    assert result.name == "paper10_dltb_leakage_evidence_audit_current"
     assert result.ok is False
     assert "original DLTB public release is not allowed" in result.details
 
