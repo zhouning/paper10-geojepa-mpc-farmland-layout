@@ -102,6 +102,12 @@ PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON = (
 PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE = (
     RESULTS / "e0_paper10_final_figure_table_export_package_2026-06-20.md"
 )
+PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_MD = (
+    RESULTS / "e0_paper10_archive_source_data_closeout_2026-07-09.md"
+)
+PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_JSON = (
+    RESULTS / "e0_paper10_archive_source_data_closeout_2026-07-09.json"
+)
 PAPER10_SUBMISSION_READINESS_BOUNDARY = (
     RESULTS / "e0_paper10_submission_readiness_boundary_2026-06-26.md"
 )
@@ -345,6 +351,8 @@ REQUIRED_PATHS = (
     PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD,
     PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_JSON,
     PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
+    PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_MD,
+    PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_JSON,
     PAPER10_SUBMISSION_READINESS_BOUNDARY,
     PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_MD,
     PAPER10_STAGE3_50X24_CANDIDATE_SCORE_SWEEP_JSON,
@@ -440,6 +448,8 @@ PUBLIC_SUBMISSION_DOCS = (
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
     PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD,
     PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
+    PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_MD,
+    PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_JSON,
     PAPER10_SUBMISSION_READINESS_BOUNDARY,
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
     PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD,
@@ -3674,6 +3684,165 @@ def check_paper10_final_figure_table_export_package_current(root: Path) -> Check
         True,
         "Paper10 final figure/table export package is current and export-bounded",
     )
+
+def check_paper10_archive_source_data_closeout_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_MD,
+        PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_JSON,
+        ARCHIVE_MANIFEST,
+        ARCHIVE_METADATA_TEMPLATES,
+        INTEGRATED_DONGXING_SOURCE_DATA_MAP,
+        PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
+        PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
+        PAPER10_FIGURE_TABLE_CAPTION_CLAIM_PACKET_MD,
+        PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_MD,
+        PAPER10_DLTB_LEAKAGE_EVIDENCE_AUDIT_MD,
+        PAPER10_CEUS_CONFIDENTIAL_DLTB_ACCEPTANCE_PACKET_MD,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_archive_source_data_closeout_current",
+            False,
+            "missing Paper10 archive/source-data closeout files: "
+            + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_MD)
+    try:
+        payload = json.loads(read_text(root / PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_JSON))
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_archive_source_data_closeout_current",
+            False,
+            f"{PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    normalized_text = " ".join(text.split())
+    required_tokens = [
+        "Paper10 archive source-data closeout",
+        "Status: archive_source_data_closeout_prepared_not_submission_ready",
+        "Record 1 public package",
+        "FAIR and DataCite closeout",
+        "DataCite fields prepared",
+        "Main Figure 1",
+        "pending_artwork",
+        "Supplementary Figure S1",
+        "not_visible_on_platform",
+        "confidential_no_external_access",
+        "Apache-2.0",
+        "CC0-1.0",
+        "not final submission approval",
+        "Formal submission remains blocked",
+    ]
+    for token in required_tokens:
+        if token not in normalized_text:
+            missing_tokens.append(f"{PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_MD}: {token}")
+
+    expected_values = {
+        ("artifact_type",): "paper10_archive_source_data_closeout",
+        ("date",): "2026-07-09",
+        ("status",): "archive_source_data_closeout_prepared_not_submission_ready",
+        ("target_journal",): "Computers, Environment and Urban Systems",
+        ("source_boundary", "git_commit_scanned"): "3df9429fb8785539020aa7c7dbce1c925ca18d9b",
+        ("source_boundary", "new_experimental_claim"): False,
+        ("source_boundary", "reran_rollouts"): False,
+        ("source_boundary", "reran_training"): False,
+        ("source_boundary", "submission_approval"): False,
+        ("record1_public_package", "code_licence"): "Apache-2.0",
+        ("record1_public_package", "generated_non_dltb_rights"): "CC0-1.0",
+        ("record1_public_package", "source_data_map_current"): True,
+        ("record1_public_package", "archive_metadata_templates_current"): True,
+        ("record1_public_package", "record1_has_code_tests_smoke_data_outputs_tables_checkpoints_metadata"): True,
+        ("record1_public_package", "record1_excludes_original_bishan_dltb"): True,
+        ("record1_public_package", "record1_excludes_original_dongxing_dltb"): True,
+        ("figure_table_source_data_alignment", "caption_claim_packet_current"): True,
+        ("figure_table_source_data_alignment", "source_coverage_audit_current"): True,
+        ("figure_table_source_data_alignment", "numbering_freeze_current"): True,
+        ("fair_metadata_audit", "record1_has_public_metadata"): True,
+        ("fair_metadata_audit", "data_cite_fields_prepared"): True,
+        ("fair_metadata_audit", "identifier_or_reviewer_link_recorded"): True,
+        ("fair_metadata_audit", "licence_or_rights_terms_recorded"): True,
+        ("fair_metadata_audit", "source_data_to_figures_and_tables_mapped"): True,
+        ("fair_metadata_audit", "restricted_raw_dltb_boundary_recorded"): True,
+        ("fair_metadata_audit", "original_dltb_not_relicensed"): True,
+        ("fair_metadata_audit", "public_record_metadata_can_remain_public_if_raw_dltb_restricted"): True,
+        ("unresolved_submission_fields", "main_figure_1_final_artwork"): "pending_artwork",
+        ("unresolved_submission_fields", "target_journal_editor_acceptance"): "not_recorded",
+        ("unresolved_submission_fields", "exact_4open_snapshot_identifier"): "not_visible_on_platform",
+        ("unresolved_submission_fields", "final_public_archive_identifier"): "anonymous_readme_direct_link_only",
+        ("unresolved_submission_fields", "final_journal_dimensions_and_file_formats"): "not_finalized",
+        ("unresolved_submission_fields", "final_declarations"): "pending_author_decision",
+        ("submission_gate", "formal_submission_blocked"): True,
+        ("submission_gate", "preflight_pass_does_not_mean_submission_ready"): True,
+        ("claim_locks", "archive_source_data_closeout_prepared"): True,
+        ("claim_locks", "record1_public_metadata_aligned"): True,
+        ("claim_locks", "final_submission_readiness_supported"): False,
+        ("claim_locks", "main_figure_1_artwork_complete"): False,
+        ("claim_locks", "target_journal_acceptance_recorded"): False,
+        ("claim_locks", "exact_4open_snapshot_identifier_backfilled"): False,
+    }
+    for keys, expected in expected_values.items():
+        observed = nested_value(payload, keys)
+        if observed != expected:
+            missing_tokens.append(
+                f"{PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_JSON}: "
+                f"{'.'.join(keys)}={observed}"
+            )
+
+    if payload.get("status") == "submission_ready":
+        missing_tokens.append(
+            f"{PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_JSON}: not final submission approval"
+        )
+    if nested_value(payload, ("submission_gate", "formal_submission_blocked")) is not True:
+        missing_tokens.append(
+            f"{PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_JSON}: not final submission approval"
+        )
+
+    required_before = payload.get("required_before_formal_submission")
+    if not isinstance(required_before, list) or len(required_before) < 5:
+        missing_tokens.append(
+            f"{PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_JSON}: required_before_formal_submission"
+        )
+    else:
+        for token in (
+            "Main Figure 1",
+            "CEUS/editor acceptance",
+            "visible-snapshot limitation",
+            "final public archive identifier",
+            "declarations",
+        ):
+            if not any(token in item for item in required_before):
+                missing_tokens.append(
+                    f"{PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_JSON}: required_before_formal_submission missing {token}"
+                )
+
+    hits = []
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if is_post_guard_submission_readiness_positive_overclaim(line):
+            hits.append(
+                f"{PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_MD}:{line_no}: {line.strip()}"
+            )
+    if hits:
+        return CheckResult(
+            "paper10_archive_source_data_closeout_current",
+            False,
+            "forbidden archive/source-data closeout wording: " + " | ".join(hits),
+        )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_archive_source_data_closeout_current",
+            False,
+            "Paper10 archive/source-data closeout gaps: " + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_archive_source_data_closeout_current",
+        True,
+        "Paper10 archive/source-data closeout is current and no-go guarded",
+    )
+
 
 def check_paper10_submission_readiness_boundary_current(root: Path) -> CheckResult:
     required_files = [
@@ -7972,6 +8141,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_figure_table_source_coverage_audit_current,
     check_paper10_figure_table_caption_claim_packet_current,
     check_paper10_final_figure_table_export_package_current,
+    check_paper10_archive_source_data_closeout_current,
     check_paper10_submission_readiness_boundary_current,
     check_paper10_manuscript_result_tables_freeze_current,
     check_paper10_manuscript_text_table_consistency_audit_current,

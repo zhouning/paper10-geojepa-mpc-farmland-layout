@@ -145,6 +145,8 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_MD,
     PAPER10_FIGURE_TABLE_SOURCE_COVERAGE_AUDIT_JSON,
     PAPER10_FINAL_FIGURE_TABLE_EXPORT_PACKAGE,
+    preflight_checks.PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_MD,
+    preflight_checks.PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_JSON,
     PAPER10_SUBMISSION_READINESS_BOUNDARY,
     PAPER10_FORMAL_MANUSCRIPT_DRAFT,
     PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT,
@@ -346,6 +348,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "paper10_figure_table_caption_claim_packet_current" in payload["passed_checks"]
     assert "paper10_figure_table_source_coverage_audit_current" in payload["passed_checks"]
     assert "paper10_final_figure_table_export_package_current" in payload["passed_checks"]
+    assert "paper10_archive_source_data_closeout_current" in payload["passed_checks"]
     assert "paper10_submission_readiness_boundary_current" in payload["passed_checks"]
     assert "paper10_manuscript_result_tables_freeze_current" in payload["passed_checks"]
     assert "paper10_manuscript_text_table_consistency_audit_current" in payload["passed_checks"]
@@ -1805,6 +1808,49 @@ def test_ceus_confidential_dltb_acceptance_packet_preflight_rejects_premature_ed
     assert result.name == "paper10_ceus_confidential_dltb_acceptance_packet_current"
     assert result.ok is False
     assert "target-journal acceptance is not recorded" in result.details
+
+
+def test_archive_source_data_closeout_preflight_accepts_current_boundary():
+    result = preflight_checks.check_paper10_archive_source_data_closeout_current(ROOT)
+
+    assert result.name == "paper10_archive_source_data_closeout_current"
+    assert result.ok is True
+
+
+def test_archive_source_data_closeout_records_record1_fair_and_no_go_boundaries():
+    payload = json.loads(
+        (ROOT / preflight_checks.PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_JSON).read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert payload["artifact_type"] == "paper10_archive_source_data_closeout"
+    assert payload["target_journal"] == "Computers, Environment and Urban Systems"
+    assert payload["record1_public_package"]["code_licence"] == "Apache-2.0"
+    assert payload["record1_public_package"]["generated_non_dltb_rights"] == "CC0-1.0"
+    assert payload["record1_public_package"]["source_data_map_current"] is True
+    assert payload["record1_public_package"]["archive_metadata_templates_current"] is True
+    assert payload["fair_metadata_audit"]["record1_has_public_metadata"] is True
+    assert payload["fair_metadata_audit"]["data_cite_fields_prepared"] is True
+    assert payload["unresolved_submission_fields"]["main_figure_1_final_artwork"] == "pending_artwork"
+    assert payload["unresolved_submission_fields"]["target_journal_editor_acceptance"] == "not_recorded"
+    assert payload["unresolved_submission_fields"]["exact_4open_snapshot_identifier"] == "not_visible_on_platform"
+    assert payload["submission_gate"]["formal_submission_blocked"] is True
+
+
+def test_archive_source_data_closeout_preflight_rejects_submission_ready_claim(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    payload_path = fixture / preflight_checks.PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_JSON
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    payload["status"] = "submission_ready"
+    payload["submission_gate"]["formal_submission_blocked"] = False
+    payload_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    result = preflight_checks.check_paper10_archive_source_data_closeout_current(fixture)
+
+    assert result.name == "paper10_archive_source_data_closeout_current"
+    assert result.ok is False
+    assert "not final submission approval" in result.details
 
 
 def test_author_decision_closeout_form_preflight_rejects_ready_to_submit_claim(tmp_path):
