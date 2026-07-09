@@ -48,8 +48,10 @@ A 2026-07-09 command-line check of the root URL using `curl.exe -L --max-time
 30 -I` observed `302 Found` followed by `401 Unauthorized` from the redirected
 API path, and `curl.exe -L --max-time 30` returned
 `{"error":"not_connected"}`. This root-link API result does not invalidate the
-README.md direct link; the remaining repository action is exact snapshot
-backfill.
+README.md direct link. The author checked the 4open page on 2026-07-09
+and reported that no exact snapshot identifier, version identifier, or
+commit hash was visible. The GitHub submission-preparation commit anchor is
+`ea7e11a5f5f041d96a611014dd14cb5e44848524`, but this is not proof of the exact 4open snapshot.
 
 ## Current gates
 
@@ -60,7 +62,7 @@ backfill.
 | original Bishan DLTB | confidential_no_external_access | Do not place in public archives or reviewer links; disclose that no external raw-data access is available. |
 | original Dongxing DLTB | confidential_no_external_access | Do not place in public archives or reviewer links; disclose that no external raw-data access is available. |
 | derived Tool2 artifacts | CC0-1.0 public candidate after leakage check | Deposit only after DLTB-leakage check, checksums, and rights metadata. |
-| 4open reviewer link | README.md direct link author-confirmed available | Root-link command-line API follow-up returned 401, but the author-confirmed README.md direct link is the reviewer-facing route; backfill the exact represented snapshot. |
+| 4open reviewer link | README.md direct link author-confirmed available; no visible snapshot identifier | Root-link command-line API follow-up returned 401, but the author-confirmed README.md direct link is the reviewer-facing route; the author checked the page on 2026-07-09 and no exact snapshot identifier was visible, so retain the GitHub submission-preparation commit anchor without treating it as exact 4open snapshot proof. |
 
 ## Required before formal submission
 
@@ -72,7 +74,8 @@ backfill.
 3. Record DLTB-leakage check evidence before any new public deposit of derived
    Tool2 or Dongxing/Neijiang non-DLTB artifacts.
 4. Record the author-confirmed 4open README.md direct reviewer link in final
-   materials and backfill the exact snapshot represented by that link.
+   materials and backfill the exact snapshot represented by that link if the
+   platform exposes it; otherwise keep the visible-snapshot limitation disclosed.
 5. Decide whether the target journal will accept the confidential raw-DLTB
    limitation with public code, smoke data, generated artifacts, and metadata.
 6. Backfill final Data and Code Availability, `MANIFEST.md`, archive metadata,
@@ -85,4 +88,5 @@ Do not apply Apache-2.0 or CC0-1.0 to original Bishan or Dongxing DLTB inputs.
 Do not claim original DLTB data are available to reviewers externally.
 Do not treat the root-link command-line API 401 as invalidating the
 author-confirmed README.md direct reviewer link.
+Do not claim the GitHub submission-preparation commit anchor is exact 4open snapshot proof.
 Do not claim all submission blockers are closed.

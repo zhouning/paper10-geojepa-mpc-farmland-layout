@@ -5788,7 +5788,8 @@ def check_paper10_public_release_rights_gate_current(root: Path) -> CheckResult:
         "401 Unauthorized",
         "{\"error\":\"not_connected\"}",
         "does not invalidate the README.md direct link",
-        "exact snapshot backfill",
+        "no exact snapshot identifier",
+        "submission-preparation commit anchor",
         "confidential_no_external_access",
         "Do not use this gate as submission approval.",
         "Do not apply Apache-2.0 or CC0-1.0 to original Bishan or Dongxing DLTB inputs.",
@@ -5842,6 +5843,12 @@ def check_paper10_public_release_rights_gate_current(root: Path) -> CheckResult:
         ("repository_snapshot", "command_line_access_check", "reviewer_browser_verification_closed"): False,
         ("repository_snapshot", "non_author_browser_test_completed"): False,
         ("repository_snapshot", "exact_submission_commit_backfilled"): False,
+        ("repository_snapshot", "author_checked_4open_snapshot_identifier"): True,
+        ("repository_snapshot", "author_visible_4open_snapshot_identifier"): False,
+        ("repository_snapshot", "snapshot_identifier_visibility_date"): "2026-07-09",
+        ("repository_snapshot", "exact_4open_snapshot_identifier_available"): False,
+        ("repository_snapshot", "submission_preparation_commit_anchor"): "ea7e11a5f5f041d96a611014dd14cb5e44848524",
+        ("repository_snapshot", "submission_preparation_commit_anchor_is_exact_4open_snapshot"): False,
         ("claim_locks", "final_submission_readiness_supported"): False,
         ("claim_locks", "original_dltb_public_release_supported"): False,
         ("claim_locks", "all_licence_and_rights_blockers_closed"): False,
@@ -5849,6 +5856,7 @@ def check_paper10_public_release_rights_gate_current(root: Path) -> CheckResult:
         ("claim_locks", "reviewer_readme_direct_link_author_confirmed"): True,
         ("claim_locks", "reviewer_link_blocker_closed_by_author_confirmation"): True,
         ("claim_locks", "reviewer_browser_link_verified"): False,
+        ("claim_locks", "exact_4open_snapshot_identifier_backfilled"): False,
     }
     for keys, expected in expected_values.items():
         observed = nested_value(payload, keys)
@@ -6620,7 +6628,7 @@ CEUS_CLEAN_MANUSCRIPT_INTERNAL_SECTIONS = (
 
 CEUS_CLEAN_MANUSCRIPT_DATA_AVAILABILITY_TOKENS = (
     "4open README.md direct link",
-    "2934d3ab629e3e9664bf39261baf1a3bd7f7cbc6",
+    "ea7e11a5f5f041d96a611014dd14cb5e44848524",
     "Apache-2.0",
     "CC0-1.0",
     "full Bishan Tool2",
@@ -6744,7 +6752,7 @@ def check_paper10_ceus_clean_main_manuscript_draft_current(root: Path) -> CheckR
         "## Clean-draft boundary",
         "not suitable as a final submission package",
         "4open README.md direct link",
-        "2934d3ab629e3e9664bf39261baf1a3bd7f7cbc6",
+        "ea7e11a5f5f041d96a611014dd14cb5e44848524",
         "Apache-2.0",
         "CC0-1.0",
         "DLTB-leakage evidence",

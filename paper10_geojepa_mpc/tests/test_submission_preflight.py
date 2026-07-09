@@ -1240,7 +1240,7 @@ def test_ceus_clean_main_manuscript_draft_records_current_rights_and_reviewer_li
     assert "Apache-2.0" in data_availability
     assert "CC0-1.0" in data_availability
     assert "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/README.md" in data_availability
-    assert "2934d3ab629e3e9664bf39261baf1a3bd7f7cbc6" in data_availability
+    assert "ea7e11a5f5f041d96a611014dd14cb5e44848524" in data_availability
     assert "software licence and generated-output rights terms remain pending" not in data_availability
     assert "repository DOI or anonymous reviewer link is pending" not in data_availability
 
@@ -1635,6 +1635,25 @@ def test_public_release_rights_gate_records_readme_link_author_confirmation():
     assert check["readme_direct_link_invalidated"] is False
     assert payload["claim_locks"]["reviewer_link_blocker_closed_by_author_confirmation"] is True
     assert "4open browser test" not in payload["submission_blockers"]["status_reason"]
+
+def test_public_release_rights_gate_records_invisible_4open_snapshot_identifier():
+    payload = json.loads(
+        (ROOT / preflight_checks.PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON).read_text(
+            encoding="utf-8"
+        )
+    )
+
+    snapshot = payload["repository_snapshot"]
+    assert snapshot["author_checked_4open_snapshot_identifier"] is True
+    assert snapshot["author_visible_4open_snapshot_identifier"] is False
+    assert snapshot["snapshot_identifier_visibility_date"] == "2026-07-09"
+    assert snapshot["exact_4open_snapshot_identifier_available"] is False
+    assert snapshot["submission_preparation_commit_anchor"] == (
+        "ea7e11a5f5f041d96a611014dd14cb5e44848524"
+    )
+    assert payload["claim_locks"]["exact_4open_snapshot_identifier_backfilled"] is False
+    assert payload["submission_blockers"]["formal_submission_blocked"] is True
+
 
 def test_public_release_rights_gate_preflight_rejects_submission_ready_status(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
