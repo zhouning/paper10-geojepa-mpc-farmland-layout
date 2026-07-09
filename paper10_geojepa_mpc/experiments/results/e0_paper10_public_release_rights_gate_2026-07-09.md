@@ -43,7 +43,11 @@ metadata are recorded.
 
 The 4open reviewer link is recorded for code and derived non-DLTB artifacts,
 but non-author browser-session testing and exact snapshot backfill remain
-pending.
+pending. A 2026-07-09 command-line access check using `curl.exe -L --max-time
+30 -I` observed `302 Found` from the entry URL followed by `401 Unauthorized`
+from the redirected API path, and `curl.exe -L --max-time 30` returned
+`{"error":"not_connected"}`. This does not close reviewer-browser
+verification and must not be treated as non-author browser-session testing.
 
 ## Current gates
 

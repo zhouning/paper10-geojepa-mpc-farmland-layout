@@ -34,6 +34,15 @@
   "repository_snapshot": {
     "anonymous_reviewer_link": "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/",
     "archive_platform": "anonymous.4open.science",
+    "command_line_access_check": {
+      "date": "2026-07-09",
+      "method": "curl.exe -L --max-time 30 -I and curl.exe -L --max-time 30 GET from the local workspace",
+      "observed_redirect_status": "302 Found",
+      "observed_followup_status": "401 Unauthorized",
+      "observed_get_body": "{\"error\":\"not_connected\"}",
+      "interpretation": "The 4open route is not verified for reviewer-browser use; formal submission remains blocked until a non-author browser session loads the repository file listing.",
+      "reviewer_browser_verification_closed": false
+    },
     "exact_submission_commit_backfilled": false,
     "non_author_browser_test_completed": false
   },
