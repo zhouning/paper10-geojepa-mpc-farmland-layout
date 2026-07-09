@@ -100,6 +100,7 @@ PAPER10_BOUNDED_MANUSCRIPT_ASSEMBLY_DRAFT = (
     RESULTS / "e0_paper10_bounded_manuscript_assembly_draft_2026-06-27.md"
 )
 MINIMAL_PREFLIGHT_FIXTURE_FILES = (
+    Path("LICENSE"),
     Path("README.md"),
     Path("REPRODUCIBILITY.md"),
     Path("MANIFEST.md"),
@@ -1532,7 +1533,7 @@ def test_data_publication_boundary_backfill_preflight_rejects_missing_restricted
     fixture = copy_minimal_preflight_fixture(tmp_path)
     availability = fixture / DATA_CODE_AVAILABILITY
     availability_text = availability.read_text(encoding="utf-8")
-    restricted_boundary = "Original Bishan and Dongxing DLTB\ninputs are restricted"
+    restricted_boundary = "Original Bishan and Dongxing DLTB inputs\nare confidential"
     assert restricted_boundary in availability_text
     availability.write_text(
         availability_text.replace(
@@ -1548,14 +1549,36 @@ def test_data_publication_boundary_backfill_preflight_rejects_missing_restricted
 
     assert result.name == "paper10_data_publication_boundary_backfill_current"
     assert result.ok is False
-    assert "Original Bishan and Dongxing DLTB inputs are restricted" in result.details
+    assert "confidential" in result.details
 
 
-def test_public_release_rights_gate_preflight_accepts_current_pending_rights():
+def test_public_release_rights_gate_preflight_accepts_current_author_decisions():
     result = preflight_checks.check_paper10_public_release_rights_gate_current(ROOT)
 
     assert result.name == "paper10_public_release_rights_gate_current"
     assert result.ok is True
+
+
+def test_public_release_rights_gate_records_apache2_cc0_and_confidential_dltb():
+    payload = json.loads(
+        (ROOT / preflight_checks.PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON).read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert payload["licence_state"]["named_software_licence_selected"] is True
+    assert payload["licence_state"]["code_licence_name"] == "Apache-2.0"
+    assert payload["licence_state"]["repository_licence_file_present"] is True
+    assert payload["rights_state"]["named_generated_output_rights_selected"] is True
+    assert payload["rights_state"]["generated_output_rights_terms"] == "CC0-1.0"
+    assert payload["rights_state"]["checkpoint_model_weight_rights_selected"] is True
+    assert payload["rights_state"]["checkpoint_model_weight_rights_terms"] == "CC0-1.0"
+    assert payload["data_boundary"]["original_bishan_dltb_access_route"] == (
+        "confidential_no_external_access"
+    )
+    assert payload["data_boundary"]["original_dongxing_dltb_access_route"] == (
+        "confidential_no_external_access"
+    )
 
 
 def test_public_release_rights_gate_preflight_rejects_submission_ready_status(tmp_path):
@@ -1574,11 +1597,21 @@ def test_public_release_rights_gate_preflight_rejects_submission_ready_status(tm
     assert "formal_submission_blocked=False" in result.details
 
 
-def test_public_release_rights_gate_preflight_rejects_premature_licence_closeout(tmp_path):
+def test_public_release_rights_gate_preflight_rejects_missing_license_file(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    (fixture / "LICENSE").unlink()
+
+    result = preflight_checks.check_paper10_public_release_rights_gate_current(fixture)
+
+    assert result.name == "paper10_public_release_rights_gate_current"
+    assert result.ok is False
+    assert "missing repository Apache-2.0 LICENSE file" in result.details
+
+
+def test_public_release_rights_gate_preflight_rejects_mismatched_licence_name(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
     payload_path = fixture / preflight_checks.PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON
     payload = json.loads(payload_path.read_text(encoding="utf-8"))
-    payload["licence_state"]["named_software_licence_selected"] = True
     payload["licence_state"]["code_licence_name"] = "MIT"
     payload_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
@@ -1586,8 +1619,7 @@ def test_public_release_rights_gate_preflight_rejects_premature_licence_closeout
 
     assert result.name == "paper10_public_release_rights_gate_current"
     assert result.ok is False
-    assert "named_software_licence_selected=True" in result.details
-    assert "missing repository licence file" in result.details
+    assert "code_licence_name=MIT" in result.details
 
 
 def test_public_release_rights_gate_preflight_rejects_public_original_dltb(tmp_path):
@@ -1596,6 +1628,8 @@ def test_public_release_rights_gate_preflight_rejects_public_original_dltb(tmp_p
     payload = json.loads(payload_path.read_text(encoding="utf-8"))
     payload["data_boundary"]["original_bishan_dltb_public_release_allowed"] = True
     payload["data_boundary"]["original_dongxing_dltb_public_release_allowed"] = True
+    payload["data_boundary"]["original_bishan_dltb_access_route"] = "public_repository"
+    payload["data_boundary"]["original_dongxing_dltb_access_route"] = "public_repository"
     payload_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
     result = preflight_checks.check_paper10_public_release_rights_gate_current(fixture)

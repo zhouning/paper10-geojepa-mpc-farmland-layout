@@ -281,6 +281,7 @@ ORIGINAL_VISION_STAGE3_CONFIRMATORY_ROLLOUTS_JSON = (
 )
 
 REQUIRED_PATHS = (
+    Path("LICENSE"),
     Path("README.md"),
     Path("REPRODUCIBILITY.md"),
     Path("MANIFEST.md"),
@@ -1120,44 +1121,48 @@ def check_paper10_data_publication_boundary_backfill_current(root: Path) -> Chec
     doc_tokens = {
         DATA_AVAILABILITY: [
             "Paper10 author data/code publication boundary",
-            "code can be public",
-            "non-DLTB artifacts can be public",
-            "Original Bishan and Dongxing DLTB inputs are restricted",
+            "Apache-2.0",
+            "CC0-1.0",
+            "Original Bishan and Dongxing DLTB inputs are confidential",
             "4open reviewer link",
-            "named software licence remains pending",
-            "controlled-access route remains pending for restricted original DLTB",
-            PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_MD.name,
+            "code is licensed under Apache-2.0",
+            "CC0-1.0",
+            "confidential",
+            "cannot be shared externally",
+            PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_MD.name,
         ],
         DATA_CODE_AVAILABILITY: [
             "Paper10 author data/code publication boundary",
-            "code can be public",
-            "non-DLTB artifacts can be public",
-            "Original Bishan and Dongxing DLTB inputs are restricted",
+            "Apache-2.0",
+            "CC0-1.0",
+            "Original Bishan and Dongxing DLTB inputs are confidential",
             "full Bishan Tool2 transition and pairwise files are treated as derived artifacts",
             "DLTB-leakage check",
-            "original Bishan DLTB inputs are not publicly redistributable",
-            "original Dongxing DLTB inputs are not publicly redistributable",
-            "software licence and generated-output/model-weight rights terms remain pending",
+            "are not publicly redistributable",
+            "cannot be shared externally",
+            "Apache-2.0",
+            "CC0-1.0",
+            "cannot be shared externally",
             "4open reviewer link has been provided but still requires a non-author browser-session test",
         ],
         DATA_ACCESS_RIGHTS_REGISTER: [
             "Author closeout update (2026-07-08)",
-            "code can be public",
-            "non-DLTB artifacts can be public",
-            "Original Bishan and Dongxing DLTB inputs are restricted",
-            "public_code_allowed_pending_named_software_licence",
-            "restricted_sensitive_original_bishan_dltb_controlled_access_required",
+            "Apache-2.0",
+            "CC0-1.0",
+            "confidential",
+            "Apache-2.0",
+            "confidential_no_external_access",
             "split_route_original_dongxing_dltb_restricted_derived_non_dltb_public_pending_leakage_check_and_controlled_route",
         ],
         ARCHIVE_METADATA_TEMPLATES: [
-            "Author publication boundary update (2026-07-08)",
-            "code can be public",
-            "non-DLTB artifacts can be public",
-            "Original Bishan and Dongxing DLTB inputs are restricted",
+            "Author publication boundary update (2026-07-09)",
+            "Apache-2.0",
+            "CC0-1.0",
+            "confidential",
             "Do not place original Bishan or Dongxing DLTB inputs in Record 1",
             "DLTB-leakage check",
-            "public_code_allowed_pending_named_software_licence",
-            "restricted_sensitive_original_bishan_dltb_controlled_access_required",
+            "Apache-2.0",
+            "confidential_no_external_access",
         ],
     }
 
@@ -5749,19 +5754,20 @@ def check_paper10_public_release_rights_gate_current(root: Path) -> CheckResult:
     normalized_text = " ".join(text.split())
     required_tokens = [
         "Paper10 public-release rights gate",
-        "Status: public_release_rights_pending_no_go",
-        "source-derived; no rollout or training rerun; no submission approval",
+        "Status: public_release_rights_closed_restricted_data_no_go",
+        "author-updated; no rollout or training rerun; no submission approval",
         "Formal submission remains blocked",
-        "code can be public",
-        "named software licence has not been selected",
-        "generated-data and checkpoint/model-weight rights terms are still pending",
-        "Original Bishan and Dongxing DLTB inputs are restricted",
-        "must not be publicly redistributed",
+        "code uses Apache-2.0",
+        "code licence is Apache-2.0",
+        "released under CC0-1.0",
+        "Original Bishan and Dongxing DLTB inputs are confidential_no_external_access",
+        "cannot be provided externally",
         "DLTB-leakage check",
         "4open reviewer link",
+        "confidential_no_external_access",
         "non-author browser-session testing",
         "Do not use this gate as submission approval.",
-        "Do not apply an open licence to original Bishan or Dongxing DLTB inputs.",
+        "Do not apply Apache-2.0 or CC0-1.0 to original Bishan or Dongxing DLTB inputs.",
     ]
     for token in required_tokens:
         if token not in normalized_text:
@@ -5770,7 +5776,7 @@ def check_paper10_public_release_rights_gate_current(root: Path) -> CheckResult:
     expected_values = {
         ("date",): "2026-07-09",
         ("artifact_type",): "paper10_public_release_rights_gate",
-        ("status",): "public_release_rights_pending_no_go",
+        ("status",): "public_release_rights_closed_restricted_data_no_go",
         ("source_boundary", "new_experimental_claim"): False,
         ("source_boundary", "reran_rollouts"): False,
         ("source_boundary", "reran_training"): False,
@@ -5779,18 +5785,21 @@ def check_paper10_public_release_rights_gate_current(root: Path) -> CheckResult:
         ("submission_blockers", "formal_submission_blocked"): True,
         ("submission_blockers", "preflight_pass_does_not_mean_submission_ready"): True,
         ("licence_state", "code_can_be_public"): True,
-        ("licence_state", "named_software_licence_selected"): False,
-        ("licence_state", "code_licence_name"): "pending_author_or_institution_selection",
-        ("licence_state", "repository_licence_file_present"): False,
+        ("licence_state", "named_software_licence_selected"): True,
+        ("licence_state", "code_licence_name"): "Apache-2.0",
+        ("licence_state", "repository_licence_file_present"): True,
         ("licence_state", "scope_limited_to_licensable_code_and_scripts"): True,
         ("rights_state", "non_dltb_artifacts_can_be_public"): True,
-        ("rights_state", "named_generated_output_rights_selected"): False,
-        ("rights_state", "generated_output_rights_terms"): "pending_author_or_institution_selection",
-        ("rights_state", "checkpoint_model_weight_rights_selected"): False,
-        ("rights_state", "checkpoint_model_weight_rights_terms"): "pending_author_or_institution_selection",
+        ("rights_state", "named_generated_output_rights_selected"): True,
+        ("rights_state", "generated_output_rights_terms"): "CC0-1.0",
+        ("rights_state", "checkpoint_model_weight_rights_selected"): True,
+        ("rights_state", "checkpoint_model_weight_rights_terms"): "CC0-1.0",
         ("rights_state", "must_not_relicense_restricted_dltb"): True,
         ("data_boundary", "original_bishan_dltb_public_release_allowed"): False,
         ("data_boundary", "original_dongxing_dltb_public_release_allowed"): False,
+        ("data_boundary", "original_bishan_dltb_access_route"): "confidential_no_external_access",
+        ("data_boundary", "original_dongxing_dltb_access_route"): "confidential_no_external_access",
+        ("data_boundary", "restricted_dltb_external_access_available"): False,
         ("data_boundary", "derived_non_dltb_public_release_allowed_after_leakage_check"): True,
         ("data_boundary", "derived_tool2_leakage_check_completed"): False,
         ("data_boundary", "dongxing_derived_leakage_check_completed"): False,
@@ -5802,6 +5811,7 @@ def check_paper10_public_release_rights_gate_current(root: Path) -> CheckResult:
         ("claim_locks", "final_submission_readiness_supported"): False,
         ("claim_locks", "original_dltb_public_release_supported"): False,
         ("claim_locks", "all_licence_and_rights_blockers_closed"): False,
+        ("claim_locks", "licence_and_generated_rights_blockers_closed"): True,
         ("claim_locks", "reviewer_browser_link_verified"): False,
     }
     for keys, expected in expected_values.items():
@@ -5829,14 +5839,24 @@ def check_paper10_public_release_rights_gate_current(root: Path) -> CheckResult:
             f"{PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON}: original DLTB public release is not allowed"
         )
 
-    licence_files = [root / "LICENSE", root / "LICENCE", root / "LICENSE.txt", root / "LICENCE.txt"]
-    repository_licence_exists = any(path.exists() for path in licence_files)
-    named_licence_selected = nested_value(payload, ("licence_state", "named_software_licence_selected"))
-    if named_licence_selected is True and not repository_licence_exists:
+    licence_path = root / "LICENSE"
+    if not licence_path.exists():
         missing_tokens.append(
             f"{PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON}: "
-            "named_software_licence_selected=True but missing repository licence file"
+            "missing repository Apache-2.0 LICENSE file"
         )
+    else:
+        licence_text = read_text(licence_path)
+        for token in (
+            "Apache License",
+            "Version 2.0, January 2004",
+            "http://www.apache.org/licenses/",
+        ):
+            if token not in licence_text:
+                missing_tokens.append(
+                    f"{PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON}: "
+                    f"LICENSE missing {token}"
+                )
 
     for key in ("licence_state", "rights_state", "data_boundary", "repository_snapshot"):
         if not isinstance(payload.get(key), dict):

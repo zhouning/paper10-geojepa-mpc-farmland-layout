@@ -6,6 +6,7 @@ data needed for smoke verification.
 
 ## Included
 
+- `LICENSE`: Apache-2.0 licence for licensable code and scripts.
 - `paper10_geojepa_mpc/`: 407 tracked non-cache files in the active
   Paper10 workspace, including 96 Python files, 130 JSON files, 133 Markdown
   files, 11 CSV files, 9 NPZ files, 11 PyTorch checkpoint files, 16 log files,
@@ -104,10 +105,10 @@ data needed for smoke verification.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_true_reward_guard_readiness_2026-07-08.json`:
   machine-readable source for the true-reward guard readiness preflight check.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_public_release_rights_gate_2026-07-09.md`:
-  current public-release rights gate recording that code and non-DLTB artifacts
-  may be public, while named software licence, generated-output/model-weight
-  rights terms, DLTB-leakage checks, restricted-DLTB access routing, 4open
-  browser testing, and final backfill remain formal-submission blockers.
+  current public-release rights gate recording Apache-2.0 for code, CC0-1.0
+  for generated non-DLTB data/model artifacts, confidential_no_external_access
+  for original Bishan and Dongxing DLTB inputs, and remaining 4open browser
+  testing, leakage-check, journal-acceptance and final-backfill blockers.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_public_release_rights_gate_2026-07-09.json`:
   machine-readable source for the public-release rights gate preflight check.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_baseline_hardened_manuscript_patch_2026-07-06.md`:

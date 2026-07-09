@@ -18,32 +18,32 @@ This boundary does not declare final submission readiness.
 
 ## Paper10 author data/code publication boundary
 
-The 2026-07-08 author closeout records the current data/code publication
-boundary in `paper10_geojepa_mpc/experiments/results/e0_paper10_author_decision_closeout_form_2026-07-08.md`:
+The 2026-07-09 author update supersedes the earlier 2026-07-08 closeout
+for public-release rights:
 
-- code can be public, but the named software licence remains pending;
-- non-DLTB artifacts can be public, subject to named rights terms and
-  DLTB-leakage checks where derived data could expose restricted source
-  content;
-- Original Bishan and Dongxing DLTB inputs are restricted and must not be
-  publicly redistributed;
+- code is licensed under Apache-2.0 in `LICENSE`;
+- generated non-DLTB JSON, Markdown, CSV, NPZ outputs, source-data tables,
+  checkpoints, and model-weight artifacts are released under CC0-1.0;
+- Original Bishan and Dongxing DLTB inputs are confidential, cannot be publicly
+  redistributed, and cannot be shared externally through public download,
+  private reviewer link, controlled-access credentials, or informal request;
 - the 4open reviewer link has been provided for code and derived non-DLTB
   artifacts, but it still requires non-author browser-session testing and final
   manuscript/archive backfill;
-- the controlled-access route remains pending for restricted original DLTB
-  inputs if the target journal requires raw-input inspection during review.
+- DLTB-leakage check evidence remains required before any new public deposit of
+  derived Tool2 or Dongxing/Neijiang non-DLTB artifacts.
 
 For the manuscript-facing Data and Code Availability draft that still carries
-the unresolved DOI, licence, and controlled-access backfill, see:
+the unresolved DOI, confidential-DLTB limitation, and final backfill, see:
 
 ```text
 paper10_geojepa_mpc/experiments/results/e0_data_code_availability_draft_2026-06-09.md
 ```
 
 For the current public-release rights gate, which records that code and
-non-DLTB artifacts may be public but that named licence, generated-output
-rights, DLTB-leakage checks, restricted-DLTB access routing, 4open browser
-testing, and final backfill still block formal submission, see:
+Apache-2.0 code licensing and CC0-1.0 generated-artifact rights are
+recorded, while confidential original DLTB non-availability, DLTB-leakage
+checks, 4open browser testing, and final backfill still block formal submission, see:
 
 ```text
 paper10_geojepa_mpc/experiments/results/e0_paper10_public_release_rights_gate_2026-07-09.md

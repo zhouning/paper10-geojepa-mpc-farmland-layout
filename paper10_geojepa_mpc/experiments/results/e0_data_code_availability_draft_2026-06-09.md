@@ -35,21 +35,20 @@ The current no-go submission blocker decision packet is tracked in
 
 ## Paper10 author data/code publication boundary
 
-The 2026-07-08 author closeout clarifies the publication scope for this draft:
-code can be public, and non-DLTB artifacts can be public after named rights
-terms and DLTB-leakage checks are recorded. Original Bishan and Dongxing DLTB
-inputs are restricted. The original Bishan DLTB inputs are not publicly
-redistributable, and the original Dongxing DLTB inputs are not publicly
-redistributable.
+The 2026-07-09 author update clarifies the publication scope for this draft:
+code is licensed under Apache-2.0 in `LICENSE`, and generated non-DLTB JSON,
+Markdown, CSV, NPZ outputs, source-data tables, checkpoints, and model-weight
+artifacts are released under CC0-1.0. Original Bishan and Dongxing DLTB inputs
+are confidential, are not publicly redistributable, and cannot be shared
+externally through public download, private reviewer link, controlled-access
+credentials, or informal request.
 
 The full Bishan Tool2 transition and pairwise files are treated as derived
-artifacts rather than original DLTB inputs, but public deposit still requires a
-DLTB-leakage check, archive checksums, and rights metadata. The 4open reviewer
-link has been provided but still requires a non-author browser-session test.
-The software licence and generated-output/model-weight rights terms remain
-pending, and the controlled-access route remains pending for restricted
-original DLTB inputs if the target journal requires raw-input inspection during
-review.
+artifacts rather than original DLTB inputs, but any new public deposit still
+requires a DLTB-leakage check, archive checksums, and rights metadata. The
+4open reviewer link has been provided but still requires a non-author
+browser-session test. The final manuscript must disclose that no external raw
+DLTB access route is available.
 
 ## Dataset inventory and access routes
 
@@ -63,8 +62,8 @@ review.
 | Dongxing/Neijiang generated summaries and figure source data | Cross-region calibration tables, Figure 4 return-label scaling, and Figure 5 low-label transfer stress test | `paper10_geojepa_mpc/experiments/results/e0_dongxing_*_2026-06-10.*`; `e0_dongxing_return_label_family_summary_2026-06-10.csv`; `e0_dongxing_low_label_budget_family_summary_2026-06-10.csv` | public code/data repository after archive/release | included in Git as derived source data; needs repository DOI or release URL before submission |
 | Generated figure previews | Draft visual checks | ignored `reviewer_outputs/` | not part of submitted source data unless selected | generated locally; do not cite unless exported and deposited |
 | Full Bishan Tool2 data (`tool2/transitions.npz`, `tool2/pairwise.npz`) | Full-scale training and rollout reproduction | external to Git; placement documented in `DATA_AVAILABILITY.md` and `REPRODUCIBILITY.md` | public repository or controlled/justified request, depending on authors' rights | not yet deposited; needs DOI/access route before submission |
-| Full prepared Bishan geospatial inputs, including GPKG root | Real-environment rollouts and reproducible 20x16 label generation | external to Git; expected files documented in `DATA_AVAILABILITY.md`; GPKG root required for packaged 20x16 reproduction | likely restricted or controlled/justified request if raw cadastral data cannot be redistributed | access condition must be decided before submission |
-| Dongxing/Neijiang prepared environment, transitions, pairwise labels, and geospatial inputs | External-region real-environment rollouts, 3711-block action-space adaptation, return-label scaling, and low-label stress tests | external to Git; audited in `e0_dongxing_local_data_cross_region_audit_2026-06-10.md`; includes prepared block products, `trajectories_6k_neijiang.npz`, `pairwise_data_neijiang.npz`, and slope-enriched geospatial inputs | public deposit if redistribution rights exist; otherwise controlled-access record with public metadata and reviewer route | not yet deposited; needs Dongxing/Neijiang data DOI or controlled-access route before submission |
+| Full prepared Bishan geospatial inputs, including GPKG root | Real-environment rollouts and reproducible 20x16 label generation | external to Git; expected files documented in `DATA_AVAILABILITY.md`; GPKG root required for packaged 20x16 reproduction | confidential_no_external_access for original DLTB inputs | cannot be shared externally; final manuscript must disclose the raw-data limitation |
+| Dongxing/Neijiang prepared environment, transitions, pairwise labels, and geospatial inputs | External-region real-environment rollouts, 3711-block action-space adaptation, return-label scaling, and low-label stress tests | external to Git; audited in `e0_dongxing_local_data_cross_region_audit_2026-06-10.md`; includes prepared block products, `trajectories_6k_neijiang.npz`, `pairwise_data_neijiang.npz`, and slope-enriched geospatial inputs | split route: CC0-1.0 for derived non-DLTB artifacts after leakage check; confidential_no_external_access for original Dongxing DLTB inputs | final manuscript must disclose that original Dongxing DLTB cannot be shared externally |
 | Paper9 local manuscript source | Task/reward provenance during internal drafting | local `D:/test/paper9_v6.tex`; status note in `references/paper10_paper9_local_source_status_2026-06-09.md` | not a dataset; local-only manuscript source | replace or formalize before submission |
 
 ## Draft Data Availability
