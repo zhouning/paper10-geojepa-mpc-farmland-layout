@@ -2,7 +2,7 @@
 
 Date: 2026-07-06
 
-Status: clean CEUS main-manuscript draft, not a final submission package. This file removes author handoff notes, source-control lists, terminology ledgers, claim-lock tables and unresolved-blocker tables from the manuscript body. It does not add a new experiment, and it keeps the current no-go submission boundary for repository identifiers, licences, data-access routes, declarations and final figure/table exports.
+Status: clean CEUS main-manuscript draft, not a final submission package. This file removes author handoff notes, source-control lists, terminology ledgers, claim-lock tables and unresolved-blocker tables from the manuscript body. It does not add a new experiment, and it keeps the current no-go submission boundary for exact archive snapshot backfill, DLTB-leakage evidence, target-journal acceptance of confidential raw-DLTB non-availability, declarations and final figure/table exports.
 
 Source assembly: `e0_paper10_ceus_baseline_hardened_manuscript_assembly_draft_2026-07-06.md`.
 
@@ -158,15 +158,15 @@ Paper10 supports monitor-gated value labels and executable masks as a bounded Ge
 
 ## Data and Code Availability
 
-This statement is a CEUS-facing draft and must be backfilled after the author team selects repository identifiers, licences and controlled-access routes.
+This statement is a CEUS-facing draft with the current public-release rights boundary backfilled. The reviewer-facing repository route is the author-confirmed 4open README.md direct link: `https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/README.md`. The current GitHub submission-preparation commit is `2934d3ab629e3e9664bf39261baf1a3bd7f7cbc6`; the exact 4open snapshot commit still needs final archive backfill if it differs from this GitHub commit.
 
-The data supporting the packaged analyses will be mapped through a versioned Paper10 repository archive and associated data records. The repository archive is intended to contain the custom code, tests, scripts, small reviewer smoke dataset, generated value-label files, monitor outputs, rollout summaries, figure-ready CSV source data, manuscript table source notes, saved checkpoints and metadata needed to inspect the reported Bishan 10x12/top4, Bishan 20x16/top5, Bishan Stage 3 boundary and Dongxing summary results. The repository DOI or anonymous reviewer link is pending and must be added before submission.
+The repository package contains custom code, tests, scripts, the small reviewer smoke dataset, generated value-label files, monitor outputs, rollout summaries, figure-ready CSV source data, manuscript table source notes, saved checkpoints and metadata needed to inspect the reported Bishan 10x12/top4, Bishan 20x16/top5, Bishan Stage 3 boundary and Dongxing summary results. Code and scripts are licensed under Apache-2.0 in `LICENSE`. Generated non-DLTB JSON, Markdown, CSV, NPZ outputs, source-data tables, checkpoints and model-weight artifacts are released under CC0-1.0.
 
-The full Bishan Tool2 transition and pairwise datasets are external to Git because they are large binary scientific data. Full Bishan reruns also require the prepared GPKG-root geospatial inputs, block products and township inputs. These data must be deposited in a durable repository if redistribution rights allow, or assigned to a controlled institutional access route with public metadata, eligible requester criteria, review procedure, reviewer access and data-use terms.
+The full Bishan Tool2 transition and pairwise datasets are external to Git because they are large binary scientific data. They are treated as derived non-DLTB artifacts, but any new public deposit still requires DLTB-leakage check evidence, archive checksums and rights metadata. Full Bishan reruns also require the prepared GPKG-root geospatial inputs, block products and township inputs.
 
-The Dongxing/Neijiang prepared data are also external to Git. The tracked repository contains derived Dongxing summary tables and figure source CSVs, but full external-region reruns require prepared block products, parcel assignments, transition trajectories, pairwise labels, environment wrapper files and slope-enriched geospatial inputs. These files need a public data record or a controlled-access metadata record before final submission.
+Original Bishan and Dongxing DLTB inputs are confidential and cannot be publicly redistributed or provided externally through public download, reviewer links, controlled-access credentials or informal requests. This limitation must be disclosed directly in the final submission. The target journal must accept this confidential raw-DLTB limitation with public code, smoke data, generated outputs and metadata.
 
-All custom code used for the packaged analyses is in the Paper10 repository. The software licence and generated-output rights terms remain pending author or institutional decisions. The final archive metadata should cite the exact submission commit and map each figure and table to its source data.
+The Dongxing/Neijiang prepared data are also external to Git. The tracked repository contains derived Dongxing summary tables and figure source CSVs, but full external-region reruns require prepared block products, parcel assignments, transition trajectories, pairwise labels, environment wrapper files and slope-enriched geospatial inputs. Derived non-DLTB artifacts may be deposited under CC0-1.0 only after DLTB-leakage checks. Original Dongxing DLTB inputs remain confidential_no_external_access.
 
 ## Declaration of generative AI and AI-assisted technologies
 
@@ -220,4 +220,4 @@ Supplementary Table S3. Mechanism ablation and control comparison for executable
 
 ## Clean-draft boundary
 
-This clean draft is suitable for author review and journal-format conversion. It is not suitable as a final submission package until the repository DOI or reviewer link, licence, generated-output rights, full-data access routes, final figures/tables, references and declarations are closed.
+This clean draft is suitable for author review and journal-format conversion. It is not suitable as a final submission package until exact archive snapshot backfill, DLTB-leakage evidence, target-journal acceptance of confidential raw-DLTB non-availability, final figures/tables, references and declarations are closed.

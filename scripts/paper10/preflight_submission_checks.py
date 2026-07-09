@@ -6253,13 +6253,16 @@ CEUS_CLEAN_MANUSCRIPT_INTERNAL_SECTIONS = (
 )
 
 CEUS_CLEAN_MANUSCRIPT_DATA_AVAILABILITY_TOKENS = (
-    "repository DOI",
+    "4open README.md direct link",
+    "2934d3ab629e3e9664bf39261baf1a3bd7f7cbc6",
+    "Apache-2.0",
+    "CC0-1.0",
     "full Bishan Tool2",
     "prepared GPKG-root geospatial inputs",
     "Dongxing/Neijiang prepared data",
-    "controlled-access metadata record",
-    "software licence",
-    "generated-output rights",
+    "DLTB-leakage check evidence",
+    "confidential_no_external_access",
+    "target journal",
 )
 
 CEUS_CLEAN_MANUSCRIPT_PENDING_AUTHOR_SECTIONS = (
@@ -6371,9 +6374,12 @@ def check_paper10_ceus_clean_main_manuscript_draft_current(root: Path) -> CheckR
         "journal-formatted reference list",
         "## Clean-draft boundary",
         "not suitable as a final submission package",
-        "repository DOI or anonymous reviewer link is pending",
-        "licence",
-        "controlled-access metadata record",
+        "4open README.md direct link",
+        "2934d3ab629e3e9664bf39261baf1a3bd7f7cbc6",
+        "Apache-2.0",
+        "CC0-1.0",
+        "DLTB-leakage evidence",
+        "target-journal acceptance of confidential raw-DLTB non-availability",
         "Pending author decision",
         "diagnostic-only two-sided sign-test readout was 1.0000",
         "does not support a claim that the value filter improved every seed or established inferential superiority",

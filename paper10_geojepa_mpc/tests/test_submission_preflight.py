@@ -1223,6 +1223,21 @@ def test_ceus_clean_main_manuscript_draft_preflight_rejects_internal_handoff_sec
     assert "Author Handoff Notes" in result.details
 
 
+def test_ceus_clean_main_manuscript_draft_records_current_rights_and_reviewer_link():
+    draft = (ROOT / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT).read_text(
+        encoding="utf-8"
+    )
+    data_availability = preflight_checks.markdown_section_outside_code_fences(
+        draft, "## Data and Code Availability"
+    )
+
+    assert "Apache-2.0" in data_availability
+    assert "CC0-1.0" in data_availability
+    assert "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/README.md" in data_availability
+    assert "2934d3ab629e3e9664bf39261baf1a3bd7f7cbc6" in data_availability
+    assert "software licence and generated-output rights terms remain pending" not in data_availability
+    assert "repository DOI or anonymous reviewer link is pending" not in data_availability
+
 def test_ceus_clean_main_manuscript_draft_preflight_rejects_missing_data_availability_route(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
     draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT
