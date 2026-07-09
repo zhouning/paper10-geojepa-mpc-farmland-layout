@@ -236,6 +236,12 @@ PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD = (
 PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON = (
     RESULTS / "e0_paper10_post_guard_submission_readiness_refresh_2026-07-08.json"
 )
+PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_MD = (
+    RESULTS / "e0_paper10_public_release_rights_gate_2026-07-09.md"
+)
+PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON = (
+    RESULTS / "e0_paper10_public_release_rights_gate_2026-07-09.json"
+)
 PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD = (
     RESULTS / "e0_paper10_anchor_raw_rollout_consistency_audit_2026-06-19.md"
 )
@@ -368,6 +374,8 @@ REQUIRED_PATHS = (
     PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON,
     PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD,
     PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON,
+    PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_MD,
+    PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON,
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_MD,
     PAPER10_ANCHOR_RAW_ROLLOUT_CONSISTENCY_AUDIT_JSON,
     PAPER10_MANUSCRIPT_RESULT_TABLES_FREEZE_MD,
@@ -5706,6 +5714,164 @@ def check_paper10_author_decision_closeout_form_current(root: Path) -> CheckResu
         "Paper10 author-decision closeout form is current and no-go guarded",
     )
 
+
+def check_paper10_public_release_rights_gate_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_MD,
+        PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON,
+        PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_MD,
+        PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON,
+        DATA_AVAILABILITY,
+        DATA_CODE_AVAILABILITY,
+        DATA_ACCESS_RIGHTS_REGISTER,
+        ARCHIVE_METADATA_TEMPLATES,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_public_release_rights_gate_current",
+            False,
+            "missing Paper10 public-release rights gate files: "
+            + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_MD)
+    try:
+        payload = json.loads(read_text(root / PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON))
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_public_release_rights_gate_current",
+            False,
+            f"{PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    normalized_text = " ".join(text.split())
+    required_tokens = [
+        "Paper10 public-release rights gate",
+        "Status: public_release_rights_pending_no_go",
+        "source-derived; no rollout or training rerun; no submission approval",
+        "Formal submission remains blocked",
+        "code can be public",
+        "named software licence has not been selected",
+        "generated-data and checkpoint/model-weight rights terms are still pending",
+        "Original Bishan and Dongxing DLTB inputs are restricted",
+        "must not be publicly redistributed",
+        "DLTB-leakage check",
+        "4open reviewer link",
+        "non-author browser-session testing",
+        "Do not use this gate as submission approval.",
+        "Do not apply an open licence to original Bishan or Dongxing DLTB inputs.",
+    ]
+    for token in required_tokens:
+        if token not in normalized_text:
+            missing_tokens.append(f"{PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_MD}: {token}")
+
+    expected_values = {
+        ("date",): "2026-07-09",
+        ("artifact_type",): "paper10_public_release_rights_gate",
+        ("status",): "public_release_rights_pending_no_go",
+        ("source_boundary", "new_experimental_claim"): False,
+        ("source_boundary", "reran_rollouts"): False,
+        ("source_boundary", "reran_training"): False,
+        ("source_boundary", "submission_approval"): False,
+        ("source_boundary", "author_decisions_invented"): False,
+        ("submission_blockers", "formal_submission_blocked"): True,
+        ("submission_blockers", "preflight_pass_does_not_mean_submission_ready"): True,
+        ("licence_state", "code_can_be_public"): True,
+        ("licence_state", "named_software_licence_selected"): False,
+        ("licence_state", "code_licence_name"): "pending_author_or_institution_selection",
+        ("licence_state", "repository_licence_file_present"): False,
+        ("licence_state", "scope_limited_to_licensable_code_and_scripts"): True,
+        ("rights_state", "non_dltb_artifacts_can_be_public"): True,
+        ("rights_state", "named_generated_output_rights_selected"): False,
+        ("rights_state", "generated_output_rights_terms"): "pending_author_or_institution_selection",
+        ("rights_state", "checkpoint_model_weight_rights_selected"): False,
+        ("rights_state", "checkpoint_model_weight_rights_terms"): "pending_author_or_institution_selection",
+        ("rights_state", "must_not_relicense_restricted_dltb"): True,
+        ("data_boundary", "original_bishan_dltb_public_release_allowed"): False,
+        ("data_boundary", "original_dongxing_dltb_public_release_allowed"): False,
+        ("data_boundary", "derived_non_dltb_public_release_allowed_after_leakage_check"): True,
+        ("data_boundary", "derived_tool2_leakage_check_completed"): False,
+        ("data_boundary", "dongxing_derived_leakage_check_completed"): False,
+        ("data_boundary", "restricted_dltb_controlled_access_route_selected"): False,
+        ("repository_snapshot", "anonymous_reviewer_link"): "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/",
+        ("repository_snapshot", "archive_platform"): "anonymous.4open.science",
+        ("repository_snapshot", "non_author_browser_test_completed"): False,
+        ("repository_snapshot", "exact_submission_commit_backfilled"): False,
+        ("claim_locks", "final_submission_readiness_supported"): False,
+        ("claim_locks", "original_dltb_public_release_supported"): False,
+        ("claim_locks", "all_licence_and_rights_blockers_closed"): False,
+        ("claim_locks", "reviewer_browser_link_verified"): False,
+    }
+    for keys, expected in expected_values.items():
+        observed = nested_value(payload, keys)
+        if observed != expected:
+            missing_tokens.append(
+                f"{PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON}: "
+                f"{'.'.join(keys)}={observed}"
+            )
+
+    status = payload.get("status")
+    if status == "submission_ready":
+        missing_tokens.append(
+            f"{PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON}: status=submission_ready"
+        )
+    if nested_value(payload, ("submission_blockers", "formal_submission_blocked")) is False:
+        missing_tokens.append(
+            f"{PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON}: formal_submission_blocked=False"
+        )
+    if (
+        nested_value(payload, ("data_boundary", "original_bishan_dltb_public_release_allowed")) is True
+        or nested_value(payload, ("data_boundary", "original_dongxing_dltb_public_release_allowed")) is True
+    ):
+        missing_tokens.append(
+            f"{PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON}: original DLTB public release is not allowed"
+        )
+
+    licence_files = [root / "LICENSE", root / "LICENCE", root / "LICENSE.txt", root / "LICENCE.txt"]
+    repository_licence_exists = any(path.exists() for path in licence_files)
+    named_licence_selected = nested_value(payload, ("licence_state", "named_software_licence_selected"))
+    if named_licence_selected is True and not repository_licence_exists:
+        missing_tokens.append(
+            f"{PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON}: "
+            "named_software_licence_selected=True but missing repository licence file"
+        )
+
+    for key in ("licence_state", "rights_state", "data_boundary", "repository_snapshot"):
+        if not isinstance(payload.get(key), dict):
+            missing_tokens.append(f"{PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON}: {key}")
+    required_before = payload.get("required_before_formal_submission")
+    if not isinstance(required_before, list) or len(required_before) < 6:
+        missing_tokens.append(
+            f"{PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON}: required_before_formal_submission"
+        )
+
+    hits = []
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if is_post_guard_submission_readiness_positive_overclaim(line):
+            hits.append(
+                f"{PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_MD}:{line_no}: {line.strip()}"
+            )
+    if hits:
+        return CheckResult(
+            "paper10_public_release_rights_gate_current",
+            False,
+            "forbidden public-release rights gate wording: " + " | ".join(hits),
+        )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_public_release_rights_gate_current",
+            False,
+            "Paper10 public-release rights gate gaps: " + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_public_release_rights_gate_current",
+        True,
+        "Paper10 public-release rights gate is current and no-go guarded",
+    )
+
 def check_paper10_post_guard_submission_readiness_refresh_current(root: Path) -> CheckResult:
     required_files = [
         PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD,
@@ -7398,6 +7564,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_post_guard_experiment_closure_refresh_current,
     check_paper10_author_decision_closeout_form_current,
     check_paper10_data_publication_boundary_backfill_current,
+    check_paper10_public_release_rights_gate_current,
     check_paper10_post_guard_submission_readiness_refresh_current,
     check_paper10_ceus_clean_main_manuscript_draft_current,
     check_paper10_anchor_raw_rollout_consistency_audit_current,

@@ -40,6 +40,15 @@ the unresolved DOI, licence, and controlled-access backfill, see:
 paper10_geojepa_mpc/experiments/results/e0_data_code_availability_draft_2026-06-09.md
 ```
 
+For the current public-release rights gate, which records that code and
+non-DLTB artifacts may be public but that named licence, generated-output
+rights, DLTB-leakage checks, restricted-DLTB access routing, 4open browser
+testing, and final backfill still block formal submission, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_public_release_rights_gate_2026-07-09.md
+```
+
 For the route-specific archive plan, including generic, Nature-family, and
 methods/reproducibility submission paths, see:
 

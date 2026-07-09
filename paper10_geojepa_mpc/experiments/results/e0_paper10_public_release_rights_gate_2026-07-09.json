@@ -1,0 +1,66 @@
+{
+  "artifact_type": "paper10_public_release_rights_gate",
+  "claim_locks": {
+    "all_licence_and_rights_blockers_closed": false,
+    "final_submission_readiness_supported": false,
+    "original_dltb_public_release_supported": false,
+    "reviewer_browser_link_verified": false
+  },
+  "data_boundary": {
+    "derived_non_dltb_public_release_allowed_after_leakage_check": true,
+    "derived_tool2_leakage_check_completed": false,
+    "dongxing_derived_leakage_check_completed": false,
+    "original_bishan_dltb_public_release_allowed": false,
+    "original_dongxing_dltb_public_release_allowed": false,
+    "restricted_dltb_controlled_access_route_selected": false
+  },
+  "date": "2026-07-09",
+  "licence_state": {
+    "code_can_be_public": true,
+    "code_licence_name": "pending_author_or_institution_selection",
+    "named_software_licence_selected": false,
+    "repository_licence_file_present": false,
+    "required_closeout": [
+      "select named software licence or institution-approved code-use statement",
+      "add repository licence metadata without applying it to restricted DLTB inputs",
+      "backfill MANIFEST and archive metadata"
+    ],
+    "scope_limited_to_licensable_code_and_scripts": true
+  },
+  "repository_snapshot": {
+    "anonymous_reviewer_link": "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/",
+    "archive_platform": "anonymous.4open.science",
+    "exact_submission_commit_backfilled": false,
+    "non_author_browser_test_completed": false
+  },
+  "required_before_formal_submission": [
+    "select named software licence and add repository licence metadata",
+    "select generated-output and checkpoint/model-weight rights terms",
+    "record DLTB-leakage check evidence for public derived artifacts",
+    "define controlled-access route for restricted original DLTB inputs if reviewer inspection is required",
+    "test the 4open reviewer link from a non-author browser session",
+    "backfill final Data and Code Availability, MANIFEST, archive metadata, and manuscript wording"
+  ],
+  "rights_state": {
+    "checkpoint_model_weight_rights_selected": false,
+    "checkpoint_model_weight_rights_terms": "pending_author_or_institution_selection",
+    "generated_output_rights_terms": "pending_author_or_institution_selection",
+    "must_not_relicense_restricted_dltb": true,
+    "named_generated_output_rights_selected": false,
+    "non_dltb_artifacts_can_be_public": true
+  },
+  "source_boundary": {
+    "author_decisions_invented": false,
+    "new_experimental_claim": false,
+    "reran_rollouts": false,
+    "reran_training": false,
+    "source": "tracked Paper10 author closeout and data-rights artifacts only",
+    "submission_approval": false
+  },
+  "status": "public_release_rights_pending_no_go",
+  "submission_blockers": {
+    "formal_submission_blocked": true,
+    "preflight_pass_does_not_mean_submission_ready": true,
+    "status_reason": "named code licence, generated-output/model-weight rights terms, DLTB-leakage checks, restricted DLTB controlled-access route, 4open browser test, and final archive/manuscript backfill remain open"
+  }
+}

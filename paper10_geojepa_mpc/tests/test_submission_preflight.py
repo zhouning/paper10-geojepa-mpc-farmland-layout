@@ -190,6 +190,8 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     PAPER10_AUTHOR_DECISION_CLOSEOUT_FORM_JSON,
     PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_MD,
     PAPER10_POST_GUARD_SUBMISSION_READINESS_REFRESH_JSON,
+    preflight_checks.PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_MD,
+    preflight_checks.PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON,
     RESULTS / "e0_paper10_experiment_freeze_audit_2026-06-27.md",
     RESULTS / "e0_paper10_experiment_closure_register_2026-06-27.md",
     PAPER10_REAL_ENV_VALUE_FILTER_SMOKE_MD,
@@ -355,6 +357,7 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "paper10_post_guard_experiment_closure_refresh_current" in payload["passed_checks"]
     assert "paper10_author_decision_closeout_form_current" in payload["passed_checks"]
     assert "paper10_data_publication_boundary_backfill_current" in payload["passed_checks"]
+    assert "paper10_public_release_rights_gate_current" in payload["passed_checks"]
     assert "paper10_post_guard_submission_readiness_refresh_current" in payload["passed_checks"]
     assert "paper10_anchor_raw_rollout_consistency_audit_current" in payload["passed_checks"]
     assert "original_vision_validation_registry_current" in payload["passed_checks"]
@@ -1546,6 +1549,60 @@ def test_data_publication_boundary_backfill_preflight_rejects_missing_restricted
     assert result.name == "paper10_data_publication_boundary_backfill_current"
     assert result.ok is False
     assert "Original Bishan and Dongxing DLTB inputs are restricted" in result.details
+
+
+def test_public_release_rights_gate_preflight_accepts_current_pending_rights():
+    result = preflight_checks.check_paper10_public_release_rights_gate_current(ROOT)
+
+    assert result.name == "paper10_public_release_rights_gate_current"
+    assert result.ok is True
+
+
+def test_public_release_rights_gate_preflight_rejects_submission_ready_status(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    payload_path = fixture / preflight_checks.PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    payload["status"] = "submission_ready"
+    payload["submission_blockers"]["formal_submission_blocked"] = False
+    payload_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    result = preflight_checks.check_paper10_public_release_rights_gate_current(fixture)
+
+    assert result.name == "paper10_public_release_rights_gate_current"
+    assert result.ok is False
+    assert "status=submission_ready" in result.details
+    assert "formal_submission_blocked=False" in result.details
+
+
+def test_public_release_rights_gate_preflight_rejects_premature_licence_closeout(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    payload_path = fixture / preflight_checks.PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    payload["licence_state"]["named_software_licence_selected"] = True
+    payload["licence_state"]["code_licence_name"] = "MIT"
+    payload_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    result = preflight_checks.check_paper10_public_release_rights_gate_current(fixture)
+
+    assert result.name == "paper10_public_release_rights_gate_current"
+    assert result.ok is False
+    assert "named_software_licence_selected=True" in result.details
+    assert "missing repository licence file" in result.details
+
+
+def test_public_release_rights_gate_preflight_rejects_public_original_dltb(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    payload_path = fixture / preflight_checks.PAPER10_PUBLIC_RELEASE_RIGHTS_GATE_JSON
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    payload["data_boundary"]["original_bishan_dltb_public_release_allowed"] = True
+    payload["data_boundary"]["original_dongxing_dltb_public_release_allowed"] = True
+    payload_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    result = preflight_checks.check_paper10_public_release_rights_gate_current(fixture)
+
+    assert result.name == "paper10_public_release_rights_gate_current"
+    assert result.ok is False
+    assert "original DLTB public release is not allowed" in result.details
 
 
 def test_author_decision_closeout_form_preflight_rejects_ready_to_submit_claim(tmp_path):

@@ -103,6 +103,13 @@ data needed for smoke verification.
   as setting-specific consistency support while preserving no-overclaim gates.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_true_reward_guard_readiness_2026-07-08.json`:
   machine-readable source for the true-reward guard readiness preflight check.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_public_release_rights_gate_2026-07-09.md`:
+  current public-release rights gate recording that code and non-DLTB artifacts
+  may be public, while named software licence, generated-output/model-weight
+  rights terms, DLTB-leakage checks, restricted-DLTB access routing, 4open
+  browser testing, and final backfill remain formal-submission blockers.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_public_release_rights_gate_2026-07-09.json`:
+  machine-readable source for the public-release rights gate preflight check.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_baseline_hardened_manuscript_patch_2026-07-06.md`:
   bounded manuscript patch for the next CEUS assembly pass.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_baseline_hardened_manuscript_assembly_draft_2026-07-06.md`:
