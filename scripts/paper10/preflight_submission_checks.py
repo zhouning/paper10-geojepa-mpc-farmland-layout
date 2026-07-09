@@ -6629,6 +6629,9 @@ CEUS_CLEAN_MANUSCRIPT_DATA_AVAILABILITY_TOKENS = (
     "DLTB-leakage check evidence",
     "confidential_no_external_access",
     "target journal",
+    "e0_paper10_ceus_confidential_dltb_acceptance_packet_2026-07-09",
+    "cannot be provided externally",
+    "no request-based route for raw DLTB",
 )
 
 CEUS_CLEAN_MANUSCRIPT_PENDING_AUTHOR_SECTIONS = (
@@ -6746,6 +6749,8 @@ def check_paper10_ceus_clean_main_manuscript_draft_current(root: Path) -> CheckR
         "CC0-1.0",
         "DLTB-leakage evidence",
         "target-journal acceptance of confidential raw-DLTB non-availability",
+        "e0_paper10_ceus_confidential_dltb_acceptance_packet_2026-07-09",
+        "no request-based route for raw DLTB",
         "Pending author decision",
         "diagnostic-only two-sided sign-test readout was 1.0000",
         "does not support a claim that the value filter improved every seed or established inferential superiority",

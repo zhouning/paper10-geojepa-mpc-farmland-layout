@@ -1244,6 +1244,20 @@ def test_ceus_clean_main_manuscript_draft_records_current_rights_and_reviewer_li
     assert "software licence and generated-output rights terms remain pending" not in data_availability
     assert "repository DOI or anonymous reviewer link is pending" not in data_availability
 
+def test_ceus_clean_main_manuscript_draft_references_confidential_dltb_disclosure_packet():
+    draft = (ROOT / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT).read_text(
+        encoding="utf-8"
+    )
+    data_availability = preflight_checks.markdown_section_outside_code_fences(
+        draft, "## Data and Code Availability"
+    )
+
+    assert "e0_paper10_ceus_confidential_dltb_acceptance_packet_2026-07-09" in data_availability
+    assert "cannot be provided externally" in data_availability
+    assert "no request-based route for raw DLTB" in data_availability
+    assert "available upon request" not in data_availability.lower()
+
+
 def test_ceus_clean_main_manuscript_draft_preflight_rejects_missing_data_availability_route(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
     draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT
