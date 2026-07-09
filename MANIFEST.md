@@ -7,8 +7,8 @@ data needed for smoke verification.
 ## Included
 
 - `LICENSE`: Apache-2.0 licence for licensable code and scripts.
-- `paper10_geojepa_mpc/`: 407 tracked non-cache files in the active
-  Paper10 workspace, including 96 Python files, 130 JSON files, 133 Markdown
+- `paper10_geojepa_mpc/`: 409 tracked non-cache files in the active
+  Paper10 workspace, including 96 Python files, 131 JSON files, 134 Markdown
   files, 11 CSV files, 9 NPZ files, 11 PyTorch checkpoint files, 16 log files,
   and 1 TXT highlights file.
 - `arcgis_toolbox_paper9/private_source/`: 10 Paper9 compatibility source files
@@ -137,9 +137,15 @@ data needed for smoke verification.
   highlights, abstract replacement text, cleanup map, data/code backfill
   template and figure/table export checklist.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_clean_main_manuscript_draft_2026-07-06.md`:
-  clean CEUS main-manuscript draft for author review and journal-format
-  conversion, with internal handoff tables removed and no-go submission
-  boundaries preserved.
+  clean CEUS main-manuscript draft for bounded formal submission, with internal
+  handoff tables removed and the 2026-07-09 CEUS policy verification applied.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_submission_policy_verification_2026-07-09.md`:
+  current CEUS submission-policy closeout verifying Elsevier Research Data
+  Policy Option B, confidential raw-DLTB disclosure route, Figure 1 upload
+  readiness, highlights compliance, and remaining submission-system fields.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_submission_policy_verification_2026-07-09.json`:
+  machine-readable source for the CEUS submission-policy verification preflight
+  check.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_highlights_2026-07-06.txt`:
   separate editable CEUS highlights file with five bullet points, each no more
   than 85 characters including spaces.

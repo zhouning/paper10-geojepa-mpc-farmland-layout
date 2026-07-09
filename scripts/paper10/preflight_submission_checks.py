@@ -114,6 +114,12 @@ PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_MD = (
 PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_JSON = (
     RESULTS / "e0_paper10_main_figure1_final_artwork_closeout_2026-07-09.json"
 )
+PAPER10_CEUS_SUBMISSION_POLICY_VERIFICATION_MD = (
+    RESULTS / "e0_paper10_ceus_submission_policy_verification_2026-07-09.md"
+)
+PAPER10_CEUS_SUBMISSION_POLICY_VERIFICATION_JSON = (
+    RESULTS / "e0_paper10_ceus_submission_policy_verification_2026-07-09.json"
+)
 PAPER10_MAIN_FIGURE1_FINAL_ASSET_DIR = (
     RESULTS / "ceus_submission_assets" / "main_figure1_workflow"
 )
@@ -376,6 +382,8 @@ REQUIRED_PATHS = (
     PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_JSON,
     PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_MD,
     PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_JSON,
+    PAPER10_CEUS_SUBMISSION_POLICY_VERIFICATION_MD,
+    PAPER10_CEUS_SUBMISSION_POLICY_VERIFICATION_JSON,
     PAPER10_MAIN_FIGURE1_FINAL_SVG,
     PAPER10_MAIN_FIGURE1_FINAL_PDF,
     PAPER10_MAIN_FIGURE1_FINAL_PNG,
@@ -478,6 +486,8 @@ PUBLIC_SUBMISSION_DOCS = (
     PAPER10_ARCHIVE_SOURCE_DATA_CLOSEOUT_JSON,
     PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_MD,
     PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_JSON,
+    PAPER10_CEUS_SUBMISSION_POLICY_VERIFICATION_MD,
+    PAPER10_CEUS_SUBMISSION_POLICY_VERIFICATION_JSON,
     PAPER10_SUBMISSION_READINESS_BOUNDARY,
     PAPER10_REAL_DATA_AVAILABILITY_AUDIT_MD,
     PAPER10_REAL_DATA_INTEGRITY_SMOKE_MD,
@@ -4058,6 +4068,170 @@ def check_paper10_main_figure1_final_artwork_closeout_current(root: Path) -> Che
     )
 
 
+
+def check_paper10_ceus_submission_policy_verification_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_CEUS_SUBMISSION_POLICY_VERIFICATION_MD,
+        PAPER10_CEUS_SUBMISSION_POLICY_VERIFICATION_JSON,
+        PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT,
+        PAPER10_CEUS_HIGHLIGHTS,
+        PAPER10_MAIN_FIGURE1_FINAL_PDF,
+        PAPER10_MAIN_FIGURE1_FINAL_PNG,
+        PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_JSON,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_ceus_submission_policy_verification_current",
+            False,
+            "missing Paper10 CEUS submission policy verification files: "
+            + ", ".join(missing),
+        )
+
+    text = read_text(root / PAPER10_CEUS_SUBMISSION_POLICY_VERIFICATION_MD)
+    clean_text = read_text(root / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT)
+    try:
+        payload = json.loads(
+            read_text(root / PAPER10_CEUS_SUBMISSION_POLICY_VERIFICATION_JSON)
+        )
+        figure1_payload = json.loads(
+            read_text(root / PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_JSON)
+        )
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_ceus_submission_policy_verification_current",
+            False,
+            f"invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    required_text_tokens = [
+        "Status: ceus_policy_verified_submission_packet_ready",
+        "Computers, Environment and Urban Systems",
+        "Research Data Policy Option B",
+        "does not require pre-submission editor acceptance",
+        "3870 px wide PNG",
+        "remaining author actions are submission-system fields",
+    ]
+    normalized_text = " ".join(text.split())
+    for token in required_text_tokens:
+        if token not in normalized_text:
+            missing_tokens.append(
+                f"{PAPER10_CEUS_SUBMISSION_POLICY_VERIFICATION_MD}: {token}"
+            )
+
+    expected_values = {
+        ("artifact_type",): "paper10_ceus_submission_policy_verification",
+        ("date",): "2026-07-09",
+        ("status",): "ceus_policy_verified_submission_packet_ready",
+        ("target_journal",): "Computers, Environment and Urban Systems",
+        ("source_boundary", "new_experimental_claim"): False,
+        ("source_boundary", "reran_rollouts"): False,
+        ("source_boundary", "reran_training"): False,
+        ("source_boundary", "author_decisions_invented"): False,
+        ("source_boundary", "policy_verification_only"): True,
+        ("policy_findings", "research_data_policy_label"): "Option B",
+        ("policy_findings", "data_deposit_encouraged_not_absolute"): True,
+        ("policy_findings", "editor_preacceptance_required_for_restricted_dltb"): False,
+        ("policy_findings", "data_statement_can_disclose_no_external_raw_dltb"): True,
+        ("policy_findings", "exact_4open_snapshot_identifier_required_by_ceus_before_submission"): False,
+        ("policy_findings", "reviewer_readme_direct_link_author_confirmed"): True,
+        ("policy_findings", "figure1_pdf_vector_available"): True,
+        ("policy_findings", "figure1_png_width_px"): 3870,
+        ("policy_findings", "figure1_png_height_px"): 1968,
+        ("policy_findings", "figure1_png_meets_elsevier_combination_fullpage_width_px"): True,
+        ("policy_findings", "highlights_count"): 5,
+        ("policy_findings", "highlights_each_under_85_chars"): True,
+        ("policy_findings", "double_anonymous_title_page_separation_required"): True,
+        ("policy_findings", "title_page_separation_prepared"): True,
+        ("submission_packet_decision", "algorithm_model_experiments_complete_for_bounded_ceus_submission"): True,
+        ("submission_packet_decision", "archive_and_source_data_package_complete_for_bounded_ceus_submission"): True,
+        ("submission_packet_decision", "main_figure1_artwork_complete_for_ceus_submission"): True,
+        ("submission_packet_decision", "formal_submission_not_blocked_by_external_policy_verification"): True,
+        ("submission_packet_decision", "current_submission_status"): "ready_for_author_upload_and_submission_system_fields",
+        ("remaining_submission_system_fields", "author_declarations"): "fill_in_submission_system",
+        ("claim_locks", "ceus_policy_blockers_closed"): True,
+        ("claim_locks", "confidential_raw_dltb_disclosure_ready"): True,
+        ("claim_locks", "final_submission_readiness_supported"): True,
+        ("claim_locks", "new_experimental_evidence_created"): False,
+        ("claim_locks", "claim_boundary_changed"): False,
+    }
+    for keys, expected in expected_values.items():
+        observed = nested_value(payload, keys)
+        if observed != expected:
+            missing_tokens.append(
+                f"{PAPER10_CEUS_SUBMISSION_POLICY_VERIFICATION_JSON}: "
+                f"{'.'.join(keys)}={observed}"
+            )
+
+    if nested_value(payload, ("official_sources_checked", "ceus_guide_for_authors")) != (
+        "https://www.elsevier.com/journals/"
+        "computers-environment-and-urban-systems/0198-9715/guide-for-authors"
+    ):
+        missing_tokens.append(
+            f"{PAPER10_CEUS_SUBMISSION_POLICY_VERIFICATION_JSON}: CEUS guide URL"
+        )
+    if nested_value(payload, ("policy_findings", "reviewer_readme_direct_link")) != (
+        "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/README.md"
+    ):
+        missing_tokens.append(
+            f"{PAPER10_CEUS_SUBMISSION_POLICY_VERIFICATION_JSON}: reviewer README link"
+        )
+
+    figure1_size = nested_value(figure1_payload, ("asset_qa", "png_size"))
+    if figure1_size != [3870, 1968]:
+        missing_tokens.append(
+            f"{PAPER10_MAIN_FIGURE1_FINAL_ARTWORK_CLOSEOUT_JSON}: png_size={figure1_size}"
+        )
+    if (root / PAPER10_MAIN_FIGURE1_FINAL_PDF).stat().st_size <= 0:
+        missing_tokens.append(f"{PAPER10_MAIN_FIGURE1_FINAL_PDF}: empty PDF")
+    if (root / PAPER10_MAIN_FIGURE1_FINAL_PNG).stat().st_size <= 0:
+        missing_tokens.append(f"{PAPER10_MAIN_FIGURE1_FINAL_PNG}: empty PNG")
+
+    highlights = [
+        line.strip()
+        for line in read_text(root / PAPER10_CEUS_HIGHLIGHTS).splitlines()
+        if line.strip()
+    ]
+    if len(highlights) != 5:
+        missing_tokens.append(f"{PAPER10_CEUS_HIGHLIGHTS}: highlight count={len(highlights)}")
+    too_long = [line for line in highlights if len(line) > 85]
+    if too_long:
+        missing_tokens.append(f"{PAPER10_CEUS_HIGHLIGHTS}: over 85 chars")
+
+    required_clean_tokens = [
+        "Article type: Research Article candidate for Computers, Environment and Urban Systems.",
+        "CEUS/Elsevier Research Data Policy Option B",
+        "does not require pre-submission editor acceptance",
+        "suitable for formal CEUS submission as a bounded manuscript package",
+    ]
+    for token in required_clean_tokens:
+        if token not in clean_text:
+            missing_tokens.append(f"{PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT}: {token}")
+    forbidden_clean_tokens = [
+        "Computers and Electronics in Agriculture",
+        "target-journal/editor acceptance is not recorded",
+        "The target journal must accept this confidential raw-DLTB limitation",
+        "not suitable as a final submission package until",
+    ]
+    for token in forbidden_clean_tokens:
+        if token in clean_text:
+            missing_tokens.append(
+                f"{PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT}: outdated blocker {token}"
+            )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_ceus_submission_policy_verification_current",
+            False,
+            "Paper10 CEUS submission policy verification gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_ceus_submission_policy_verification_current",
+        True,
+        "Paper10 CEUS submission policy blockers are verified closed for bounded submission",
+    )
 def check_paper10_submission_readiness_boundary_current(root: Path) -> CheckResult:
     required_files = [
         PAPER10_SUBMISSION_READINESS_BOUNDARY,
@@ -7011,7 +7185,7 @@ CEUS_CLEAN_MANUSCRIPT_INTERNAL_SECTIONS = (
 
 CEUS_CLEAN_MANUSCRIPT_DATA_AVAILABILITY_TOKENS = (
     "4open README.md direct link",
-    "ea7e11a5f5f041d96a611014dd14cb5e44848524",
+    "92a10620d8832bacae4fbeda1fdb5708b265d139",
     "Apache-2.0",
     "CC0-1.0",
     "full Bishan Tool2",
@@ -7019,8 +7193,8 @@ CEUS_CLEAN_MANUSCRIPT_DATA_AVAILABILITY_TOKENS = (
     "Dongxing/Neijiang prepared data",
     "DLTB-leakage check evidence",
     "confidential_no_external_access",
-    "target journal",
-    "e0_paper10_ceus_confidential_dltb_acceptance_packet_2026-07-09",
+    "CEUS/Elsevier Research Data Policy Option B",
+    "e0_paper10_ceus_submission_policy_verification_2026-07-09",
     "cannot be provided externally",
     "no request-based route for raw DLTB",
 )
@@ -7117,7 +7291,7 @@ def check_paper10_ceus_clean_main_manuscript_draft_current(root: Path) -> CheckR
             )
 
     required_tokens = [
-        "Status: clean CEUS main-manuscript draft, not a final submission package",
+        "Status: clean CEUS main-manuscript draft, updated by the 2026-07-09 CEUS policy verification for bounded formal submission",
         "Source assembly: `e0_paper10_ceus_baseline_hardened_manuscript_assembly_draft_2026-07-06.md`",
         "## Title page",
         "## Highlights",
@@ -7133,14 +7307,14 @@ def check_paper10_ceus_clean_main_manuscript_draft_current(root: Path) -> CheckR
         "references/paper10_local_sources_2026-06-09.bib",
         "journal-formatted reference list",
         "## Clean-draft boundary",
-        "not suitable as a final submission package",
+        "suitable for formal CEUS submission as a bounded manuscript package",
         "4open README.md direct link",
-        "ea7e11a5f5f041d96a611014dd14cb5e44848524",
+        "92a10620d8832bacae4fbeda1fdb5708b265d139",
         "Apache-2.0",
         "CC0-1.0",
-        "DLTB-leakage evidence",
-        "target-journal acceptance of confidential raw-DLTB non-availability",
-        "e0_paper10_ceus_confidential_dltb_acceptance_packet_2026-07-09",
+        "DLTB-leakage check evidence",
+        "does not require pre-submission editor acceptance",
+        "e0_paper10_ceus_submission_policy_verification_2026-07-09",
         "no request-based route for raw DLTB",
         "Pending author decision",
         "diagnostic-only two-sided sign-test readout was 1.0000",
@@ -8357,6 +8531,7 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_final_figure_table_export_package_current,
     check_paper10_archive_source_data_closeout_current,
     check_paper10_main_figure1_final_artwork_closeout_current,
+    check_paper10_ceus_submission_policy_verification_current,
     check_paper10_submission_readiness_boundary_current,
     check_paper10_manuscript_result_tables_freeze_current,
     check_paper10_manuscript_text_table_consistency_audit_current,

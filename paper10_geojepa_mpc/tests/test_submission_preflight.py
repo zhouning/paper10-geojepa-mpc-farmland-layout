@@ -1251,11 +1251,11 @@ def test_ceus_clean_main_manuscript_draft_records_current_rights_and_reviewer_li
     assert "Apache-2.0" in data_availability
     assert "CC0-1.0" in data_availability
     assert "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/README.md" in data_availability
-    assert "ea7e11a5f5f041d96a611014dd14cb5e44848524" in data_availability
+    assert "92a10620d8832bacae4fbeda1fdb5708b265d139" in data_availability
     assert "software licence and generated-output rights terms remain pending" not in data_availability
     assert "repository DOI or anonymous reviewer link is pending" not in data_availability
 
-def test_ceus_clean_main_manuscript_draft_references_confidential_dltb_disclosure_packet():
+def test_ceus_clean_main_manuscript_draft_references_policy_verification_packet():
     draft = (ROOT / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT).read_text(
         encoding="utf-8"
     )
@@ -1263,7 +1263,7 @@ def test_ceus_clean_main_manuscript_draft_references_confidential_dltb_disclosur
         draft, "## Data and Code Availability"
     )
 
-    assert "e0_paper10_ceus_confidential_dltb_acceptance_packet_2026-07-09" in data_availability
+    assert "e0_paper10_ceus_submission_policy_verification_2026-07-09" in data_availability
     assert "cannot be provided externally" in data_availability
     assert "no request-based route for raw DLTB" in data_availability
     assert "available upon request" not in data_availability.lower()
@@ -2441,3 +2441,23 @@ def test_main_figure1_final_artwork_closeout_rejects_svg_hygiene_regression(tmp_
     assert result.ok is False
     assert "deterministic SVG date metadata" in result.details
     assert "SVG trailing whitespace" in result.details
+
+def test_ceus_submission_policy_verification_closes_external_policy_blockers():
+    result = preflight_checks.check_paper10_ceus_submission_policy_verification_current(ROOT)
+
+    assert result.name == "paper10_ceus_submission_policy_verification_current"
+    assert result.ok is True
+
+    payload = json.loads(
+        (
+            ROOT
+            / preflight_checks.PAPER10_CEUS_SUBMISSION_POLICY_VERIFICATION_JSON
+        ).read_text(encoding="utf-8")
+    )
+    assert payload["status"] == "ceus_policy_verified_submission_packet_ready"
+    assert payload["policy_findings"]["research_data_policy_label"] == "Option B"
+    assert payload["policy_findings"]["editor_preacceptance_required_for_restricted_dltb"] is False
+    assert payload["policy_findings"]["data_statement_can_disclose_no_external_raw_dltb"] is True
+    assert payload["policy_findings"]["figure1_pdf_vector_available"] is True
+    assert payload["policy_findings"]["figure1_png_width_px"] == 3870
+    assert payload["remaining_submission_system_fields"]["author_declarations"] == "fill_in_submission_system"

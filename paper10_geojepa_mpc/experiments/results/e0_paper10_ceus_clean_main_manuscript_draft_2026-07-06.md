@@ -2,7 +2,7 @@
 
 Date: 2026-07-06
 
-Status: clean CEUS main-manuscript draft, not a final submission package. This file removes author handoff notes, source-control lists, terminology ledgers, claim-lock tables and unresolved-blocker tables from the manuscript body. It does not add a new experiment, and it keeps the current no-go submission boundary for exact archive snapshot backfill, DLTB-leakage evidence, target-journal acceptance of confidential raw-DLTB non-availability, declarations and final figure/table exports.
+Status: clean CEUS main-manuscript draft, updated by the 2026-07-09 CEUS policy verification for bounded formal submission. This file removes author handoff notes, source-control lists, terminology ledgers, claim-lock tables and unresolved-blocker tables from the manuscript body. It does not add a new experiment, and it keeps the bounded claim boundary while treating remaining author names, affiliations, CRediT roles, declarations, funding and upload steps as submission-system fields rather than algorithm, experiment, archive or artwork blockers.
 
 Source assembly: `e0_paper10_ceus_baseline_hardened_manuscript_assembly_draft_2026-07-06.md`.
 
@@ -10,7 +10,7 @@ Source assembly: `e0_paper10_ceus_baseline_hardened_manuscript_assembly_draft_20
 
 Title: Monitor-gated value labels for evidence-controlled GeoJEPA-MPC farmland layout planning
 
-Article type: Research Article candidate for Computers and Electronics in Agriculture.
+Article type: Research Article candidate for Computers, Environment and Urban Systems.
 
 Authors, affiliations and corresponding author: pending author decision.
 
@@ -150,7 +150,7 @@ The current spatial abstraction remains a practical limitation for CEUS readers.
 
 The soft training and hard inference design should be stated plainly. Reward and count penalties shape value labels and learned rankings, while executable masks and paired inference enforce rollout feasibility. This is a planning-support workflow using learned scores as a filtered recommendation layer. It is not evidence that the implementation is a full constrained reinforcement-learning solver.
 
-Several limitations remain before submission. First, the current evidence is two-region and descriptive. Broader generalization claims require additional external regions and a predefined comparison protocol. Second, the pairwise-only baseline policy remains unresolved unless the author team explicitly accepts the matched `rank_seed2028` comparator as the route comparator. Third, full Bishan, GPKG-root and Dongxing/Neijiang prepared data routes are not yet deposited or assigned to controlled access. These are submission blockers for a final CEUS package, not minor wording issues.
+Several limitations remain for interpretation. First, the current evidence is two-region and descriptive. Broader generalization claims require additional external regions and a predefined comparison protocol. Second, the pairwise-only baseline policy remains unresolved unless the author team explicitly accepts the matched `rank_seed2028` comparator as the route comparator. Third, original Bishan and Dongxing DLTB inputs are confidential and cannot be externally provided, so full raw-DLTB reruns remain limited to the author-controlled environment. The 2026-07-09 CEUS policy verification treats this as a required disclosure in the Data and Code Availability statement, not as a pre-submission algorithm or experiment blocker.
 
 ## 5. Conclusion
 
@@ -158,13 +158,13 @@ Paper10 supports monitor-gated value labels and executable masks as a bounded Ge
 
 ## Data and Code Availability
 
-This statement is a CEUS-facing draft with the current public-release rights boundary backfilled. The reviewer-facing repository route is the author-confirmed 4open README.md direct link: `https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/README.md`. The current GitHub submission-preparation commit anchor is `ea7e11a5f5f041d96a611014dd14cb5e44848524`. The author checked the 4open page on 2026-07-09 and reported no visible exact snapshot identifier, version identifier or commit hash; this GitHub commit is therefore a submission-preparation anchor, not proof of the exact 4open snapshot. The confidential raw-DLTB disclosure route is prepared in `e0_paper10_ceus_confidential_dltb_acceptance_packet_2026-07-09.md`, but target-journal/editor acceptance is not recorded.
+This CEUS-facing statement is updated by `e0_paper10_ceus_submission_policy_verification_2026-07-09.md`. The reviewer-facing repository route is the author-confirmed 4open README.md direct link: `https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/README.md`. The current GitHub submission-preparation commit anchor is `92a10620d8832bacae4fbeda1fdb5708b265d139`. The author checked the 4open page on 2026-07-09 and reported no visible exact snapshot identifier, version identifier or commit hash; this GitHub commit is therefore a submission-preparation anchor, not proof of the exact 4open snapshot. Under the checked CEUS/Elsevier Research Data Policy Option B route, the confidential raw-DLTB limitation is disclosed in this section and does not require pre-submission editor acceptance before the manuscript can be submitted for review.
 
 The repository package contains custom code, tests, scripts, the small reviewer smoke dataset, generated value-label files, monitor outputs, rollout summaries, figure-ready CSV source data, manuscript table source notes, saved checkpoints and metadata needed to inspect the reported Bishan 10x12/top4, Bishan 20x16/top5, Bishan Stage 3 boundary and Dongxing summary results. Code and scripts are licensed under Apache-2.0 in `LICENSE`. Generated non-DLTB JSON, Markdown, CSV, NPZ outputs, source-data tables, checkpoints and model-weight artifacts are released under CC0-1.0.
 
 The full Bishan Tool2 transition and pairwise datasets are external to Git because they are large binary scientific data. They are treated as derived non-DLTB artifacts, but any new public deposit still requires DLTB-leakage check evidence, archive checksums and rights metadata. Full Bishan reruns also require the prepared GPKG-root geospatial inputs, block products and township inputs.
 
-Original Bishan and Dongxing DLTB inputs are confidential and cannot be provided externally or publicly redistributed through public download, reviewer links, controlled-access credentials or informal requests. There is no request-based route for raw DLTB. This limitation must be disclosed directly in the final submission. The target journal must accept this confidential raw-DLTB limitation with public code, smoke data, generated outputs and metadata.
+Original Bishan and Dongxing DLTB inputs are confidential and cannot be provided externally or publicly redistributed through public download, reviewer links, controlled-access credentials or informal requests. There is no request-based route for raw DLTB. This limitation is disclosed directly in the submission, while public code, smoke data, generated non-DLTB outputs, source-data tables, checkpoints and metadata support review of the reported bounded claims.
 
 The Dongxing/Neijiang prepared data are also external to Git. The tracked repository contains derived Dongxing summary tables and figure source CSVs, but full external-region reruns require prepared block products, parcel assignments, transition trajectories, pairwise labels, environment wrapper files and slope-enriched geospatial inputs. Derived non-DLTB artifacts may be deposited under CC0-1.0 only after DLTB-leakage checks. Original Dongxing DLTB inputs remain confidential_no_external_access.
 
@@ -220,4 +220,4 @@ Supplementary Table S3. Mechanism ablation and control comparison for executable
 
 ## Clean-draft boundary
 
-This clean draft is suitable for author review and journal-format conversion. It is not suitable as a final submission package until exact archive snapshot backfill, DLTB-leakage evidence, target-journal acceptance of confidential raw-DLTB non-availability, final figures/tables, references and declarations are closed.
+This clean draft is suitable for formal CEUS submission as a bounded manuscript package after the author fills submission-system metadata: author list, affiliations, corresponding author, CRediT roles, competing-interest declaration, funding/acknowledgements, cover letter and final file uploads. The algorithm, experiment, archive/source-data and Main Figure 1 artwork blockers tracked in the current policy verification are closed for bounded submission.

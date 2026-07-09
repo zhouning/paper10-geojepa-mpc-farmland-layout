@@ -1,0 +1,59 @@
+{
+  "artifact_type": "paper10_ceus_submission_policy_verification",
+  "date": "2026-07-09",
+  "status": "ceus_policy_verified_submission_packet_ready",
+  "target_journal": "Computers, Environment and Urban Systems",
+  "source_boundary": {
+    "new_experimental_claim": false,
+    "reran_rollouts": false,
+    "reran_training": false,
+    "author_decisions_invented": false,
+    "policy_verification_only": true
+  },
+  "official_sources_checked": {
+    "ceus_guide_for_authors": "https://www.elsevier.com/journals/computers-environment-and-urban-systems/0198-9715/guide-for-authors",
+    "elsevier_artwork_sizing": "https://www.elsevier.com/about/policies-and-standards/author/artwork-and-media-instructions/artwork-sizing",
+    "elsevier_research_data_policy": "https://www.elsevier.com/researcher/author/policies-and-guidelines/research-data",
+    "checked_date": "2026-07-09"
+  },
+  "policy_findings": {
+    "research_data_policy_label": "Option B",
+    "data_deposit_encouraged_not_absolute": true,
+    "editor_preacceptance_required_for_restricted_dltb": false,
+    "data_statement_can_disclose_no_external_raw_dltb": true,
+    "exact_4open_snapshot_identifier_required_by_ceus_before_submission": false,
+    "reviewer_readme_direct_link_author_confirmed": true,
+    "reviewer_readme_direct_link": "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/README.md",
+    "submission_preparation_commit_anchor": "92a10620d8832bacae4fbeda1fdb5708b265d139",
+    "figure1_pdf_vector_available": true,
+    "figure1_png_width_px": 3870,
+    "figure1_png_height_px": 1968,
+    "figure1_png_meets_elsevier_combination_fullpage_width_px": true,
+    "highlights_count": 5,
+    "highlights_each_under_85_chars": true,
+    "double_anonymous_title_page_separation_required": true,
+    "title_page_separation_prepared": true
+  },
+  "submission_packet_decision": {
+    "algorithm_model_experiments_complete_for_bounded_ceus_submission": true,
+    "archive_and_source_data_package_complete_for_bounded_ceus_submission": true,
+    "main_figure1_artwork_complete_for_ceus_submission": true,
+    "formal_submission_not_blocked_by_external_policy_verification": true,
+    "current_submission_status": "ready_for_author_upload_and_submission_system_fields"
+  },
+  "remaining_submission_system_fields": {
+    "author_declarations": "fill_in_submission_system",
+    "author_names_affiliations_corresponding_author": "fill_in_submission_system",
+    "credit_roles": "fill_in_submission_system",
+    "funding_acknowledgements": "fill_in_submission_system",
+    "cover_letter_final_paste": "fill_in_submission_system",
+    "prepared_files_upload": "fill_in_submission_system"
+  },
+  "claim_locks": {
+    "ceus_policy_blockers_closed": true,
+    "confidential_raw_dltb_disclosure_ready": true,
+    "final_submission_readiness_supported": true,
+    "new_experimental_evidence_created": false,
+    "claim_boundary_changed": false
+  }
+}

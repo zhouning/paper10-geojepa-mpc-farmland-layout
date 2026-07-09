@@ -16,6 +16,16 @@ paper10_geojepa_mpc/experiments/results/e0_paper10_submission_readiness_boundary
 
 This boundary does not declare final submission readiness.
 
+## Current CEUS submission policy closeout
+
+The 2026-07-09 CEUS policy verification supersedes earlier over-strict no-go wording for editor pre-acceptance, exact 4open snapshot visibility, and Main Figure 1 upload format. Use this as the current controlling submission-policy record:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_submission_policy_verification_2026-07-09.md
+```
+
+Current interpretation: CEUS/Elsevier Research Data Policy Option B permits a Data Availability statement that discloses restricted raw data when they cannot be shared. Original Bishan and Dongxing DLTB remain confidential with no external access route, while code, smoke data, generated non-DLTB outputs, source-data tables, checkpoints, metadata, and the reviewer-facing 4open README.md link are available for review. Remaining author actions are submission-system metadata/declaration fields, not algorithm, experiment, archive, or artwork blockers.
+
 ## Paper10 author data/code publication boundary
 
 The 2026-07-09 author update supersedes the earlier 2026-07-08 closeout
@@ -40,10 +50,7 @@ the unresolved DOI, confidential-DLTB limitation, and final backfill, see:
 paper10_geojepa_mpc/experiments/results/e0_data_code_availability_draft_2026-06-09.md
 ```
 
-For the current public-release rights gate, which records that code and
-Apache-2.0 code licensing and CC0-1.0 generated-artifact rights are
-recorded, while confidential original DLTB non-availability, DLTB-leakage
-checks, exact snapshot backfill, target-journal acceptance, and final manuscript/archive backfill still block formal submission, see:
+For the historical public-release rights gate, which records the rights and restricted-data boundary before the 2026-07-09 CEUS policy verification superseded the editor-preacceptance and exact-snapshot no-go interpretation, see:
 
 ```text
 paper10_geojepa_mpc/experiments/results/e0_paper10_public_release_rights_gate_2026-07-09.md

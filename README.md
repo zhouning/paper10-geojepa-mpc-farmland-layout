@@ -260,17 +260,25 @@ and
 for the next CEUS formal-output conversion pass.
 Use
 `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_clean_main_manuscript_draft_2026-07-06.md`
-as the current clean main-manuscript draft for author review and journal-format
-conversion. It removes internal handoff and claim-lock material from the main
-body while preserving the no-go submission boundary.
+as the current clean main-manuscript draft for bounded formal CEUS submission.
+It removes internal handoff and claim-lock material from the main body and now
+uses the 2026-07-09 CEUS policy verification for the current submission-policy
+boundary.
 Use
 `paper10_geojepa_mpc/experiments/results/e0_paper10_main_figure1_artwork_preview_2026-06-27.md`
 as the Main Figure 1 workflow-artwork preview record. Use
 `paper10_geojepa_mpc/experiments/results/e0_paper10_main_figure1_final_artwork_closeout_2026-07-09.md`
 as the current Main Figure 1 final artwork candidate closeout. It records the
-tracked SVG/PDF/PNG assets and keeps final journal file-format confirmation,
-archive identifier backfill, declarations, and confidential-DLTB acceptance open
-before formal submission.
+tracked deterministic SVG/PDF/PNG assets. The 2026-07-09 CEUS policy
+verification closes the prior over-strict file-format and confidential-DLTB
+preacceptance blockers for bounded submission.
+Use
+`paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_submission_policy_verification_2026-07-09.md`
+as the current CEUS submission-policy closeout. It verifies CEUS/Elsevier
+Research Data Policy Option B, Figure 1 file-format readiness, highlights
+compliance, double-anonymous title-page separation, and downgrades remaining
+author declarations/upload fields to submission-system actions rather than
+algorithm, experiment, archive, or artwork blockers.
 Use
 `paper10_geojepa_mpc/experiments/results/e0_paper10_target_journal_fit_assessment_2026-06-27.md`
 as the current target-journal route assessment. It recommends a CEUS-first
