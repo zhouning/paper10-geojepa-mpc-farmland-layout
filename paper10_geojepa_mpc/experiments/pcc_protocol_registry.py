@@ -29,6 +29,14 @@ LOCKED_PCC_V1_CONTRACT = {
             "candidate_actions": 8,
         },
     },
+    "offline_reference_policy": {
+        "name": "paper9_mpc",
+        "checkpoint_sha256": "fd3cdeeb827dc59a30e559a36fc95166db77447dc6e7d1d4b5b4c081704c947f",
+        "planning_horizon": 5,
+        "top_k": 50,
+        "gamma": 0.99,
+        "continuation": "random",
+    },
     "grid": {
         "ensemble_size": [3, 5],
         "joint_coverage": [0.8, 0.9, 0.95],

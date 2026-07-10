@@ -61,6 +61,9 @@ def test_registry_contains_locked_scientific_contract():
         "states_per_trajectory": 10,
         "candidate_actions": 8,
     }
+    assert payload["offline_reference_policy"]["planning_horizon"] == 5
+    assert payload["offline_reference_policy"]["top_k"] == 50
+    assert len(payload["offline_reference_policy"]["checkpoint_sha256"]) == 64
 
 
 def test_pcc_v1_rejects_missing_locked_scientific_contract():
