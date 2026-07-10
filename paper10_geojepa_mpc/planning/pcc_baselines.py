@@ -135,6 +135,90 @@ class PCCObservablePolicy:
         )
 
 
+class GreedyRankingPolicy:
+    def __init__(self, ranker, name: str):
+        self.ranker = ranker
+        self.name = str(name)
+
+    def select(self, state: dict) -> tuple[int, dict]:
+        ranked = np.asarray(self.ranker(state), dtype=np.int64).reshape(-1)
+        if ranked.size == 0:
+            raise ValueError(f"{self.name} received no executable candidates")
+        return int(ranked[0]), {
+            "policy": self.name,
+            "n_candidates": int(ranked.size),
+            "unexecuted_real_reward_queries": 0,
+        }
+
+    def observe(self, transition: dict) -> None:
+        return None
+
+
+class DistributionalRiskPolicy:
+    def __init__(
+        self,
+        *,
+        ensemble,
+        proposal_rankers,
+        candidate_budget: int,
+        planning_horizon: int,
+        risk_penalty: float,
+        device: str = "cpu",
+    ):
+        if float(risk_penalty) < 0.0:
+            raise ValueError("risk penalty must be non-negative")
+        self.ensemble = ensemble
+        self.proposal_rankers = list(proposal_rankers)
+        self.candidate_budget = int(candidate_budget)
+        self.planning_horizon = int(planning_horizon)
+        self.risk_penalty = float(risk_penalty)
+        self.device = str(device)
+
+    def select(self, state: dict) -> tuple[int, dict]:
+        from paper10_geojepa_mpc.planning.pcc_selector import (
+            build_candidate_pool,
+            predict_paired_ensemble,
+        )
+
+        proposal_groups = [ranker(state) for ranker in self.proposal_rankers]
+        if not proposal_groups or len(proposal_groups[0]) == 0:
+            raise ValueError("distributional risk policy received no proposals")
+        reference_action = int(proposal_groups[0][0])
+        actions = build_candidate_pool(
+            reference_action=reference_action,
+            proposal_groups=proposal_groups,
+            executable_mask=state["executable_mask"],
+            candidate_budget=self.candidate_budget,
+        )
+        prediction = predict_paired_ensemble(
+            self.ensemble,
+            block_features=state["block_features"],
+            neighbour_features=state["neighbour_features"],
+            global_features=state["global_features"],
+            actions=actions,
+            reference_action=reference_action,
+            planning_horizon=self.planning_horizon,
+            device=self.device,
+        )
+        score = (
+            prediction.candidate_mean[:, 0]
+            - self.risk_penalty * prediction.candidate_base_scale[:, 0]
+        )
+        order = np.lexsort((actions, -score))
+        selected = int(order[0])
+        return int(actions[selected]), {
+            "policy": "distributional_risk",
+            "risk_penalty": self.risk_penalty,
+            "risk_score": float(score[selected]),
+            "member_evaluations": prediction.member_evaluations,
+            "model_forward_count": prediction.model_forward_count,
+            "unexecuted_real_reward_queries": 0,
+        }
+
+    def observe(self, transition: dict) -> None:
+        return None
+
+
 class OnlineExpertSelector:
     def __init__(
         self,

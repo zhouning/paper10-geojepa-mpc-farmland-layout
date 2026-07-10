@@ -276,10 +276,25 @@ def parse_args(argv: Sequence[str] | None = None):
         choices=("diagnostic", "development", "confirmation"),
         default="diagnostic",
     )
+    parser.add_argument(
+        "--policy",
+        choices=(
+            "executable_random",
+            "paper9_mpc",
+            "legacy_value_filter",
+            "model_reward_greedy",
+            "rank_only",
+            "distributional_risk",
+            "online_expert_selector",
+            "pcc_matched",
+            "pcc_full",
+        ),
+        default="pcc_matched",
+    )
     parser.add_argument("--env-source", choices=("paper9", "neijiang"), default="paper9")
     parser.add_argument("--prepared-dir", default=str(ROOT.parent))
-    parser.add_argument("--checkpoint-root", required=True)
-    parser.add_argument("--calibrator", required=True)
+    parser.add_argument("--checkpoint-root", default=None)
+    parser.add_argument("--calibrator", default=None)
     parser.add_argument(
         "--reference-checkpoint",
         default=str(
@@ -300,6 +315,8 @@ def parse_args(argv: Sequence[str] | None = None):
     parser.add_argument("--tolerance-scale", type=float, default=0.05)
     parser.add_argument("--residual-window", type=int, default=10)
     parser.add_argument("--executable-threshold", type=float, default=0.95)
+    parser.add_argument("--risk-penalty", type=float, default=1.0)
+    parser.add_argument("--expert-learning-rate", type=float, default=0.1)
     parser.add_argument("--reference-horizon", type=int, default=5)
     parser.add_argument("--reference-top-k", type=int, default=50)
     parser.add_argument("--device", default="cpu")
@@ -345,8 +362,26 @@ def main(argv: Sequence[str] | None = None) -> None:
         tolerance_scale = float(args.tolerance_scale)
         residual_window = int(args.residual_window)
 
-    ensemble = load_pcc_ensemble(args.checkpoint_root, device=args.device)
-    calibrator = load_joint_calibrator(args.calibrator)
+    needs_ensemble = args.policy in {
+        "distributional_risk",
+        "online_expert_selector",
+        "pcc_matched",
+        "pcc_full",
+    }
+    if needs_ensemble and args.checkpoint_root is None:
+        raise ValueError(f"--checkpoint-root is required for {args.policy}")
+    ensemble = (
+        load_pcc_ensemble(args.checkpoint_root, device=args.device)
+        if needs_ensemble
+        else []
+    )
+    if args.policy.startswith("pcc_") and args.calibrator is None:
+        raise ValueError(f"--calibrator is required for {args.policy}")
+    calibrator = (
+        load_joint_calibrator(args.calibrator)
+        if args.policy.startswith("pcc_")
+        else None
+    )
     env = _make_env(args.env_source, args.prepared_dir)
     reference_adapter = TorchCheckpointMPCAdapter.from_checkpoint(
         args.reference_checkpoint,
@@ -355,22 +390,28 @@ def main(argv: Sequence[str] | None = None) -> None:
     reference_adapter.assert_compatible(env.n_blocks)
     mpc_select_action = _load_paper9_mpc_select_action()
     ensemble_size = len(ensemble)
+    compute_mode = (
+        "full" if args.policy == "pcc_full" else args.compute_mode
+    )
     candidate_budget = (
         matched_pool_size(ensemble_size)
-        if args.compute_mode == "matched"
+        if ensemble_size and compute_mode == "matched"
         else 50
     )
     if args.candidate_budget is not None:
         candidate_budget = int(args.candidate_budget)
     max_member_evaluations = (
-        50 if args.compute_mode == "matched" else None
+        50 if ensemble_size and compute_mode == "matched" else None
     )
-    horizon_index = (1, 3, 5).index(planning_horizon)
-    objective_scale = np.asarray(
-        ensemble[0][1]["objective_scaling"]["scale"],
-        dtype=np.float64,
-    )
-    tolerances = objective_scale[horizon_index, 1:] * tolerance_scale
+    if ensemble:
+        horizon_index = (1, 3, 5).index(planning_horizon)
+        objective_scale = np.asarray(
+            ensemble[0][1]["objective_scaling"]["scale"],
+            dtype=np.float64,
+        )
+        tolerances = objective_scale[horizon_index, 1:] * tolerance_scale
+    else:
+        tolerances = np.zeros(3, dtype=np.float64)
 
     def strict_mask(runtime_env):
         return np.asarray(runtime_env.action_masks(), dtype=bool) & np.asarray(
@@ -380,8 +421,14 @@ def main(argv: Sequence[str] | None = None) -> None:
 
     reward_ranker = _adapter_ranker(reference_adapter, score_mode="reward")
     value_ranker = _adapter_ranker(reference_adapter, score_mode="value")
-    checkpoint_paths = sorted(Path(args.checkpoint_root).glob("member_*.pt"))
+    checkpoint_paths = (
+        sorted(Path(args.checkpoint_root).glob("member_*.pt"))
+        if args.checkpoint_root is not None
+        else []
+    )
     checkpoint_digests = [_sha256_file(path) for path in checkpoint_paths]
+    if not checkpoint_digests:
+        checkpoint_digests = [_sha256_file(args.reference_checkpoint)]
     output_path = Path(args.output)
     existing = load_resumable_results(
         output_path,
@@ -417,23 +464,89 @@ def main(argv: Sequence[str] | None = None) -> None:
             reference_rng,
             "paper9_mpc",
         )
-        feedback = ExecutedFeedbackScaler(
-            window=residual_window,
-            q_joint=calibrator.q_joint,
+        from paper10_geojepa_mpc.planning.pcc_baselines import (
+            DistributionalRiskPolicy,
+            ExecutableRandomPolicy,
+            GreedyRankingPolicy,
+            OnlineExpertSelector,
         )
-        policy = PCCObservablePolicy(
-            ensemble=ensemble,
-            calibrator=calibrator,
-            feedback_scaler=feedback,
-            reference_policy=reference_policy,
-            proposal_rankers=[reward_ranker, value_ranker],
-            candidate_budget=candidate_budget,
-            planning_horizon=planning_horizon,
-            tolerances=tolerances,
-            executable_threshold=float(args.executable_threshold),
-            device=args.device,
-            max_member_evaluations=max_member_evaluations,
-        )
+        if args.policy == "executable_random":
+            policy = ExecutableRandomPolicy(np.random.default_rng(seed + 19001))
+        elif args.policy == "paper9_mpc":
+            policy = reference_policy
+        elif args.policy == "legacy_value_filter":
+            from paper10_geojepa_mpc.planning.value_filter_selector import (
+                value_filter_mpc_select_action,
+            )
+
+            def value_filter_selector(state, rng):
+                action, info = value_filter_mpc_select_action(
+                    reference_adapter,
+                    state["block_features"],
+                    state["global_features"],
+                    state["executable_mask"],
+                    horizon=int(args.reference_horizon),
+                    top_k=int(args.reference_top_k),
+                    gamma=0.99,
+                    n_rollouts=1,
+                    continuation="random",
+                    scoring="reward",
+                    candidate_score_mode="value",
+                    stable_candidate_order=True,
+                    random_continuation_mode="common",
+                    rng=rng,
+                )
+                info["unexecuted_real_reward_queries"] = 0
+                return action, info
+
+            policy = SelectorPolicy(
+                value_filter_selector,
+                np.random.default_rng(seed + 18001),
+                "legacy_value_filter",
+            )
+        elif args.policy == "model_reward_greedy":
+            policy = GreedyRankingPolicy(reward_ranker, "model_reward_greedy")
+        elif args.policy == "rank_only":
+            policy = GreedyRankingPolicy(value_ranker, "rank_only")
+        else:
+            risk_policy = DistributionalRiskPolicy(
+                ensemble=ensemble,
+                proposal_rankers=[reward_ranker, value_ranker],
+                candidate_budget=candidate_budget,
+                planning_horizon=planning_horizon,
+                risk_penalty=float(args.risk_penalty),
+                device=args.device,
+            )
+            if args.policy == "distributional_risk":
+                policy = risk_policy
+            elif args.policy == "online_expert_selector":
+                policy = OnlineExpertSelector(
+                    [
+                        reference_policy,
+                        GreedyRankingPolicy(reward_ranker, "model_reward_greedy"),
+                        risk_policy,
+                    ],
+                    learning_rate=float(args.expert_learning_rate),
+                    rng=np.random.default_rng(seed + 20001),
+                )
+            else:
+                feedback = ExecutedFeedbackScaler(
+                    window=residual_window,
+                    q_joint=calibrator.q_joint,
+                )
+                policy = PCCObservablePolicy(
+                    ensemble=ensemble,
+                    calibrator=calibrator,
+                    feedback_scaler=feedback,
+                    reference_policy=reference_policy,
+                    proposal_rankers=[reward_ranker, value_ranker],
+                    candidate_budget=candidate_budget,
+                    planning_horizon=planning_horizon,
+                    tolerances=tolerances,
+                    executable_threshold=float(args.executable_threshold),
+                    device=args.device,
+                    max_member_evaluations=max_member_evaluations,
+                )
         result = run_policy_episode(
             env=env,
             policy=policy,
@@ -444,7 +557,7 @@ def main(argv: Sequence[str] | None = None) -> None:
         )
         result.update(
             {
-                "policy": f"pcc_{args.compute_mode}",
+                "policy": args.policy,
                 "model_seed": int(args.model_seed),
                 "registry_digest": registry_digest,
                 "checkpoint_digests": checkpoint_digests,
