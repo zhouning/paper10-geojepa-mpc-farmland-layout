@@ -17,6 +17,18 @@ LOCKED_PCC_V1_PARTITIONS = {
 LOCKED_PCC_V1_MODEL_SEEDS = (5101, 5102, 5103)
 LOCKED_PCC_V1_CONTRACT = {
     "horizons": [1, 3, 5],
+    "offline_sampling": {
+        "train": {"states_per_trajectory": 20, "candidate_actions": 8},
+        "calibration": {"states_per_trajectory": 10, "candidate_actions": 8},
+        "dongxing_adaptation": {
+            "states_per_trajectory": 20,
+            "candidate_actions": 8,
+        },
+        "dongxing_calibration": {
+            "states_per_trajectory": 10,
+            "candidate_actions": 8,
+        },
+    },
     "grid": {
         "ensemble_size": [3, 5],
         "joint_coverage": [0.8, 0.9, 0.95],

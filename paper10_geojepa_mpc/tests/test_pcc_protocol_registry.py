@@ -53,6 +53,14 @@ def test_registry_contains_locked_scientific_contract():
     assert payload["success_gates"]["bishan"]["reward_lower_bound_strictly_positive"] is True
     assert payload["success_gates"]["dongxing"]["reward_lower_bound_minimum"] == 0.0
     assert "oracle_action_audit_diagnostic" not in payload["deployable_baselines"]
+    assert payload["offline_sampling"]["train"] == {
+        "states_per_trajectory": 20,
+        "candidate_actions": 8,
+    }
+    assert payload["offline_sampling"]["calibration"] == {
+        "states_per_trajectory": 10,
+        "candidate_actions": 8,
+    }
 
 
 def test_pcc_v1_rejects_missing_locked_scientific_contract():

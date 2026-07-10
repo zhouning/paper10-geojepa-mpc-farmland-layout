@@ -283,6 +283,12 @@ def freeze_registry(path: str | Path, selected_config: dict[str, Any]) -> dict[s
   },
   "model_seeds": [5101, 5102, 5103],
   "horizons": [1, 3, 5],
+  "offline_sampling": {
+    "train": {"states_per_trajectory": 20, "candidate_actions": 8},
+    "calibration": {"states_per_trajectory": 10, "candidate_actions": 8},
+    "dongxing_adaptation": {"states_per_trajectory": 20, "candidate_actions": 8},
+    "dongxing_calibration": {"states_per_trajectory": 10, "candidate_actions": 8}
+  },
   "grid": {
     "ensemble_size": [3, 5],
     "joint_coverage": [0.8, 0.9, 0.95],
@@ -1590,7 +1596,7 @@ Expected: three recorded actions, three environment steps, zero unexecuted real-
 - [ ] **Step 3: Generate Bishan training labels**
 
 ```powershell
-D:\adk\.venv\Scripts\python.exe -m paper10_geojepa_mpc.experiments.pcc_value_labels --registry paper10_geojepa_mpc\experiments\protocols\pcc_v1.json --partition train --env-source paper9 --reference-policy paper9_mpc --states-per-trajectory 50 --candidate-actions 16 --horizons 1,3,5 --gamma 0.99 --output-dir paper10_runs\pcc_v1\labels\bishan_train
+D:\adk\.venv\Scripts\python.exe -m paper10_geojepa_mpc.experiments.pcc_value_labels --registry paper10_geojepa_mpc\experiments\protocols\pcc_v1.json --partition train --seeds 1000-1007 --env-source paper9 --prepared-dir D:\test --states-per-trajectory 20 --candidate-actions 8 --horizons 1,3,5 --gamma 0.99 --output-dir paper10_runs\pcc_v1\labels\bishan_train
 ```
 
 Expected: eight seed-specific NPZ files and a manifest whose trajectory IDs are exactly 1000-1007.
@@ -1598,7 +1604,7 @@ Expected: eight seed-specific NPZ files and a manifest whose trajectory IDs are 
 - [ ] **Step 4: Generate Bishan calibration labels**
 
 ```powershell
-D:\adk\.venv\Scripts\python.exe -m paper10_geojepa_mpc.experiments.pcc_value_labels --registry paper10_geojepa_mpc\experiments\protocols\pcc_v1.json --partition calibration --env-source paper9 --reference-policy paper9_mpc --states-per-trajectory 20 --candidate-actions 16 --horizons 1,3,5 --gamma 0.99 --output-dir paper10_runs\pcc_v1\labels\bishan_calibration
+D:\adk\.venv\Scripts\python.exe -m paper10_geojepa_mpc.experiments.pcc_value_labels --registry paper10_geojepa_mpc\experiments\protocols\pcc_v1.json --partition calibration --seeds 2000-2019 --env-source paper9 --prepared-dir D:\test --states-per-trajectory 10 --candidate-actions 8 --horizons 1,3,5 --gamma 0.99 --output-dir paper10_runs\pcc_v1\labels\bishan_calibration
 ```
 
 Expected: 20 seed-specific NPZ files with IDs 2000-2019 and no overlap with training.
@@ -1693,8 +1699,8 @@ Expected: output is labelled `deployable=false` and is excluded by the statistic
 - [ ] **Step 4: Generate Dongxing adaptation and calibration labels**
 
 ```powershell
-D:\adk\.venv\Scripts\python.exe -m paper10_geojepa_mpc.experiments.pcc_value_labels --registry paper10_geojepa_mpc\experiments\protocols\pcc_v1.json --partition dongxing_adaptation --env-source neijiang --prepared-dir D:\test\neijiang_cross_region --reference-policy paper9_mpc --states-per-trajectory 50 --candidate-actions 16 --horizons 1,3,5 --output-dir paper10_runs\pcc_v1\labels\dongxing_adaptation
-D:\adk\.venv\Scripts\python.exe -m paper10_geojepa_mpc.experiments.pcc_value_labels --registry paper10_geojepa_mpc\experiments\protocols\pcc_v1.json --partition dongxing_calibration --env-source neijiang --prepared-dir D:\test\neijiang_cross_region --reference-policy paper9_mpc --states-per-trajectory 20 --candidate-actions 16 --horizons 1,3,5 --output-dir paper10_runs\pcc_v1\labels\dongxing_calibration
+D:\adk\.venv\Scripts\python.exe -m paper10_geojepa_mpc.experiments.pcc_value_labels --registry paper10_geojepa_mpc\experiments\protocols\pcc_v1.json --partition dongxing_adaptation --seeds 6000-6003 --env-source neijiang --prepared-dir D:\test\neijiang_cross_region --states-per-trajectory 20 --candidate-actions 8 --horizons 1,3,5 --output-dir paper10_runs\pcc_v1\labels\dongxing_adaptation
+D:\adk\.venv\Scripts\python.exe -m paper10_geojepa_mpc.experiments.pcc_value_labels --registry paper10_geojepa_mpc\experiments\protocols\pcc_v1.json --partition dongxing_calibration --seeds 7000-7019 --env-source neijiang --prepared-dir D:\test\neijiang_cross_region --states-per-trajectory 10 --candidate-actions 8 --horizons 1,3,5 --output-dir paper10_runs\pcc_v1\labels\dongxing_calibration
 ```
 
 Expected: action-relative checkpoints require no action-embedding replacement; only the declared adapter/calibration stage uses these labels.
