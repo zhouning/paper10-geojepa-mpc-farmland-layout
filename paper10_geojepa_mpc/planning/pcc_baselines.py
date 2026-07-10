@@ -53,6 +53,88 @@ class ExecutableRandomPolicy:
         return None
 
 
+class SelectorPolicy:
+    def __init__(self, selector, rng: np.random.Generator, name: str):
+        self.selector = selector
+        self.rng = rng
+        self.name = str(name)
+
+    def select(self, state: dict) -> tuple[int, dict]:
+        action, raw_info = self.selector(state, self.rng)
+        info = dict(raw_info)
+        info.setdefault("policy", self.name)
+        info.setdefault("unexecuted_real_reward_queries", 0)
+        return int(action), info
+
+    def observe(self, transition: dict) -> None:
+        return None
+
+
+class PCCObservablePolicy:
+    def __init__(
+        self,
+        *,
+        ensemble,
+        calibrator,
+        feedback_scaler,
+        reference_policy,
+        proposal_rankers,
+        candidate_budget: int,
+        planning_horizon: int,
+        tolerances,
+        executable_threshold: float,
+        device: str = "cpu",
+        max_member_evaluations: int | None = None,
+    ):
+        self.ensemble = ensemble
+        self.calibrator = calibrator
+        self.feedback_scaler = feedback_scaler
+        self.reference_policy = reference_policy
+        self.proposal_rankers = list(proposal_rankers)
+        self.candidate_budget = int(candidate_budget)
+        self.planning_horizon = int(planning_horizon)
+        self.tolerances = np.asarray(tolerances, dtype=np.float64)
+        self.executable_threshold = float(executable_threshold)
+        self.device = str(device)
+        self.max_member_evaluations = max_member_evaluations
+
+    def select(self, state: dict) -> tuple[int, dict]:
+        from paper10_geojepa_mpc.planning.pcc_selector import pcc_select_action
+
+        reference_action, reference_info = self.reference_policy.select(state)
+        proposal_groups = [ranker(state) for ranker in self.proposal_rankers]
+        action, info = pcc_select_action(
+            ensemble=self.ensemble,
+            calibrator=self.calibrator,
+            feedback_scaler=self.feedback_scaler,
+            block_features=state["block_features"],
+            neighbour_features=state["neighbour_features"],
+            global_features=state["global_features"],
+            executable_mask=state["executable_mask"],
+            reference_policy=lambda: reference_action,
+            proposal_groups=proposal_groups,
+            candidate_budget=self.candidate_budget,
+            planning_horizon=self.planning_horizon,
+            tolerances=self.tolerances,
+            executable_threshold=self.executable_threshold,
+            device=self.device,
+            max_member_evaluations=self.max_member_evaluations,
+        )
+        info["reference_policy_info"] = reference_info
+        return action, info
+
+    def observe(self, transition: dict) -> None:
+        predicted = transition.get("predicted_mean")
+        scale = transition.get("base_scale")
+        if predicted is None or scale is None:
+            raise ValueError("PCC executed transition lacks immediate prediction")
+        self.feedback_scaler.update(
+            transition["observed_outcome"],
+            predicted,
+            scale,
+        )
+
+
 class OnlineExpertSelector:
     def __init__(
         self,

@@ -259,3 +259,44 @@ def test_partition_generation_uses_each_declared_trajectory_once(tmp_path):
     assert len(created) == 2
     assert manifest["trajectory_seeds"] == [1000, 1001]
     assert len(manifest["artifacts"]) == 2
+
+
+def test_partition_generation_allows_only_declared_smoke_subset(tmp_path):
+    registry = {
+        "protocol_id": "fixture",
+        "partitions": {"train": [1000, 1001]},
+    }
+    created = []
+
+    manifest = generate_label_partition(
+        registry=registry,
+        partition="train",
+        trajectory_seeds=[1001],
+        output_dir=tmp_path,
+        env_factory=lambda: created.append(TinyObjectiveEnv()) or created[-1],
+        policy_factory=lambda env: (lambda *_: 0),
+        n_states=1,
+        candidate_actions=1,
+        horizons=(1,),
+        gamma=1.0,
+        metric_reader=lambda runtime_env: runtime_env.metrics(),
+        state_attrs=("value", "step_count"),
+    )
+
+    assert len(created) == 1
+    assert manifest["trajectory_seeds"] == [1001]
+    with pytest.raises(ValueError, match="declared partition"):
+        generate_label_partition(
+            registry=registry,
+            partition="train",
+            trajectory_seeds=[9999],
+            output_dir=tmp_path / "bad",
+            env_factory=TinyObjectiveEnv,
+            policy_factory=lambda env: (lambda *_: 0),
+            n_states=1,
+            candidate_actions=1,
+            horizons=(1,),
+            gamma=1.0,
+            metric_reader=lambda runtime_env: runtime_env.metrics(),
+            state_attrs=("value", "step_count"),
+        )

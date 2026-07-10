@@ -460,6 +460,7 @@ def generate_label_partition(
     *,
     registry: dict[str, object],
     partition: str,
+    trajectory_seeds: Sequence[int] | None = None,
     output_dir: str | Path,
     env_factory,
     policy_factory,
@@ -480,10 +481,19 @@ def generate_label_partition(
     partitions = registry.get("partitions", {})
     if partition not in partitions:
         raise ValueError(f"unknown registry partition: {partition}")
+    declared_seeds = [int(value) for value in partitions[partition]]
+    selected_seeds = (
+        declared_seeds
+        if trajectory_seeds is None
+        else [int(value) for value in trajectory_seeds]
+    )
+    if not selected_seeds or len(selected_seeds) != len(set(selected_seeds)):
+        raise ValueError("trajectory seed subset must be non-empty and unique")
+    if not set(selected_seeds) <= set(declared_seeds):
+        raise ValueError("trajectory seed is outside the declared partition")
 
     artifacts = []
-    for raw_seed in partitions[partition]:
-        trajectory_seed = int(raw_seed)
+    for trajectory_seed in selected_seeds:
         env = env_factory()
         reference_policy = policy_factory(env)
         continuation_policy = (
@@ -591,6 +601,7 @@ def parse_args(argv: Sequence[str] | None = None):
     parser = argparse.ArgumentParser()
     parser.add_argument("--registry", required=True)
     parser.add_argument("--partition", required=True)
+    parser.add_argument("--seeds", default=None)
     parser.add_argument("--env-source", choices=("paper9", "neijiang"), default="paper9")
     parser.add_argument("--prepared-dir", default=str(ROOT))
     parser.add_argument(
@@ -613,6 +624,23 @@ def parse_args(argv: Sequence[str] | None = None):
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--output-dir", required=True)
     return parser.parse_args(argv)
+
+
+def _parse_seed_spec(spec: str) -> list[int]:
+    seeds = []
+    for token in str(spec).split(","):
+        token = token.strip()
+        if not token:
+            continue
+        if "-" in token:
+            start_text, end_text = token.split("-", 1)
+            start, end = int(start_text), int(end_text)
+            if end < start:
+                raise ValueError("seed range end must not precede start")
+            seeds.extend(range(start, end + 1))
+        else:
+            seeds.append(int(token))
+    return seeds
 
 
 def main(argv: Sequence[str] | None = None) -> None:
@@ -651,6 +679,9 @@ def main(argv: Sequence[str] | None = None) -> None:
     manifest = generate_label_partition(
         registry=registry,
         partition=args.partition,
+        trajectory_seeds=(
+            _parse_seed_spec(args.seeds) if args.seeds is not None else None
+        ),
         output_dir=args.output_dir,
         env_factory=lambda: _make_label_env(args.env_source, args.prepared_dir),
         policy_factory=policy_factory,

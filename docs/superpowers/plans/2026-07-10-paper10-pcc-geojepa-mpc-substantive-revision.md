@@ -1574,7 +1574,7 @@ Expected: grid size and lexicographic ordering are deterministic and freeze cann
 - [ ] **Step 1: Run the focused unit suite before scientific work**
 
 ```powershell
-D:\adk\.venv\Scripts\python.exe -m pytest paper10_geojepa_mpc\tests\test_pcc_*.py paper10_geojepa_mpc\tests\test_paired_conformal.py paper10_geojepa_mpc\tests\test_executed_feedback.py -q
+D:\adk\.venv\Scripts\python.exe -m pytest paper10_geojepa_mpc\tests -q -k "pcc or paired_conformal or executed_feedback"
 ```
 
 Expected: all focused tests pass.

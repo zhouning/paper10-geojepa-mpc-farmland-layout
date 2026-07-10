@@ -20,6 +20,7 @@ Thumbs.db
 
 # Local rerun outputs can be saved elsewhere or explicitly force-added.
 /reviewer_outputs/
+/paper10_runs/
 
 # Local macOS experiment config copied from the tracked example.
 /scripts/macos/frontier_random050_50x24_h5.env

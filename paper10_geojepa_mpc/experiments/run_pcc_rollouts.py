@@ -1,7 +1,13 @@
+import argparse
+import hashlib
+import importlib.util
 import json
 from pathlib import Path
+import sys
+from typing import Sequence
 
 import numpy as np
+import torch
 
 from paper10_geojepa_mpc.experiments.pcc_objectives import oriented_outcome
 from paper10_geojepa_mpc.experiments.pcc_value_labels import (
@@ -38,8 +44,17 @@ def select_without_execution(*, env, selector, **selector_kwargs):
     return int(action), dict(info)
 
 
-def _observable_state(env) -> dict[str, np.ndarray]:
+ROOT = Path(__file__).resolve().parents[2]
+PAPER9_DIR = ROOT / "arcgis_toolbox_paper9"
+
+
+def _observable_state(env, action_mask_fn=None) -> dict[str, np.ndarray]:
     block = np.asarray(env._get_block_features(), dtype=np.float32).copy()
+    mask = (
+        np.asarray(action_mask_fn(env), dtype=bool)
+        if action_mask_fn is not None
+        else np.asarray(env.action_masks(), dtype=bool)
+    )
     return {
         "block_features": block,
         "neighbour_features": build_neighbour_feature_matrix(env, block),
@@ -47,7 +62,7 @@ def _observable_state(env) -> dict[str, np.ndarray]:
             env._get_global_features(),
             dtype=np.float32,
         ).copy(),
-        "executable_mask": np.asarray(env.action_masks(), dtype=bool).copy(),
+        "executable_mask": mask.copy(),
     }
 
 
@@ -58,6 +73,7 @@ def run_policy_episode(
     seed: int,
     rollout_steps: int,
     metric_reader,
+    action_mask_fn=None,
 ) -> dict[str, object]:
     if int(rollout_steps) <= 0:
         raise ValueError("rollout_steps must be positive")
@@ -66,7 +82,7 @@ def run_policy_episode(
     total_reward = 0.0
     for step_index in range(int(rollout_steps)):
         before_metrics = dict(metric_reader(env))
-        state = _observable_state(env)
+        state = _observable_state(env, action_mask_fn=action_mask_fn)
         action, selection_info = select_without_execution(
             env=env,
             selector=policy.select,
@@ -169,3 +185,279 @@ def write_seed_result_atomic(
     )
     temporary.replace(path)
     return payload
+
+
+def _sha256_file(path: str | Path) -> str:
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _load_paper9_mpc_select_action():
+    path = PAPER9_DIR / "private_source" / "mpc_plan.py"
+    spec = importlib.util.spec_from_file_location("paper9_private_mpc_plan", path)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"Cannot load Paper9 MPC implementation: {path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.mpc_select_action
+
+
+def _parse_seed_spec(spec: str) -> list[int]:
+    seeds = []
+    for token in str(spec).split(","):
+        token = token.strip()
+        if not token:
+            continue
+        if "-" in token:
+            start_text, end_text = token.split("-", 1)
+            start, end = int(start_text), int(end_text)
+            if end < start:
+                raise ValueError("seed range end must not precede start")
+            seeds.extend(range(start, end + 1))
+        else:
+            seeds.append(int(token))
+    if not seeds or len(seeds) != len(set(seeds)):
+        raise ValueError("seed list must be non-empty and unique")
+    return seeds
+
+
+def _metric_reader(env) -> dict[str, float]:
+    return {
+        "avg_slope": float(env.avg_farmland_slope),
+        "contiguity": float(env.contiguity),
+        "baimu_area_ha": float(env.baimu_total_area) / 10000.0,
+    }
+
+
+def _make_env(env_source: str, prepared_dir: str):
+    from paper10_geojepa_mpc.experiments.value_label_generation import _make_label_env
+
+    return _make_label_env(env_source, prepared_dir)
+
+
+def _adapter_ranker(adapter, *, score_mode: str, value_weight: float = 0.5):
+    from paper10_geojepa_mpc.planning.scoring import score_candidate_actions
+
+    def rank(state):
+        valid = np.flatnonzero(state["executable_mask"]).astype(np.int64)
+        if valid.size == 0:
+            return valid
+        with torch.no_grad():
+            scores = score_candidate_actions(
+                adapter.model,
+                torch.as_tensor(
+                    state["block_features"],
+                    dtype=torch.float32,
+                    device=adapter.device,
+                ),
+                torch.as_tensor(
+                    state["global_features"],
+                    dtype=torch.float32,
+                    device=adapter.device,
+                ),
+                torch.as_tensor(valid, dtype=torch.long, device=adapter.device),
+                score_mode=score_mode,
+                value_weight=value_weight,
+            ).detach().cpu().numpy()
+        order = np.lexsort((valid, -scores))
+        return valid[order]
+
+    return rank
+
+
+def parse_args(argv: Sequence[str] | None = None):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--registry", required=True)
+    parser.add_argument(
+        "--mode",
+        choices=("diagnostic", "development", "confirmation"),
+        default="diagnostic",
+    )
+    parser.add_argument("--env-source", choices=("paper9", "neijiang"), default="paper9")
+    parser.add_argument("--prepared-dir", default=str(ROOT.parent))
+    parser.add_argument("--checkpoint-root", required=True)
+    parser.add_argument("--calibrator", required=True)
+    parser.add_argument(
+        "--reference-checkpoint",
+        default=str(
+            ROOT
+            / "paper10_geojepa_mpc"
+            / "experiments"
+            / "checkpoints"
+            / "e0_bishan_rank_seed2028"
+            / "rank_seed2028.pt"
+        ),
+    )
+    parser.add_argument("--model-seed", type=int, default=5101)
+    parser.add_argument("--seeds", required=True)
+    parser.add_argument("--rollout-steps", type=int, default=3)
+    parser.add_argument("--planning-horizon", type=int, default=3)
+    parser.add_argument("--candidate-budget", type=int, default=None)
+    parser.add_argument("--compute-mode", choices=("matched", "full"), default="matched")
+    parser.add_argument("--tolerance-scale", type=float, default=0.05)
+    parser.add_argument("--residual-window", type=int, default=10)
+    parser.add_argument("--executable-threshold", type=float, default=0.95)
+    parser.add_argument("--reference-horizon", type=int, default=5)
+    parser.add_argument("--reference-top-k", type=int, default=50)
+    parser.add_argument("--device", default="cpu")
+    parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--output", required=True)
+    return parser.parse_args(argv)
+
+
+def main(argv: Sequence[str] | None = None) -> None:
+    from paper10_geojepa_mpc.experiments.pcc_protocol_registry import (
+        load_registry,
+        validate_registry,
+        verify_frozen_registry,
+    )
+    from paper10_geojepa_mpc.planning.env_masks import executable_swap_mask
+    from paper10_geojepa_mpc.planning.executed_feedback import ExecutedFeedbackScaler
+    from paper10_geojepa_mpc.planning.paired_conformal import load_joint_calibrator
+    from paper10_geojepa_mpc.planning.paper9_adapter import TorchCheckpointMPCAdapter
+    from paper10_geojepa_mpc.planning.pcc_baselines import (
+        PCCObservablePolicy,
+        SelectorPolicy,
+        matched_pool_size,
+    )
+    from paper10_geojepa_mpc.planning.pcc_selector import load_pcc_ensemble
+
+    args = parse_args(argv)
+    if str(ROOT) not in sys.path:
+        sys.path.insert(0, str(ROOT))
+    if str(PAPER9_DIR) not in sys.path:
+        sys.path.insert(0, str(PAPER9_DIR))
+    registry_path = Path(args.registry)
+    registry = load_registry(registry_path)
+    validate_registry(registry)
+    if args.mode == "confirmation":
+        registry_digest = verify_frozen_registry(registry)
+        selected = registry["selected_config"]
+        planning_horizon = int(selected["planning_horizon"])
+        tolerance_scale = float(selected["tolerance_scale"])
+        residual_window = int(selected["residual_window"])
+    else:
+        registry_digest = _sha256_file(registry_path)
+        planning_horizon = int(args.planning_horizon)
+        tolerance_scale = float(args.tolerance_scale)
+        residual_window = int(args.residual_window)
+
+    ensemble = load_pcc_ensemble(args.checkpoint_root, device=args.device)
+    calibrator = load_joint_calibrator(args.calibrator)
+    env = _make_env(args.env_source, args.prepared_dir)
+    reference_adapter = TorchCheckpointMPCAdapter.from_checkpoint(
+        args.reference_checkpoint,
+        device=args.device,
+    )
+    reference_adapter.assert_compatible(env.n_blocks)
+    mpc_select_action = _load_paper9_mpc_select_action()
+    ensemble_size = len(ensemble)
+    candidate_budget = (
+        matched_pool_size(ensemble_size)
+        if args.compute_mode == "matched"
+        else 50
+    )
+    if args.candidate_budget is not None:
+        candidate_budget = int(args.candidate_budget)
+    max_member_evaluations = (
+        50 if args.compute_mode == "matched" else None
+    )
+    horizon_index = (1, 3, 5).index(planning_horizon)
+    objective_scale = np.asarray(
+        ensemble[0][1]["objective_scaling"]["scale"],
+        dtype=np.float64,
+    )
+    tolerances = objective_scale[horizon_index, 1:] * tolerance_scale
+
+    def strict_mask(runtime_env):
+        return np.asarray(runtime_env.action_masks(), dtype=bool) & np.asarray(
+            executable_swap_mask(runtime_env),
+            dtype=bool,
+        )
+
+    reward_ranker = _adapter_ranker(reference_adapter, score_mode="reward")
+    value_ranker = _adapter_ranker(reference_adapter, score_mode="value")
+    checkpoint_paths = sorted(Path(args.checkpoint_root).glob("member_*.pt"))
+    checkpoint_digests = [_sha256_file(path) for path in checkpoint_paths]
+    output_path = Path(args.output)
+    existing = load_resumable_results(
+        output_path,
+        registry_digest=registry_digest,
+        checkpoint_digests=checkpoint_digests,
+    )
+    completed = set(existing["completed_seeds"]) if args.resume else set()
+
+    for seed in _parse_seed_spec(args.seeds):
+        if seed in completed:
+            continue
+        reference_rng = np.random.default_rng(seed + 17001)
+
+        def reference_selector(state, rng):
+            action, info = mpc_select_action(
+                reference_adapter,
+                state["block_features"],
+                state["global_features"],
+                state["executable_mask"],
+                horizon=int(args.reference_horizon),
+                top_k=int(args.reference_top_k),
+                gamma=0.99,
+                n_rollouts=1,
+                continuation="random",
+                scoring="reward",
+                rng=rng,
+            )
+            info["unexecuted_real_reward_queries"] = 0
+            return action, info
+
+        reference_policy = SelectorPolicy(
+            reference_selector,
+            reference_rng,
+            "paper9_mpc",
+        )
+        feedback = ExecutedFeedbackScaler(
+            window=residual_window,
+            q_joint=calibrator.q_joint,
+        )
+        policy = PCCObservablePolicy(
+            ensemble=ensemble,
+            calibrator=calibrator,
+            feedback_scaler=feedback,
+            reference_policy=reference_policy,
+            proposal_rankers=[reward_ranker, value_ranker],
+            candidate_budget=candidate_budget,
+            planning_horizon=planning_horizon,
+            tolerances=tolerances,
+            executable_threshold=float(args.executable_threshold),
+            device=args.device,
+            max_member_evaluations=max_member_evaluations,
+        )
+        result = run_policy_episode(
+            env=env,
+            policy=policy,
+            seed=seed,
+            rollout_steps=args.rollout_steps,
+            metric_reader=_metric_reader,
+            action_mask_fn=strict_mask,
+        )
+        result.update(
+            {
+                "policy": f"pcc_{args.compute_mode}",
+                "model_seed": int(args.model_seed),
+                "registry_digest": registry_digest,
+                "checkpoint_digests": checkpoint_digests,
+            }
+        )
+        write_seed_result_atomic(
+            output_path,
+            seed_result=result,
+            registry_digest=registry_digest,
+            checkpoint_digests=checkpoint_digests,
+        )
+    print(output_path.read_text(encoding="utf-8"))
+
+
+if __name__ == "__main__":
+    main()
