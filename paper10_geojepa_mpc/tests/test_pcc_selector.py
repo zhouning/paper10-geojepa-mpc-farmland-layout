@@ -11,6 +11,7 @@ from paper10_geojepa_mpc.planning.pcc_selector import (
     paired_ensemble_statistics,
     pcc_select_action,
     predict_paired_ensemble,
+    predict_paired_ensemble_all_horizons,
 )
 
 
@@ -169,6 +170,24 @@ def test_ensemble_prediction_denormalizes_and_reuses_reference_batch_row():
     )
     assert prediction.member_evaluations == 6
     assert prediction.model_forward_count == 2
+
+
+def test_all_horizon_prediction_is_available_for_joint_calibration():
+    prediction = predict_paired_ensemble_all_horizons(
+        _fake_ensemble(),
+        block_features=np.zeros((3, 2), dtype=np.float32),
+        neighbour_features=np.zeros((3, 2), dtype=np.float32),
+        global_features=np.zeros(2, dtype=np.float32),
+        actions=np.array([0, 1, 2]),
+        reference_action=0,
+        device="cpu",
+    )
+
+    assert prediction.mean_delta.shape == (3, 3, 4)
+    np.testing.assert_allclose(
+        prediction.mean_delta[1],
+        np.tile(np.array([2.0, 3.0, 4.0, 5.0]), (3, 1)),
+    )
 
 
 def test_complete_selector_calls_reference_once_and_returns_feedback_prediction():

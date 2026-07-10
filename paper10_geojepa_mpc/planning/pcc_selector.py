@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from pathlib import Path
 
 import numpy as np
 import torch
@@ -21,6 +22,18 @@ class EnsemblePrediction:
     mean_delta: np.ndarray
     paired_scale: np.ndarray
     uncertainty_rank: np.ndarray
+    executable_probability: np.ndarray
+    candidate_mean: np.ndarray
+    candidate_base_scale: np.ndarray
+    member_evaluations: int
+    model_forward_count: int
+
+
+@dataclass(frozen=True)
+class EnsembleHorizonPrediction:
+    actions: np.ndarray
+    mean_delta: np.ndarray
+    paired_scale: np.ndarray
     executable_probability: np.ndarray
     candidate_mean: np.ndarray
     candidate_base_scale: np.ndarray
@@ -179,7 +192,7 @@ def build_candidate_pool(
     return np.asarray(ordered[: int(candidate_budget)], dtype=np.int64)
 
 
-def predict_paired_ensemble(
+def predict_paired_ensemble_all_horizons(
     ensemble,
     *,
     block_features,
@@ -187,17 +200,14 @@ def predict_paired_ensemble(
     global_features,
     actions,
     reference_action: int,
-    planning_horizon: int,
     device: str = "cpu",
-) -> EnsemblePrediction:
+) -> EnsembleHorizonPrediction:
     actions = np.asarray(actions, dtype=np.int64).reshape(-1)
     if actions.size == 0 or np.unique(actions).size != actions.size:
         raise ValueError("actions must be non-empty and unique")
     reference_matches = np.flatnonzero(actions == int(reference_action))
     if reference_matches.size != 1:
         raise ValueError("candidate pool must contain the reference action exactly once")
-    if int(planning_horizon) not in HORIZONS:
-        raise ValueError("planning horizon must be one of 1, 3, or 5")
     if not ensemble:
         raise ValueError("ensemble must contain at least one member")
 
@@ -207,7 +217,6 @@ def predict_paired_ensemble(
     if block.ndim != 2 or neighbour.shape != block.shape or global_array.ndim != 1:
         raise ValueError("observable feature shapes are invalid")
 
-    horizon_index = HORIZONS.index(int(planning_horizon))
     member_means = []
     member_log_scales = []
     member_probabilities = []
@@ -253,17 +262,11 @@ def predict_paired_ensemble(
         model.eval()
         with torch.no_grad():
             output = model(bf, nf, gf, act)
-        normalized_mean = (
-            output.horizon_mean[:, horizon_index].detach().cpu().numpy()
-        )
-        normalized_log_scale = (
-            output.horizon_log_scale[:, horizon_index].detach().cpu().numpy()
-        )
-        physical_mean = (
-            normalized_mean * scale[horizon_index] + center[horizon_index]
-        )
+        normalized_mean = output.horizon_mean.detach().cpu().numpy()
+        normalized_log_scale = output.horizon_log_scale.detach().cpu().numpy()
+        physical_mean = normalized_mean * scale[None, :, :] + center[None, :, :]
         physical_standard_deviation = (
-            np.exp(normalized_log_scale) * scale[horizon_index]
+            np.exp(normalized_log_scale) * scale[None, :, :]
         )
         member_means.append(physical_mean)
         member_log_scales.append(np.log(physical_standard_deviation))
@@ -289,16 +292,52 @@ def predict_paired_ensemble(
         np.maximum(marginal_epistemic + marginal_aleatoric, 1e-12)
     )
     executable_probability = np.stack(member_probabilities, axis=0).mean(axis=0)
-    return EnsemblePrediction(
+    return EnsembleHorizonPrediction(
         actions=actions,
         mean_delta=statistics.mean_delta,
         paired_scale=statistics.paired_scale,
-        uncertainty_rank=statistics.uncertainty_rank,
         executable_probability=executable_probability,
         candidate_mean=member_means.mean(axis=0),
         candidate_base_scale=candidate_base_scale,
         member_evaluations=int(member_means.shape[0] * actions.size),
         model_forward_count=int(member_means.shape[0]),
+    )
+
+
+def predict_paired_ensemble(
+    ensemble,
+    *,
+    block_features,
+    neighbour_features,
+    global_features,
+    actions,
+    reference_action: int,
+    planning_horizon: int,
+    device: str = "cpu",
+) -> EnsemblePrediction:
+    if int(planning_horizon) not in HORIZONS:
+        raise ValueError("planning horizon must be one of 1, 3, or 5")
+    all_horizons = predict_paired_ensemble_all_horizons(
+        ensemble,
+        block_features=block_features,
+        neighbour_features=neighbour_features,
+        global_features=global_features,
+        actions=actions,
+        reference_action=reference_action,
+        device=device,
+    )
+    horizon_index = HORIZONS.index(int(planning_horizon))
+    paired_scale = all_horizons.paired_scale[:, horizon_index]
+    return EnsemblePrediction(
+        actions=all_horizons.actions,
+        mean_delta=all_horizons.mean_delta[:, horizon_index],
+        paired_scale=paired_scale,
+        uncertainty_rank=paired_scale.max(axis=-1),
+        executable_probability=all_horizons.executable_probability,
+        candidate_mean=all_horizons.candidate_mean[:, horizon_index],
+        candidate_base_scale=all_horizons.candidate_base_scale[:, horizon_index],
+        member_evaluations=all_horizons.member_evaluations,
+        model_forward_count=all_horizons.model_forward_count,
     )
 
 
@@ -386,3 +425,13 @@ def pcc_select_action(
             "model_forward_count": 0,
             "unexecuted_real_reward_queries": 0,
         }
+
+
+def load_pcc_ensemble(checkpoint_root, device: str = "cpu"):
+    from paper10_geojepa_mpc.training.pcc_training import load_pcc_checkpoint
+
+    path = Path(checkpoint_root)
+    checkpoints = [path] if path.is_file() else sorted(path.glob("member_*.pt"))
+    if not checkpoints:
+        raise ValueError(f"no PCC member checkpoints found under {path}")
+    return [load_pcc_checkpoint(checkpoint, device=device) for checkpoint in checkpoints]

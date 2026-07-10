@@ -2,9 +2,17 @@ import json
 
 import numpy as np
 import pytest
+import torch
+import torch.nn as nn
 
+from paper10_geojepa_mpc.experiments.pcc_value_labels import (
+    write_label_manifest,
+    write_trajectory_artifact,
+)
+from paper10_geojepa_mpc.models.pcc_geojepa import PCCModelOutput
 from paper10_geojepa_mpc.planning.paired_conformal import (
     audit_joint_coverage,
+    fit_calibrator_from_artifacts,
     fit_joint_calibrator,
     load_joint_calibrator,
     save_joint_calibrator,
@@ -116,3 +124,70 @@ def test_serialized_calibrator_digest_detects_mutation(tmp_path):
     path.write_text(json.dumps(saved), encoding="utf-8")
     with pytest.raises(ValueError, match="digest mismatch"):
         load_joint_calibrator(path)
+
+
+class _ExactDeltaMember(nn.Module):
+    def forward(self, block, neighbour, global_features, actions):
+        batch = actions.shape[0]
+        mean = actions.float()[:, None, None].expand(batch, 3, 4).clone()
+        zeros = torch.zeros_like(mean)
+        return PCCModelOutput(
+            next_block=block,
+            next_global=global_features,
+            immediate_mean=mean[:, 0],
+            immediate_log_scale=zeros[:, 0],
+            horizon_mean=mean,
+            horizon_log_scale=zeros,
+            executable_logit=torch.full((batch,), 10.0),
+            latent=torch.zeros(batch, 2),
+        )
+
+
+def test_artifact_fitting_preserves_candidate_reference_and_trajectory_axes(tmp_path):
+    labels = tmp_path / "labels"
+    actions = np.asarray([[1, 2]], dtype=np.int64)
+    objective = np.stack(
+        [
+            np.full((3, 4), 1.0, dtype=np.float32),
+            np.full((3, 4), 2.0, dtype=np.float32),
+        ],
+        axis=0,
+    )[None, ...]
+    dataset = {
+        "states_bf": np.zeros((1, 3, 2), dtype=np.float32),
+        "states_neighbor_bf": np.zeros((1, 3, 2), dtype=np.float32),
+        "states_gf": np.zeros((1, 2), dtype=np.float32),
+        "actions": actions,
+        "objective_returns": objective,
+        "reference_actions": np.asarray([0], dtype=np.int64),
+        "reference_objective_returns": np.zeros_like(objective),
+        "trajectory_ids": np.asarray([2000], dtype=np.int64),
+        "state_steps": np.asarray([0], dtype=np.int64),
+        "horizons": np.asarray([1, 3, 5], dtype=np.int64),
+    }
+    artifact = write_trajectory_artifact(labels, 2000, dataset)
+    write_label_manifest(
+        labels,
+        protocol_id="fixture",
+        partition="calibration",
+        artifacts=[artifact],
+        continuation_policy={"name": "fixture"},
+        horizons=(1, 3, 5),
+    )
+    scaling = {
+        "center": np.zeros((3, 4)).tolist(),
+        "scale": np.ones((3, 4)).tolist(),
+    }
+    ensemble = [(_ExactDeltaMember(), {"objective_scaling": scaling})]
+
+    calibrator = fit_calibrator_from_artifacts(
+        labels / "manifest.json",
+        ensemble=ensemble,
+        coverage=0.8,
+        output_path=tmp_path / "calibrator.json",
+        device="cpu",
+    )
+
+    assert calibrator.trajectory_ids.tolist() == [2000]
+    assert calibrator.trajectory_scores.tolist() == [0.0]
+    assert calibrator.q_joint == 0.0

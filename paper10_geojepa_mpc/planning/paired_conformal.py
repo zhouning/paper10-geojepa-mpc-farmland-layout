@@ -1,3 +1,4 @@
+import argparse
 import hashlib
 import json
 import math
@@ -204,3 +205,189 @@ def load_joint_calibrator(path: str | Path) -> JointPairedCalibrator:
             int(value) for value in payload.get("calibration_seeds", [])
         ),
     )
+
+
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _load_label_manifest(path: str | Path) -> tuple[Path, dict[str, object]]:
+    path = Path(path)
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    expected = payload.get("manifest_digest")
+    clean = {key: value for key, value in payload.items() if key != "manifest_digest"}
+    canonical = json.dumps(
+        clean,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+    ).encode("utf-8")
+    if expected != hashlib.sha256(canonical).hexdigest():
+        raise ValueError("label manifest digest mismatch")
+    if "confirmation" in str(payload.get("partition", "")).lower():
+        raise ValueError("confirmation labels cannot fit a calibrator")
+    return path, payload
+
+
+def fit_calibrator_from_artifacts(
+    labels_manifest: str | Path,
+    *,
+    ensemble,
+    coverage: float,
+    output_path: str | Path,
+    device: str = "cpu",
+) -> JointPairedCalibrator:
+    from paper10_geojepa_mpc.planning.pcc_selector import (
+        predict_paired_ensemble_all_horizons,
+    )
+
+    manifest_path, manifest = _load_label_manifest(labels_manifest)
+    target_rows = []
+    predicted_rows = []
+    scale_rows = []
+    trajectory_rows = []
+    calibration_seeds = []
+    for artifact in manifest["artifacts"]:
+        path = manifest_path.parent / str(artifact["path"])
+        if _sha256_file(path) != artifact["sha256"]:
+            raise ValueError(f"label artifact digest mismatch: {path}")
+        with np.load(path) as data:
+            arrays = {key: data[key].copy() for key in data.files}
+        trajectory_seed = int(artifact["trajectory_seed"])
+        calibration_seeds.append(trajectory_seed)
+        if not np.all(arrays["trajectory_ids"] == trajectory_seed):
+            raise ValueError("trajectory identity mismatch in calibration labels")
+        n_states, n_candidates = arrays["actions"].shape
+        for state_index in range(n_states):
+            candidate_actions = np.asarray(
+                arrays["actions"][state_index],
+                dtype=np.int64,
+            )
+            reference_action = int(arrays["reference_actions"][state_index])
+            pool = np.asarray(
+                list(
+                    dict.fromkeys(
+                        [reference_action, *candidate_actions.astype(int).tolist()]
+                    )
+                ),
+                dtype=np.int64,
+            )
+            prediction = predict_paired_ensemble_all_horizons(
+                ensemble,
+                block_features=arrays["states_bf"][state_index],
+                neighbour_features=arrays["states_neighbor_bf"][state_index],
+                global_features=arrays["states_gf"][state_index],
+                actions=pool,
+                reference_action=reference_action,
+                device=device,
+            )
+            index_by_action = {
+                int(action): index for index, action in enumerate(prediction.actions)
+            }
+            indexes = np.asarray(
+                [index_by_action[int(action)] for action in candidate_actions],
+                dtype=np.int64,
+            )
+            target_delta = (
+                arrays["objective_returns"][state_index]
+                - arrays["reference_objective_returns"][state_index]
+            )
+            if target_delta.shape != (n_candidates, 3, 4):
+                raise ValueError("calibration objective label shape mismatch")
+            target_rows.append(target_delta)
+            predicted_rows.append(prediction.mean_delta[indexes])
+            scale_rows.append(prediction.paired_scale[indexes])
+            trajectory_rows.append(
+                np.full(n_candidates, trajectory_seed, dtype=np.int64)
+            )
+
+    target = np.concatenate(target_rows, axis=0)
+    predicted = np.concatenate(predicted_rows, axis=0)
+    scale = np.concatenate(scale_rows, axis=0)
+    trajectory_ids = np.concatenate(trajectory_rows, axis=0)
+    calibrator = fit_joint_calibrator(
+        target,
+        predicted,
+        scale,
+        trajectory_ids,
+        coverage=coverage,
+        protocol_id=str(manifest["protocol_id"]),
+        calibration_seeds=sorted(set(calibration_seeds)),
+    )
+    save_joint_calibrator(output_path, calibrator)
+    return calibrator
+
+
+def _resolve_coverage(registry, explicit: float | None, from_frozen: bool) -> float:
+    if from_frozen:
+        if explicit is not None or registry.get("status") != "frozen":
+            raise ValueError("frozen coverage requires a frozen registry and no override")
+        return float(registry["selected_config"]["joint_coverage"])
+    if explicit is None:
+        raise ValueError("--coverage is required during development")
+    declared = {float(value) for value in registry["grid"]["joint_coverage"]}
+    if float(explicit) not in declared:
+        raise ValueError("coverage is outside the declared development grid")
+    return float(explicit)
+
+
+def parse_args(argv: Sequence[str] | None = None):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--registry", required=True)
+    parser.add_argument("--labels-manifest", required=True)
+    parser.add_argument("--checkpoint-root", required=True)
+    parser.add_argument("--coverage", type=float, default=None)
+    parser.add_argument("--coverage-from-frozen-registry", action="store_true")
+    parser.add_argument("--device", default="cpu")
+    parser.add_argument("--output-dir", required=True)
+    return parser.parse_args(argv)
+
+
+def main(argv: Sequence[str] | None = None) -> None:
+    from paper10_geojepa_mpc.experiments.pcc_protocol_registry import (
+        load_registry,
+        validate_registry,
+        verify_frozen_registry,
+    )
+    from paper10_geojepa_mpc.planning.pcc_selector import load_pcc_ensemble
+
+    args = parse_args(argv)
+    registry = load_registry(args.registry)
+    validate_registry(registry)
+    if registry.get("status") == "frozen":
+        verify_frozen_registry(registry)
+    coverage = _resolve_coverage(
+        registry,
+        args.coverage,
+        args.coverage_from_frozen_registry,
+    )
+    ensemble = load_pcc_ensemble(args.checkpoint_root, device=args.device)
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    calibrator = fit_calibrator_from_artifacts(
+        args.labels_manifest,
+        ensemble=ensemble,
+        coverage=coverage,
+        output_path=output_dir / "calibrator.json",
+        device=args.device,
+    )
+    print(
+        json.dumps(
+            {
+                "coverage": calibrator.coverage,
+                "q_joint": calibrator.q_joint,
+                "n_calibration_trajectories": len(calibrator.trajectory_ids),
+                "output": str(output_dir / "calibrator.json"),
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
+if __name__ == "__main__":
+    main()
