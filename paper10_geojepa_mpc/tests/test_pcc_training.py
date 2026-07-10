@@ -3,6 +3,7 @@ from pathlib import Path
 import numpy as np
 import torch
 
+from paper10_geojepa_mpc.training import pcc_training
 from paper10_geojepa_mpc.experiments.pcc_value_labels import (
     write_label_manifest,
     write_trajectory_artifact,
@@ -205,3 +206,32 @@ def test_ensemble_members_use_distinct_seeds_and_bootstrap_membership(tmp_path):
         checkpoints[0]["bootstrap_trajectory_ids"]
         != checkpoints[1]["bootstrap_trajectory_ids"]
     )
+
+
+def test_training_streams_trajectory_artifacts_without_global_candidate_expansion(
+    tmp_path,
+    monkeypatch,
+):
+    manifest = _fixture_manifest(tmp_path / "labels")
+
+    monkeypatch.setattr(
+        pcc_training,
+        "_concatenate_datasets",
+        lambda *args, **kwargs: (_ for _ in ()).throw(
+            AssertionError("global dataset concatenation is forbidden")
+        ),
+    )
+
+    paths = train_pcc_ensemble(
+        labels_manifest=manifest,
+        model_seed=5101,
+        ensemble_size=1,
+        epochs=1,
+        batch_size=2,
+        learning_rate=0.0,
+        device="cpu",
+        output_dir=tmp_path / "checkpoints",
+        hidden_dim=8,
+    )
+
+    assert len(paths) == 1
