@@ -67,9 +67,23 @@ Use
 `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_review_response_experiment_package_2026-07-09.md`
 as the CEUS review-response algorithm experiment package. It promotes the
 20-seed `rewardtop7 margin=1.50` true-reward guard as the manuscript-facing
-primary Bishan algorithm result (72.1918 versus 65.8876 mean reward; paired
-delta 6.3041; bootstrap 95% CI 4.1401 to 8.5056; 20/20 seed wins) and demotes
-the old 5-seed value-filter result to historical descriptive anchor.
+oracle/action-audit Bishan reward evidence (72.1918 versus 65.8876 mean
+reward; paired delta 6.3041; bootstrap 95% CI 4.1401 to 8.5056; 20/20 seed
+wins) and demotes the old 5-seed value-filter result to historical descriptive
+anchor.
+
+Use
+`paper10_geojepa_mpc/experiments/results/e0_paper10_guard_information_set_audit_2026-07-09.md`
+as the guard information-set and baseline stress audit. It records that the current
+true-reward guard is an oracle/action-audit guard, not a standalone deployable
+no-oracle planner, and lists unresolved dynamic proxy/baseline rollouts.
+
+Use
+`paper10_geojepa_mpc/experiments/results/e0_paper10_proxy_guard_dynamic_baseline_audit_2026-07-09.md`
+as the 5-seed no-oracle proxy guard dynamic stress audit. It records that
+`model_reward_proxy_guard_m010` and `candidate_score_proxy_guard_m010` did not
+beat the 5-seed value-filter anchor, so proxy diagnostics must not be promoted
+to dynamic rollout superiority claims.
 
 The previous 10x12/h5 top-4 pilot remains packaged as the direct baseline. Its
 recorded 100-step seeds 0-4 mean total reward is `65.2566` with sample standard
@@ -135,6 +149,10 @@ Paper-facing writing assets are tracked under
 - `e0_paper10_ceus_baseline_inference_hardening_2026-07-06.md`
 - `e0_paper10_ceus_review_response_experiment_package_2026-07-09.md`
 - `e0_paper10_ceus_review_response_experiment_package_2026-07-09.json`
+- `e0_paper10_guard_information_set_audit_2026-07-09.md`
+- `e0_paper10_guard_information_set_audit_2026-07-09.json`
+- `e0_paper10_proxy_guard_dynamic_baseline_audit_2026-07-09.md`
+- `e0_paper10_proxy_guard_dynamic_baseline_audit_2026-07-09.json`
 - `e0_paper10_ceus_baseline_hardened_manuscript_patch_2026-07-06.md`
 - `e0_paper10_ceus_baseline_hardened_manuscript_assembly_draft_2026-07-06.md`
 - `e0_paper10_formal_output_readiness_audit_2026-07-06.md`

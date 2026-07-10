@@ -245,6 +245,18 @@ PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_MD = (
 PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_JSON = (
     RESULTS / "e0_paper10_ceus_review_response_experiment_package_2026-07-09.json"
 )
+PAPER10_GUARD_INFORMATION_SET_AUDIT_MD = (
+    RESULTS / "e0_paper10_guard_information_set_audit_2026-07-09.md"
+)
+PAPER10_GUARD_INFORMATION_SET_AUDIT_JSON = (
+    RESULTS / "e0_paper10_guard_information_set_audit_2026-07-09.json"
+)
+PAPER10_PROXY_GUARD_DYNAMIC_BASELINE_AUDIT_MD = (
+    RESULTS / "e0_paper10_proxy_guard_dynamic_baseline_audit_2026-07-09.md"
+)
+PAPER10_PROXY_GUARD_DYNAMIC_BASELINE_AUDIT_JSON = (
+    RESULTS / "e0_paper10_proxy_guard_dynamic_baseline_audit_2026-07-09.json"
+)
 PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH = (
     RESULTS / "e0_paper10_ceus_baseline_hardened_manuscript_patch_2026-07-06.md"
 )
@@ -5811,6 +5823,270 @@ def check_paper10_ceus_baseline_inference_hardening_current(root: Path) -> Check
 
 
 
+def check_paper10_guard_information_set_audit_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_GUARD_INFORMATION_SET_AUDIT_MD,
+        PAPER10_GUARD_INFORMATION_SET_AUDIT_JSON,
+        README,
+        MANIFEST,
+        DATA_AVAILABILITY,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_guard_information_set_audit_current",
+            False,
+            "missing Paper10 guard information-set audit files: " + ", ".join(missing),
+        )
+
+    audit_text = read_text(root / PAPER10_GUARD_INFORMATION_SET_AUDIT_MD)
+    try:
+        payload = json.loads(read_text(root / PAPER10_GUARD_INFORMATION_SET_AUDIT_JSON))
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_guard_information_set_audit_current",
+            False,
+            f"{PAPER10_GUARD_INFORMATION_SET_AUDIT_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    package_name = PAPER10_GUARD_INFORMATION_SET_AUDIT_MD.name
+    for doc in (README, MANIFEST, DATA_AVAILABILITY):
+        if package_name not in read_text(root / doc):
+            missing_tokens.append(f"{doc}: {package_name}")
+
+    required_text_tokens = [
+        "Paper10 guard information-set and baseline stress audit",
+        "Status: guard_information_set_and_baseline_stress_audit",
+        "oracle/action-audit guard",
+        "not a standalone deployable no-oracle planner",
+        "model_reward_top1_proxy",
+        "candidate_score_top1_proxy",
+        "executable_random_20seed_rollout",
+        "Do not claim proxy-guard rollout superiority.",
+        "Do not claim the dynamic baseline suite is complete.",
+    ]
+    for token in required_text_tokens:
+        if token not in audit_text:
+            missing_tokens.append(f"{PAPER10_GUARD_INFORMATION_SET_AUDIT_MD}: {token}")
+
+    expected_values = {
+        ("status",): "guard_information_set_and_baseline_stress_audit",
+        ("source_boundary", "reran_training"): False,
+        ("source_boundary", "reran_rollouts"): False,
+        ("source_boundary", "new_dynamic_rollout_baselines"): False,
+        ("source_boundary", "statewise_reanalysis_only"): True,
+        ("information_set_boundary", "allowed_primary_role"): "oracle/action-audit guard",
+        ("information_set_boundary", "deployable_without_reward_oracle"): False,
+        ("information_set_boundary", "primary_guard_information_set"): "privileged_immediate_true_reward_action_audit",
+        ("statewise_audit_summary", "audited_states"): 2000,
+        ("statewise_audit_summary", "switches"): 172,
+        ("claim_gates", "true_reward_guard_deployable_without_oracle"): False,
+        ("claim_gates", "proxy_guard_rollout_superiority_supported"): False,
+        ("claim_gates", "dynamic_baseline_suite_complete"): False,
+        ("claim_gates", "manuscript_should_call_guard_oracle_action_audit"): True,
+    }
+    for path_keys, expected in expected_values.items():
+        value = payload
+        for key in path_keys:
+            if not isinstance(value, dict) or key not in value:
+                missing_tokens.append(
+                    f"{PAPER10_GUARD_INFORMATION_SET_AUDIT_JSON}: {'.'.join(path_keys)}"
+                )
+                value = None
+                break
+            value = value[key]
+        if value != expected:
+            missing_tokens.append(
+                f"{PAPER10_GUARD_INFORMATION_SET_AUDIT_JSON}: "
+                f"{'.'.join(path_keys)}={value}"
+            )
+
+    missing_baselines = set(payload.get("missing_dynamic_baselines", []))
+    for baseline in [
+        "executable_random_20seed_rollout",
+        "greedy_immediate_true_reward_20seed_rollout",
+        "rank_only_or_no_value_20seed_rollout",
+        "model_reward_proxy_guard_20seed_rollout",
+        "candidate_score_proxy_guard_20seed_rollout",
+        "full_valid_action_oracle_upper_bound_20seed_rollout",
+    ]:
+        if baseline not in missing_baselines:
+            missing_tokens.append(
+                f"{PAPER10_GUARD_INFORMATION_SET_AUDIT_JSON}: missing baseline {baseline}"
+            )
+
+    one_step = payload.get("one_step_policy_diagnostics", {})
+    selected = one_step.get("selected_value_filter", {})
+    model_proxy = one_step.get("model_reward_top1_proxy", {})
+    candidate_proxy = one_step.get("candidate_score_top1_proxy", {})
+    if float(model_proxy.get("mean_delta_vs_selected", 0.0)) <= 0.0:
+        missing_tokens.append(
+            f"{PAPER10_GUARD_INFORMATION_SET_AUDIT_JSON}: model proxy one-step delta"
+        )
+    if float(candidate_proxy.get("mean_delta_vs_selected", 0.0)) <= 0.0:
+        missing_tokens.append(
+            f"{PAPER10_GUARD_INFORMATION_SET_AUDIT_JSON}: candidate proxy one-step delta"
+        )
+    if selected.get("diagnostic_scope") != "statewise immediate action audit, not dynamic rollout":
+        missing_tokens.append(
+            f"{PAPER10_GUARD_INFORMATION_SET_AUDIT_JSON}: selected diagnostic scope"
+        )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_guard_information_set_audit_current",
+            False,
+            "Paper10 guard information-set audit gaps: " + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_guard_information_set_audit_current",
+        True,
+        "Paper10 guard information-set audit is current and oracle-bounded",
+    )
+
+def check_paper10_proxy_guard_dynamic_baseline_audit_current(root: Path) -> CheckResult:
+    required_files = [
+        PAPER10_PROXY_GUARD_DYNAMIC_BASELINE_AUDIT_MD,
+        PAPER10_PROXY_GUARD_DYNAMIC_BASELINE_AUDIT_JSON,
+        README,
+        MANIFEST,
+        DATA_AVAILABILITY,
+    ]
+    missing = [str(path) for path in required_files if not (root / path).exists()]
+    if missing:
+        return CheckResult(
+            "paper10_proxy_guard_dynamic_baseline_audit_current",
+            False,
+            "missing Paper10 proxy guard dynamic baseline audit files: "
+            + ", ".join(missing),
+        )
+
+    audit_text = read_text(root / PAPER10_PROXY_GUARD_DYNAMIC_BASELINE_AUDIT_MD)
+    try:
+        payload = json.loads(
+            read_text(root / PAPER10_PROXY_GUARD_DYNAMIC_BASELINE_AUDIT_JSON)
+        )
+    except json.JSONDecodeError as exc:
+        return CheckResult(
+            "paper10_proxy_guard_dynamic_baseline_audit_current",
+            False,
+            f"{PAPER10_PROXY_GUARD_DYNAMIC_BASELINE_AUDIT_JSON}: invalid JSON: {exc}",
+        )
+
+    missing_tokens = []
+    package_name = PAPER10_PROXY_GUARD_DYNAMIC_BASELINE_AUDIT_MD.name
+    for doc in (README, MANIFEST, DATA_AVAILABILITY):
+        if package_name not in read_text(root / doc):
+            missing_tokens.append(f"{doc}: {package_name}")
+
+    required_text_tokens = [
+        "Paper10 proxy guard dynamic baseline stress audit",
+        "Status: proxy_guard_dynamic_baseline_stress_audit",
+        "value_filter_5seed_anchor",
+        "model_reward_proxy_guard_m010",
+        "candidate_score_proxy_guard_m010",
+        "65.2734",
+        "63.4116",
+        "Do not claim proxy-guard rollout superiority.",
+        "Do not present the true-reward guard as a deployable no-oracle policy.",
+    ]
+    for token in required_text_tokens:
+        if token not in audit_text:
+            missing_tokens.append(
+                f"{PAPER10_PROXY_GUARD_DYNAMIC_BASELINE_AUDIT_MD}: {token}"
+            )
+
+    expected_values = {
+        ("status",): "proxy_guard_dynamic_baseline_stress_audit",
+        ("source_boundary", "reran_training"): False,
+        ("source_boundary", "reran_rollouts"): True,
+        ("source_boundary", "new_dynamic_rollout_baselines"): True,
+        ("source_boundary", "scope"): "5-seed no-oracle proxy guard stress test, not 20-seed confirmation",
+        ("claim_gates", "model_reward_proxy_beats_value_filter_5seed_mean"): False,
+        ("claim_gates", "candidate_score_proxy_beats_value_filter_5seed_mean"): False,
+        ("claim_gates", "no_oracle_proxy_guard_superiority_supported"): False,
+        ("claim_gates", "proxy_guard_20seed_confirmation_complete"): False,
+        ("claim_gates", "true_reward_guard_remains_oracle_action_audit"): True,
+        ("claim_gates", "manuscript_should_not_promote_proxy_guard"): True,
+    }
+    for path_keys, expected in expected_values.items():
+        value = payload
+        for key in path_keys:
+            if not isinstance(value, dict) or key not in value:
+                missing_tokens.append(
+                    f"{PAPER10_PROXY_GUARD_DYNAMIC_BASELINE_AUDIT_JSON}: "
+                    f"{'.'.join(path_keys)}"
+                )
+                value = None
+                break
+            value = value[key]
+        if value != expected:
+            missing_tokens.append(
+                f"{PAPER10_PROXY_GUARD_DYNAMIC_BASELINE_AUDIT_JSON}: "
+                f"{'.'.join(path_keys)}={value}"
+            )
+
+    anchor = payload.get("value_filter_anchor", {})
+    if abs(float(anchor.get("total_reward_mean", 0.0)) - 69.47054604253474) > 1e-8:
+        missing_tokens.append(
+            f"{PAPER10_PROXY_GUARD_DYNAMIC_BASELINE_AUDIT_JSON}: value-filter mean"
+        )
+
+    proxy_rows = {
+        row.get("policy_label"): row
+        for row in payload.get("proxy_guard_rollouts", [])
+        if isinstance(row, dict)
+    }
+    expected_proxy_rows = {
+        "model_reward_proxy_guard_m010": {
+            "total_reward_mean": 65.2734437835953,
+            "delta_vs_value_filter_5seed_mean": -4.197102258939438,
+            "switches": 99,
+            "switch_rate": 0.198,
+            "beats_value_filter_5seed_mean": False,
+        },
+        "candidate_score_proxy_guard_m010": {
+            "total_reward_mean": 63.41162026645615,
+            "delta_vs_value_filter_5seed_mean": -6.058925776078588,
+            "switches": 98,
+            "switch_rate": 0.196,
+            "beats_value_filter_5seed_mean": False,
+        },
+    }
+    for label, expected_row in expected_proxy_rows.items():
+        row = proxy_rows.get(label)
+        if not isinstance(row, dict):
+            missing_tokens.append(
+                f"{PAPER10_PROXY_GUARD_DYNAMIC_BASELINE_AUDIT_JSON}: {label}"
+            )
+            continue
+        for key, expected in expected_row.items():
+            value = row.get(key)
+            if isinstance(expected, float):
+                if not isinstance(value, (int, float)) or abs(float(value) - expected) > 1e-8:
+                    missing_tokens.append(
+                        f"{PAPER10_PROXY_GUARD_DYNAMIC_BASELINE_AUDIT_JSON}: "
+                        f"{label}.{key}={value}"
+                    )
+            elif value != expected:
+                missing_tokens.append(
+                    f"{PAPER10_PROXY_GUARD_DYNAMIC_BASELINE_AUDIT_JSON}: "
+                    f"{label}.{key}={value}"
+                )
+
+    if missing_tokens:
+        return CheckResult(
+            "paper10_proxy_guard_dynamic_baseline_audit_current",
+            False,
+            "Paper10 proxy guard dynamic baseline audit gaps: "
+            + " | ".join(missing_tokens),
+        )
+    return CheckResult(
+        "paper10_proxy_guard_dynamic_baseline_audit_current",
+        True,
+        "Paper10 proxy guard dynamic baseline audit is current and negative-bounded",
+    )
 def check_paper10_ceus_review_response_experiment_package_current(root: Path) -> CheckResult:
     required_files = [
         PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_MD,
@@ -5866,6 +6142,8 @@ def check_paper10_ceus_review_response_experiment_package_current(root: Path) ->
         "diagnostic sign-test p=1.0000",
         "reward_primary_secondary_mixed",
         "monitor gate as evidence control",
+        "Primary Oracle Action-Audit Reward Evidence",
+        "submission_story_should_use_guard_as_oracle_action_audit_evidence",
         "Do not claim uniform secondary-metric improvement.",
         "Do not claim direct 50-state Bishan scale-up success.",
         "Do not claim robust Bishan-to-Dongxing transfer superiority.",
@@ -5904,7 +6182,10 @@ def check_paper10_ceus_review_response_experiment_package_current(root: Path) ->
         ("claim_gates", "monitor_gate_online_reward_gain_supported"): False,
         ("claim_gates", "direct_50state_scaleup_supported"): False,
         ("claim_gates", "robust_transfer_superiority_supported"): False,
-        ("claim_gates", "submission_story_should_use_guard_as_primary"): True,
+        ("claim_gates", "submission_story_should_use_guard_as_primary"): False,
+        ("claim_gates", "submission_story_should_use_guard_as_oracle_action_audit_evidence"): True,
+        ("claim_gates", "primary_guard_promoted_to_main_algorithm_candidate"): False,
+        ("claim_gates", "primary_guard_recorded_as_oracle_action_audit_reward_evidence"): True,
     }
     for path_keys, expected in expected_values.items():
         value = payload
@@ -7367,7 +7648,7 @@ CEUS_CLEAN_MANUSCRIPT_INTERNAL_SECTIONS = (
 
 CEUS_CLEAN_MANUSCRIPT_DATA_AVAILABILITY_TOKENS = (
     "4open README.md direct link",
-    "92a10620d8832bacae4fbeda1fdb5708b265d139",
+    "b5457460e747cc320e2246dbfcd30e082851c01a",
     "Apache-2.0",
     "CC0-1.0",
     "full Bishan Tool2",
@@ -7391,12 +7672,12 @@ CEUS_CLEAN_MANUSCRIPT_PENDING_AUTHOR_SECTIONS = (
 
 CEUS_CLEAN_MANUSCRIPT_REQUIRED_CAPTIONS = (
     "Figure 1. Monitor-gated GeoJEPA-MPC workflow for farmland layout planning",
-    "Figure 2. Bishan 20x16/top5 true-reward margin guard result",
+    "Figure 2. Bishan 20x16/top5 oracle action-audit guard result",
     "Figure 3. Bishan Stage 3 boundary rows and candidate-score sweep",
     "Figure 4. Dongxing/Neijiang return-label scaling",
     "Supplementary Figure S1. Dongxing/Neijiang low-label transfer stress test",
     "Table 1. Bishan monitor-selected value-label gates",
-    "Table 2. Bishan 20-seed true-reward margin guard and legacy value-filter anchor",
+    "Table 2. Bishan 20-seed oracle action-audit guard and legacy value-filter anchor",
     "Table 3. Dongxing/Neijiang return-label scaling summary",
     "Supplementary Table S1. Stage 3 seed-level rollout rewards",
     "Supplementary Table S2. Dongxing/Neijiang low-label transfer stress-test summary",
@@ -7473,7 +7754,7 @@ def check_paper10_ceus_clean_main_manuscript_draft_current(root: Path) -> CheckR
             )
 
     required_tokens = [
-        "Status: clean CEUS main-manuscript draft, updated by the 2026-07-09 CEUS policy verification for bounded formal submission",
+        "Status: clean CEUS main-manuscript draft, updated by the 2026-07-09 CEUS policy verification, guard information-set audit and proxy guard dynamic baseline stress audit for bounded formal submission",
         "Source assembly: `e0_paper10_ceus_baseline_hardened_manuscript_assembly_draft_2026-07-06.md`",
         "## Title page",
         "## Highlights",
@@ -7491,7 +7772,7 @@ def check_paper10_ceus_clean_main_manuscript_draft_current(root: Path) -> CheckR
         "## Clean-draft boundary",
         "suitable for formal CEUS submission as a bounded manuscript package",
         "4open README.md direct link",
-        "92a10620d8832bacae4fbeda1fdb5708b265d139",
+        "b5457460e747cc320e2246dbfcd30e082851c01a",
         "Apache-2.0",
         "CC0-1.0",
         "DLTB-leakage check evidence",
@@ -7501,8 +7782,13 @@ def check_paper10_ceus_clean_main_manuscript_draft_current(root: Path) -> CheckR
         "Pending author decision",
         "diagnostic-only two-sided sign-test readout was 1.0000",
         "e0_paper10_ceus_review_response_experiment_package_2026-07-09",
+        "e0_paper10_guard_information_set_audit_2026-07-09",
+        "e0_paper10_proxy_guard_dynamic_baseline_audit_2026-07-09",
         "20-seed rewardtop7 true-reward margin guard",
+        "oracle/action-audit reward evidence",
+        "not as a standalone no-oracle planner",
         "true-reward margin guard reached 72.1918 mean reward",
+        "model-reward and candidate-score proxy guards reached 65.2734 and 63.4116 mean reward",
         "bootstrap 95% CI 4.1401 to 8.5056",
         "does not support a claim that the value filter improved every seed or established inferential superiority",
         "not broad scale-up, transfer superiority or operational cadastral deployment",
@@ -8730,6 +9016,8 @@ CHECKS: tuple[Callable[[Path], CheckResult], ...] = (
     check_paper10_real_env_longhorizon_confirmatory_audit_current,
     check_paper10_ceus_baseline_inference_hardening_current,
     check_paper10_ceus_review_response_experiment_package_current,
+    check_paper10_guard_information_set_audit_current,
+    check_paper10_proxy_guard_dynamic_baseline_audit_current,
     check_paper10_true_reward_guard_readiness_current,
     check_paper10_post_guard_experiment_closure_refresh_current,
     check_paper10_author_decision_closeout_form_current,

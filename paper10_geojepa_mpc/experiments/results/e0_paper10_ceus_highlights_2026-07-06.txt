@@ -1,5 +1,5 @@
 Monitor gates control value-label escalation for farmland layout planning.
-True-reward guard is the primary Bishan algorithm result.
-Bishan guard wins 20/20 seeds with positive bootstrap CI.
+Oracle action-audit guard bounds the Bishan primary reward evidence.
+No-oracle proxy guards failed to beat the 5-seed value-filter anchor.
 Old 5-seed value-filter anchor remains descriptive background.
 Stage 3 and Dongxing tests define scale and calibration boundaries.

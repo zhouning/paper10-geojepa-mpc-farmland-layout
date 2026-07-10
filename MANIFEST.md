@@ -115,11 +115,22 @@ data needed for smoke verification.
   machine-readable source for the true-reward guard readiness preflight check.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_review_response_experiment_package_2026-07-09.md`:
   CEUS review-response algorithm experiment package promoting the 20-seed
-  `rewardtop7 margin=1.50` true-reward guard as the primary Bishan algorithm
-  evidence and demoting the old 5-seed value-filter result to descriptive
-  background.
+  `rewardtop7 margin=1.50` true-reward guard as oracle/action-audit Bishan
+  reward evidence and demoting the old 5-seed value-filter result to
+  descriptive background.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_review_response_experiment_package_2026-07-09.json`:
   machine-readable source for the CEUS review-response experiment preflight check.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_guard_information_set_audit_2026-07-09.md`:
+  guard information-set and baseline stress audit recording that the current
+  true-reward guard is an oracle/action-audit guard, not a standalone deployable
+  no-oracle planner, and listing unresolved dynamic proxy/baseline rollouts.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_guard_information_set_audit_2026-07-09.json`:
+  machine-readable source for the guard information-set audit preflight check.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_proxy_guard_dynamic_baseline_audit_2026-07-09.md`:
+  5-seed no-oracle proxy guard dynamic stress audit showing that model-reward
+  and candidate-score proxy guards did not beat the 5-seed value-filter anchor.
+- `paper10_geojepa_mpc/experiments/results/e0_paper10_proxy_guard_dynamic_baseline_audit_2026-07-09.json`:
+  machine-readable source for the proxy guard dynamic stress audit.
 - `paper10_geojepa_mpc/experiments/results/e0_paper10_public_release_rights_gate_2026-07-09.md`:
   current public-release rights gate recording Apache-2.0 for code, CC0-1.0
   for generated non-DLTB data/model artifacts, confidential_no_external_access

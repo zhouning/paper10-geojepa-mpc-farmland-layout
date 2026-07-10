@@ -15,6 +15,8 @@ from scripts.paper10.preflight_submission_checks import (
     check_citation_keys_resolve,
     check_paper10_ceus_baseline_inference_hardening_current,
     check_paper10_ceus_review_response_experiment_package_current,
+    check_paper10_guard_information_set_audit_current,
+    check_paper10_proxy_guard_dynamic_baseline_audit_current,
     check_paper10_author_decision_closeout_form_current,
     check_paper10_post_guard_experiment_closure_refresh_current,
     check_paper10_post_guard_submission_readiness_refresh_current,
@@ -73,6 +75,10 @@ from scripts.paper10.preflight_submission_checks import (
     PAPER10_CEUS_BASELINE_HARDENING_JSON,
     PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_MD,
     PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_JSON,
+    PAPER10_GUARD_INFORMATION_SET_AUDIT_MD,
+    PAPER10_GUARD_INFORMATION_SET_AUDIT_JSON,
+    PAPER10_PROXY_GUARD_DYNAMIC_BASELINE_AUDIT_MD,
+    PAPER10_PROXY_GUARD_DYNAMIC_BASELINE_AUDIT_JSON,
     PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH,
     PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_ASSEMBLY_DRAFT,
     PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT,
@@ -197,6 +203,10 @@ MINIMAL_PREFLIGHT_FIXTURE_FILES = (
     PAPER10_CEUS_BASELINE_HARDENING_JSON,
     PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_MD,
     PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_JSON,
+    PAPER10_GUARD_INFORMATION_SET_AUDIT_MD,
+    PAPER10_GUARD_INFORMATION_SET_AUDIT_JSON,
+    PAPER10_PROXY_GUARD_DYNAMIC_BASELINE_AUDIT_MD,
+    PAPER10_PROXY_GUARD_DYNAMIC_BASELINE_AUDIT_JSON,
     PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_PATCH,
     PAPER10_CEUS_BASELINE_HARDENED_MANUSCRIPT_ASSEMBLY_DRAFT,
     PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT,
@@ -378,6 +388,8 @@ def test_submission_preflight_cli_passes_current_repository():
     assert "paper10_real_env_longhorizon_confirmatory_audit_current" in payload["passed_checks"]
     assert "paper10_ceus_baseline_inference_hardening_current" in payload["passed_checks"]
     assert "paper10_ceus_review_response_experiment_package_current" in payload["passed_checks"]
+    assert "paper10_guard_information_set_audit_current" in payload["passed_checks"]
+    assert "paper10_proxy_guard_dynamic_baseline_audit_current" in payload["passed_checks"]
     assert "paper10_ceus_clean_main_manuscript_draft_current" in payload["passed_checks"]
     assert "paper10_true_reward_guard_readiness_current" in payload["passed_checks"]
     assert "paper10_post_guard_experiment_closure_refresh_current" in payload["passed_checks"]
@@ -1262,7 +1274,7 @@ def test_ceus_clean_main_manuscript_draft_records_current_rights_and_reviewer_li
     assert "Apache-2.0" in data_availability
     assert "CC0-1.0" in data_availability
     assert "https://anonymous.4open.science/r/geojepa-mpc-farmland-layout-8552/README.md" in data_availability
-    assert "92a10620d8832bacae4fbeda1fdb5708b265d139" in data_availability
+    assert "b5457460e747cc320e2246dbfcd30e082851c01a" in data_availability
     assert "software licence and generated-output rights terms remain pending" not in data_availability
     assert "repository DOI or anonymous reviewer link is pending" not in data_availability
 
@@ -1276,6 +1288,7 @@ def test_ceus_clean_main_manuscript_draft_references_policy_verification_packet(
 
     assert "e0_paper10_ceus_submission_policy_verification_2026-07-09" in data_availability
     assert "cannot be provided externally" in data_availability
+    assert "e0_paper10_proxy_guard_dynamic_baseline_audit_2026-07-09" in data_availability
     assert "no request-based route for raw DLTB" in data_availability
     assert "available upon request" not in data_availability.lower()
 
@@ -2486,6 +2499,65 @@ def test_submission_preflight_minimal_fixture_reports_missing_ceus_review_respon
     assert str(PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_MD) in details
 
 
+
+
+def test_guard_information_set_audit_preflight_rejects_deployable_oracle_claim(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    path = fixture / PAPER10_GUARD_INFORMATION_SET_AUDIT_JSON
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["information_set_boundary"]["deployable_without_reward_oracle"] = True
+    payload["claim_gates"]["true_reward_guard_deployable_without_oracle"] = True
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+
+    result = check_paper10_guard_information_set_audit_current(fixture)
+
+    assert result.name == "paper10_guard_information_set_audit_current"
+    assert result.ok is False
+    assert "true_reward_guard_deployable_without_oracle" in result.details
+
+
+def test_guard_information_set_audit_preflight_requires_missing_baseline_list(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    path = fixture / PAPER10_GUARD_INFORMATION_SET_AUDIT_JSON
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["missing_dynamic_baselines"].remove("executable_random_20seed_rollout")
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+
+    result = check_paper10_guard_information_set_audit_current(fixture)
+
+    assert result.name == "paper10_guard_information_set_audit_current"
+    assert result.ok is False
+    assert "executable_random_20seed_rollout" in result.details
+
+def test_proxy_guard_dynamic_baseline_preflight_rejects_positive_proxy_gate(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    path = fixture / PAPER10_PROXY_GUARD_DYNAMIC_BASELINE_AUDIT_JSON
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["claim_gates"]["no_oracle_proxy_guard_superiority_supported"] = True
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+
+    result = check_paper10_proxy_guard_dynamic_baseline_audit_current(fixture)
+
+    assert result.name == "paper10_proxy_guard_dynamic_baseline_audit_current"
+    assert result.ok is False
+    assert "no_oracle_proxy_guard_superiority_supported" in result.details
+
+
+def test_proxy_guard_dynamic_baseline_preflight_rejects_inflated_proxy_mean(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    path = fixture / PAPER10_PROXY_GUARD_DYNAMIC_BASELINE_AUDIT_JSON
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["proxy_guard_rollouts"][0]["total_reward_mean"] = 70.0
+    payload["proxy_guard_rollouts"][0]["beats_value_filter_5seed_mean"] = True
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+
+    result = check_paper10_proxy_guard_dynamic_baseline_audit_current(fixture)
+
+    assert result.name == "paper10_proxy_guard_dynamic_baseline_audit_current"
+    assert result.ok is False
+    assert "model_reward_proxy_guard_m010.total_reward_mean" in result.details
+    assert "model_reward_proxy_guard_m010.beats_value_filter_5seed_mean" in result.details
+
 def test_ceus_review_response_package_preflight_rejects_legacy_anchor_as_primary(tmp_path):
     fixture = copy_minimal_preflight_fixture(tmp_path)
     path = fixture / PAPER10_CEUS_REVIEW_RESPONSE_EXPERIMENT_PACKAGE_JSON
@@ -2516,3 +2588,21 @@ def test_ceus_clean_main_manuscript_draft_preflight_requires_guard_primary_resul
     assert result.name == "paper10_ceus_clean_main_manuscript_draft_current"
     assert result.ok is False
     assert "true-reward margin guard reached 72.1918 mean reward" in result.details
+
+
+def test_ceus_clean_main_manuscript_draft_preflight_requires_proxy_guard_boundary(tmp_path):
+    fixture = copy_minimal_preflight_fixture(tmp_path)
+    draft = fixture / PAPER10_CEUS_CLEAN_MAIN_MANUSCRIPT_DRAFT
+    draft.write_text(
+        draft.read_text(encoding="utf-8").replace(
+            "model-reward and candidate-score proxy guards reached 65.2734 and 63.4116 mean reward",
+            "proxy guards reached manuscript-ready rollout superiority",
+        ),
+        encoding="utf-8",
+    )
+
+    result = preflight_checks.check_paper10_ceus_clean_main_manuscript_draft_current(fixture)
+
+    assert result.name == "paper10_ceus_clean_main_manuscript_draft_current"
+    assert result.ok is False
+    assert "65.2734 and 63.4116" in result.details

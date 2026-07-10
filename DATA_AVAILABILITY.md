@@ -145,10 +145,26 @@ paper10_geojepa_mpc/experiments/results/e0_paper10_true_reward_guard_readiness_2
 ```
 
 For the CEUS review-response algorithm experiment package that promotes the
-20-seed true-reward guard as the manuscript-facing primary Bishan result, see:
+20-seed true-reward guard as manuscript-facing oracle/action-audit Bishan
+reward evidence, see:
 
 ```text
 paper10_geojepa_mpc/experiments/results/e0_paper10_ceus_review_response_experiment_package_2026-07-09.md
+```
+
+For the guard information-set and baseline stress audit that bounds the current
+true-reward guard as an oracle/action-audit guard and records unresolved dynamic
+proxy/baseline rollout risks, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_guard_information_set_audit_2026-07-09.md
+```
+
+For the 5-seed no-oracle proxy guard dynamic stress audit showing that model-reward
+and candidate-score proxy guards did not beat the 5-seed value-filter anchor, see:
+
+```text
+paper10_geojepa_mpc/experiments/results/e0_paper10_proxy_guard_dynamic_baseline_audit_2026-07-09.md
 ```
 
 This algorithm-readiness and review-response boundary does not close repository DOI, licence,

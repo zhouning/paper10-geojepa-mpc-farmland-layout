@@ -1,0 +1,161 @@
+{
+  "allowed_language": [
+    "oracle/action-audit guard",
+    "statewise immediate proxy diagnostic",
+    "not a standalone deployable no-oracle planner",
+    "dynamic proxy-guard rollout remains future work"
+  ],
+  "blocked_language": [
+    "deployable true-reward guard without oracle access",
+    "proxy guard rollout superiority",
+    "complete dynamic baseline suite",
+    "true-reward guard proves learned planner superiority"
+  ],
+  "claim_gates": {
+    "dynamic_baseline_suite_complete": false,
+    "manuscript_should_call_guard_oracle_action_audit": true,
+    "oracle_upper_bound_statewise_supported": true,
+    "proxy_guard_rollout_superiority_supported": false,
+    "statewise_proxy_screening_supported": true,
+    "true_reward_guard_deployable_without_oracle": false
+  },
+  "completed_dynamic_baselines": [
+    "value_filter_20seed_rollout",
+    "true_reward_margin_guard_20seed_rollout",
+    "dual7x7_true_reward_guard_diagnostic"
+  ],
+  "date": "2026-07-09",
+  "information_set_boundary": {
+    "allowed_primary_role": "oracle/action-audit guard",
+    "deployable_without_reward_oracle": false,
+    "not_allowed_primary_role": "standalone deployable no-oracle planner",
+    "primary_guard_information_set": "privileged_immediate_true_reward_action_audit",
+    "review_risk": "CEUS reviewers may treat the current guard as privileged simulator/reward access unless a learned or operational proxy guard is evaluated under the same rollout protocol."
+  },
+  "missing_dynamic_baselines": [
+    "executable_random_20seed_rollout",
+    "greedy_immediate_true_reward_20seed_rollout",
+    "rank_only_or_no_value_20seed_rollout",
+    "model_reward_proxy_guard_20seed_rollout",
+    "candidate_score_proxy_guard_20seed_rollout",
+    "full_valid_action_oracle_upper_bound_20seed_rollout"
+  ],
+  "one_step_policy_diagnostics": {
+    "audit_true_best_upper_bound": {
+      "action_change_rate": 0.939,
+      "diagnostic_scope": "statewise immediate action audit, not dynamic rollout",
+      "improves_selected_rate": 0.939,
+      "mean_delta_vs_selected": 0.8904121200617146,
+      "mean_true_reward": 1.3002508578625096,
+      "policy": "audit_true_best_upper_bound",
+      "ties_selected_rate": 0.061,
+      "true_best_match_rate": 1.0,
+      "worse_than_selected_rate": 0.0
+    },
+    "candidate_score_top1_proxy": {
+      "action_change_rate": 0.9495,
+      "diagnostic_scope": "statewise immediate action audit, not dynamic rollout",
+      "improves_selected_rate": 0.636,
+      "mean_delta_vs_selected": 0.22690720453930502,
+      "mean_true_reward": 0.6367459423401001,
+      "policy": "candidate_score_top1_proxy",
+      "ties_selected_rate": 0.0505,
+      "true_best_match_rate": 0.176,
+      "worse_than_selected_rate": 0.3135
+    },
+    "margin_true_reward_guard_executed": {
+      "diagnostic_scope": "statewise immediate action audit, not dynamic rollout",
+      "improves_selected_rate": 0.086,
+      "mean_delta_vs_selected": 0.3120791156311936,
+      "mean_true_reward": 0.7219178534319887,
+      "oracle_dependency": "uses immediate true reward over the audit action set",
+      "policy": "margin_true_reward_guard_executed",
+      "switch_rate": 0.086
+    },
+    "model_reward_top1_proxy": {
+      "action_change_rate": 0.95,
+      "diagnostic_scope": "statewise immediate action audit, not dynamic rollout",
+      "improves_selected_rate": 0.617,
+      "mean_delta_vs_selected": 0.20853797616136005,
+      "mean_true_reward": 0.6183767139621551,
+      "policy": "model_reward_top1_proxy",
+      "ties_selected_rate": 0.05,
+      "true_best_match_rate": 0.1585,
+      "worse_than_selected_rate": 0.333
+    },
+    "selected_value_filter": {
+      "action_change_rate": 0.0,
+      "diagnostic_scope": "statewise immediate action audit, not dynamic rollout",
+      "improves_selected_rate": 0.0,
+      "mean_delta_vs_selected": 0.0,
+      "mean_true_reward": 0.40983873780079505,
+      "policy": "selected_value_filter",
+      "ties_selected_rate": 1.0,
+      "true_best_match_rate": 0.0,
+      "worse_than_selected_rate": 0.0
+    }
+  },
+  "proxy_score_gap_diagnostics": {
+    "candidate_score_margin_guard_inputs": {
+      "available": false,
+      "mean_score_gap_vs_selected": 0.0,
+      "positive_gap_rate": 0.0,
+      "states_with_scores": 0
+    },
+    "model_reward_margin_guard_inputs": {
+      "available": false,
+      "mean_score_gap_vs_selected": 0.0,
+      "positive_gap_rate": 0.0,
+      "states_with_scores": 0
+    }
+  },
+  "source_boundary": {
+    "new_dynamic_rollout_baselines": false,
+    "reran_rollouts": false,
+    "reran_training": false,
+    "source": "tracked action-audit rollout rows",
+    "statewise_reanalysis_only": true
+  },
+  "source_files": {
+    "audit_rollout_json": "paper10_geojepa_mpc/experiments/results/e0_bishan_20x16_top5_true_reward_margin_guard_m150_audit_rewardtop7_blend010_seeds0-19_100step_2026-07-07.json"
+  },
+  "statewise_audit_summary": {
+    "audit_true_best_in_candidate_topk_rate": 0.9715,
+    "audit_true_best_in_model_reward_topk_rate": 0.971,
+    "audited_states": 2000,
+    "configured_steps": 100,
+    "execution_policy": "margin_true_reward_guard",
+    "mean_audited_actions": 7.7605,
+    "mean_true_reward_time_sec": 0.4452338695497019,
+    "mean_valid_actions": 2285.4405,
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "selected_is_audit_true_best_rate": 0.061,
+    "selected_true_reward_regret_mean": 0.8904121200617146,
+    "switch_rate": 0.086,
+    "switches": 172,
+    "total_true_reward_time_sec": 890.4677390994038,
+    "true_reward_switch_margin": 1.5
+  },
+  "status": "guard_information_set_and_baseline_stress_audit"
+}

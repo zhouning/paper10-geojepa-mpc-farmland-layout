@@ -53,7 +53,11 @@ def test_action_audit_metrics_reports_selected_true_reward_regret_and_ranks():
     assert metrics["selected_true_reward_rank"] == 4
     assert metrics["selected_is_audit_true_best"] == 0.0
     assert metrics["model_reward_top1_action"] == 22
+    assert metrics["model_reward_top1_model_reward_score"] == 0.9
+    assert metrics["model_reward_top1_candidate_score"] == 0.2
     assert metrics["candidate_top1_action"] == 23
+    assert metrics["candidate_top1_candidate_score"] == 0.95
+    assert metrics["candidate_top1_model_reward_score"] == 0.8
     assert metrics["audit_true_best_in_model_reward_topk"] == 0.0
     assert metrics["audit_true_best_in_candidate_topk"] == 1.0
 
@@ -90,4 +94,49 @@ def test_choose_execution_action_supports_margin_true_reward_guard():
             true_reward_switch_margin=1.0,
         )
         == 21
+    )
+
+
+def test_choose_execution_action_supports_no_oracle_proxy_margin_guards():
+    metrics = {
+        "selected_action": 22,
+        "selected_model_reward_score": 0.2,
+        "selected_candidate_score": 0.4,
+        "model_reward_top1_action": 21,
+        "model_reward_top1_model_reward_score": 0.9,
+        "candidate_top1_action": 23,
+        "candidate_top1_candidate_score": 0.65,
+    }
+
+    assert (
+        choose_execution_action(
+            metrics,
+            "model_reward_margin_guard",
+            true_reward_switch_margin=0.8,
+        )
+        == 22
+    )
+    assert (
+        choose_execution_action(
+            metrics,
+            "model_reward_margin_guard",
+            true_reward_switch_margin=0.5,
+        )
+        == 21
+    )
+    assert (
+        choose_execution_action(
+            metrics,
+            "candidate_score_margin_guard",
+            true_reward_switch_margin=0.3,
+        )
+        == 22
+    )
+    assert (
+        choose_execution_action(
+            metrics,
+            "candidate_score_margin_guard",
+            true_reward_switch_margin=0.2,
+        )
+        == 23
     )

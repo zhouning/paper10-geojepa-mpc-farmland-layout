@@ -1,0 +1,130 @@
+{
+  "claim_gates": {
+    "candidate_score_proxy_beats_value_filter_5seed_mean": false,
+    "manuscript_should_not_promote_proxy_guard": true,
+    "model_reward_proxy_beats_value_filter_5seed_mean": false,
+    "no_oracle_proxy_guard_superiority_supported": false,
+    "proxy_guard_20seed_confirmation_complete": false,
+    "true_reward_guard_remains_oracle_action_audit": true
+  },
+  "date": "2026-07-09",
+  "interpretation": {
+    "allowed_language": [
+      "5-seed proxy guard stress test",
+      "no-oracle proxy guards did not improve the 5-seed value-filter anchor",
+      "statewise proxy diagnostics do not establish dynamic rollout superiority"
+    ],
+    "blocked_language": [
+      "proxy guard rollout superiority",
+      "deployable proxy guard is the primary algorithm",
+      "true-reward guard is validated as a no-oracle policy"
+    ],
+    "summary": "The tested no-oracle score-margin proxy guards did not beat the 5-seed value-filter anchor, so statewise proxy gains should not be converted into a dynamic rollout superiority claim."
+  },
+  "proxy_guard_rollouts": [
+    {
+      "audit_action_scope": {
+        "audit_random_sample": 0,
+        "audit_top_candidate": 0,
+        "audit_top_reward": 1
+      },
+      "audited_steps": 500,
+      "beats_value_filter_5seed_mean": false,
+      "delta_vs_value_filter_5seed_mean": -4.197102258939438,
+      "episode_total_rewards": [
+        70.49784341425541,
+        67.80541069830926,
+        66.60127661304513,
+        62.26750186412392,
+        59.19518632824273
+      ],
+      "execution_policy": "model_reward_margin_guard",
+      "higher_immediate_reward_switch_rate": 0.797979797979798,
+      "lower_immediate_reward_switch_rate": 0.20202020202020202,
+      "n_episodes": 5,
+      "policy_label": "model_reward_proxy_guard_m010",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "source_json": "paper10_geojepa_mpc/experiments/results/e0_bishan_20x16_top5_model_reward_proxy_guard_m010_rewardtop1_blend010_seeds0-4_100step_2026-07-09.json",
+      "steps": 100,
+      "switch_margin_score_space": 0.1,
+      "switch_rate": 0.198,
+      "switches": 99,
+      "switches_with_higher_immediate_true_reward": 79,
+      "switches_with_lower_immediate_true_reward": 20,
+      "switches_with_tied_immediate_true_reward": 0,
+      "total_reward_max": 70.49784341425541,
+      "total_reward_mean": 65.2734437835953,
+      "total_reward_min": 59.19518632824273,
+      "total_reward_std_sample": 4.512461869583964
+    },
+    {
+      "audit_action_scope": {
+        "audit_random_sample": 0,
+        "audit_top_candidate": 1,
+        "audit_top_reward": 0
+      },
+      "audited_steps": 500,
+      "beats_value_filter_5seed_mean": false,
+      "delta_vs_value_filter_5seed_mean": -6.058925776078588,
+      "episode_total_rewards": [
+        63.04104006202413,
+        64.33144953133308,
+        62.82314563214901,
+        61.672899794752105,
+        65.1895663120224
+      ],
+      "execution_policy": "candidate_score_margin_guard",
+      "higher_immediate_reward_switch_rate": 0.7857142857142857,
+      "lower_immediate_reward_switch_rate": 0.21428571428571427,
+      "n_episodes": 5,
+      "policy_label": "candidate_score_proxy_guard_m010",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "source_json": "paper10_geojepa_mpc/experiments/results/e0_bishan_20x16_top5_candidate_score_proxy_guard_m010_candidatetop1_blend010_seeds0-4_100step_2026-07-09.json",
+      "steps": 100,
+      "switch_margin_score_space": 0.1,
+      "switch_rate": 0.196,
+      "switches": 98,
+      "switches_with_higher_immediate_true_reward": 77,
+      "switches_with_lower_immediate_true_reward": 21,
+      "switches_with_tied_immediate_true_reward": 0,
+      "total_reward_max": 65.1895663120224,
+      "total_reward_mean": 63.41162026645615,
+      "total_reward_min": 61.672899794752105,
+      "total_reward_std_sample": 1.3705800760381723
+    }
+  ],
+  "source_boundary": {
+    "new_dynamic_rollout_baselines": true,
+    "prepared_dir": "D:/test",
+    "reran_rollouts": true,
+    "reran_training": false,
+    "scope": "5-seed no-oracle proxy guard stress test, not 20-seed confirmation"
+  },
+  "status": "proxy_guard_dynamic_baseline_stress_audit",
+  "value_filter_anchor": {
+    "n_episodes": 5,
+    "policy_label": "value_filter_5seed_anchor",
+    "seed_total_rewards": [
+      67.7134969354234,
+      70.2252087804031,
+      69.7218379673849,
+      69.82450306303002,
+      69.86768346643231
+    ],
+    "source_json": "paper10_geojepa_mpc/experiments/results/e0_frontier_random050_value_head_20x16_h5_seed44_top5_rollout_summary.json",
+    "total_reward_mean": 69.47054604253474,
+    "total_reward_std_sample": 1.0003610285842477
+  }
+}

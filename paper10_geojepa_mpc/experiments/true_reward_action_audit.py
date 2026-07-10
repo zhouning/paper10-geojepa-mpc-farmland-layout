@@ -154,8 +154,12 @@ def action_audit_metrics(
         "audit_best_candidate_score": float(candidate_scores[best_true_idx]),
         "model_reward_top1_action": int(actions[int(model_order[0])]),
         "model_reward_top1_true_reward": float(true_rewards[int(model_order[0])]),
+        "model_reward_top1_model_reward_score": float(model_reward_scores[int(model_order[0])]),
+        "model_reward_top1_candidate_score": float(candidate_scores[int(model_order[0])]),
         "candidate_top1_action": int(actions[int(candidate_order[0])]),
         "candidate_top1_true_reward": float(true_rewards[int(candidate_order[0])]),
+        "candidate_top1_model_reward_score": float(model_reward_scores[int(candidate_order[0])]),
+        "candidate_top1_candidate_score": float(candidate_scores[int(candidate_order[0])]),
         "audit_true_best_in_model_reward_topk": float(best_true_idx in set(model_order[:k])),
         "audit_true_best_in_candidate_topk": float(best_true_idx in set(candidate_order[:k])),
         "true_reward_model_reward_pearson": _corr(true_rewards, model_reward_scores),
@@ -188,9 +192,26 @@ def choose_execution_action(
         if improvement >= float(true_reward_switch_margin):
             return int(metrics["audit_best_action"])
         return int(metrics["selected_action"])
+    if execution_policy == "model_reward_margin_guard":
+        improvement = (
+            float(metrics["model_reward_top1_model_reward_score"])
+            - float(metrics["selected_model_reward_score"])
+        )
+        if improvement >= float(true_reward_switch_margin):
+            return int(metrics["model_reward_top1_action"])
+        return int(metrics["selected_action"])
+    if execution_policy == "candidate_score_margin_guard":
+        improvement = (
+            float(metrics["candidate_top1_candidate_score"])
+            - float(metrics["selected_candidate_score"])
+        )
+        if improvement >= float(true_reward_switch_margin):
+            return int(metrics["candidate_top1_action"])
+        return int(metrics["selected_action"])
     raise ValueError(
         "execution_policy must be 'value_filter', 'audit_true_best', "
-        "or 'margin_true_reward_guard'"
+        "'margin_true_reward_guard', 'model_reward_margin_guard', or "
+        "'candidate_score_margin_guard'"
     )
 
 
@@ -294,7 +315,13 @@ def parse_args():
     parser.add_argument("--candidate-reward-reserve", type=int, default=0)
     parser.add_argument(
         "--execution-policy",
-        choices=("value_filter", "audit_true_best", "margin_true_reward_guard"),
+        choices=(
+            "value_filter",
+            "audit_true_best",
+            "margin_true_reward_guard",
+            "model_reward_margin_guard",
+            "candidate_score_margin_guard",
+        ),
         default="value_filter",
     )
     parser.add_argument("--true-reward-switch-margin", type=float, default=0.0)

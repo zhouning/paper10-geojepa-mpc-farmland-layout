@@ -1,4 +1,4 @@
-﻿"""CEUS review-response algorithm and experiment package for Paper10."""
+"""CEUS review-response algorithm and experiment package for Paper10."""
 
 from __future__ import annotations
 
@@ -17,6 +17,9 @@ DEFAULT_BASELINE_HARDENING_JSON = (
 )
 DEFAULT_MECHANISM_AUDIT_JSON = (
     RESULTS / "e0_paper10_ceus_mechanism_claim_audit_2026-06-27.json"
+)
+DEFAULT_GUARD_INFORMATION_SET_JSON = (
+    RESULTS / "e0_paper10_guard_information_set_audit_2026-07-09.json"
 )
 DEFAULT_OUTPUT_JSON = (
     RESULTS / "e0_paper10_ceus_review_response_experiment_package_2026-07-09.json"
@@ -74,8 +77,8 @@ def _primary_algorithm_evidence(guard: dict[str, Any]) -> dict[str, Any]:
             guard_stats["selected_true_reward_regret_mean"]
         ),
         "algorithmic_change_relative_to_clean_draft": (
-            "promote the tracked true-reward margin guard over the old "
-            "5-seed value-filter anchor as the primary Bishan algorithm evidence"
+            "record the tracked true-reward margin guard over the old "
+            "5-seed value-filter anchor as oracle/action-audit Bishan reward evidence"
         ),
     }
 
@@ -130,6 +133,28 @@ def _secondary_metric_assessment(guard: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _guard_information_set_boundary(guard_info: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "information_set_boundary": guard_info["information_set_boundary"],
+        "statewise_audit_summary": guard_info["statewise_audit_summary"],
+        "one_step_policy_diagnostics": guard_info["one_step_policy_diagnostics"],
+        "completed_dynamic_baselines": guard_info["completed_dynamic_baselines"],
+        "missing_dynamic_baselines": guard_info["missing_dynamic_baselines"],
+        "claim_gates": {
+            "true_reward_guard_deployable_without_oracle": bool(
+                guard_info["claim_gates"]["true_reward_guard_deployable_without_oracle"]
+            ),
+            "proxy_guard_rollout_superiority_supported": bool(
+                guard_info["claim_gates"]["proxy_guard_rollout_superiority_supported"]
+            ),
+            "dynamic_baseline_suite_complete": bool(
+                guard_info["claim_gates"]["dynamic_baseline_suite_complete"]
+            ),
+            "manuscript_should_call_guard_oracle_action_audit": bool(
+                guard_info["claim_gates"]["manuscript_should_call_guard_oracle_action_audit"]
+            ),
+        },
+    }
 def _mechanism_boundary(
     baseline: dict[str, Any],
     mechanism: dict[str, Any],
@@ -170,19 +195,24 @@ def build_ceus_review_response_experiment_package(
     true_reward_guard_json: str | Path = DEFAULT_TRUE_REWARD_GUARD_JSON,
     baseline_hardening_json: str | Path = DEFAULT_BASELINE_HARDENING_JSON,
     mechanism_audit_json: str | Path = DEFAULT_MECHANISM_AUDIT_JSON,
+    guard_information_set_json: str | Path = DEFAULT_GUARD_INFORMATION_SET_JSON,
     output_date: str = "2026-07-09",
 ) -> dict[str, Any]:
     guard_path = Path(true_reward_guard_json)
     baseline_path = Path(baseline_hardening_json)
     mechanism_path = Path(mechanism_audit_json)
+    guard_info_path = Path(guard_information_set_json)
     guard = _load_json(guard_path)
     baseline = _load_json(baseline_path)
     mechanism = _load_json(mechanism_path)
+    guard_info = _load_json(guard_info_path)
 
     primary = _primary_algorithm_evidence(guard)
     legacy = _legacy_anchor(baseline)
     secondary = _secondary_metric_assessment(guard)
     mechanism_boundary = _mechanism_boundary(baseline, mechanism)
+    guard_info_boundary = _guard_information_set_boundary(guard_info)
+    guard_info_gates = guard_info_boundary["claim_gates"]
     ci = primary["bootstrap_95ci_delta"]
 
     return {
@@ -199,13 +229,16 @@ def build_ceus_review_response_experiment_package(
             "true_reward_guard_json": _relative_source(guard_path),
             "baseline_hardening_json": _relative_source(baseline_path),
             "mechanism_audit_json": _relative_source(mechanism_path),
+            "guard_information_set_json": _relative_source(guard_info_path),
         },
         "primary_algorithm_evidence": primary,
         "legacy_value_filter_anchor": legacy,
         "secondary_metric_assessment": secondary,
         "mechanism_boundary": mechanism_boundary,
+        "guard_information_set_boundary": guard_info_boundary,
         "claim_gates": {
-            "primary_guard_promoted_to_main_algorithm_candidate": True,
+            "primary_guard_promoted_to_main_algorithm_candidate": False,
+            "primary_guard_recorded_as_oracle_action_audit_reward_evidence": True,
             "primary_guard_confirmatory_20seed_supported": (
                 primary["n_seeds"] == 20
                 and primary["seed_wins"] == 20
@@ -232,13 +265,28 @@ def build_ceus_review_response_experiment_package(
             "direct_50state_scaleup_supported": False,
             "robust_transfer_superiority_supported": False,
             "deployment_ready_cadastral_planning_supported": False,
-            "submission_story_should_use_guard_as_primary": True,
+            "submission_story_should_use_guard_as_primary": False,
+            "submission_story_should_use_guard_as_oracle_action_audit_evidence": True,
+            "true_reward_guard_deployable_without_oracle": guard_info_gates[
+                "true_reward_guard_deployable_without_oracle"
+            ],
+            "proxy_guard_rollout_superiority_supported": guard_info_gates[
+                "proxy_guard_rollout_superiority_supported"
+            ],
+            "dynamic_baseline_suite_complete": guard_info_gates[
+                "dynamic_baseline_suite_complete"
+            ],
+            "manuscript_should_call_guard_oracle_action_audit": guard_info_gates[
+                "manuscript_should_call_guard_oracle_action_audit"
+            ],
         },
         "manuscript_sync_actions": [
-            "Make the 20-seed rewardtop7 true-reward margin guard the primary Bishan algorithm result.",
+            "Present the 20-seed rewardtop7 true-reward margin guard as oracle/action-audit Bishan reward evidence, not as a deployable no-oracle algorithm.",
             "Move the 5-seed value-filter result to historical descriptive anchor and comparator context.",
             "Report secondary planning metrics as mixed rather than uniformly improved.",
             "Frame the monitor gate as evidence control, not direct online reward gain.",
+            "Frame the true-reward guard as an oracle/action-audit guard, not a standalone deployable no-oracle planner.",
+            "Treat proxy-guard and stronger dynamic baselines as unresolved experiment risks.",
         ],
         "blocked_language": [
             "the 5-seed value-filter anchor is the strongest Paper10 result",
@@ -247,6 +295,9 @@ def build_ceus_review_response_experiment_package(
             "direct 50-state Bishan scale-up success",
             "robust Bishan-to-Dongxing transfer superiority",
             "deployment-ready cadastral planning",
+            "standalone deployable no-oracle planner",
+            "proxy guard rollout superiority",
+            "complete dynamic baseline suite",
         ],
     }
 
@@ -260,6 +311,10 @@ def ceus_review_response_experiment_package_markdown(payload: dict[str, Any]) ->
     legacy = payload["legacy_value_filter_anchor"]
     secondary = payload["secondary_metric_assessment"]
     mechanism = payload["mechanism_boundary"]
+    guard_info = payload["guard_information_set_boundary"]
+    info = guard_info["information_set_boundary"]
+    statewise = guard_info["statewise_audit_summary"]
+    one_step = guard_info["one_step_policy_diagnostics"]
     gates = payload["claim_gates"]
     ci = primary["bootstrap_95ci_delta"]
     lines = [
@@ -271,16 +326,16 @@ def ceus_review_response_experiment_package_markdown(payload: dict[str, Any]) ->
         "",
         (
             "This package responds to CEUS-style review risk by reclassifying "
-            "the tracked 20-seed true-reward margin guard as the primary "
-            "algorithm evidence."
+            "the tracked 20-seed true-reward margin guard as oracle/action-audit "
+            "Bishan reward evidence."
         ),
         "",
         "## Source Boundary",
         "",
         "No training or rollout was rerun for this package.",
-        "The package is not text-only: it changes the manuscript-facing algorithm and experiment hierarchy using tracked confirmatory guard artifacts.",
+        "The package is not text-only: it changes the manuscript-facing evidence hierarchy using tracked confirmatory guard artifacts and explicit information-set boundaries.",
         "",
-        "## Primary Algorithm Evidence",
+        "## Primary Oracle Action-Audit Reward Evidence",
         "",
         (
             "Primary algorithm candidate: `rewardtop7 margin=1.50` "
@@ -364,6 +419,29 @@ def ceus_review_response_experiment_package_markdown(payload: dict[str, Any]) ->
                 f"{_fmt(mechanism['no_mask_negative_zero_swap_steps'])} |"
             ),
             "",
+            "## Guard Information-Set Boundary",
+            "",
+            f"Primary guard role: {info['allowed_primary_role']}.",
+            f"The current true-reward guard is not a {info['not_allowed_primary_role']}.",
+            "",
+            "| diagnostic | value |",
+            "|---|---:|",
+            f"| deployable without reward oracle | {info['deployable_without_reward_oracle']} |",
+            f"| audited states | {statewise['audited_states']} |",
+            f"| selected true-reward regret mean | {_fmt(statewise['selected_true_reward_regret_mean'])} |",
+            f"| model_reward_top1_proxy delta vs selected | {_fmt(one_step['model_reward_top1_proxy']['mean_delta_vs_selected'])} |",
+            f"| candidate_score_top1_proxy delta vs selected | {_fmt(one_step['candidate_score_top1_proxy']['mean_delta_vs_selected'])} |",
+            "",
+            "Missing dynamic baselines:",
+            "",
+        ]
+    )
+    for baseline in guard_info["missing_dynamic_baselines"]:
+        lines.append(f"- {baseline}")
+
+    lines.extend(
+        [
+            "",
             "## Claim Gates",
             "",
             "| gate | status |",
@@ -393,6 +471,9 @@ def ceus_review_response_experiment_package_markdown(payload: dict[str, Any]) ->
             "Do not claim direct 50-state Bishan scale-up success.",
             "Do not claim robust Bishan-to-Dongxing transfer superiority.",
             "Do not claim deployment-ready cadastral planning.",
+            "Do not call the true-reward guard a standalone deployable no-oracle planner.",
+            "Do not claim proxy-guard rollout superiority.",
+            "Do not claim a complete dynamic baseline suite.",
             "",
         ]
     )
@@ -404,6 +485,7 @@ def write_ceus_review_response_experiment_package(
     true_reward_guard_json: str | Path = DEFAULT_TRUE_REWARD_GUARD_JSON,
     baseline_hardening_json: str | Path = DEFAULT_BASELINE_HARDENING_JSON,
     mechanism_audit_json: str | Path = DEFAULT_MECHANISM_AUDIT_JSON,
+    guard_information_set_json: str | Path = DEFAULT_GUARD_INFORMATION_SET_JSON,
     output_json: str | Path = DEFAULT_OUTPUT_JSON,
     output_md: str | Path = DEFAULT_OUTPUT_MD,
     output_date: str = "2026-07-09",
@@ -412,6 +494,7 @@ def write_ceus_review_response_experiment_package(
         true_reward_guard_json=true_reward_guard_json,
         baseline_hardening_json=baseline_hardening_json,
         mechanism_audit_json=mechanism_audit_json,
+        guard_information_set_json=guard_information_set_json,
         output_date=output_date,
     )
     output_json_path = Path(output_json)
@@ -436,6 +519,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--true-reward-guard-json", default=DEFAULT_TRUE_REWARD_GUARD_JSON)
     parser.add_argument("--baseline-hardening-json", default=DEFAULT_BASELINE_HARDENING_JSON)
     parser.add_argument("--mechanism-audit-json", default=DEFAULT_MECHANISM_AUDIT_JSON)
+    parser.add_argument("--guard-information-set-json", default=DEFAULT_GUARD_INFORMATION_SET_JSON)
     parser.add_argument("--output-json", default=DEFAULT_OUTPUT_JSON)
     parser.add_argument("--output-md", default=DEFAULT_OUTPUT_MD)
     parser.add_argument("--date", default="2026-07-09")
@@ -448,6 +532,7 @@ def main() -> None:
         true_reward_guard_json=args.true_reward_guard_json,
         baseline_hardening_json=args.baseline_hardening_json,
         mechanism_audit_json=args.mechanism_audit_json,
+        guard_information_set_json=args.guard_information_set_json,
         output_json=args.output_json,
         output_md=args.output_md,
         output_date=args.date,

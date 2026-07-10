@@ -20,9 +20,12 @@ BASELINE_HARDENING_JSON = (
 MECHANISM_AUDIT_JSON = (
     RESULTS / "e0_paper10_ceus_mechanism_claim_audit_2026-06-27.json"
 )
+GUARD_INFORMATION_SET_JSON = (
+    RESULTS / "e0_paper10_guard_information_set_audit_2026-07-09.json"
+)
 
 
-def test_build_ceus_review_response_package_promotes_guard_as_primary_algorithm():
+def test_build_ceus_review_response_package_records_guard_as_oracle_action_audit_evidence():
     payload = build_ceus_review_response_experiment_package(output_date="2026-07-09")
 
     assert payload["status"] == "ceus_review_response_algorithm_experiment_package"
@@ -71,6 +74,13 @@ def test_build_ceus_review_response_package_promotes_guard_as_primary_algorithm(
     assert payload["mechanism_boundary"]["monitor_gate_evidence_control_supported"] is True
     assert payload["mechanism_boundary"]["executable_mask_necessity_supported"] is True
 
+    info = payload["guard_information_set_boundary"]
+    assert info["information_set_boundary"]["allowed_primary_role"] == "oracle/action-audit guard"
+    assert info["information_set_boundary"]["deployable_without_reward_oracle"] is False
+    assert info["claim_gates"]["proxy_guard_rollout_superiority_supported"] is False
+    assert info["claim_gates"]["dynamic_baseline_suite_complete"] is False
+    assert "executable_random_20seed_rollout" in info["missing_dynamic_baselines"]
+
     gates = payload["claim_gates"]
     assert gates["primary_guard_confirmatory_20seed_supported"] is True
     assert gates["old_5seed_value_filter_primary_claim_blocked"] is True
@@ -78,7 +88,13 @@ def test_build_ceus_review_response_package_promotes_guard_as_primary_algorithm(
     assert gates["monitor_gate_online_reward_gain_supported"] is False
     assert gates["direct_50state_scaleup_supported"] is False
     assert gates["robust_transfer_superiority_supported"] is False
-    assert gates["submission_story_should_use_guard_as_primary"] is True
+    assert gates["submission_story_should_use_guard_as_primary"] is False
+    assert gates["submission_story_should_use_guard_as_oracle_action_audit_evidence"] is True
+    assert gates["primary_guard_promoted_to_main_algorithm_candidate"] is False
+    assert gates["primary_guard_recorded_as_oracle_action_audit_reward_evidence"] is True
+    assert gates["true_reward_guard_deployable_without_oracle"] is False
+    assert gates["proxy_guard_rollout_superiority_supported"] is False
+    assert gates["dynamic_baseline_suite_complete"] is False
 
 
 def test_ceus_review_response_markdown_records_algorithmic_change_and_guardrails():
@@ -105,9 +121,14 @@ def test_ceus_review_response_markdown_records_algorithmic_change_and_guardrails
         "diagnostic sign-test p=1.0000",
         "reward_primary_secondary_mixed",
         "monitor gate as evidence control",
+        "Primary Oracle Action-Audit Reward Evidence",
+        "submission_story_should_use_guard_as_oracle_action_audit_evidence",
         "Do not claim uniform secondary-metric improvement.",
         "Do not claim direct 50-state Bishan scale-up success.",
         "Do not claim robust Bishan-to-Dongxing transfer superiority.",
+        "oracle/action-audit guard",
+        "not a standalone deployable no-oracle planner",
+        "proxy_guard_rollout_superiority_supported",
     ]:
         assert token in text
 
@@ -120,6 +141,7 @@ def test_write_ceus_review_response_package_writes_json_and_markdown(tmp_path):
         true_reward_guard_json=TRUE_REWARD_GUARD_JSON,
         baseline_hardening_json=BASELINE_HARDENING_JSON,
         mechanism_audit_json=MECHANISM_AUDIT_JSON,
+        guard_information_set_json=GUARD_INFORMATION_SET_JSON,
         output_json=output_json,
         output_md=output_md,
         output_date="2026-07-09",
