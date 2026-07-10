@@ -126,7 +126,7 @@ class _FakeMember(nn.Module):
         normalized = actions.float()[:, None, None] + self.member_offset
         horizon_mean = normalized.expand(batch, 3, 4).clone()
         horizon_log_scale = torch.zeros_like(horizon_mean)
-        immediate_mean = horizon_mean[:, 0]
+        immediate_mean = horizon_mean[:, 0] + 100.0
         immediate_log_scale = torch.zeros_like(immediate_mean)
         return PCCModelOutput(
             next_block=block,
@@ -222,6 +222,9 @@ def test_complete_selector_calls_reference_once_and_returns_feedback_prediction(
     assert action == 2
     assert calls == ["reference"]
     assert info["reference_action"] == 0
-    assert len(info["selected_predicted_mean"]) == 4
+    np.testing.assert_allclose(
+        info["selected_predicted_mean"],
+        [205.0, 307.5, 410.0, 512.5],
+    )
     assert len(info["selected_base_scale"]) == 4
     assert info["unexecuted_real_reward_queries"] == 0

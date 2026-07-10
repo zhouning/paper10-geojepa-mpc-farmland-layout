@@ -25,6 +25,8 @@ class EnsemblePrediction:
     executable_probability: np.ndarray
     candidate_mean: np.ndarray
     candidate_base_scale: np.ndarray
+    immediate_candidate_mean: np.ndarray
+    immediate_candidate_base_scale: np.ndarray
     member_evaluations: int
     model_forward_count: int
 
@@ -37,6 +39,8 @@ class EnsembleHorizonPrediction:
     executable_probability: np.ndarray
     candidate_mean: np.ndarray
     candidate_base_scale: np.ndarray
+    immediate_candidate_mean: np.ndarray
+    immediate_candidate_base_scale: np.ndarray
     member_evaluations: int
     model_forward_count: int
 
@@ -220,6 +224,8 @@ def predict_paired_ensemble_all_horizons(
     member_means = []
     member_log_scales = []
     member_probabilities = []
+    member_immediate_means = []
+    member_immediate_log_scales = []
     expected_center = None
     expected_scale = None
     device_obj = torch.device(device)
@@ -270,6 +276,16 @@ def predict_paired_ensemble_all_horizons(
         )
         member_means.append(physical_mean)
         member_log_scales.append(np.log(physical_standard_deviation))
+        immediate_mean = (
+            output.immediate_mean.detach().cpu().numpy() * scale[0] + center[0]
+        )
+        immediate_standard_deviation = (
+            np.exp(output.immediate_log_scale.detach().cpu().numpy()) * scale[0]
+        )
+        member_immediate_means.append(immediate_mean)
+        member_immediate_log_scales.append(
+            np.log(immediate_standard_deviation)
+        )
         member_probabilities.append(
             torch.sigmoid(output.executable_logit).detach().cpu().numpy()
         )
@@ -292,6 +308,19 @@ def predict_paired_ensemble_all_horizons(
         np.maximum(marginal_epistemic + marginal_aleatoric, 1e-12)
     )
     executable_probability = np.stack(member_probabilities, axis=0).mean(axis=0)
+    member_immediate_means = np.stack(member_immediate_means, axis=0)
+    member_immediate_log_scales = np.stack(member_immediate_log_scales, axis=0)
+    if member_immediate_means.shape[0] > 1:
+        immediate_epistemic = member_immediate_means.var(axis=0, ddof=1)
+    else:
+        immediate_epistemic = np.zeros_like(member_immediate_means[0])
+    immediate_aleatoric = np.mean(
+        np.exp(2.0 * member_immediate_log_scales),
+        axis=0,
+    )
+    immediate_base_scale = np.sqrt(
+        np.maximum(immediate_epistemic + immediate_aleatoric, 1e-12)
+    )
     return EnsembleHorizonPrediction(
         actions=actions,
         mean_delta=statistics.mean_delta,
@@ -299,6 +328,8 @@ def predict_paired_ensemble_all_horizons(
         executable_probability=executable_probability,
         candidate_mean=member_means.mean(axis=0),
         candidate_base_scale=candidate_base_scale,
+        immediate_candidate_mean=member_immediate_means.mean(axis=0),
+        immediate_candidate_base_scale=immediate_base_scale,
         member_evaluations=int(member_means.shape[0] * actions.size),
         model_forward_count=int(member_means.shape[0]),
     )
@@ -336,6 +367,8 @@ def predict_paired_ensemble(
         executable_probability=all_horizons.executable_probability,
         candidate_mean=all_horizons.candidate_mean[:, horizon_index],
         candidate_base_scale=all_horizons.candidate_base_scale[:, horizon_index],
+        immediate_candidate_mean=all_horizons.immediate_candidate_mean,
+        immediate_candidate_base_scale=all_horizons.immediate_candidate_base_scale,
         member_evaluations=all_horizons.member_evaluations,
         model_forward_count=all_horizons.model_forward_count,
     )
@@ -405,10 +438,10 @@ def pcc_select_action(
                 "online_multiplier": online_multiplier.tolist(),
                 "member_evaluations": prediction.member_evaluations,
                 "model_forward_count": prediction.model_forward_count,
-                "selected_predicted_mean": prediction.candidate_mean[
+                "selected_predicted_mean": prediction.immediate_candidate_mean[
                     selected_index
                 ].tolist(),
-                "selected_base_scale": prediction.candidate_base_scale[
+                "selected_base_scale": prediction.immediate_candidate_base_scale[
                     selected_index
                 ].tolist(),
                 "unexecuted_real_reward_queries": 0,
