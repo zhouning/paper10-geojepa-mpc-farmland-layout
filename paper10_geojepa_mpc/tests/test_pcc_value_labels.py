@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 
 from paper10_geojepa_mpc.experiments.pcc_value_labels import (
+    build_checkpoint_reference_policy_factory,
     build_neighbour_feature_matrix,
     derive_continuation_seed,
     evaluate_candidate_objectives,
@@ -11,6 +12,66 @@ from paper10_geojepa_mpc.experiments.pcc_value_labels import (
     write_label_manifest,
     write_trajectory_artifact,
 )
+
+
+class BatchTrackingReferenceAdapter:
+    def __init__(self):
+        self.batch_sizes = []
+
+    def assert_compatible(self, n_blocks):
+        assert int(n_blocks) == 6
+
+    def batch_predict(self, block_features, global_features, actions):
+        actions = np.asarray(actions, dtype=np.int64)
+        self.batch_sizes.append(len(actions))
+        return (
+            np.asarray(block_features, dtype=np.float32).copy(),
+            np.asarray(global_features, dtype=np.float32).copy(),
+            actions.astype(np.float32),
+            {},
+        )
+
+
+class SixActionReferenceEnv:
+    n_blocks = 6
+
+    def _get_block_features(self):
+        return np.zeros((6, 2), dtype=np.float32)
+
+    def _get_global_features(self):
+        return np.zeros(5, dtype=np.float32)
+
+    def action_masks(self):
+        return np.ones(6, dtype=bool)
+
+
+def test_checkpoint_reference_factory_uses_bounded_screening_batches(monkeypatch):
+    from paper10_geojepa_mpc.planning.paper9_adapter import (
+        TorchCheckpointMPCAdapter,
+    )
+
+    adapter = BatchTrackingReferenceAdapter()
+    monkeypatch.setattr(
+        TorchCheckpointMPCAdapter,
+        "from_checkpoint",
+        classmethod(lambda cls, checkpoint, device: adapter),
+    )
+    factory = build_checkpoint_reference_policy_factory(
+        "unused.pt",
+        device="cpu",
+        horizon=1,
+        top_k=3,
+        gamma=0.99,
+        screening_batch_size=2,
+    )
+
+    action = factory(SixActionReferenceEnv())(
+        SixActionReferenceEnv(),
+        np.random.default_rng(4),
+    )
+
+    assert action == 5
+    assert max(adapter.batch_sizes) <= 3
 
 
 class TinyObjectiveEnv:

@@ -13,6 +13,9 @@ from paper10_geojepa_mpc.experiments.pcc_objectives import oriented_outcome
 from paper10_geojepa_mpc.experiments.pcc_value_labels import (
     build_neighbour_feature_matrix,
 )
+from paper10_geojepa_mpc.planning.paper9_memory_efficient import (
+    memory_efficient_mpc_select_action,
+)
 
 
 def select_without_execution(*, env, selector, **selector_kwargs):
@@ -78,6 +81,7 @@ def run_policy_episode(
     if int(rollout_steps) <= 0:
         raise ValueError("rollout_steps must be positive")
     env.reset(seed=int(seed))
+    initial_metrics = dict(metric_reader(env))
     steps = []
     total_reward = 0.0
     for step_index in range(int(rollout_steps)):
@@ -120,12 +124,19 @@ def run_policy_episode(
         total_reward += float(reward)
         if terminated or truncated:
             break
+    final_metrics = dict(metric_reader(env))
     return {
         "seed": int(seed),
         "steps": steps,
         "environment_step_count": int(getattr(env, "step_count", len(steps))),
         "total_reward": float(total_reward),
-        "final_metrics": dict(metric_reader(env)),
+        "initial_metrics": initial_metrics,
+        "final_metrics": final_metrics,
+        "objective_outcome": oriented_outcome(
+            total_reward,
+            initial_metrics,
+            final_metrics,
+        ).tolist(),
     }
 
 
@@ -203,6 +214,35 @@ def _load_paper9_mpc_select_action():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module.mpc_select_action
+
+
+def _select_paper9_reference_action(
+    adapter,
+    state,
+    rng,
+    *,
+    horizon: int,
+    top_k: int,
+    gamma: float = 0.99,
+    screening_batch_size: int = 64,
+):
+    action, info = memory_efficient_mpc_select_action(
+        adapter,
+        state["block_features"],
+        state["global_features"],
+        state["executable_mask"],
+        horizon=int(horizon),
+        top_k=int(top_k),
+        gamma=float(gamma),
+        n_rollouts=1,
+        continuation="random",
+        scoring="reward",
+        screening_batch_size=int(screening_batch_size),
+        rng=rng,
+    )
+    info = dict(info)
+    info["unexecuted_real_reward_queries"] = 0
+    return int(action), info
 
 
 def _parse_seed_spec(spec: str) -> list[int]:
@@ -388,7 +428,6 @@ def main(argv: Sequence[str] | None = None) -> None:
         device=args.device,
     )
     reference_adapter.assert_compatible(env.n_blocks)
-    mpc_select_action = _load_paper9_mpc_select_action()
     ensemble_size = len(ensemble)
     compute_mode = (
         "full" if args.policy == "pcc_full" else args.compute_mode
@@ -443,21 +482,14 @@ def main(argv: Sequence[str] | None = None) -> None:
         reference_rng = np.random.default_rng(seed + 17001)
 
         def reference_selector(state, rng):
-            action, info = mpc_select_action(
+            return _select_paper9_reference_action(
                 reference_adapter,
-                state["block_features"],
-                state["global_features"],
-                state["executable_mask"],
+                state,
+                rng,
                 horizon=int(args.reference_horizon),
                 top_k=int(args.reference_top_k),
                 gamma=0.99,
-                n_rollouts=1,
-                continuation="random",
-                scoring="reward",
-                rng=rng,
             )
-            info["unexecuted_real_reward_queries"] = 0
-            return action, info
 
         reference_policy = SelectorPolicy(
             reference_selector,

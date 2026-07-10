@@ -1,6 +1,5 @@
 import argparse
 import hashlib
-import importlib.util
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -14,6 +13,9 @@ from paper10_geojepa_mpc.experiments.value_label_generation import (
     _make_label_env,
     restore_env,
     snapshot_env,
+)
+from paper10_geojepa_mpc.planning.paper9_memory_efficient import (
+    memory_efficient_mpc_select_action,
 )
 
 
@@ -544,16 +546,6 @@ def _default_metric_reader(env) -> dict[str, float]:
     }
 
 
-def _load_paper9_mpc_select_action():
-    path = PAPER9_DIR / "private_source" / "mpc_plan.py"
-    spec = importlib.util.spec_from_file_location("paper9_private_mpc_plan", path)
-    if spec is None or spec.loader is None:
-        raise ImportError(f"Cannot load Paper9 MPC implementation: {path}")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module.mpc_select_action
-
-
 def build_checkpoint_reference_policy_factory(
     checkpoint: str | Path,
     *,
@@ -562,11 +554,11 @@ def build_checkpoint_reference_policy_factory(
     top_k: int,
     gamma: float,
     action_mask_fn=None,
+    screening_batch_size: int = 64,
 ):
     from paper10_geojepa_mpc.planning.paper9_adapter import TorchCheckpointMPCAdapter
 
     adapter = TorchCheckpointMPCAdapter.from_checkpoint(checkpoint, device=device)
-    mpc_select_action = _load_paper9_mpc_select_action()
 
     def factory(env):
         adapter.assert_compatible(env.n_blocks)
@@ -577,7 +569,7 @@ def build_checkpoint_reference_policy_factory(
                 if action_mask_fn is not None
                 else np.asarray(runtime_env.action_masks(), dtype=bool)
             )
-            action, _ = mpc_select_action(
+            action, _ = memory_efficient_mpc_select_action(
                 adapter,
                 runtime_env._get_block_features(),
                 runtime_env._get_global_features(),
@@ -588,6 +580,7 @@ def build_checkpoint_reference_policy_factory(
                 n_rollouts=1,
                 continuation="random",
                 scoring="reward",
+                screening_batch_size=int(screening_batch_size),
                 rng=rng,
             )
             return int(action)

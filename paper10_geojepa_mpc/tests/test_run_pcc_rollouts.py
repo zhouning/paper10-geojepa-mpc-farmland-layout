@@ -7,11 +7,49 @@ from paper10_geojepa_mpc.planning.pcc_baselines import (
     matched_pool_size,
 )
 from paper10_geojepa_mpc.experiments.run_pcc_rollouts import (
+    _select_paper9_reference_action,
     load_resumable_results,
     run_policy_episode,
     select_without_execution,
     write_seed_result_atomic,
 )
+
+
+class BoundedBatchAdapter:
+    def __init__(self):
+        self.batch_sizes = []
+
+    def batch_predict(self, block_features, global_features, actions):
+        actions = np.asarray(actions, dtype=np.int64)
+        self.batch_sizes.append(len(actions))
+        return (
+            np.asarray(block_features, dtype=np.float32).copy(),
+            np.asarray(global_features, dtype=np.float32).copy(),
+            actions.astype(np.float32),
+            {},
+        )
+
+
+def test_paper9_rollout_reference_action_uses_bounded_screening():
+    adapter = BoundedBatchAdapter()
+    state = {
+        "block_features": np.zeros((7, 2), dtype=np.float32),
+        "global_features": np.zeros(5, dtype=np.float32),
+        "executable_mask": np.ones(7, dtype=bool),
+    }
+
+    action, info = _select_paper9_reference_action(
+        adapter,
+        state,
+        np.random.default_rng(3),
+        horizon=1,
+        top_k=3,
+        screening_batch_size=2,
+    )
+
+    assert action == 6
+    assert max(adapter.batch_sizes) <= 3
+    assert info["unexecuted_real_reward_queries"] == 0
 
 
 class SpyEnv:
@@ -115,6 +153,12 @@ def test_episode_executes_one_step_per_selection_and_observes_only_executed_acti
     assert len(policy.observed) == 2
     assert all(row["action"] == 2 for row in policy.observed)
     assert all("reference_outcome" not in row for row in policy.observed)
+    assert result["initial_metrics"] == {
+        "avg_slope": 10.0,
+        "contiguity": 0.0,
+        "baimu_area_ha": 100.0,
+    }
+    assert len(result["objective_outcome"]) == 4
 
 
 def test_seed_result_is_atomic_and_resume_checks_digests(tmp_path):
