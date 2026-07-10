@@ -20,6 +20,8 @@ class JointPairedCalibrator:
     objective_names: tuple[str, ...]
     protocol_id: str | None = None
     calibration_seeds: tuple[int, ...] = ()
+    labels_manifest_digest: str | None = None
+    checkpoint_digests: tuple[str, ...] = ()
 
     def lower_bounds(
         self,
@@ -80,6 +82,8 @@ def fit_joint_calibrator(
     objective_names: Sequence[str] = OBJECTIVE_NAMES,
     protocol_id: str | None = None,
     calibration_seeds: Sequence[int] = (),
+    labels_manifest_digest: str | None = None,
+    checkpoint_digests: Sequence[str] = (),
 ) -> JointPairedCalibrator:
     if not 0.0 < float(coverage) < 1.0:
         raise ValueError("coverage must be in (0, 1)")
@@ -108,6 +112,12 @@ def fit_joint_calibrator(
         objective_names=tuple(str(value) for value in objective_names),
         protocol_id=None if protocol_id is None else str(protocol_id),
         calibration_seeds=tuple(int(value) for value in calibration_seeds),
+        labels_manifest_digest=(
+            None
+            if labels_manifest_digest is None
+            else str(labels_manifest_digest)
+        ),
+        checkpoint_digests=tuple(str(value) for value in checkpoint_digests),
     )
 
 
@@ -149,6 +159,8 @@ def _payload(calibrator: JointPairedCalibrator) -> dict[str, object]:
         "objective_names": list(calibrator.objective_names),
         "protocol_id": calibrator.protocol_id,
         "calibration_seeds": list(calibrator.calibration_seeds),
+        "labels_manifest_digest": calibrator.labels_manifest_digest,
+        "checkpoint_digests": list(calibrator.checkpoint_digests),
     }
 
 
@@ -204,6 +216,10 @@ def load_joint_calibrator(path: str | Path) -> JointPairedCalibrator:
         calibration_seeds=tuple(
             int(value) for value in payload.get("calibration_seeds", [])
         ),
+        labels_manifest_digest=payload.get("labels_manifest_digest"),
+        checkpoint_digests=tuple(
+            str(value) for value in payload.get("checkpoint_digests", [])
+        ),
     )
 
 
@@ -240,6 +256,7 @@ def fit_calibrator_from_artifacts(
     coverage: float,
     output_path: str | Path,
     device: str = "cpu",
+    checkpoint_digests: Sequence[str] = (),
 ) -> JointPairedCalibrator:
     from paper10_geojepa_mpc.planning.pcc_selector import (
         predict_paired_ensemble_all_horizons,
@@ -317,6 +334,8 @@ def fit_calibrator_from_artifacts(
         coverage=coverage,
         protocol_id=str(manifest["protocol_id"]),
         calibration_seeds=sorted(set(calibration_seeds)),
+        labels_manifest_digest=str(manifest["manifest_digest"]),
+        checkpoint_digests=tuple(map(str, checkpoint_digests)),
     )
     save_joint_calibrator(output_path, calibrator)
     return calibrator
@@ -366,6 +385,14 @@ def main(argv: Sequence[str] | None = None) -> None:
         args.coverage_from_frozen_registry,
     )
     ensemble = load_pcc_ensemble(args.checkpoint_root, device=args.device)
+    checkpoint_root = Path(args.checkpoint_root)
+    checkpoint_paths = (
+        [checkpoint_root]
+        if checkpoint_root.is_file()
+        else sorted(checkpoint_root.glob("member_*.pt"))
+    )
+    if not checkpoint_paths:
+        raise ValueError("calibration checkpoint root contains no members")
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     calibrator = fit_calibrator_from_artifacts(
@@ -374,6 +401,7 @@ def main(argv: Sequence[str] | None = None) -> None:
         coverage=coverage,
         output_path=output_dir / "calibrator.json",
         device=args.device,
+        checkpoint_digests=[_sha256_file(path) for path in checkpoint_paths],
     )
     print(
         json.dumps(

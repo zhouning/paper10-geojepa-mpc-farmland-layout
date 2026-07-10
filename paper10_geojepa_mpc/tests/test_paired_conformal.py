@@ -166,7 +166,7 @@ def test_artifact_fitting_preserves_candidate_reference_and_trajectory_axes(tmp_
         "horizons": np.asarray([1, 3, 5], dtype=np.int64),
     }
     artifact = write_trajectory_artifact(labels, 2000, dataset)
-    write_label_manifest(
+    manifest = write_label_manifest(
         labels,
         protocol_id="fixture",
         partition="calibration",
@@ -186,8 +186,14 @@ def test_artifact_fitting_preserves_candidate_reference_and_trajectory_axes(tmp_
         coverage=0.8,
         output_path=tmp_path / "calibrator.json",
         device="cpu",
+        checkpoint_digests=["a" * 64],
     )
 
     assert calibrator.trajectory_ids.tolist() == [2000]
     assert calibrator.trajectory_scores.tolist() == [0.0]
     assert calibrator.q_joint == 0.0
+    assert calibrator.labels_manifest_digest == manifest["manifest_digest"]
+    assert calibrator.checkpoint_digests == ("a" * 64,)
+    loaded = load_joint_calibrator(tmp_path / "calibrator.json")
+    assert loaded.labels_manifest_digest == manifest["manifest_digest"]
+    assert loaded.checkpoint_digests == ("a" * 64,)

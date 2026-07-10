@@ -54,14 +54,36 @@ def _load_valid_seed_manifest(path: Path, expected_seed: int):
         return None
 
 
-def valid_completed_seeds(output_root: str | Path, seeds) -> set[int]:
+def valid_completed_seeds(
+    output_root: str | Path,
+    seeds,
+    *,
+    expected_policy: str | None = None,
+    expected_model_seed: int | None = None,
+) -> set[int]:
     output_root = Path(output_root)
     completed = set()
     for raw_seed in seeds:
         seed = int(raw_seed)
         manifest = output_root / f"seed_{seed}" / "manifest.json"
-        if _load_valid_seed_manifest(manifest, seed) is not None:
-            completed.add(seed)
+        payload = _load_valid_seed_manifest(manifest, seed)
+        if payload is None:
+            continue
+        continuation = payload.get("continuation_policy", {})
+        if expected_policy is not None:
+            expected_name = (
+                "pcc_round1" if expected_policy == "pcc" else str(expected_policy)
+            )
+            if continuation.get("name") != expected_name:
+                continue
+        if (
+            expected_policy == "pcc"
+            and expected_model_seed is not None
+            and int(continuation.get("model_seed", -1))
+            != int(expected_model_seed)
+        ):
+            continue
+        completed.add(seed)
     return completed
 
 
@@ -145,6 +167,11 @@ def parse_args(argv: Sequence[str] | None = None):
     parser = argparse.ArgumentParser()
     parser.add_argument("--registry", required=True)
     parser.add_argument("--partition", required=True)
+    parser.add_argument(
+        "--policy",
+        choices=("paper9_mpc", "pcc"),
+        default="paper9_mpc",
+    )
     parser.add_argument("--seeds", default=None)
     parser.add_argument("--max-workers", type=int, default=4)
     parser.add_argument("--env-source", choices=("paper9", "neijiang"), default="paper9")
@@ -156,16 +183,90 @@ def parse_args(argv: Sequence[str] | None = None):
     parser.add_argument("--gamma", type=float, default=0.99)
     parser.add_argument("--reference-horizon", type=int, default=5)
     parser.add_argument("--reference-top-k", type=int, default=50)
+    parser.add_argument("--pcc-checkpoint-root", default=None)
+    parser.add_argument("--pcc-calibrator", default=None)
+    parser.add_argument("--pcc-model-seed", type=int, default=None)
+    parser.add_argument("--pcc-planning-horizon", type=int, default=3)
+    parser.add_argument("--pcc-candidate-budget", type=int, default=50)
+    parser.add_argument("--pcc-tolerance-scale", type=float, default=0.05)
+    parser.add_argument("--pcc-executable-threshold", type=float, default=0.95)
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--output-root", required=True)
     return parser.parse_args(argv)
 
 
+def _build_seed_command(args, *, seed: int, states: int, candidates: int):
+    seed_dir = Path(args.output_root) / f"seed_{int(seed)}"
+    command = [
+        sys.executable,
+        "-m",
+        "paper10_geojepa_mpc.experiments.pcc_value_labels",
+        "--registry",
+        str(args.registry),
+        "--partition",
+        str(args.partition),
+        "--policy",
+        str(args.policy),
+        "--seeds",
+        str(seed),
+        "--env-source",
+        str(args.env_source),
+        "--prepared-dir",
+        str(args.prepared_dir),
+        "--states-per-trajectory",
+        str(states),
+        "--candidate-actions",
+        str(candidates),
+        "--horizons",
+        str(args.horizons),
+        "--gamma",
+        str(args.gamma),
+        "--planning-horizon",
+        str(args.reference_horizon),
+        "--top-k",
+        str(args.reference_top_k),
+        "--device",
+        str(args.device),
+        "--output-dir",
+        str(seed_dir),
+    ]
+    if args.reference_checkpoint:
+        command.extend(["--reference-checkpoint", str(args.reference_checkpoint)])
+    if args.policy == "pcc":
+        command.extend(
+            [
+                "--pcc-checkpoint-root",
+                str(args.pcc_checkpoint_root),
+                "--pcc-calibrator",
+                str(args.pcc_calibrator),
+                "--pcc-model-seed",
+                str(args.pcc_model_seed),
+                "--pcc-planning-horizon",
+                str(args.pcc_planning_horizon),
+                "--pcc-candidate-budget",
+                str(args.pcc_candidate_budget),
+                "--pcc-tolerance-scale",
+                str(args.pcc_tolerance_scale),
+                "--pcc-executable-threshold",
+                str(args.pcc_executable_threshold),
+            ]
+        )
+    return command
+
+
 def main(argv: Sequence[str] | None = None) -> None:
     args = parse_args(argv)
     registry = load_registry(args.registry)
     validate_registry(registry)
+    if args.policy == "pcc" and (
+        args.pcc_checkpoint_root is None
+        or args.pcc_calibrator is None
+        or args.pcc_model_seed is None
+    ):
+        raise ValueError(
+            "PCC label jobs require checkpoint root, calibrator, and model seed"
+        )
     declared = [int(value) for value in registry["partitions"][args.partition]]
     seeds = _parse_seed_spec(args.seeds) if args.seeds else declared
     if not seeds or len(seeds) != len(set(seeds)) or not set(seeds) <= set(declared):
@@ -184,46 +285,26 @@ def main(argv: Sequence[str] | None = None) -> None:
         else sampling["candidate_actions"]
     )
     output_root = Path(args.output_root)
-    completed = valid_completed_seeds(output_root, seeds) if args.resume else set()
+    completed = (
+        valid_completed_seeds(
+            output_root,
+            seeds,
+            expected_policy=args.policy,
+            expected_model_seed=args.pcc_model_seed,
+        )
+        if args.resume
+        else set()
+    )
     pending = [seed for seed in seeds if seed not in completed]
 
     commands = {}
     for seed in pending:
-        seed_dir = output_root / f"seed_{seed}"
-        command = [
-            sys.executable,
-            "-m",
-            "paper10_geojepa_mpc.experiments.pcc_value_labels",
-            "--registry",
-            str(args.registry),
-            "--partition",
-            str(args.partition),
-            "--seeds",
-            str(seed),
-            "--env-source",
-            str(args.env_source),
-            "--prepared-dir",
-            str(args.prepared_dir),
-            "--states-per-trajectory",
-            str(states),
-            "--candidate-actions",
-            str(candidates),
-            "--horizons",
-            str(args.horizons),
-            "--gamma",
-            str(args.gamma),
-            "--planning-horizon",
-            str(args.reference_horizon),
-            "--top-k",
-            str(args.reference_top_k),
-            "--device",
-            str(args.device),
-            "--output-dir",
-            str(seed_dir),
-        ]
-        if args.reference_checkpoint:
-            command.extend(["--reference-checkpoint", str(args.reference_checkpoint)])
-        commands[seed] = command
+        commands[seed] = _build_seed_command(
+            args,
+            seed=seed,
+            states=states,
+            candidates=candidates,
+        )
 
     with ThreadPoolExecutor(max_workers=int(args.max_workers)) as executor:
         futures = {

@@ -5,7 +5,9 @@ from paper10_geojepa_mpc.experiments.pcc_value_labels import (
     write_trajectory_artifact,
 )
 from paper10_geojepa_mpc.experiments.run_pcc_label_jobs import (
+    _build_seed_command,
     merge_seed_manifests,
+    parse_args,
     valid_completed_seeds,
 )
 
@@ -50,3 +52,44 @@ def test_completed_seed_detection_rejects_missing_artifact(tmp_path):
     (tmp_path / "seed_1000" / "trajectory_1000.npz").unlink()
 
     assert valid_completed_seeds(tmp_path, [1000, 1001]) == set()
+
+
+def test_completed_seed_detection_rejects_wrong_continuation_lineage(tmp_path):
+    _write_seed(tmp_path, 1000)
+
+    assert valid_completed_seeds(
+        tmp_path,
+        [1000],
+        expected_policy="pcc",
+        expected_model_seed=5101,
+    ) == set()
+
+
+def test_pcc_seed_job_command_carries_checkpoint_calibrator_and_model_seed(tmp_path):
+    args = parse_args(
+        [
+            "--registry",
+            "registry.json",
+            "--partition",
+            "train",
+            "--prepared-dir",
+            str(tmp_path),
+            "--policy",
+            "pcc",
+            "--pcc-checkpoint-root",
+            "checkpoints",
+            "--pcc-calibrator",
+            "calibrator.json",
+            "--pcc-model-seed",
+            "5101",
+            "--output-root",
+            str(tmp_path / "out"),
+        ]
+    )
+
+    command = _build_seed_command(args, seed=1000, states=20, candidates=8)
+
+    assert command[command.index("--policy") + 1] == "pcc"
+    assert command[command.index("--pcc-checkpoint-root") + 1] == "checkpoints"
+    assert command[command.index("--pcc-calibrator") + 1] == "calibrator.json"
+    assert command[command.index("--pcc-model-seed") + 1] == "5101"

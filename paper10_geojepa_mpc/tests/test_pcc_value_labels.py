@@ -1,8 +1,11 @@
 import numpy as np
 import pytest
+import torch
+import torch.nn as nn
 
 from paper10_geojepa_mpc.experiments.pcc_value_labels import (
     build_checkpoint_reference_policy_factory,
+    build_pcc_policy_factory,
     build_neighbour_feature_matrix,
     derive_continuation_seed,
     evaluate_candidate_objectives,
@@ -12,6 +15,8 @@ from paper10_geojepa_mpc.experiments.pcc_value_labels import (
     write_label_manifest,
     write_trajectory_artifact,
 )
+from paper10_geojepa_mpc.models.pcc_geojepa import PCCModelOutput
+from paper10_geojepa_mpc.planning.paired_conformal import fit_joint_calibrator
 
 
 class BatchTrackingReferenceAdapter:
@@ -43,6 +48,94 @@ class SixActionReferenceEnv:
 
     def action_masks(self):
         return np.ones(6, dtype=bool)
+
+
+class TinyOfflinePCCEnv:
+    n_blocks = 3
+    block_adj = [np.array([1]), np.array([0, 2]), np.array([1])]
+
+    def __init__(self):
+        self.step_calls = 0
+
+    def _get_block_features(self):
+        return np.zeros((3, 2), dtype=np.float32)
+
+    def _get_global_features(self):
+        return np.zeros(5, dtype=np.float32)
+
+    def action_masks(self):
+        return np.ones(3, dtype=bool)
+
+    def step(self, action):
+        self.step_calls += 1
+        raise AssertionError("offline policy selection must not execute the environment")
+
+
+class ReferencePrefersZeroAdapter(BatchTrackingReferenceAdapter):
+    def assert_compatible(self, n_blocks):
+        assert int(n_blocks) == 3
+
+    def batch_predict(self, block_features, global_features, actions):
+        actions = np.asarray(actions, dtype=np.int64)
+        self.batch_sizes.append(len(actions))
+        return (
+            np.asarray(block_features, dtype=np.float32).copy(),
+            np.asarray(global_features, dtype=np.float32).copy(),
+            -actions.astype(np.float32),
+            {},
+        )
+
+
+class ActionDeltaMember(nn.Module):
+    def forward(self, block, neighbour, global_features, actions):
+        batch = actions.shape[0]
+        horizon_mean = actions.float()[:, None, None].expand(batch, 3, 4)
+        zeros = torch.zeros_like(horizon_mean)
+        return PCCModelOutput(
+            next_block=block,
+            next_global=global_features,
+            immediate_mean=horizon_mean[:, 0],
+            immediate_log_scale=zeros[:, 0],
+            horizon_mean=horizon_mean,
+            horizon_log_scale=zeros,
+            executable_logit=torch.full((batch,), 10.0),
+            latent=torch.zeros(batch, 2),
+        )
+
+
+def test_offline_pcc_policy_can_improve_on_reference_without_env_step():
+    scaling = {
+        "center": np.zeros((3, 4)).tolist(),
+        "scale": np.ones((3, 4)).tolist(),
+    }
+    ensemble = [(ActionDeltaMember(), {"objective_scaling": scaling})]
+    calibrator = fit_joint_calibrator(
+        np.zeros((3, 1, 4)),
+        np.zeros((3, 1, 4)),
+        np.ones((3, 1, 4)),
+        np.arange(3),
+        coverage=0.8,
+    )
+    env = TinyOfflinePCCEnv()
+    factory = build_pcc_policy_factory(
+        ensemble=ensemble,
+        calibrator=calibrator,
+        reference_adapter=ReferencePrefersZeroAdapter(),
+        proposal_rankers=[lambda state: np.array([2, 1, 0])],
+        device="cpu",
+        planning_horizon=3,
+        candidate_budget=3,
+        tolerance_scale=0.0,
+        action_mask_fn=lambda runtime_env: runtime_env.action_masks(),
+        reference_horizon=1,
+        reference_top_k=3,
+        reference_gamma=0.99,
+    )
+
+    action = factory(env)(env, np.random.default_rng(11))
+
+    assert action == 2
+    assert env.step_calls == 0
 
 
 def test_checkpoint_reference_factory_uses_bounded_screening_batches(monkeypatch):

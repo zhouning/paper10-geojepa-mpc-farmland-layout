@@ -14,6 +14,11 @@ from paper10_geojepa_mpc.experiments.value_label_generation import (
     restore_env,
     snapshot_env,
 )
+from paper10_geojepa_mpc.experiments.pcc_offline_policy import (
+    build_neighbour_feature_matrix,
+    build_pcc_checkpoint_policy_factory,
+    build_pcc_policy_factory,
+)
 from paper10_geojepa_mpc.planning.paper9_memory_efficient import (
     memory_efficient_mpc_select_action,
 )
@@ -51,25 +56,6 @@ def _normalize_horizons(horizons: Sequence[int]) -> tuple[int, ...]:
     if tuple(sorted(set(normalized))) != normalized:
         raise ValueError("horizons must be strictly increasing and unique")
     return normalized
-
-
-def build_neighbour_feature_matrix(env, block_features) -> np.ndarray:
-    block_features = np.asarray(block_features, dtype=np.float32)
-    if block_features.ndim != 2:
-        raise ValueError("block_features must have shape [n_blocks, n_features]")
-    if len(env.block_adj) != block_features.shape[0]:
-        raise ValueError("block_adj length must equal n_blocks")
-
-    rows = []
-    for neighbours in env.block_adj:
-        indexes = np.asarray(neighbours, dtype=np.int64).reshape(-1)
-        if indexes.size == 0:
-            rows.append(np.zeros(block_features.shape[1], dtype=np.float32))
-        else:
-            if indexes.min() < 0 or indexes.max() >= block_features.shape[0]:
-                raise ValueError("block_adj contains an out-of-range block index")
-            rows.append(block_features[indexes].mean(axis=0))
-    return np.stack(rows).astype(np.float32)
 
 
 def derive_continuation_seed(
@@ -594,6 +580,11 @@ def parse_args(argv: Sequence[str] | None = None):
     parser = argparse.ArgumentParser()
     parser.add_argument("--registry", required=True)
     parser.add_argument("--partition", required=True)
+    parser.add_argument(
+        "--policy",
+        choices=("paper9_mpc", "pcc"),
+        default="paper9_mpc",
+    )
     parser.add_argument("--seeds", default=None)
     parser.add_argument("--env-source", choices=("paper9", "neijiang"), default="paper9")
     parser.add_argument("--prepared-dir", default=str(ROOT))
@@ -614,6 +605,13 @@ def parse_args(argv: Sequence[str] | None = None):
     parser.add_argument("--gamma", type=float, default=0.99)
     parser.add_argument("--planning-horizon", type=int, default=5)
     parser.add_argument("--top-k", type=int, default=50)
+    parser.add_argument("--pcc-checkpoint-root", default=None)
+    parser.add_argument("--pcc-calibrator", default=None)
+    parser.add_argument("--pcc-model-seed", type=int, default=None)
+    parser.add_argument("--pcc-planning-horizon", type=int, default=3)
+    parser.add_argument("--pcc-candidate-budget", type=int, default=50)
+    parser.add_argument("--pcc-tolerance-scale", type=float, default=0.05)
+    parser.add_argument("--pcc-executable-threshold", type=float, default=0.95)
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--output-dir", required=True)
     return parser.parse_args(argv)
@@ -652,6 +650,15 @@ def main(argv: Sequence[str] | None = None) -> None:
     registry = load_registry(args.registry)
     validate_registry(registry)
     checkpoint = Path(args.reference_checkpoint)
+    reference_contract = registry["offline_reference_policy"]
+    if _sha256_file(checkpoint) != str(reference_contract["checkpoint_sha256"]):
+        raise ValueError("offline reference checkpoint digest mismatch")
+    if (
+        int(args.planning_horizon) != int(reference_contract["planning_horizon"])
+        or int(args.top_k) != int(reference_contract["top_k"])
+        or float(args.gamma) != float(reference_contract["gamma"])
+    ):
+        raise ValueError("offline reference policy configuration mismatch")
 
     def strict_executable_mask(env):
         base = np.asarray(env.action_masks(), dtype=bool)
@@ -660,14 +667,51 @@ def main(argv: Sequence[str] | None = None) -> None:
             raise ValueError("strict executable mask shape mismatch")
         return base & strict
 
-    policy_factory = build_checkpoint_reference_policy_factory(
-        checkpoint,
-        device=args.device,
-        horizon=args.planning_horizon,
-        top_k=args.top_k,
-        gamma=args.gamma,
-        action_mask_fn=strict_executable_mask,
-    )
+    if args.policy == "pcc":
+        if (
+            args.pcc_checkpoint_root is None
+            or args.pcc_calibrator is None
+            or args.pcc_model_seed is None
+        ):
+            raise ValueError(
+                "PCC labels require checkpoint root, calibrator, and model seed"
+            )
+        if int(args.pcc_model_seed) not in {
+            int(value) for value in registry["model_seeds"]
+        }:
+            raise ValueError("PCC label model seed is outside the registry")
+        policy_factory, policy_metadata = build_pcc_checkpoint_policy_factory(
+            checkpoint_root=args.pcc_checkpoint_root,
+            calibrator_path=args.pcc_calibrator,
+            reference_checkpoint=checkpoint,
+            model_seed=args.pcc_model_seed,
+            device=args.device,
+            planning_horizon=args.pcc_planning_horizon,
+            candidate_budget=args.pcc_candidate_budget,
+            tolerance_scale=args.pcc_tolerance_scale,
+            action_mask_fn=strict_executable_mask,
+            reference_horizon=args.planning_horizon,
+            reference_top_k=args.top_k,
+            reference_gamma=args.gamma,
+            executable_threshold=args.pcc_executable_threshold,
+        )
+    else:
+        policy_factory = build_checkpoint_reference_policy_factory(
+            checkpoint,
+            device=args.device,
+            horizon=args.planning_horizon,
+            top_k=args.top_k,
+            gamma=args.gamma,
+            action_mask_fn=strict_executable_mask,
+        )
+        policy_metadata = {
+            "name": "paper9_mpc",
+            "checkpoint": str(checkpoint),
+            "checkpoint_sha256": _sha256_file(checkpoint),
+            "planning_horizon": int(args.planning_horizon),
+            "top_k": int(args.top_k),
+            "gamma": float(args.gamma),
+        }
     horizons = tuple(int(value) for value in args.horizons.split(","))
     manifest = generate_label_partition(
         registry=registry,
@@ -686,14 +730,7 @@ def main(argv: Sequence[str] | None = None) -> None:
         continuation_policy_factory=policy_factory,
         advance_policy_factory=policy_factory,
         executable_target_mask_fn=strict_executable_mask,
-        continuation_policy_metadata={
-            "name": "paper9_mpc",
-            "checkpoint": str(checkpoint),
-            "checkpoint_sha256": _sha256_file(checkpoint),
-            "planning_horizon": int(args.planning_horizon),
-            "top_k": int(args.top_k),
-            "gamma": float(args.gamma),
-        },
+        continuation_policy_metadata=policy_metadata,
     )
     print(json.dumps(manifest, indent=2, sort_keys=True))
 

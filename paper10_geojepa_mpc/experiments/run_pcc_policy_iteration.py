@@ -1,41 +1,21 @@
-import hashlib
+import argparse
 import json
-from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Sequence
 
-
-ROUND1_LABEL_POLICY_CONFIG = {
-    "ensemble_size": 3,
-    "joint_coverage": 0.90,
-    "tolerance_scale": 0.05,
-    "planning_horizon": 3,
-    "executed_feedback": False,
-    "reference_policy": "paper9_mpc",
-}
-
-
-@dataclass(frozen=True)
-class PolicyRound:
-    round_index: int
-    label_policy: str
-    parent_digest: str | None
-
-    def __post_init__(self):
-        if self.round_index not in {0, 1, 2}:
-            raise ValueError("PCC uses exactly two policy-improvement rounds")
-        if self.round_index == 0 and self.parent_digest is not None:
-            raise ValueError("round 0 cannot have a parent digest")
-        if self.round_index > 0 and not self.parent_digest:
-            raise ValueError("improvement rounds require a parent digest")
-
-
-def build_policy_rounds(reference_policy: str) -> tuple[PolicyRound, ...]:
-    return (
-        PolicyRound(0, str(reference_policy), None),
-        PolicyRound(1, "pcc_round1", "resolved_after_round0"),
-        PolicyRound(2, "pcc_round2", "resolved_after_round1"),
-    )
+from paper10_geojepa_mpc.experiments.pcc_policy_iteration_execution import (
+    DEFAULT_REFERENCE_CHECKPOINT,
+    build_iteration_command_plan,
+    execute_policy_iteration,
+)
+from paper10_geojepa_mpc.experiments.pcc_policy_iteration_lineage import (
+    ROUND1_LABEL_POLICY_CONFIG,
+    PolicyRound,
+    build_policy_rounds,
+    verify_policy_iteration_root,
+    verify_round_manifest,
+    write_round_manifest,
+)
 
 
 def run_two_round_policy_iteration(
@@ -92,68 +72,70 @@ def run_two_round_policy_iteration(
     }
 
 
-def _canonical(payload: dict[str, object]) -> bytes:
-    clean = {key: value for key, value in payload.items() if key != "round_digest"}
-    return json.dumps(
-        clean,
-        sort_keys=True,
-        separators=(",", ":"),
-        ensure_ascii=True,
-    ).encode("utf-8")
-
-
-def _round_digest(payload: dict[str, object]) -> str:
-    return hashlib.sha256(_canonical(payload)).hexdigest()
-
-
-def write_round_manifest(
-    path: str | Path,
-    *,
-    round_index: int,
-    parent_digest: str,
-    train_labels_digest: str,
-    calibration_labels_digest: str,
-    checkpoint_digests: list[str],
-    continuation_policy: dict[str, object],
-) -> dict[str, object]:
-    PolicyRound(
-        round_index=int(round_index),
-        label_policy=f"pcc_round{int(round_index)}",
-        parent_digest=str(parent_digest),
+def parse_args(argv: Sequence[str] | None = None):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--registry", required=True)
+    parser.add_argument("--verify-only", action="store_true")
+    parser.add_argument("--input-root", default=None)
+    parser.add_argument("--round0-train-labels", default=None)
+    parser.add_argument("--round0-calibration-labels", default=None)
+    parser.add_argument("--round1-checkpoints", default=None)
+    parser.add_argument("--round1-iteration-ensemble-size", type=int, default=3)
+    parser.add_argument("--round1-iteration-coverage", type=float, default=0.90)
+    parser.add_argument(
+        "--round1-iteration-tolerance-scale",
+        type=float,
+        default=0.05,
     )
-    if len(checkpoint_digests) == 0 or len(set(checkpoint_digests)) != len(
-        checkpoint_digests
-    ):
-        raise ValueError("checkpoint digests must be non-empty and distinct")
-    payload: dict[str, object] = {
-        "schema_version": 1,
-        "round_index": int(round_index),
-        "parent_digest": str(parent_digest),
-        "train_labels_digest": str(train_labels_digest),
-        "calibration_labels_digest": str(calibration_labels_digest),
-        "checkpoint_digests": list(checkpoint_digests),
-        "continuation_policy": dict(continuation_policy),
-    }
-    payload["round_digest"] = _round_digest(payload)
-    path = Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(".tmp.json")
-    temporary.write_text(
-        json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=True) + "\n",
-        encoding="utf-8",
+    parser.add_argument("--round1-iteration-horizon", type=int, default=3)
+    parser.add_argument(
+        "--round1-iteration-candidate-budget",
+        type=int,
+        default=50,
     )
-    temporary.replace(path)
-    return payload
+    parser.add_argument("--rounds", type=int, default=2)
+    parser.add_argument(
+        "--env-source",
+        choices=("paper9", "neijiang"),
+        default="paper9",
+    )
+    parser.add_argument(
+        "--prepared-dir",
+        default=str(Path(__file__).resolve().parents[3]),
+    )
+    parser.add_argument(
+        "--reference-checkpoint",
+        default=str(DEFAULT_REFERENCE_CHECKPOINT),
+    )
+    parser.add_argument("--reference-horizon", type=int, default=5)
+    parser.add_argument("--reference-top-k", type=int, default=50)
+    parser.add_argument("--gamma", type=float, default=0.99)
+    parser.add_argument("--epochs", type=int, default=20)
+    parser.add_argument("--batch-size", type=int, default=128)
+    parser.add_argument("--learning-rate", type=float, default=1e-3)
+    parser.add_argument("--hidden-dim", type=int, default=32)
+    parser.add_argument("--max-label-workers", type=int, default=4)
+    parser.add_argument("--device", default="cpu")
+    parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--output-dir", default=None)
+    return parser.parse_args(argv)
 
 
-def verify_round_manifest(payload: dict[str, object]) -> str:
-    expected = payload.get("round_digest")
-    observed = _round_digest(payload)
-    if not isinstance(expected, str) or observed != expected:
-        raise ValueError("policy round digest mismatch")
-    PolicyRound(
-        round_index=int(payload["round_index"]),
-        label_policy=f"pcc_round{int(payload['round_index'])}",
-        parent_digest=str(payload["parent_digest"]),
+def main(argv: Sequence[str] | None = None) -> None:
+    from paper10_geojepa_mpc.experiments.pcc_protocol_registry import (
+        load_registry,
     )
-    return observed
+
+    args = parse_args(argv)
+    registry = load_registry(args.registry)
+    if args.verify_only:
+        if args.input_root is None:
+            raise ValueError("--verify-only requires --input-root")
+        report = verify_policy_iteration_root(args.input_root, registry=registry)
+    else:
+        report = execute_policy_iteration(args, registry=registry)
+    print(json.dumps(report, indent=2, sort_keys=True, ensure_ascii=True))
+
+
+if __name__ == "__main__":
+    main()
