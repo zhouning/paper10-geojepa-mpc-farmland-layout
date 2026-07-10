@@ -8,6 +8,7 @@ from paper10_geojepa_mpc.planning.pcc_baselines import (
 )
 from paper10_geojepa_mpc.experiments.run_pcc_rollouts import (
     _select_paper9_reference_action,
+    _validate_ensemble_model_seed,
     load_resumable_results,
     run_policy_episode,
     select_without_execution,
@@ -50,6 +51,23 @@ def test_paper9_rollout_reference_action_uses_bounded_screening():
     assert action == 6
     assert max(adapter.batch_sizes) <= 3
     assert info["unexecuted_real_reward_queries"] == 0
+
+
+def test_ensemble_model_seed_must_match_declared_rollout_seed():
+    ensemble = [
+        (object(), {"model_seed": 5101, "member_index": 0}),
+        (object(), {"model_seed": 5101, "member_index": 1}),
+    ]
+
+    _validate_ensemble_model_seed(ensemble, expected_model_seed=5101)
+
+    with pytest.raises(ValueError, match="lineage"):
+        _validate_ensemble_model_seed(ensemble, expected_model_seed=5102)
+    with pytest.raises(ValueError, match="lineage"):
+        _validate_ensemble_model_seed(
+            [(object(), {"member_index": 0})],
+            expected_model_seed=5101,
+        )
 
 
 class SpyEnv:

@@ -245,6 +245,21 @@ def _select_paper9_reference_action(
     return int(action), info
 
 
+def _validate_ensemble_model_seed(ensemble, *, expected_model_seed: int) -> None:
+    if not ensemble:
+        raise ValueError("ensemble checkpoint lineage is empty")
+    observed = []
+    for _, checkpoint in ensemble:
+        try:
+            observed.append(int(checkpoint["model_seed"]))
+        except (KeyError, TypeError, ValueError) as error:
+            raise ValueError("ensemble checkpoint lineage is missing model_seed") from error
+    if set(observed) != {int(expected_model_seed)}:
+        raise ValueError(
+            "ensemble checkpoint lineage does not match declared --model-seed"
+        )
+
+
 def _parse_seed_spec(spec: str) -> list[int]:
     seeds = []
     for token in str(spec).split(","):
@@ -415,6 +430,11 @@ def main(argv: Sequence[str] | None = None) -> None:
         if needs_ensemble
         else []
     )
+    if ensemble:
+        _validate_ensemble_model_seed(
+            ensemble,
+            expected_model_seed=int(args.model_seed),
+        )
     if args.policy.startswith("pcc_") and args.calibrator is None:
         raise ValueError(f"--calibrator is required for {args.policy}")
     calibrator = (
