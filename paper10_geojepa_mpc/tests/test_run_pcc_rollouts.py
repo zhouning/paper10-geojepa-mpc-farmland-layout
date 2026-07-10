@@ -1,6 +1,11 @@
 import numpy as np
 import pytest
 
+from paper10_geojepa_mpc.planning.pcc_baselines import (
+    OnlineExpertSelector,
+    build_baseline,
+    matched_pool_size,
+)
 from paper10_geojepa_mpc.experiments.run_pcc_rollouts import (
     load_resumable_results,
     run_policy_episode,
@@ -134,3 +139,85 @@ def test_seed_result_is_atomic_and_resume_checks_digests(tmp_path):
             registry_digest="changed",
             checkpoint_digests=["member0"],
         )
+
+
+class StaticPolicy:
+    def __init__(self, action=1):
+        self.action = int(action)
+        self.observed = []
+
+    def select(self, state):
+        return self.action, {"unexecuted_real_reward_queries": 0}
+
+    def observe(self, transition):
+        self.observed.append(transition)
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        "executable_random",
+        "paper9_mpc",
+        "legacy_value_filter",
+        "model_reward_greedy",
+        "rank_only",
+        "distributional_risk",
+        "online_expert_selector",
+        "pcc_matched",
+        "pcc_full",
+    ],
+)
+def test_every_no_oracle_baseline_builds_without_real_reward_access(name):
+    factories = {
+        baseline: (lambda action=index: StaticPolicy(action))
+        for index, baseline in enumerate(
+            [
+                "paper9_mpc",
+                "legacy_value_filter",
+                "model_reward_greedy",
+                "rank_only",
+                "distributional_risk",
+                "pcc_matched",
+                "pcc_full",
+            ],
+            start=1,
+        )
+    }
+    policy = build_baseline(
+        name,
+        {
+            "rng": np.random.default_rng(3),
+            "policy_factories": factories,
+            "expert_names": ["paper9_mpc", "model_reward_greedy"],
+            "expert_learning_rate": 0.1,
+        },
+    )
+
+    action, info = policy.select(
+        {"executable_mask": np.ones(10, dtype=bool)}
+    )
+
+    assert isinstance(action, int)
+    assert info["unexecuted_real_reward_queries"] == 0
+
+
+def test_online_expert_updates_only_the_executed_expert():
+    first = StaticPolicy(1)
+    second = StaticPolicy(2)
+    selector = OnlineExpertSelector(
+        [first, second],
+        learning_rate=0.1,
+        rng=np.random.default_rng(4),
+    )
+
+    selector.select({"executable_mask": np.ones(3, dtype=bool)})
+    chosen = selector.last_selected_expert
+    selector.observe({"action": chosen + 1, "reward": 2.0})
+
+    assert len([policy for policy in (first, second) if policy.observed]) == 1
+
+
+def test_matched_pool_size_enforces_fifty_candidate_equivalents():
+    assert matched_pool_size(3) == 16
+    assert matched_pool_size(5) == 10
+    assert 3 * matched_pool_size(3) <= 50
