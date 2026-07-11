@@ -37,7 +37,21 @@ Observed result: `22 passed`.
 
 ### Round-0 Bishan calibration labels
 
-Checkpoint sampled at `2026-07-11T12:50:59+08:00`:
+Final state verified at `2026-07-11T14:38:03+08:00`:
+
+- Status: complete
+- Completed at: `2026-07-11T13:46:16+08:00`
+- Seeds: `2000-2019` (20/20)
+- Artifact count: 20
+- Root manifest:
+  `paper10_runs/pcc_v1/labels/bishan_calibration/manifest.json`
+- Manifest digest:
+  `18f04a375bc59598047342bc59e27c05f29aaac96bc92d2583407e51f14d647b`
+- Continuation policy: locked `paper9_mpc`
+- Launcher stderr size: 0 bytes
+
+The preceding in-progress checkpoint, sampled at
+`2026-07-11T12:50:59+08:00`, recorded:
 
 - Completed: seeds `2000-2011` (12/20; 60%)
 - Running: seeds `2012-2015`
@@ -47,7 +61,7 @@ Checkpoint sampled at `2026-07-11T12:50:59+08:00`:
 - Output root:
   `paper10_runs/pcc_v1/labels/bishan_calibration/`
 
-The live command is:
+The completed launcher command was:
 
 ```powershell
 D:\adk\.venv\Scripts\python.exe -m paper10_geojepa_mpc.experiments.run_pcc_label_jobs `
@@ -64,13 +78,11 @@ D:\adk\.venv\Scripts\python.exe -m paper10_geojepa_mpc.experiments.run_pcc_label
   --output-root paper10_runs\pcc_v1\labels\bishan_calibration
 ```
 
-Do not start a duplicate launcher while PID `21452` or its child workers are
-alive. Seed `job.log` files are written only after the corresponding subprocess
-finishes, so an empty root launcher log is not evidence of failure.
-
-If the launcher is no longer alive and the root manifest is absent, rerun the
-same command with `--resume`; completed seed manifests and NPZ hashes are checked
-before pending seeds are scheduled.
+The launcher and all child workers exited after writing the merged manifest.
+Seed `job.log` files were written after each subprocess finished. If later
+integrity checks reject the merged manifest, rerun the same command with
+`--resume`; completed seed manifests and NPZ hashes are checked before any seed
+is scheduled.
 
 ## Resume checks
 
@@ -90,6 +102,10 @@ the locked `paper9_mpc` continuation policy.
 
 ## Next execution steps
 
+As of `2026-07-11T14:38:03+08:00`, no ensemble-training or policy-iteration
+process is active, and `paper10_runs/pcc_v1/checkpoints/` has not yet been
+created.
+
 1. Train all declared Bishan ensemble combinations for model seeds
    `5101,5102,5103` and ensemble sizes `3,5` using the completed training-label
    manifest. Expected total: 24 member checkpoints.
@@ -104,4 +120,3 @@ the locked `paper9_mpc` continuation policy.
    frozen registry digest has been committed.
 
 The exact commands and success criteria remain in Task 13 of the governing plan.
-
