@@ -131,6 +131,19 @@ class ExperimentInventory:
         record = self._record(model_seed, ensemble_size, policy_round)
         return tuple(sorted(record.calibrators))
 
+    def calibrator_digest(
+        self,
+        model_seed: int,
+        ensemble_size: int,
+        policy_round: int,
+        coverage: float,
+    ) -> str:
+        record = self._record(model_seed, ensemble_size, policy_round)
+        try:
+            return record.calibrator_digests[float(coverage)]
+        except KeyError as exc:
+            raise KeyError(f"calibrator coverage is missing: {coverage}") from exc
+
     def report(self) -> dict[str, object]:
         records = []
         for record in self.records:
@@ -440,12 +453,20 @@ def _validate_round_parents(
 def build_inventory(
     root: str | Path,
     *,
+    calibrator_root: str | Path | None = None,
     model_seeds: Sequence[int],
     registry: dict[str, object] | None = None,
 ) -> ExperimentInventory:
     root = Path(root).resolve()
     if not root.is_dir():
         raise FileNotFoundError(f"experiment inventory root does not exist: {root}")
+    calibrator_root = (
+        root if calibrator_root is None else Path(calibrator_root).resolve()
+    )
+    if not calibrator_root.is_dir():
+        raise FileNotFoundError(
+            f"calibrator inventory root does not exist: {calibrator_root}"
+        )
     registry = load_registry() if registry is None else registry
     validate_registry(registry)
     expected_model_seeds = tuple(int(value) for value in model_seeds)
@@ -462,7 +483,7 @@ def build_inventory(
     if registry.get("status") == "frozen":
         frozen_registry_digest = verify_frozen_registry(registry)
     checkpoints = _checkpoint_artifacts(root)
-    calibrators = _calibrator_artifacts(root)
+    calibrators = _calibrator_artifacts(calibrator_root)
     manifests = _round_manifests(root)
     protocol_id = str(registry["protocol_id"])
     calibration_seeds = tuple(

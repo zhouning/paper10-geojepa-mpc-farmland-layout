@@ -1,6 +1,7 @@
 import hashlib
 import json
 from pathlib import Path
+import shutil
 
 import numpy as np
 import pytest
@@ -171,7 +172,33 @@ def test_inventory_resolves_every_model_seed_ensemble_round(tmp_path):
     assert inventory.checkpoint_root(5102, 3, 2).name == "checkpoints"
     assert len(inventory.checkpoint_digests(5102, 3, 2)) == 3
     assert inventory.coverages(5102, 3, 2) == (0.8, 0.9, 0.95)
+    assert len(inventory.calibrator_digest(5102, 3, 2, 0.9)) == 64
     assert len(inventory.records) == 6
+
+
+def test_inventory_supports_separate_calibrator_root(tmp_path):
+    checkpoint_root = tmp_path / "checkpoints"
+    calibration_root = tmp_path / "calibration"
+    create_inventory_fixture(
+        checkpoint_root,
+        model_seeds=(5101,),
+        rounds=(1,),
+    )
+    calibration_root.mkdir()
+    shutil.move(
+        str(checkpoint_root / "calibration_blobs"),
+        str(calibration_root / "calibration_blobs"),
+    )
+
+    inventory = build_inventory(
+        checkpoint_root,
+        calibrator_root=calibration_root,
+        model_seeds=(5101,),
+    )
+
+    assert inventory.calibrator(5101, 3, 1, 0.9).is_relative_to(
+        calibration_root
+    )
 
 
 @pytest.mark.parametrize(

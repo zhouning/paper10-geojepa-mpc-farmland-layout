@@ -76,6 +76,32 @@ def test_pcc_v1_locks_paper9_mpc_as_offline_continuation():
     assert reference["continuation"] == "paper9_mpc"
 
 
+def test_pcc_v1_locks_baseline_selection_anchor_before_grid_search():
+    anchor = load_registry()["development_baseline_anchor"]
+
+    assert anchor["ensemble_size"] == 3
+    assert anchor["policy_round"] == 1
+    assert anchor["joint_coverage"] == 0.9
+    assert anchor["stage_a_seeds"] == [3000, 3001, 3002, 3003, 3004]
+    assert anchor["stage_a_rollout_steps"] == 3
+    assert anchor["baseline_seeds"] == list(range(3000, 3010))
+    assert anchor["baseline_rollout_steps"] == 100
+    assert set(anchor["candidates"]) == {
+        "executable_random",
+        "paper9_mpc",
+        "legacy_value_filter",
+        "model_reward_greedy",
+        "rank_only",
+        "distributional_risk",
+        "online_expert_selector",
+    }
+    assert not set(anchor["candidates"]) & {
+        "pcc_matched",
+        "pcc_full",
+        "oracle_action_audit_diagnostic",
+    }
+
+
 def test_registry_rejects_random_continuation_identity():
     payload = load_registry()
     payload["offline_reference_policy"]["continuation"] = "random"
