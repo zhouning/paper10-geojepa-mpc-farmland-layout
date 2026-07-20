@@ -1,6 +1,9 @@
+import hashlib
+import json
 from pathlib import Path
 
 import numpy as np
+import pytest
 import torch
 
 from paper10_geojepa_mpc.training import pcc_training
@@ -9,7 +12,15 @@ from paper10_geojepa_mpc.experiments.pcc_value_labels import (
     write_trajectory_artifact,
 )
 from paper10_geojepa_mpc.models.pcc_geojepa import PCCGeoJEPAMember
-from paper10_geojepa_mpc.experiments.run_pcc_train import resolve_ensemble_size
+from paper10_geojepa_mpc.experiments.run_pcc_train import (
+    resolve_ensemble_size,
+    validate_adaptation_request,
+    validate_adaptation_hyperparameters,
+)
+from paper10_geojepa_mpc.experiments.pcc_protocol_registry import (
+    freeze_registry,
+    load_registry,
+)
 from paper10_geojepa_mpc.training.pcc_training import (
     bootstrap_trajectory_ids,
     compute_robust_objective_scaling,
@@ -87,6 +98,58 @@ def test_objective_heads_scope_freezes_executable_and_representation_layers():
     assert all(
         parameter.requires_grad is (name in trainable)
         for name, parameter in model.named_parameters()
+    )
+
+
+def test_dongxing_adaptation_changes_only_objective_heads_and_records_lineage(
+    tmp_path,
+):
+    manifest = _fixture_manifest(tmp_path / "labels")
+    parent_paths = train_pcc_ensemble(
+        labels_manifest=manifest,
+        model_seed=5101,
+        ensemble_size=1,
+        epochs=1,
+        batch_size=4,
+        learning_rate=0.0,
+        device="cpu",
+        output_dir=tmp_path / "parent",
+        hidden_dim=8,
+    )
+    _, before = load_pcc_checkpoint(parent_paths[0], device="cpu")
+
+    adapted_paths = train_pcc_ensemble(
+        labels_manifest=manifest,
+        model_seed=5101,
+        ensemble_size=1,
+        epochs=1,
+        batch_size=4,
+        learning_rate=1e-2,
+        device="cpu",
+        output_dir=tmp_path / "adapted",
+        hidden_dim=8,
+        trainable_scope="objective_heads",
+        init_checkpoint_root=tmp_path / "parent",
+        registry_digest="f" * 64,
+        region="dongxing",
+    )
+    _, after = load_pcc_checkpoint(adapted_paths[0], device="cpu")
+
+    for name, value in before["state_dict"].items():
+        if name.startswith(("immediate_head.", "horizon_head.")):
+            continue
+        torch.testing.assert_close(value, after["state_dict"][name])
+    assert after["region"] == "dongxing"
+    assert after["registry_digest"] == "f" * 64
+    assert after["parent_checkpoint_sha256"] == hashlib.sha256(
+        parent_paths[0].read_bytes()
+    ).hexdigest()
+    assert after["adaptation_labels_manifest_digest"] == after[
+        "labels_manifest_digest"
+    ]
+    assert all(
+        name.startswith(("immediate_head.", "horizon_head."))
+        for name in after["trainable_parameter_names"]
     )
 
 
@@ -210,6 +273,87 @@ def test_frozen_ensemble_size_cannot_be_reselected_for_adaptation():
     }
 
     assert resolve_ensemble_size(registry, None, from_frozen=True) == 5
+
+
+def test_dongxing_adaptation_request_binds_partition_and_parent_digests(tmp_path):
+    parent_root = tmp_path / "parent"
+    parent_root.mkdir()
+    parent_paths = []
+    for member in range(3):
+        path = parent_root / f"member_{member}.pt"
+        path.write_bytes(f"parent-{member}".encode("ascii"))
+        parent_paths.append(path)
+    parent_digests = [
+        hashlib.sha256(path.read_bytes()).hexdigest() for path in parent_paths
+    ]
+    selected_digests = [
+        *parent_digests,
+        *[f"{index:064x}" for index in range(3, 9)],
+    ]
+    registry_path = tmp_path / "registry.json"
+    registry_path.write_text(json.dumps(load_registry()), encoding="utf-8")
+    frozen = freeze_registry(
+        registry_path,
+        selected_config={
+            "ensemble_size": 3,
+            "checkpoint_digests": selected_digests,
+        },
+    )
+    manifest_path = tmp_path / "dongxing_manifest.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "protocol_id": "pcc_v1",
+                "partition": "dongxing_adaptation",
+                "trajectory_seeds": [6000, 6001, 6002, 6003],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    observed = validate_adaptation_request(
+        frozen,
+        labels_manifest=manifest_path,
+        model_seed=5101,
+        init_checkpoint_root=parent_root,
+    )
+
+    assert observed == parent_digests
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["trajectory_seeds"] = [6000, 6001, 6002]
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    with pytest.raises(ValueError, match="seed block"):
+        validate_adaptation_request(
+            frozen,
+            labels_manifest=manifest_path,
+            model_seed=5101,
+            init_checkpoint_root=parent_root,
+        )
+
+
+def test_dongxing_adaptation_hyperparameters_are_frozen(tmp_path):
+    registry_path = tmp_path / "registry.json"
+    registry_path.write_text(json.dumps(load_registry()), encoding="utf-8")
+    frozen = freeze_registry(
+        registry_path,
+        selected_config={"ensemble_size": 3},
+    )
+    locked = {
+        "epochs": 50,
+        "batch_size": 128,
+        "learning_rate": 1e-3,
+        "hidden_dim": 32,
+        "trainable_scope": "objective_heads",
+        "representation": "action_relative",
+        "county_action_count": None,
+    }
+
+    assert validate_adaptation_hyperparameters(frozen, **locked) == locked
+    with pytest.raises(ValueError, match="hyperparameters"):
+        validate_adaptation_hyperparameters(
+            frozen,
+            **{**locked, "learning_rate": 1e-2},
+        )
 
 
 def test_ensemble_members_use_distinct_seeds_and_bootstrap_membership(tmp_path):

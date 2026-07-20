@@ -12,6 +12,7 @@ from paper10_geojepa_mpc.experiments.pcc_confirmatory_statistics import (
     holm_adjust,
     load_confirmation_artifacts,
     main,
+    manuscript_claim_gate,
 )
 from paper10_geojepa_mpc.experiments.pcc_protocol_registry import (
     freeze_registry,
@@ -134,6 +135,28 @@ def test_locked_confirmation_rejects_incomplete_seed_blocks():
             bootstrap_seed=7,
             draws=100,
         )
+
+
+def test_failed_confirmation_emits_exact_failed_gate_without_retuning():
+    primary = np.ones((3, 20, 4), dtype=float)
+    primary[:, :, 3] = -1.0
+    matched = np.ones((3, 20, 4), dtype=float)
+    dongxing = np.zeros((3, 20, 4), dtype=float)
+    locked = evaluate_locked_confirmation(
+        primary,
+        matched,
+        dongxing,
+        information_audit_passed=True,
+        bootstrap_seed=7,
+        draws=1000,
+    )
+
+    claim = manuscript_claim_gate({"locked_confirmation": locked})
+
+    assert claim["primary_success"] is False
+    assert claim["failed_gates"] == ["bishan.connected_area_benefit"]
+    assert "retun" not in json.dumps(claim).lower()
+    assert claim["allow_performance_breakthrough_claim"] is False
 
 
 def test_holm_adjustment_is_monotone_in_sorted_p_values():

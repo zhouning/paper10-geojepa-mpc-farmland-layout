@@ -8,6 +8,7 @@ import pytest
 import torch
 
 from paper10_geojepa_mpc.experiments.pcc_experiment_inventory import (
+    build_adapted_inventory,
     build_inventory,
     main,
 )
@@ -199,6 +200,236 @@ def test_inventory_supports_separate_calibrator_root(tmp_path):
     assert inventory.calibrator(5101, 3, 1, 0.9).is_relative_to(
         calibration_root
     )
+
+
+def create_adapted_inventory_fixture(
+    root: Path,
+    *,
+    first_checkpoint_overrides=None,
+    omit_first_checkpoint_fields=(),
+    adaptation_label_digests=None,
+    calibration_label_digests=None,
+    first_summary_overrides=None,
+):
+    checkpoint_root = root / "adapted"
+    calibration_root = root / "calibration"
+    registry_path = root / "registry.json"
+    registry_path.write_text(json.dumps(load_registry()), encoding="utf-8")
+    parent_digests = [f"{index + 1:064x}" for index in range(9)]
+    frozen = freeze_registry(
+        registry_path,
+        selected_config={
+            "ensemble_size": 3,
+            "policy_round": 2,
+            "joint_coverage": 0.9,
+            "checkpoint_digests": parent_digests,
+        },
+    )
+    calibration_seeds = tuple(frozen["partitions"]["dongxing_calibration"])
+    adaptation_label_digests = dict(adaptation_label_digests or {})
+    calibration_label_digests = dict(calibration_label_digests or {})
+    for model_index, model_seed in enumerate(frozen["model_seeds"]):
+        model_root = checkpoint_root / f"model-{model_seed}"
+        model_root.mkdir(parents=True)
+        paths = []
+        checkpoint_digests = []
+        for member_index in range(3):
+            path = model_root / f"member_{member_index}.pt"
+            checkpoint = {
+                "model_seed": model_seed,
+                "member_seed": model_seed * 100 + member_index,
+                "member_index": member_index,
+                "bootstrap_trajectory_ids": [
+                    6000 + ((member_index + offset) % 4)
+                    for offset in range(4)
+                ],
+                "labels_manifest_digest": adaptation_label_digests.get(
+                    model_seed, "adapt-dongxing"
+                ),
+                "adaptation_labels_manifest_digest": (
+                    adaptation_label_digests.get(model_seed, "adapt-dongxing")
+                ),
+                "registry_digest": frozen["frozen_digest"],
+                "protocol_id": frozen["protocol_id"],
+                "objective_names": list(OBJECTIVE_NAMES),
+                "trainable_scope": "objective_heads",
+                "trainable_parameter_names": [
+                    "immediate_head.weight",
+                    "horizon_head.weight",
+                ],
+                "region": "dongxing",
+                "parent_checkpoint_sha256": parent_digests[
+                    model_index * 3 + member_index
+                ],
+            }
+            if model_index == 0 and member_index == 0:
+                checkpoint.update(first_checkpoint_overrides or {})
+                for field in omit_first_checkpoint_fields:
+                    checkpoint.pop(field, None)
+            torch.save(checkpoint, path)
+            paths.append(path)
+            checkpoint_digests.append(_sha256_file(path))
+        summary = {
+            "protocol_id": frozen["protocol_id"],
+            "registry_digest": frozen["frozen_digest"],
+            "region": "dongxing",
+            "model_seed": model_seed,
+            "ensemble_size": 3,
+            "trainable_scope": "objective_heads",
+            "adaptation_hyperparameters": dict(
+                frozen["dongxing_adaptation_training"]
+            ),
+            "parent_checkpoint_digests": parent_digests[
+                model_index * 3 : (model_index + 1) * 3
+            ],
+            "checkpoints": [
+                {"path": str(path), "sha256": digest}
+                for path, digest in zip(paths, checkpoint_digests)
+            ],
+        }
+        if model_index == 0:
+            summary.update(first_summary_overrides or {})
+        (model_root / "training_summary.json").write_text(
+            json.dumps(summary),
+            encoding="utf-8",
+        )
+        calibrator = JointPairedCalibrator(
+            coverage=0.9,
+            q_joint=1.0,
+            trajectory_ids=np.asarray(calibration_seeds),
+            trajectory_scores=np.ones(len(calibration_seeds)),
+            objective_names=OBJECTIVE_NAMES,
+            protocol_id=frozen["protocol_id"],
+            calibration_seeds=calibration_seeds,
+            labels_manifest_digest=calibration_label_digests.get(
+                model_seed, "calibration-dongxing"
+            ),
+            checkpoint_digests=tuple(checkpoint_digests),
+        )
+        save_joint_calibrator(
+            calibration_root / f"model-{model_seed}.json",
+            calibrator,
+        )
+    return checkpoint_root, calibration_root, frozen
+
+
+def test_adapted_inventory_resolves_only_frozen_dongxing_winner(tmp_path):
+    checkpoint_root, calibration_root, frozen = (
+        create_adapted_inventory_fixture(tmp_path)
+    )
+
+    inventory = build_adapted_inventory(
+        checkpoint_root,
+        calibrator_root=calibration_root,
+        registry=frozen,
+    )
+
+    assert len(inventory.records) == 3
+    assert len(inventory.checkpoint_digests(5102, 3, 2)) == 3
+    assert inventory.coverages(5102, 3, 2) == (0.9,)
+
+
+@pytest.mark.parametrize(
+    ("overrides", "omitted_fields", "message"),
+    [
+        (
+            {"parent_checkpoint_sha256": "f" * 64},
+            (),
+            "checkpoint lineage",
+        ),
+        (
+            {"bootstrap_trajectory_ids": [8000]},
+            (),
+            "adaptation partition",
+        ),
+        ({}, ("objective_names",), "objective order"),
+    ],
+    ids=("parent-hash", "bootstrap-partition", "objective-order"),
+)
+def test_adapted_inventory_rejects_checkpoint_lineage_mismatch(
+    tmp_path,
+    overrides,
+    omitted_fields,
+    message,
+):
+    checkpoint_root, calibration_root, frozen = (
+        create_adapted_inventory_fixture(
+            tmp_path,
+            first_checkpoint_overrides=overrides,
+            omit_first_checkpoint_fields=omitted_fields,
+        )
+    )
+
+    with pytest.raises(ValueError, match=message):
+        build_adapted_inventory(
+            checkpoint_root,
+            calibrator_root=calibration_root,
+            registry=frozen,
+        )
+
+
+@pytest.mark.parametrize(
+    ("fixture_overrides", "message"),
+    [
+        (
+            {
+                "adaptation_label_digests": {
+                    5101: "adapt-a",
+                    5102: "adapt-b",
+                    5103: "adapt-c",
+                }
+            },
+            "shared adaptation label",
+        ),
+        (
+            {
+                "calibration_label_digests": {
+                    5101: "calibration-a",
+                    5102: "calibration-b",
+                    5103: "calibration-c",
+                }
+            },
+            "shared calibration label",
+        ),
+    ],
+    ids=("adaptation-labels", "calibration-labels"),
+)
+def test_adapted_inventory_requires_shared_label_manifests(
+    tmp_path,
+    fixture_overrides,
+    message,
+):
+    checkpoint_root, calibration_root, frozen = (
+        create_adapted_inventory_fixture(tmp_path, **fixture_overrides)
+    )
+
+    with pytest.raises(ValueError, match=message):
+        build_adapted_inventory(
+            checkpoint_root,
+            calibrator_root=calibration_root,
+            registry=frozen,
+        )
+
+
+def test_adapted_inventory_rejects_training_hyperparameter_mismatch(tmp_path):
+    checkpoint_root, calibration_root, frozen = (
+        create_adapted_inventory_fixture(
+            tmp_path,
+            first_summary_overrides={
+                "adaptation_hyperparameters": {
+                    **load_registry()["dongxing_adaptation_training"],
+                    "learning_rate": 0.01,
+                }
+            },
+        )
+    )
+
+    with pytest.raises(ValueError, match="adaptation hyperparameters"):
+        build_adapted_inventory(
+            checkpoint_root,
+            calibrator_root=calibration_root,
+            registry=frozen,
+        )
 
 
 @pytest.mark.parametrize(

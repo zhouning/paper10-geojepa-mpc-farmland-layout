@@ -20,7 +20,10 @@ from paper10_geojepa_mpc.experiments.pcc_protocol_registry import (
     load_registry,
     verify_frozen_registry,
 )
-from paper10_geojepa_mpc.experiments.pcc_experiment_inventory import build_inventory
+from paper10_geojepa_mpc.experiments.pcc_experiment_inventory import (
+    build_adapted_inventory,
+    build_inventory,
+)
 
 
 @dataclass(frozen=True)
@@ -562,12 +565,19 @@ def main(argv: Sequence[str] | None = None) -> None:
             calibrator_root = (
                 args.dongxing_calibration_root or args.dongxing_checkpoint_root
             )
-        inventory = build_inventory(
-            checkpoint_root,
-            calibrator_root=calibrator_root,
-            model_seeds=registry["model_seeds"],
-            registry=registry,
-        )
+        if region == "bishan":
+            inventory = build_inventory(
+                checkpoint_root,
+                calibrator_root=calibrator_root,
+                model_seeds=registry["model_seeds"],
+                registry=registry,
+            )
+        else:
+            inventory = build_adapted_inventory(
+                checkpoint_root,
+                calibrator_root=calibrator_root,
+                registry=registry,
+            )
         plan = build_confirmation_plan(
             registry,
             registry_path=registry_path,

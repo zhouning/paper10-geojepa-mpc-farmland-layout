@@ -328,6 +328,9 @@ def _checkpoint_payload(
     trainable_scope: str,
     metrics: dict[str, float],
     registry_digest: str | None,
+    region: str,
+    parent_checkpoint_sha256: str | None,
+    trainable_parameter_names: list[str],
 ) -> dict[str, object]:
     return {
         "model_class": "PCCGeoJEPAMember",
@@ -352,7 +355,15 @@ def _checkpoint_payload(
         "protocol_id": manifest["protocol_id"],
         "registry_digest": registry_digest,
         "labels_manifest_digest": manifest["manifest_digest"],
+        "adaptation_labels_manifest_digest": (
+            manifest["manifest_digest"]
+            if trainable_scope == "objective_heads"
+            else None
+        ),
+        "region": str(region),
+        "parent_checkpoint_sha256": parent_checkpoint_sha256,
         "trainable_scope": trainable_scope,
+        "trainable_parameter_names": list(trainable_parameter_names),
         "metrics": metrics,
     }
 
@@ -452,11 +463,19 @@ def train_pcc_ensemble(
     registry_digest: str | None = None,
     representation: str = "action_relative",
     county_action_count: int | None = None,
+    region: str = "bishan",
 ) -> list[Path]:
     if min(int(ensemble_size), int(epochs), int(batch_size)) <= 0:
         raise ValueError("ensemble_size, epochs, and batch_size must be positive")
     if float(learning_rate) < 0.0:
         raise ValueError("learning_rate must be non-negative")
+    region = str(region)
+    if region not in {"bishan", "dongxing"}:
+        raise ValueError("region must be bishan or dongxing")
+    if region == "dongxing" and trainable_scope != "objective_heads":
+        raise ValueError("Dongxing adaptation must update objective heads only")
+    if trainable_scope == "objective_heads" and registry_digest is None:
+        raise ValueError("objective-head adaptation requires a frozen registry digest")
 
     manifest_path, manifest = _load_manifest(labels_manifest)
     artifact_index = _load_artifact_index(manifest_path, manifest)
@@ -487,9 +506,20 @@ def train_pcc_ensemble(
             county_action_count=county_action_count,
         ).to(device_obj)
         init_path = _resolve_init_checkpoint(init_checkpoint_root, member_index)
+        parent_checkpoint_sha256 = None
         if init_path is not None:
-            initial_model, _ = load_pcc_checkpoint(init_path, device=device)
+            initial_model, initial_checkpoint = load_pcc_checkpoint(
+                init_path,
+                device=device,
+            )
+            if (
+                int(initial_checkpoint.get("model_seed", -1)) != int(model_seed)
+                or int(initial_checkpoint.get("member_index", -1))
+                != int(member_index)
+            ):
+                raise ValueError("adaptation parent checkpoint lineage mismatch")
             model.load_state_dict(initial_model.state_dict(), strict=True)
+            parent_checkpoint_sha256 = _sha256_file(init_path)
         elif trainable_scope != "all":
             raise ValueError("objective_heads training requires init_checkpoint_root")
         trainable_names = set_trainable_scope(model, trainable_scope)
@@ -573,6 +603,9 @@ def train_pcc_ensemble(
                 trainable_scope=trainable_scope,
                 metrics=metrics,
                 registry_digest=registry_digest,
+                region=region,
+                parent_checkpoint_sha256=parent_checkpoint_sha256,
+                trainable_parameter_names=sorted(trainable_names),
             ),
             checkpoint_path,
         )

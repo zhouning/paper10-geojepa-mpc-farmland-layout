@@ -63,6 +63,15 @@ def test_registry_contains_locked_scientific_contract():
         "states_per_trajectory": 10,
         "candidate_actions": 8,
     }
+    assert payload["dongxing_adaptation_training"] == {
+        "epochs": 50,
+        "batch_size": 128,
+        "learning_rate": 0.001,
+        "hidden_dim": 32,
+        "trainable_scope": "objective_heads",
+        "representation": "action_relative",
+        "county_action_count": None,
+    }
     assert payload["offline_reference_policy"]["planning_horizon"] == 5
     assert payload["offline_reference_policy"]["top_k"] == 50
     assert len(payload["offline_reference_policy"]["checkpoint_sha256"]) == 64
@@ -142,6 +151,12 @@ def test_pcc_v1_rejects_missing_locked_scientific_contract():
         (
             lambda payload: payload["compute_budget"].__setitem__(
                 "single_model_candidate_equivalents", 100
+            ),
+            "scientific contract",
+        ),
+        (
+            lambda payload: payload["dongxing_adaptation_training"].__setitem__(
+                "learning_rate", 0.01
             ),
             "scientific contract",
         ),

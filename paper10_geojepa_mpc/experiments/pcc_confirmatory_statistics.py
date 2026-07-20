@@ -196,6 +196,68 @@ def evaluate_locked_confirmation(
     }
 
 
+def manuscript_claim_gate(report: dict[str, object]) -> dict[str, object]:
+    locked = report.get("locked_confirmation", report)
+    primary = locked["primary"]
+    matched = locked["matched_compute"]
+    dongxing = locked["dongxing"]
+    failures = []
+
+    primary_atomic_failed = False
+    if primary.get("reward_superiority") is not True:
+        failures.append("bishan.reward")
+        primary_atomic_failed = True
+    for objective, passed in primary.get("planning_noninferiority", {}).items():
+        if passed is not True:
+            failures.append(f"bishan.{objective}")
+            primary_atomic_failed = True
+    if (
+        not primary_atomic_failed
+        and int(primary.get("training_seed_joint_support", 0)) < 2
+    ):
+        failures.append("bishan.minimum_supporting_model_seeds")
+
+    matched_atomic_failed = False
+    if matched.get("reward_superiority") is not True:
+        failures.append("matched_compute.reward")
+        matched_atomic_failed = True
+    for objective, passed in matched.get("planning_noninferiority", {}).items():
+        if passed is not True:
+            failures.append(f"matched_compute.{objective}")
+            matched_atomic_failed = True
+    if (
+        not matched_atomic_failed
+        and int(matched.get("training_seed_joint_support", 0)) < 2
+    ):
+        failures.append("matched_compute.minimum_supporting_model_seeds")
+
+    for objective, passed in dongxing.get("directional_gates", {}).items():
+        if passed is not True:
+            failures.append(f"dongxing.{objective}")
+    if locked.get("information_audit_passed") is not True:
+        failures.append("information_set.zero_unexecuted_real_reward_queries")
+
+    success = bool(locked.get("overall_success") is True and not failures)
+    return {
+        "primary_success": success,
+        "failed_gates": failures,
+        "allow_performance_breakthrough_claim": success,
+        "allowed_claims": (
+            ["locked PCC improvement with planning non-inferiority"]
+            if success
+            else ["locked confirmation did not satisfy every primary condition"]
+        ),
+        "forbidden_claims": (
+            []
+            if success
+            else [
+                "overall PCC performance breakthrough",
+                "reuse of PCC v1 confirmation seeds for a redesigned study",
+            ]
+        ),
+    }
+
+
 def holm_adjust(p_values) -> np.ndarray:
     values = np.asarray(p_values, dtype=np.float64).reshape(-1)
     if not np.isfinite(values).all() or np.any((values < 0.0) | (values > 1.0)):
@@ -489,6 +551,9 @@ def main(argv: Sequence[str] | None = None) -> None:
             },
         },
         "locked_confirmation": locked,
+        "manuscript_claim_gate": manuscript_claim_gate(
+            {"locked_confirmation": locked}
+        ),
         "secondary_comparisons_holm": secondary,
         "source_files": {
             "bishan": bishan["source_files"],

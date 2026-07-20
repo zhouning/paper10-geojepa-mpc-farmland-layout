@@ -9,6 +9,7 @@ from typing import Mapping, Sequence
 import numpy as np
 import torch
 
+from paper10_geojepa_mpc.experiments.pcc_objectives import OBJECTIVE_NAMES
 from paper10_geojepa_mpc.experiments.pcc_policy_iteration_lineage import (
     verify_round_manifest,
 )
@@ -553,6 +554,198 @@ def build_inventory(
             registry["offline_reference_policy"]["checkpoint_sha256"]
         ),
     )
+    return ExperimentInventory(tuple(records))
+
+
+def _summary_checkpoint_path(summary_path: Path, raw_path: object) -> Path:
+    path = Path(str(raw_path))
+    if not path.is_absolute():
+        path = summary_path.parent / path
+    return path.resolve()
+
+
+def build_adapted_inventory(
+    root: str | Path,
+    *,
+    calibrator_root: str | Path,
+    registry: dict[str, object],
+) -> ExperimentInventory:
+    root = Path(root).resolve()
+    calibrator_root = Path(calibrator_root).resolve()
+    if not root.is_dir() or not calibrator_root.is_dir():
+        raise FileNotFoundError("adapted checkpoint or calibrator root is missing")
+    validate_registry(registry)
+    frozen_digest = verify_frozen_registry(registry)
+    selected = registry["selected_config"]
+    model_seeds = tuple(int(value) for value in registry["model_seeds"])
+    ensemble_size = int(selected["ensemble_size"])
+    policy_round = int(selected["policy_round"])
+    coverage = float(selected["joint_coverage"])
+    parent_digests = tuple(str(value) for value in selected["checkpoint_digests"])
+    if (
+        len(parent_digests) != len(model_seeds) * ensemble_size
+        or len(parent_digests) != len(set(parent_digests))
+    ):
+        raise ValueError("frozen parent checkpoint lineage is incomplete")
+
+    summaries = []
+    for path, payload in _json_payloads(root):
+        if payload.get("region") == "dongxing" and "checkpoints" in payload:
+            summaries.append((path, payload))
+    by_model = {}
+    for path, summary in summaries:
+        model_seed = int(summary.get("model_seed", -1))
+        if model_seed in by_model:
+            raise ValueError("Dongxing training summary is duplicated")
+        by_model[model_seed] = (path, summary)
+    if set(by_model) != set(model_seeds):
+        raise ValueError("Dongxing training summaries are incomplete")
+
+    calibrator_artifacts = _calibrator_artifacts(calibrator_root)
+    calibration_seeds = tuple(
+        int(value) for value in registry["partitions"]["dongxing_calibration"]
+    )
+    adaptation_seeds = frozenset(
+        int(value) for value in registry["partitions"]["dongxing_adaptation"]
+    )
+    records = []
+    all_adapted_digests = []
+    for model_index, model_seed in enumerate(model_seeds):
+        summary_path, summary = by_model[model_seed]
+        expected_parents = parent_digests[
+            model_index * ensemble_size : (model_index + 1) * ensemble_size
+        ]
+        if (
+            summary.get("adaptation_hyperparameters")
+            != registry["dongxing_adaptation_training"]
+        ):
+            raise ValueError("Dongxing adaptation hyperparameters mismatch")
+        if (
+            summary.get("protocol_id") != registry["protocol_id"]
+            or summary.get("registry_digest") != frozen_digest
+            or summary.get("region") != "dongxing"
+            or summary.get("trainable_scope") != "objective_heads"
+            or int(summary.get("ensemble_size", -1)) != ensemble_size
+            or tuple(map(str, summary.get("parent_checkpoint_digests", [])))
+            != expected_parents
+        ):
+            raise ValueError("Dongxing training summary lineage mismatch")
+        checkpoint_rows = summary.get("checkpoints")
+        if not isinstance(checkpoint_rows, list) or len(checkpoint_rows) != ensemble_size:
+            raise ValueError("Dongxing checkpoint block is incomplete")
+        checkpoints = []
+        adaptation_label_digests = set()
+        bootstrap_blocks = set()
+        for member_index, row in enumerate(checkpoint_rows):
+            checkpoint_path = _summary_checkpoint_path(summary_path, row["path"])
+            if not checkpoint_path.is_file():
+                raise FileNotFoundError("Dongxing adapted checkpoint is missing")
+            digest = _sha256_file(checkpoint_path)
+            if digest != str(row.get("sha256")):
+                raise ValueError("Dongxing adapted checkpoint digest mismatch")
+            checkpoint = torch.load(
+                checkpoint_path,
+                map_location="cpu",
+                weights_only=False,
+            )
+            trainable_names = tuple(
+                str(value) for value in checkpoint.get("trainable_parameter_names", [])
+            )
+            if tuple(checkpoint.get("objective_names", ())) != OBJECTIVE_NAMES:
+                raise ValueError("Dongxing objective order mismatch")
+            if (
+                int(checkpoint.get("model_seed", -1)) != model_seed
+                or int(checkpoint.get("member_index", -1)) != member_index
+                or checkpoint.get("registry_digest") != frozen_digest
+                or checkpoint.get("protocol_id") != registry["protocol_id"]
+                or checkpoint.get("region") != "dongxing"
+                or checkpoint.get("trainable_scope") != "objective_heads"
+                or checkpoint.get("parent_checkpoint_sha256")
+                != expected_parents[member_index]
+                or not trainable_names
+                or not all(
+                    name.startswith(("immediate_head.", "horizon_head."))
+                    for name in trainable_names
+                )
+            ):
+                raise ValueError("Dongxing adapted checkpoint lineage mismatch")
+            adaptation_digest = str(
+                checkpoint.get("adaptation_labels_manifest_digest", "")
+            )
+            if (
+                not adaptation_digest
+                or adaptation_digest
+                != str(checkpoint.get("labels_manifest_digest", ""))
+            ):
+                raise ValueError("Dongxing adaptation label lineage mismatch")
+            adaptation_label_digests.add(adaptation_digest)
+            bootstrap = tuple(
+                int(value)
+                for value in checkpoint.get("bootstrap_trajectory_ids", [])
+            )
+            if (
+                len(bootstrap) != len(adaptation_seeds)
+                or not set(bootstrap).issubset(adaptation_seeds)
+            ):
+                raise ValueError("Dongxing bootstrap adaptation partition mismatch")
+            bootstrap_blocks.add(bootstrap)
+            checkpoints.append((checkpoint_path, digest))
+        if len(adaptation_label_digests) != 1:
+            raise ValueError("Dongxing adaptation label lineage is inconsistent")
+        if len(bootstrap_blocks) != ensemble_size:
+            raise ValueError("Dongxing bootstrap memberships are duplicated")
+        checkpoint_digests = tuple(digest for _, digest in checkpoints)
+        if len(checkpoint_digests) != len(set(checkpoint_digests)):
+            raise ValueError("Dongxing adapted checkpoint digests are duplicated")
+        all_adapted_digests.extend(checkpoint_digests)
+
+        matching_calibrators = []
+        for artifact in calibrator_artifacts.values():
+            calibrator = artifact.calibrator
+            if tuple(calibrator.checkpoint_digests) == checkpoint_digests:
+                matching_calibrators.append(artifact)
+        if len(matching_calibrators) != 1:
+            raise ValueError("Dongxing frozen-coverage calibrator is missing or duplicated")
+        artifact = matching_calibrators[0]
+        calibration_manifest = {
+            "checkpoint_digests": list(checkpoint_digests),
+            "calibration_labels_digest": artifact.calibrator.labels_manifest_digest,
+        }
+        observed_coverage = _validate_calibrator(
+            artifact,
+            calibration_manifest,
+            protocol_id=str(registry["protocol_id"]),
+            calibration_seeds=calibration_seeds,
+            allowed_coverages={coverage},
+        )
+        records.append(
+            EnsembleInventoryRecord(
+                model_seed=model_seed,
+                ensemble_size=ensemble_size,
+                policy_round=policy_round,
+                checkpoint_root=checkpoints[0][0].parent,
+                checkpoint_paths=tuple(path for path, _ in checkpoints),
+                checkpoint_digests=checkpoint_digests,
+                calibrators=MappingProxyType(
+                    {observed_coverage: artifact.path}
+                ),
+                calibrator_digests=MappingProxyType(
+                    {observed_coverage: artifact.digest}
+                ),
+                round_manifest_path=summary_path,
+                round_digest=_sha256_file(summary_path),
+                train_labels_digest=next(iter(adaptation_label_digests)),
+                calibration_labels_digest=(
+                    artifact.calibrator.labels_manifest_digest
+                ),
+            )
+        )
+    if len({record.train_labels_digest for record in records}) != 1:
+        raise ValueError("Dongxing models require one shared adaptation label manifest")
+    if len({record.calibration_labels_digest for record in records}) != 1:
+        raise ValueError("Dongxing models require one shared calibration label manifest")
+    if len(all_adapted_digests) != len(set(all_adapted_digests)):
+        raise ValueError("Dongxing adapted checkpoints are reused across model seeds")
     return ExperimentInventory(tuple(records))
 
 

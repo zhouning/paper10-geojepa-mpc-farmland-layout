@@ -331,3 +331,68 @@ def test_confirmation_cli_dry_run_writes_plan_from_committed_freeze(
         inventory=_FakeInventory(),
         prepared_dir_bishan=tmp_path,
     ).jobs)
+
+
+def test_confirmation_cli_uses_adapted_inventory_for_dongxing(
+    tmp_path,
+    monkeypatch,
+):
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _git(repo, "init")
+    _git(repo, "config", "user.email", "paper10@example.invalid")
+    _git(repo, "config", "user.name", "Paper10 Test")
+    registry_path = repo / "pcc_v1.json"
+    registry_path.write_text(json.dumps(load_registry()), encoding="utf-8")
+    frozen = freeze_registry(registry_path, selected_config=_selected_config())
+    _git(repo, "add", "pcc_v1.json")
+    _git(repo, "commit", "-m", "freeze registry")
+    checkpoint_root = tmp_path / "dongxing-checkpoints"
+    calibration_root = tmp_path / "dongxing-calibration"
+    captured = {}
+
+    def fake_adapted_inventory(root, *, calibrator_root, registry):
+        captured.update(
+            root=Path(root),
+            calibrator_root=Path(calibrator_root),
+            registry=registry,
+        )
+        return _FakeInventory()
+
+    monkeypatch.setattr(
+        "paper10_geojepa_mpc.experiments.run_pcc_confirmation.build_inventory",
+        lambda *args, **kwargs: (_ for _ in ()).throw(
+            AssertionError("Dongxing must not use the development inventory")
+        ),
+    )
+    monkeypatch.setattr(
+        "paper10_geojepa_mpc.experiments.run_pcc_confirmation.build_adapted_inventory",
+        fake_adapted_inventory,
+        raising=False,
+    )
+
+    main(
+        [
+            "--registry",
+            str(registry_path),
+            "--region",
+            "dongxing",
+            "--run-root",
+            str(tmp_path / "runs"),
+            "--prepared-dir-bishan",
+            str(tmp_path),
+            "--prepared-dir-dongxing",
+            str(tmp_path),
+            "--checkpoint-root",
+            str(tmp_path / "bishan-checkpoints"),
+            "--dongxing-checkpoint-root",
+            str(checkpoint_root),
+            "--dongxing-calibration-root",
+            str(calibration_root),
+            "--dry-run",
+        ]
+    )
+
+    assert captured["root"] == checkpoint_root
+    assert captured["calibrator_root"] == calibration_root
+    assert captured["registry"] == frozen

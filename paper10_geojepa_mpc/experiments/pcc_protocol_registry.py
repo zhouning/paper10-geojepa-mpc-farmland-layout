@@ -30,6 +30,15 @@ LOCKED_PCC_V1_CONTRACT = {
             "candidate_actions": 8,
         },
     },
+    "dongxing_adaptation_training": {
+        "epochs": 50,
+        "batch_size": 128,
+        "learning_rate": 0.001,
+        "hidden_dim": 32,
+        "trainable_scope": "objective_heads",
+        "representation": "action_relative",
+        "county_action_count": None,
+    },
     "offline_reference_policy": {
         "name": "paper9_mpc",
         "checkpoint_sha256": "fd3cdeeb827dc59a30e559a36fc95166db77447dc6e7d1d4b5b4c081704c947f",
