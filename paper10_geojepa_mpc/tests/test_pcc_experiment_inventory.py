@@ -64,6 +64,11 @@ def create_inventory_fixture(
                 torch.save(
                     {
                         "model_seed": int(model_seed),
+                        "ensemble_size": int(
+                            checkpoint_overrides.get(
+                                "ensemble_size", len(member_indexes)
+                            )
+                        ),
                         "member_seed": int(model_seed * 100 + ordinal),
                         "member_index": int(member_index),
                         "bootstrap_trajectory_ids": [
@@ -237,6 +242,7 @@ def create_adapted_inventory_fixture(
             path = model_root / f"member_{member_index}.pt"
             checkpoint = {
                 "model_seed": model_seed,
+                "ensemble_size": 3,
                 "member_seed": model_seed * 100 + member_index,
                 "member_index": member_index,
                 "bootstrap_trajectory_ids": [
@@ -475,6 +481,18 @@ def test_inventory_rejects_duplicate_bootstrap_membership(tmp_path):
     )
 
     with pytest.raises(ValueError, match="bootstrap"):
+        build_inventory(tmp_path, model_seeds=(5101,))
+
+
+def test_inventory_rejects_checkpoint_ensemble_size_mismatch(tmp_path):
+    create_inventory_fixture(
+        tmp_path,
+        model_seeds=(5101,),
+        rounds=(1,),
+        checkpoint_overrides={"ensemble_size": 5},
+    )
+
+    with pytest.raises(ValueError, match="ensemble size"):
         build_inventory(tmp_path, model_seeds=(5101,))
 
 

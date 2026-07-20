@@ -294,9 +294,14 @@ def _concatenate_datasets(
     }
 
 
-def _member_seed(model_seed: int, member_index: int) -> int:
+def _member_seed(
+    model_seed: int,
+    member_index: int,
+    *,
+    ensemble_size: int,
+) -> int:
     value = np.random.SeedSequence(
-        [int(model_seed), int(member_index)]
+        [int(model_seed), int(ensemble_size), int(member_index)]
     ).generate_state(1, dtype=np.uint32)[0]
     return int(value)
 
@@ -320,6 +325,7 @@ def _checkpoint_payload(
     model: PCCGeoJEPAMember,
     *,
     model_seed: int,
+    ensemble_size: int,
     member_seed: int,
     member_index: int,
     bootstrap_ids: np.ndarray,
@@ -346,6 +352,7 @@ def _checkpoint_payload(
             for key, value in model.state_dict().items()
         },
         "model_seed": int(model_seed),
+        "ensemble_size": int(ensemble_size),
         "member_seed": int(member_seed),
         "member_index": int(member_index),
         "bootstrap_trajectory_ids": [int(value) for value in bootstrap_ids],
@@ -494,7 +501,11 @@ def train_pcc_ensemble(
     device_obj = torch.device(device)
 
     for member_index in range(int(ensemble_size)):
-        seed = _member_seed(model_seed, member_index)
+        seed = _member_seed(
+            model_seed,
+            member_index,
+            ensemble_size=ensemble_size,
+        )
         torch.manual_seed(seed)
         np.random.seed(seed)
         bootstrap_ids = bootstrap_trajectory_ids(unique_ids, seed=seed)
@@ -595,6 +606,7 @@ def train_pcc_ensemble(
             _checkpoint_payload(
                 model,
                 model_seed=model_seed,
+                ensemble_size=ensemble_size,
                 member_seed=seed,
                 member_index=member_index,
                 bootstrap_ids=bootstrap_ids,

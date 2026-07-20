@@ -30,6 +30,7 @@ class _CheckpointArtifact:
     path: Path
     digest: str
     model_seed: int
+    ensemble_size: int
     member_seed: int
     member_index: int
     bootstrap_trajectory_ids: tuple[int, ...]
@@ -208,6 +209,7 @@ def _checkpoint_artifacts(root: Path) -> dict[str, _CheckpointArtifact]:
             path=resolved,
             digest=digest,
             model_seed=int(payload["model_seed"]),
+            ensemble_size=int(payload.get("ensemble_size", -1)),
             member_seed=int(payload["member_seed"]),
             member_index=int(payload["member_index"]),
             bootstrap_trajectory_ids=tuple(
@@ -305,6 +307,8 @@ def _validate_checkpoint_group(
         raise ValueError("checkpoint digest order does not match member indexes")
     if any(row.model_seed != model_seed for row in by_member):
         raise ValueError("checkpoint model seed lineage mismatch")
+    if any(row.ensemble_size != ensemble_size for row in by_member):
+        raise ValueError("checkpoint ensemble size lineage mismatch")
     if any(row.protocol_id != protocol_id for row in by_member):
         raise ValueError("checkpoint protocol lineage mismatch")
     train_digest = str(manifest.get("train_labels_digest", ""))
@@ -655,6 +659,7 @@ def build_adapted_inventory(
                 raise ValueError("Dongxing objective order mismatch")
             if (
                 int(checkpoint.get("model_seed", -1)) != model_seed
+                or int(checkpoint.get("ensemble_size", -1)) != ensemble_size
                 or int(checkpoint.get("member_index", -1)) != member_index
                 or checkpoint.get("registry_digest") != frozen_digest
                 or checkpoint.get("protocol_id") != registry["protocol_id"]

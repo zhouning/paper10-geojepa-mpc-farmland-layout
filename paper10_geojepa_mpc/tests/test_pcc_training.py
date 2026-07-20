@@ -41,6 +41,19 @@ def test_bootstrap_samples_complete_trajectories_reproducibly():
     assert set(first.tolist()) <= {1000, 1001, 1002}
 
 
+def test_ensemble_size_trials_use_disjoint_member_randomness():
+    k3 = {
+        pcc_training._member_seed(5101, member_index, ensemble_size=3)
+        for member_index in range(3)
+    }
+    k5 = {
+        pcc_training._member_seed(5101, member_index, ensemble_size=5)
+        for member_index in range(5)
+    }
+
+    assert k3.isdisjoint(k5)
+
+
 def test_objective_loss_rewards_accurate_mean_and_finite_scale():
     target = torch.zeros(2, 3, 4)
     exact = heteroscedastic_objective_loss(
@@ -372,6 +385,7 @@ def test_ensemble_members_use_distinct_seeds_and_bootstrap_membership(tmp_path):
     )
     checkpoints = [load_pcc_checkpoint(path, device="cpu")[1] for path in paths]
 
+    assert all(checkpoint["ensemble_size"] == 2 for checkpoint in checkpoints)
     assert checkpoints[0]["member_seed"] != checkpoints[1]["member_seed"]
     assert (
         checkpoints[0]["bootstrap_trajectory_ids"]
