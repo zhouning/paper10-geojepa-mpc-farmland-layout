@@ -335,6 +335,8 @@ def _checkpoint_payload(
             "block_feature_dim": model.block_feature_dim,
             "k_global": model.k_global,
             "hidden_dim": model.hidden_dim,
+            "representation": model.representation,
+            "county_action_count": model.county_action_count,
         },
         "state_dict": {
             key: value.detach().cpu().clone()
@@ -448,6 +450,8 @@ def train_pcc_ensemble(
     trainable_scope: str = "all",
     init_checkpoint_root: str | Path | None = None,
     registry_digest: str | None = None,
+    representation: str = "action_relative",
+    county_action_count: int | None = None,
 ) -> list[Path]:
     if min(int(ensemble_size), int(epochs), int(batch_size)) <= 0:
         raise ValueError("ensemble_size, epochs, and batch_size must be positive")
@@ -479,6 +483,8 @@ def train_pcc_ensemble(
             block_feature_dim=block_feature_dim,
             k_global=global_feature_dim,
             hidden_dim=hidden_dim,
+            representation=representation,
+            county_action_count=county_action_count,
         ).to(device_obj)
         init_path = _resolve_init_checkpoint(init_checkpoint_root, member_index)
         if init_path is not None:

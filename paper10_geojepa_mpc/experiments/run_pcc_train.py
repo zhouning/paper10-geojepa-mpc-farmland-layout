@@ -54,6 +54,12 @@ def parse_args(argv: Sequence[str] | None = None):
     parser.add_argument("--batch-size", type=int, default=128)
     parser.add_argument("--learning-rate", type=float, default=1e-3)
     parser.add_argument("--hidden-dim", type=int, default=32)
+    parser.add_argument(
+        "--representation",
+        choices=("action_relative", "county_specific_action_embedding"),
+        default="action_relative",
+    )
+    parser.add_argument("--county-action-count", type=int, default=None)
     parser.add_argument("--device", default="cpu")
     parser.add_argument(
         "--trainable-scope",
@@ -94,6 +100,8 @@ def main(argv: Sequence[str] | None = None) -> None:
         trainable_scope=args.trainable_scope,
         init_checkpoint_root=args.init_checkpoint_root,
         registry_digest=registry_digest,
+        representation=args.representation,
+        county_action_count=args.county_action_count,
     )
     summary = {
         "protocol_id": registry["protocol_id"],
@@ -101,6 +109,8 @@ def main(argv: Sequence[str] | None = None) -> None:
         "model_seed": int(args.model_seed),
         "ensemble_size": ensemble_size,
         "trainable_scope": args.trainable_scope,
+        "representation": args.representation,
+        "county_action_count": args.county_action_count,
         "checkpoints": [
             {"path": str(path), "sha256": _sha256_file(path)} for path in paths
         ],

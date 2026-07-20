@@ -176,6 +176,33 @@ def test_tiny_ensemble_training_saves_reloadable_checkpoint(tmp_path):
     assert output.horizon_mean.shape == (1, 3, 4)
 
 
+def test_county_specific_ablation_checkpoint_round_trips_representation(tmp_path):
+    manifest = _fixture_manifest(tmp_path / "labels")
+
+    paths = train_pcc_ensemble(
+        labels_manifest=manifest,
+        model_seed=5101,
+        ensemble_size=1,
+        epochs=1,
+        batch_size=4,
+        learning_rate=0.0,
+        device="cpu",
+        output_dir=tmp_path / "checkpoints",
+        hidden_dim=8,
+        representation="county_specific_action_embedding",
+        county_action_count=5,
+    )
+
+    model, checkpoint = load_pcc_checkpoint(paths[0], device="cpu")
+
+    assert checkpoint["model_kwargs"]["representation"] == (
+        "county_specific_action_embedding"
+    )
+    assert checkpoint["model_kwargs"]["county_action_count"] == 5
+    assert model.representation == "county_specific_action_embedding"
+    assert model.county_action_count == 5
+
+
 def test_frozen_ensemble_size_cannot_be_reselected_for_adaptation():
     registry = {
         "status": "frozen",

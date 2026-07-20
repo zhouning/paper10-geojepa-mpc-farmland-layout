@@ -85,6 +85,16 @@ class PCCObservablePolicy:
         executable_threshold: float,
         device: str = "cpu",
         max_member_evaluations: int | None = None,
+        use_aleatoric_scale: bool = True,
+        use_conformal: bool = True,
+        pareto_objectives=(
+            "reward",
+            "slope_benefit",
+            "contiguity_benefit",
+            "connected_area_benefit",
+        ),
+        executed_feedback: bool = True,
+        reference_fallback: bool = True,
     ):
         self.ensemble = ensemble
         self.calibrator = calibrator
@@ -97,6 +107,11 @@ class PCCObservablePolicy:
         self.executable_threshold = float(executable_threshold)
         self.device = str(device)
         self.max_member_evaluations = max_member_evaluations
+        self.use_aleatoric_scale = bool(use_aleatoric_scale)
+        self.use_conformal = bool(use_conformal)
+        self.pareto_objectives = tuple(pareto_objectives)
+        self.executed_feedback = bool(executed_feedback)
+        self.reference_fallback = bool(reference_fallback)
 
     def select(self, state: dict) -> tuple[int, dict]:
         from paper10_geojepa_mpc.planning.pcc_selector import pcc_select_action
@@ -119,11 +134,18 @@ class PCCObservablePolicy:
             executable_threshold=self.executable_threshold,
             device=self.device,
             max_member_evaluations=self.max_member_evaluations,
+            use_aleatoric_scale=self.use_aleatoric_scale,
+            use_conformal=self.use_conformal,
+            pareto_objectives=self.pareto_objectives,
+            reference_fallback=self.reference_fallback,
         )
         info["reference_policy_info"] = reference_info
+        info["executed_feedback"] = self.executed_feedback
         return action, info
 
     def observe(self, transition: dict) -> None:
+        if not self.executed_feedback:
+            return
         predicted = transition.get("predicted_mean")
         scale = transition.get("base_scale")
         if predicted is None or scale is None:

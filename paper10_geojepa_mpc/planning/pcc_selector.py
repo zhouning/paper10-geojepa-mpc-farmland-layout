@@ -4,6 +4,7 @@ from pathlib import Path
 import numpy as np
 import torch
 
+from paper10_geojepa_mpc.experiments.pcc_objectives import OBJECTIVE_NAMES
 from paper10_geojepa_mpc.models.pcc_geojepa import HORIZONS
 
 
@@ -50,6 +51,8 @@ def paired_ensemble_statistics(
     candidate_log_scale,
     reference_mean,
     reference_log_scale,
+    *,
+    use_aleatoric_scale: bool = True,
 ) -> PairedEnsembleStatistics:
     candidate_mean = np.asarray(candidate_mean, dtype=np.float64)
     candidate_log_scale = np.asarray(candidate_log_scale, dtype=np.float64)
@@ -83,11 +86,14 @@ def paired_ensemble_statistics(
         epistemic_variance = member_delta.var(axis=0, ddof=1)
     else:
         epistemic_variance = np.zeros_like(mean_delta)
-    aleatoric_variance = np.mean(
-        np.exp(2.0 * candidate_log_scale)
-        + np.exp(2.0 * expanded_reference_log_scale),
-        axis=0,
-    )
+    if use_aleatoric_scale:
+        aleatoric_variance = np.mean(
+            np.exp(2.0 * candidate_log_scale)
+            + np.exp(2.0 * expanded_reference_log_scale),
+            axis=0,
+        )
+    else:
+        aleatoric_variance = np.zeros_like(epistemic_variance)
     paired_scale = np.sqrt(
         np.maximum(epistemic_variance + aleatoric_variance, 1e-12)
     )
@@ -101,6 +107,31 @@ def paired_ensemble_statistics(
     )
 
 
+def calibrated_lower_bounds(
+    mean_delta,
+    paired_scale,
+    *,
+    calibrator,
+    online_multiplier,
+    use_conformal: bool = True,
+) -> np.ndarray:
+    mean = np.asarray(mean_delta, dtype=np.float64)
+    scale = np.asarray(paired_scale, dtype=np.float64)
+    multiplier = np.asarray(online_multiplier, dtype=np.float64)
+    if mean.shape != scale.shape or mean.shape[-1] != len(OBJECTIVE_NAMES):
+        raise ValueError("paired mean and scale shapes must match PCC objectives")
+    if multiplier.shape != (len(OBJECTIVE_NAMES),):
+        raise ValueError("online multiplier must have one value per objective")
+    if not all(
+        np.isfinite(value).all() for value in (mean, scale, multiplier)
+    ) or np.any(scale < 0.0) or np.any(multiplier <= 0.0):
+        raise ValueError("calibrated bound inputs must be finite and non-negative")
+    q_value = float(calibrator.q_joint) if use_conformal else 1.0
+    if not np.isfinite(q_value) or q_value < 0.0:
+        raise ValueError("calibration multiplier must be finite and non-negative")
+    return mean - q_value * scale * multiplier
+
+
 def choose_from_bounds(
     actions,
     lower_bounds,
@@ -109,6 +140,8 @@ def choose_from_bounds(
     reference_action: int,
     tolerances,
     executable_threshold: float = 0.95,
+    pareto_objectives=OBJECTIVE_NAMES,
+    reference_fallback: bool = True,
 ):
     actions = np.asarray(actions, dtype=np.int64).reshape(-1)
     lower = np.asarray(lower_bounds, dtype=np.float64)
@@ -123,6 +156,13 @@ def choose_from_bounds(
         raise ValueError("tolerances must contain three non-negative values")
     if not 0.0 <= float(executable_threshold) <= 1.0:
         raise ValueError("executable_threshold must be in [0, 1]")
+    pareto_objectives = tuple(str(value) for value in pareto_objectives)
+    if (
+        not pareto_objectives
+        or len(set(pareto_objectives)) != len(pareto_objectives)
+        or not set(pareto_objectives) <= set(OBJECTIVE_NAMES)
+    ):
+        raise ValueError("pareto objectives must be a non-empty PCC objective subset")
     if actions.size == 0 or not all(
         np.isfinite(value).all()
         for value in (lower, probability, uncertainty, tolerances)
@@ -136,14 +176,42 @@ def choose_from_bounds(
         }
 
     admissible = probability >= float(executable_threshold)
-    admissible &= lower[:, 0] > 0.0
-    admissible &= np.all(lower[:, 1:] >= -tolerances[None, :], axis=1)
+    if "reward" in pareto_objectives:
+        admissible &= lower[:, 0] > 0.0
+    for objective in pareto_objectives:
+        if objective == "reward":
+            continue
+        index = OBJECTIVE_NAMES.index(objective)
+        admissible &= lower[:, index] >= -tolerances[index - 1]
     indexes = np.flatnonzero(admissible)
     if indexes.size == 0:
+        if not reference_fallback:
+            indexes = np.flatnonzero(
+                probability >= float(executable_threshold)
+            )
+            if indexes.size:
+                selected = sorted(
+                    indexes.tolist(),
+                    key=lambda index: (
+                        -float(lower[index, 0]),
+                        -float(lower[index, 1:].min()),
+                        float(uncertainty[index]),
+                        int(actions[index]),
+                    ),
+                )[0]
+                return int(actions[selected]), {
+                    "fallback": False,
+                    "fallback_reason": "reference_fallback_disabled",
+                    "admissible_actions": [],
+                    "selected_index": int(selected),
+                    "selected_lower_bounds": lower[selected].tolist(),
+                    "pareto_objectives": list(pareto_objectives),
+                }
         return int(reference_action), {
             "fallback": True,
             "fallback_reason": "no_admissible_candidate",
             "admissible_actions": [],
+            "pareto_objectives": list(pareto_objectives),
         }
 
     order = sorted(
@@ -162,6 +230,7 @@ def choose_from_bounds(
         "admissible_actions": [int(actions[index]) for index in indexes],
         "selected_index": int(selected),
         "selected_lower_bounds": lower[selected].tolist(),
+        "pareto_objectives": list(pareto_objectives),
     }
 
 
@@ -205,6 +274,7 @@ def predict_paired_ensemble_all_horizons(
     actions,
     reference_action: int,
     device: str = "cpu",
+    use_aleatoric_scale: bool = True,
 ) -> EnsembleHorizonPrediction:
     actions = np.asarray(actions, dtype=np.int64).reshape(-1)
     if actions.size == 0 or np.unique(actions).size != actions.size:
@@ -298,12 +368,17 @@ def predict_paired_ensemble_all_horizons(
         member_log_scales,
         member_means[:, reference_index],
         member_log_scales[:, reference_index],
+        use_aleatoric_scale=use_aleatoric_scale,
     )
     if member_means.shape[0] > 1:
         marginal_epistemic = member_means.var(axis=0, ddof=1)
     else:
         marginal_epistemic = np.zeros_like(member_means[0])
-    marginal_aleatoric = np.mean(np.exp(2.0 * member_log_scales), axis=0)
+    marginal_aleatoric = (
+        np.mean(np.exp(2.0 * member_log_scales), axis=0)
+        if use_aleatoric_scale
+        else np.zeros_like(marginal_epistemic)
+    )
     candidate_base_scale = np.sqrt(
         np.maximum(marginal_epistemic + marginal_aleatoric, 1e-12)
     )
@@ -314,9 +389,13 @@ def predict_paired_ensemble_all_horizons(
         immediate_epistemic = member_immediate_means.var(axis=0, ddof=1)
     else:
         immediate_epistemic = np.zeros_like(member_immediate_means[0])
-    immediate_aleatoric = np.mean(
-        np.exp(2.0 * member_immediate_log_scales),
-        axis=0,
+    immediate_aleatoric = (
+        np.mean(
+            np.exp(2.0 * member_immediate_log_scales),
+            axis=0,
+        )
+        if use_aleatoric_scale
+        else np.zeros_like(immediate_epistemic)
     )
     immediate_base_scale = np.sqrt(
         np.maximum(immediate_epistemic + immediate_aleatoric, 1e-12)
@@ -345,6 +424,7 @@ def predict_paired_ensemble(
     reference_action: int,
     planning_horizon: int,
     device: str = "cpu",
+    use_aleatoric_scale: bool = True,
 ) -> EnsemblePrediction:
     if int(planning_horizon) not in HORIZONS:
         raise ValueError("planning horizon must be one of 1, 3, or 5")
@@ -356,6 +436,7 @@ def predict_paired_ensemble(
         actions=actions,
         reference_action=reference_action,
         device=device,
+        use_aleatoric_scale=use_aleatoric_scale,
     )
     horizon_index = HORIZONS.index(int(planning_horizon))
     paired_scale = all_horizons.paired_scale[:, horizon_index]
@@ -391,6 +472,10 @@ def pcc_select_action(
     executable_threshold: float,
     device: str = "cpu",
     max_member_evaluations: int | None = None,
+    use_aleatoric_scale: bool = True,
+    use_conformal: bool = True,
+    pareto_objectives=OBJECTIVE_NAMES,
+    reference_fallback: bool = True,
 ):
     reference_action = int(reference_policy())
     try:
@@ -409,6 +494,7 @@ def pcc_select_action(
             reference_action=reference_action,
             planning_horizon=planning_horizon,
             device=device,
+            use_aleatoric_scale=use_aleatoric_scale,
         )
         if (
             max_member_evaluations is not None
@@ -416,10 +502,12 @@ def pcc_select_action(
         ):
             raise ValueError("matched compute budget exceeded")
         online_multiplier = feedback_scaler.multiplier()
-        lower_bounds = calibrator.lower_bounds(
+        lower_bounds = calibrated_lower_bounds(
             prediction.mean_delta,
             prediction.paired_scale,
+            calibrator=calibrator,
             online_multiplier=online_multiplier,
+            use_conformal=use_conformal,
         )
         selected_action, info = choose_from_bounds(
             prediction.actions,
@@ -429,13 +517,21 @@ def pcc_select_action(
             reference_action=reference_action,
             tolerances=tolerances,
             executable_threshold=executable_threshold,
+            pareto_objectives=pareto_objectives,
+            reference_fallback=reference_fallback,
         )
         selected_index = int(np.flatnonzero(prediction.actions == selected_action)[0])
         info.update(
             {
                 "reference_action": reference_action,
                 "joint_q": float(calibrator.q_joint),
+                "effective_q": (
+                    float(calibrator.q_joint) if use_conformal else 1.0
+                ),
                 "online_multiplier": online_multiplier.tolist(),
+                "use_aleatoric_scale": bool(use_aleatoric_scale),
+                "use_conformal": bool(use_conformal),
+                "reference_fallback": bool(reference_fallback),
                 "member_evaluations": prediction.member_evaluations,
                 "model_forward_count": prediction.model_forward_count,
                 "selected_predicted_mean": prediction.immediate_candidate_mean[

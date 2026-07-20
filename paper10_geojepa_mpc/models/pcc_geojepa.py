@@ -51,13 +51,37 @@ class PCCGeoJEPAMember(nn.Module):
         block_feature_dim: int,
         k_global: int,
         hidden_dim: int = 32,
+        representation: str = "action_relative",
+        county_action_count: int | None = None,
     ):
         super().__init__()
         self.block_feature_dim = int(block_feature_dim)
         self.k_global = int(k_global)
         self.hidden_dim = int(hidden_dim)
+        self.representation = str(representation)
+        self.county_action_count = (
+            None if county_action_count is None else int(county_action_count)
+        )
         if min(self.block_feature_dim, self.k_global, self.hidden_dim) <= 0:
             raise ValueError("model dimensions must be positive")
+        if self.representation not in {
+            "action_relative",
+            "county_specific_action_embedding",
+        }:
+            raise ValueError("unknown PCC representation")
+        if self.representation == "county_specific_action_embedding":
+            if self.county_action_count is None or self.county_action_count <= 0:
+                raise ValueError(
+                    "county-specific representation requires county_action_count"
+                )
+            self.action_embedding = nn.Embedding(
+                self.county_action_count,
+                self.hidden_dim,
+            )
+        elif self.county_action_count is not None:
+            raise ValueError(
+                "county_action_count is valid only for county-specific representation"
+            )
 
         self.block_encoder = nn.Sequential(
             nn.Linear(self.block_feature_dim, 64),
@@ -114,6 +138,12 @@ class PCCGeoJEPAMember(nn.Module):
             int(actions.min()) < 0 or int(actions.max()) >= block.shape[1]
         ):
             raise ValueError("action index is out of range")
+        if (
+            self.representation == "county_specific_action_embedding"
+            and actions.numel()
+            and int(actions.max()) >= self.county_action_count
+        ):
+            raise ValueError("action index exceeds the county action space")
         return actions
 
     def forward(
@@ -135,6 +165,8 @@ class PCCGeoJEPAMember(nn.Module):
         encoded = self.block_encoder(block)
         neighbour_encoded = self.neighbour_encoder(neighbour)
         selected = encoded[rows, actions]
+        if self.representation == "county_specific_action_embedding":
+            selected = selected + self.action_embedding(actions)
         selected_neighbour = neighbour_encoded[rows, actions]
         county_mean = encoded.mean(dim=1)
         context = torch.cat(
