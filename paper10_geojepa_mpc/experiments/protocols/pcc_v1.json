@@ -24,7 +24,7 @@
     "planning_horizon": 5,
     "top_k": 50,
     "gamma": 0.99,
-    "continuation": "random"
+    "continuation": "paper9_mpc"
   },
   "grid": {
     "ensemble_size": [3, 5],

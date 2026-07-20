@@ -4,8 +4,10 @@ from pathlib import Path
 import pytest
 
 from paper10_geojepa_mpc.experiments.pcc_protocol_registry import (
+    DEFAULT_REGISTRY,
     freeze_registry,
     load_registry,
+    main,
     validate_registry,
     verify_frozen_registry,
 )
@@ -64,6 +66,30 @@ def test_registry_contains_locked_scientific_contract():
     assert payload["offline_reference_policy"]["planning_horizon"] == 5
     assert payload["offline_reference_policy"]["top_k"] == 50
     assert len(payload["offline_reference_policy"]["checkpoint_sha256"]) == 64
+
+
+def test_pcc_v1_locks_paper9_mpc_as_offline_continuation():
+    payload = load_registry()
+    reference = payload["offline_reference_policy"]
+
+    assert reference["name"] == "paper9_mpc"
+    assert reference["continuation"] == "paper9_mpc"
+
+
+def test_registry_rejects_random_continuation_identity():
+    payload = load_registry()
+    payload["offline_reference_policy"]["continuation"] = "random"
+
+    with pytest.raises(ValueError, match="scientific contract"):
+        validate_registry(payload)
+
+
+def test_registry_cli_verifies_development_contract(capsys):
+    main(["--registry", str(DEFAULT_REGISTRY), "--verify-development"])
+
+    output = json.loads(capsys.readouterr().out)
+    assert output["status"] == "development"
+    assert len(output["registry_file_sha256"]) == 64
 
 
 def test_pcc_v1_rejects_missing_locked_scientific_contract():

@@ -1,7 +1,8 @@
+import argparse
 import hashlib
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Sequence
 
 
 DEFAULT_REGISTRY = Path(__file__).with_name("protocols") / "pcc_v1.json"
@@ -35,7 +36,7 @@ LOCKED_PCC_V1_CONTRACT = {
         "planning_horizon": 5,
         "top_k": 50,
         "gamma": 0.99,
-        "continuation": "random",
+        "continuation": "paper9_mpc",
     },
     "grid": {
         "ensemble_size": [3, 5],
@@ -183,3 +184,38 @@ def verify_frozen_registry(payload: dict[str, Any]) -> str:
         raise ValueError("frozen registry digest mismatch")
     validate_registry(payload)
     return observed
+
+
+def parse_args(argv: Sequence[str] | None = None):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--registry", required=True)
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--verify-development", action="store_true")
+    group.add_argument("--verify-frozen", action="store_true")
+    return parser.parse_args(argv)
+
+
+def main(argv: Sequence[str] | None = None) -> None:
+    args = parse_args(argv)
+    registry_path = Path(args.registry)
+    payload = load_registry(registry_path)
+    validate_registry(payload)
+    if args.verify_frozen:
+        registry_hash = verify_frozen_registry(payload)
+    else:
+        if payload.get("status") != "development":
+            raise ValueError("registry is not in development")
+        registry_hash = hashlib.sha256(registry_path.read_bytes()).hexdigest()
+    print(
+        json.dumps(
+            {
+                "status": payload["status"],
+                "registry_file_sha256": registry_hash,
+            },
+            sort_keys=True,
+        )
+    )
+
+
+if __name__ == "__main__":
+    main()
