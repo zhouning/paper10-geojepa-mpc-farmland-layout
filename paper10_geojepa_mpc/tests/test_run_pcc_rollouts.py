@@ -1,3 +1,5 @@
+import json
+
 import numpy as np
 import pytest
 
@@ -10,10 +12,193 @@ from paper10_geojepa_mpc.experiments.run_pcc_rollouts import (
     _select_paper9_reference_action,
     _validate_ensemble_model_seed,
     load_resumable_results,
+    main,
+    parse_args,
+    run_oracle_diagnostic_episode,
     run_policy_episode,
     select_without_execution,
+    validate_policy_role,
+    validate_rollout_request,
     write_seed_result_atomic,
 )
+from paper10_geojepa_mpc.experiments.pcc_protocol_registry import (
+    freeze_registry,
+    load_registry,
+)
+
+
+def test_confirmation_mode_rejects_development_seed():
+    with pytest.raises(ValueError, match="confirmation partition"):
+        validate_rollout_request(
+            load_registry(),
+            mode="confirmation",
+            env_source="paper9",
+            seeds=[3000],
+        )
+
+
+def test_development_mode_rejects_confirmation_seed():
+    with pytest.raises(ValueError, match="development partition"):
+        validate_rollout_request(
+            load_registry(),
+            mode="development",
+            env_source="paper9",
+            seeds=[4000],
+        )
+
+
+def test_oracle_diagnostic_cannot_consume_dongxing_confirmation_partition():
+    with pytest.raises(ValueError, match="incompatible"):
+        validate_rollout_request(
+            load_registry(),
+            mode="diagnostic",
+            env_source="neijiang",
+            seeds=[8000],
+        )
+
+
+def test_oracle_diagnostic_is_not_a_deployable_policy_choice():
+    args = parse_args(
+        [
+            "--registry",
+            "registry.json",
+            "--mode",
+            "confirmation",
+            "--policy",
+            "oracle_action_audit_diagnostic",
+            "--seeds",
+            "4000",
+            "--output",
+            "out.json",
+        ]
+    )
+
+    with pytest.raises(ValueError, match="diagnostic"):
+        validate_policy_role(args)
+
+
+def test_oracle_diagnostic_role_is_explicitly_privileged_and_not_deployable():
+    args = parse_args(
+        [
+            "--registry",
+            "registry.json",
+            "--mode",
+            "diagnostic",
+            "--policy",
+            "oracle_action_audit_diagnostic",
+            "--seeds",
+            "4000",
+            "--output",
+            "out.json",
+        ]
+    )
+
+    role = validate_policy_role(args)
+
+    assert role == {
+        "deployable": False,
+        "diagnostic_role": "privileged_upper_bound",
+    }
+
+
+def test_cli_rejects_wrong_partition_before_environment_or_output(
+    tmp_path,
+    monkeypatch,
+):
+    registry_path = tmp_path / "registry.json"
+    registry_path.write_text(json.dumps(load_registry()), encoding="utf-8")
+    freeze_registry(registry_path, selected_config={"id": "fixture"})
+    output = tmp_path / "rollout.json"
+
+    def forbidden_environment(*args, **kwargs):
+        raise AssertionError("environment must not be created")
+
+    monkeypatch.setattr(
+        "paper10_geojepa_mpc.experiments.run_pcc_rollouts._make_env",
+        forbidden_environment,
+    )
+
+    with pytest.raises(ValueError, match="confirmation partition"):
+        main(
+            [
+                "--registry",
+                str(registry_path),
+                "--mode",
+                "confirmation",
+                "--policy",
+                "paper9_mpc",
+                "--seeds",
+                "3000",
+                "--output",
+                str(output),
+            ]
+        )
+
+    assert not output.exists()
+
+
+def test_diagnostic_cli_uses_separate_privileged_runner(tmp_path, monkeypatch):
+    registry_path = tmp_path / "registry.json"
+    registry_path.write_text(json.dumps(load_registry()), encoding="utf-8")
+    frozen = freeze_registry(registry_path, selected_config={"id": "fixture"})
+    output = tmp_path / "oracle.json"
+    calls = []
+
+    monkeypatch.setattr(
+        "paper10_geojepa_mpc.experiments.run_pcc_rollouts._make_env",
+        lambda *args, **kwargs: object(),
+    )
+
+    def fake_diagnostic(**kwargs):
+        calls.append(kwargs["seed"])
+        return {
+            "seed": kwargs["seed"],
+            "policy": "oracle_action_audit_diagnostic",
+            "deployable": False,
+            "diagnostic_role": "privileged_upper_bound",
+            "unexecuted_real_reward_queries": 3,
+            "steps": [
+                {
+                    "deployable": False,
+                    "diagnostic_role": "privileged_upper_bound",
+                    "unexecuted_real_reward_queries": 3,
+                }
+            ],
+        }
+
+    monkeypatch.setattr(
+        "paper10_geojepa_mpc.experiments.run_pcc_rollouts.run_oracle_diagnostic_episode",
+        fake_diagnostic,
+    )
+
+    def forbidden_adapter(*args, **kwargs):
+        raise AssertionError("diagnostic path must not load a deployable adapter")
+
+    monkeypatch.setattr(
+        "paper10_geojepa_mpc.planning.paper9_adapter.TorchCheckpointMPCAdapter.from_checkpoint",
+        forbidden_adapter,
+    )
+
+    main(
+        [
+            "--registry",
+            str(registry_path),
+            "--mode",
+            "diagnostic",
+            "--policy",
+            "oracle_action_audit_diagnostic",
+            "--seeds",
+            "4000",
+            "--output",
+            str(output),
+        ]
+    )
+
+    payload = json.loads(output.read_text(encoding="utf-8"))
+    assert calls == [4000]
+    assert payload["registry_digest"] == frozen["frozen_digest"]
+    assert payload["checkpoint_digests"] == []
+    assert payload["seed_results"][0]["deployable"] is False
 
 
 class BoundedBatchAdapter:
@@ -107,6 +292,31 @@ class SpyEnv:
         self.step_count += 1
         done = self.step_count >= self.max_steps
         return None, float(action), done, False, self.metrics()
+
+
+def test_oracle_diagnostic_episode_is_privileged_and_executes_once_per_step():
+    env = SpyEnv()
+
+    result = run_oracle_diagnostic_episode(
+        env=env,
+        seed=4000,
+        rollout_steps=2,
+        metric_reader=lambda runtime_env: runtime_env.metrics(),
+        true_reward_evaluator=lambda runtime_env, actions: np.asarray(
+            actions,
+            dtype=float,
+        ),
+    )
+
+    assert env.step_calls == [2, 2]
+    assert result["policy"] == "oracle_action_audit_diagnostic"
+    assert result["deployable"] is False
+    assert result["diagnostic_role"] == "privileged_upper_bound"
+    assert all(step["deployable"] is False for step in result["steps"])
+    assert all(
+        step["unexecuted_real_reward_queries"] == 3
+        for step in result["steps"]
+    )
 
 
 def test_selection_never_steps_real_environment():

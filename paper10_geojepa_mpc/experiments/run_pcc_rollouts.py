@@ -140,6 +140,108 @@ def run_policy_episode(
     }
 
 
+def _evaluate_true_rewards_with_restore(env, actions: np.ndarray) -> np.ndarray:
+    from paper10_geojepa_mpc.experiments.rollout_candidate_diagnostics import (
+        _restore,
+        _snapshot,
+    )
+
+    snapshot = _snapshot(env)
+    rewards = []
+    for action in np.asarray(actions, dtype=np.int64):
+        try:
+            _, reward, _, _, _ = env.step(int(action))
+            rewards.append(float(reward))
+        finally:
+            _restore(env, snapshot)
+    return np.asarray(rewards, dtype=np.float64)
+
+
+def run_oracle_diagnostic_episode(
+    *,
+    env,
+    seed: int,
+    rollout_steps: int,
+    metric_reader,
+    action_mask_fn=None,
+    true_reward_evaluator=_evaluate_true_rewards_with_restore,
+) -> dict[str, object]:
+    if int(rollout_steps) <= 0:
+        raise ValueError("rollout_steps must be positive")
+    env.reset(seed=int(seed))
+    initial_metrics = dict(metric_reader(env))
+    steps = []
+    total_reward = 0.0
+    total_queries = 0
+    for step_index in range(int(rollout_steps)):
+        before_metrics = dict(metric_reader(env))
+        mask = (
+            np.asarray(action_mask_fn(env), dtype=bool)
+            if action_mask_fn is not None
+            else np.asarray(env.action_masks(), dtype=bool)
+        )
+        actions = np.flatnonzero(mask).astype(np.int64)
+        if actions.size == 0:
+            break
+        before_step_count = int(getattr(env, "step_count", 0))
+        true_rewards = np.asarray(
+            true_reward_evaluator(env, actions),
+            dtype=np.float64,
+        )
+        if int(getattr(env, "step_count", 0)) != before_step_count:
+            raise RuntimeError("oracle diagnostic evaluator mutated the environment")
+        if true_rewards.shape != actions.shape or not np.isfinite(true_rewards).all():
+            raise ValueError("oracle diagnostic rewards must be finite per action")
+        selected_index = int(np.argmax(true_rewards))
+        action = int(actions[selected_index])
+        query_count = int(actions.size)
+        _, reward, terminated, truncated, environment_info = env.step(action)
+        after_metrics = dict(metric_reader(env))
+        observed_outcome = oriented_outcome(
+            float(reward),
+            before_metrics,
+            after_metrics,
+        )
+        steps.append(
+            {
+                "step": int(step_index),
+                "action": action,
+                "reward": float(reward),
+                "observed_outcome": observed_outcome.tolist(),
+                "environment_info": dict(environment_info),
+                "policy": "oracle_action_audit_diagnostic",
+                "deployable": False,
+                "diagnostic_role": "privileged_upper_bound",
+                "unexecuted_real_reward_queries": query_count,
+                "true_reward_query_count": query_count,
+                "queried_actions": actions.tolist(),
+                "queried_true_rewards": true_rewards.tolist(),
+            }
+        )
+        total_reward += float(reward)
+        total_queries += query_count
+        if terminated or truncated:
+            break
+    final_metrics = dict(metric_reader(env))
+    return {
+        "seed": int(seed),
+        "policy": "oracle_action_audit_diagnostic",
+        "deployable": False,
+        "diagnostic_role": "privileged_upper_bound",
+        "unexecuted_real_reward_queries": int(total_queries),
+        "steps": steps,
+        "environment_step_count": int(getattr(env, "step_count", len(steps))),
+        "total_reward": float(total_reward),
+        "initial_metrics": initial_metrics,
+        "final_metrics": final_metrics,
+        "objective_outcome": oriented_outcome(
+            total_reward,
+            initial_metrics,
+            final_metrics,
+        ).tolist(),
+    }
+
+
 def load_resumable_results(
     path: str | Path,
     *,
@@ -323,6 +425,43 @@ def _adapter_ranker(adapter, *, score_mode: str, value_weight: float = 0.5):
     return rank
 
 
+def validate_rollout_request(
+    registry: dict[str, object],
+    *,
+    mode: str,
+    env_source: str,
+    seeds,
+) -> str:
+    partition = {
+        ("development", "paper9"): "development",
+        ("confirmation", "paper9"): "confirmation",
+        ("confirmation", "neijiang"): "dongxing_confirmation",
+        ("diagnostic", "paper9"): "confirmation",
+    }.get((str(mode), str(env_source)))
+    if partition is None:
+        raise ValueError("rollout mode and environment source are incompatible")
+    observed = [int(value) for value in seeds]
+    if not observed or len(observed) != len(set(observed)):
+        raise ValueError("rollout seed request must be non-empty and unique")
+    expected = {int(value) for value in registry["partitions"][partition]}
+    if not set(observed).issubset(expected):
+        label = partition.replace("_", " ")
+        raise ValueError(f"seeds are outside the {label} partition")
+    return partition
+
+
+def validate_policy_role(args) -> dict[str, object]:
+    diagnostic = str(args.policy) == "oracle_action_audit_diagnostic"
+    if diagnostic and str(args.mode) != "diagnostic":
+        raise ValueError("oracle action audit is diagnostic and not deployable")
+    if str(args.mode) == "diagnostic" and not diagnostic:
+        raise ValueError("diagnostic mode requires the oracle action audit policy")
+    return {
+        "deployable": not diagnostic,
+        "diagnostic_role": "privileged_upper_bound" if diagnostic else None,
+    }
+
+
 def parse_args(argv: Sequence[str] | None = None):
     parser = argparse.ArgumentParser()
     parser.add_argument("--registry", required=True)
@@ -343,6 +482,7 @@ def parse_args(argv: Sequence[str] | None = None):
             "online_expert_selector",
             "pcc_matched",
             "pcc_full",
+            "oracle_action_audit_diagnostic",
         ),
         default="pcc_matched",
     )
@@ -405,14 +545,24 @@ def main(argv: Sequence[str] | None = None) -> None:
     registry_path = Path(args.registry)
     registry = load_registry(registry_path)
     validate_registry(registry)
-    if args.mode == "confirmation":
+    requested_seeds = _parse_seed_spec(args.seeds)
+    validate_policy_role(args)
+    validate_rollout_request(
+        registry,
+        mode=args.mode,
+        env_source=args.env_source,
+        seeds=requested_seeds,
+    )
+    if args.mode in {"confirmation", "diagnostic"}:
         registry_digest = verify_frozen_registry(registry)
+    else:
+        registry_digest = _sha256_file(registry_path)
+    if args.mode == "confirmation":
         selected = registry["selected_config"]
         planning_horizon = int(selected["planning_horizon"])
         tolerance_scale = float(selected["tolerance_scale"])
         residual_window = int(selected["residual_window"])
     else:
-        registry_digest = _sha256_file(registry_path)
         planning_horizon = int(args.planning_horizon)
         tolerance_scale = float(args.tolerance_scale)
         residual_window = int(args.residual_window)
@@ -443,6 +593,48 @@ def main(argv: Sequence[str] | None = None) -> None:
         else None
     )
     env = _make_env(args.env_source, args.prepared_dir)
+
+    def strict_mask(runtime_env):
+        return np.asarray(runtime_env.action_masks(), dtype=bool) & np.asarray(
+            executable_swap_mask(runtime_env),
+            dtype=bool,
+        )
+
+    if args.mode == "diagnostic":
+        output_path = Path(args.output)
+        checkpoint_digests = []
+        existing = load_resumable_results(
+            output_path,
+            registry_digest=registry_digest,
+            checkpoint_digests=checkpoint_digests,
+        )
+        completed = set(existing["completed_seeds"]) if args.resume else set()
+        for seed in requested_seeds:
+            if seed in completed:
+                continue
+            result = run_oracle_diagnostic_episode(
+                env=env,
+                seed=seed,
+                rollout_steps=args.rollout_steps,
+                metric_reader=_metric_reader,
+                action_mask_fn=strict_mask,
+            )
+            result.update(
+                {
+                    "registry_digest": registry_digest,
+                    "checkpoint_digests": checkpoint_digests,
+                    "model_dependency": "none",
+                }
+            )
+            write_seed_result_atomic(
+                output_path,
+                seed_result=result,
+                registry_digest=registry_digest,
+                checkpoint_digests=checkpoint_digests,
+            )
+        print(output_path.read_text(encoding="utf-8"))
+        return
+
     reference_adapter = TorchCheckpointMPCAdapter.from_checkpoint(
         args.reference_checkpoint,
         device=args.device,
@@ -472,12 +664,6 @@ def main(argv: Sequence[str] | None = None) -> None:
     else:
         tolerances = np.zeros(3, dtype=np.float64)
 
-    def strict_mask(runtime_env):
-        return np.asarray(runtime_env.action_masks(), dtype=bool) & np.asarray(
-            executable_swap_mask(runtime_env),
-            dtype=bool,
-        )
-
     reward_ranker = _adapter_ranker(reference_adapter, score_mode="reward")
     value_ranker = _adapter_ranker(reference_adapter, score_mode="value")
     checkpoint_paths = (
@@ -496,7 +682,7 @@ def main(argv: Sequence[str] | None = None) -> None:
     )
     completed = set(existing["completed_seeds"]) if args.resume else set()
 
-    for seed in _parse_seed_spec(args.seeds):
+    for seed in requested_seeds:
         if seed in completed:
             continue
         reference_rng = np.random.default_rng(seed + 17001)
