@@ -155,7 +155,23 @@ as an unnecessary protocol state.
 - selects strictly by planning gates, reward, compute, then stable ID; and
 - optionally freezes only after all gates and artifacts pass.
 
-### 6.3 Confirmation orchestrator
+### 6.3 Complete model/calibrator factorial
+
+The bounded development grid declares ensemble size `{3, 5}`, joint coverage
+`{0.80, 0.90, 0.95}`, and policy round `{1, 2}`. Development is complete only
+when every model seed has all four checkpoint families `(K, round) in
+{(3,1), (5,1), (3,2), (5,2)}` and every family has all three coverage-specific
+calibrators. Round manifests obtain the model seed and member set from verified
+checkpoint contents and physical hashes; directory names are not lineage.
+
+The policy-improvement trajectory remains fixed. Round-2 labels are generated
+only by the predeclared round-1 `K=3`, coverage `0.90` policy. The round-2 `K=3`
+and `K=5` ensembles are trained on those same immutable labels and calibrated
+independently at the three declared coverages. Thus development varies model
+capacity and calibration quantile without changing the data-generating policy
+after outcomes are observed.
+
+### 6.4 Confirmation orchestrator
 
 A focused confirmation orchestrator schedules the frozen policy matrix without
 changing worker semantics. It creates one artifact per region, policy, and model
@@ -167,7 +183,7 @@ The orchestrator refuses to start when the registry is not frozen, the frozen
 digest is not committed, an output already references another digest, or a seed is
 outside its declared confirmation partition.
 
-### 6.4 Oracle diagnostic
+### 6.5 Oracle diagnostic
 
 The oracle action-audit diagnostic uses a separate explicitly privileged path.
 Its records contain `deployable=false`, the count of true-reward queries, and the
