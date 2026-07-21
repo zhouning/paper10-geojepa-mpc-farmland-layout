@@ -16,6 +16,78 @@ LOCKED_PCC_V1_PARTITIONS = {
     "dongxing_confirmation": tuple(range(8000, 8020)),
 }
 LOCKED_PCC_V1_MODEL_SEEDS = (5101, 5102, 5103)
+LOCKED_PCC_V1_1_CONTRACT = {
+    "source_inputs": {
+        "protocol_id": "pcc_v1",
+        "train_manifest_digest": (
+            "fd948356c45e68ccf4f95824902487ba62d6cc1eb912df812cc08842c9ce57db"
+        ),
+        "calibration_manifest_digest": (
+            "18f04a375bc59598047342bc59e27c05f29aaac96bc92d2583407e51f14d647b"
+        ),
+    },
+    "model": {
+        "class": "PCCPairedDeltaMember",
+        "representation": "action_relative",
+        "hidden_dim": 32,
+        "ema_decay": 0.99,
+        "transfer_checkpoint_sha256": (
+            "fd3cdeeb827dc59a30e559a36fc95166db77447dc6e7d1d4b5b4c081704c947f"
+        ),
+    },
+    "pilot_training": {
+        "epochs": 20,
+        "batch_size": 128,
+        "learning_rate": 0.001,
+    },
+    "candidate_selection": {
+        "executable_probability_threshold": 0.95,
+        "proposal_order": [
+            "paper9_reference",
+            "paper9_reward_ranker",
+            "paper9_value_ranker",
+            "stable_executable_index",
+        ],
+        "base_rule": "reward_mean_among_mean_safe",
+        "planning_objectives": [
+            "slope_benefit",
+            "contiguity_benefit",
+            "connected_area_benefit",
+        ],
+        "tie_break": [
+            "reward_mean_desc",
+            "worst_planning_mean_desc",
+            "planning_scale_asc",
+            "action_index_asc",
+        ],
+    },
+    "selected_conformal": {
+        "coverages": [0.8, 0.9, 0.95],
+        "score": "one_sided_selected_trajectory_planning_max",
+        "objectives": [
+            "slope_benefit",
+            "contiguity_benefit",
+            "connected_area_benefit",
+        ],
+        "epsilon": 1e-6,
+    },
+    "compute_modes": {
+        "matched": "floor(50 / ensemble_size)",
+        "full": 50,
+    },
+    "viability": {
+        "ensemble_size": 3,
+        "policy_round": 1,
+        "development_seeds": list(range(3000, 3010)),
+        "states_per_trajectory": 20,
+        "minimum_nonfallback_rate": 0.1,
+        "minimum_action_difference_rate": 0.1,
+        "minimum_reward_delta": 0.0,
+        "minimum_planning_delta": 0.0,
+        "minimum_supporting_model_seeds": 2,
+        "coverage_selection": "highest_passing",
+    },
+}
 LOCKED_PCC_V1_CONTRACT = {
     "horizons": [1, 3, 5],
     "offline_sampling": {
@@ -196,6 +268,22 @@ def validate_registry(payload: dict[str, Any]) -> None:
             if payload.get(field) != expected:
                 raise ValueError(
                     f"locked scientific contract mismatch for pcc_v1: {field}"
+                )
+    elif payload.get("protocol_id") == "pcc_v1_1":
+        actual = {role: tuple(map(int, seeds)) for role, seeds in roles.items()}
+        if actual != LOCKED_PCC_V1_PARTITIONS:
+            raise ValueError("locked partition mismatch for pcc_v1_1")
+        if model_seeds != LOCKED_PCC_V1_MODEL_SEEDS:
+            raise ValueError("locked model seed mismatch for pcc_v1_1")
+        for field, expected in LOCKED_PCC_V1_CONTRACT.items():
+            if payload.get(field) != expected:
+                raise ValueError(
+                    f"locked scientific contract mismatch for pcc_v1_1: {field}"
+                )
+        for field, expected in LOCKED_PCC_V1_1_CONTRACT.items():
+            if payload.get(field) != expected:
+                raise ValueError(
+                    f"locked scientific contract mismatch for pcc_v1_1: {field}"
                 )
 
 

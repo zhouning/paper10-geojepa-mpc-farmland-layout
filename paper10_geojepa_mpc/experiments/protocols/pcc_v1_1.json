@@ -1,0 +1,188 @@
+{
+  "protocol_id": "pcc_v1_1",
+  "status": "development",
+  "partitions": {
+    "train": [1000, 1001, 1002, 1003, 1004, 1005, 1006, 1007],
+    "calibration": [2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019],
+    "development": [3000, 3001, 3002, 3003, 3004, 3005, 3006, 3007, 3008, 3009],
+    "confirmation": [4000, 4001, 4002, 4003, 4004, 4005, 4006, 4007, 4008, 4009, 4010, 4011, 4012, 4013, 4014, 4015, 4016, 4017, 4018, 4019],
+    "dongxing_adaptation": [6000, 6001, 6002, 6003],
+    "dongxing_calibration": [7000, 7001, 7002, 7003, 7004, 7005, 7006, 7007, 7008, 7009, 7010, 7011, 7012, 7013, 7014, 7015, 7016, 7017, 7018, 7019],
+    "dongxing_confirmation": [8000, 8001, 8002, 8003, 8004, 8005, 8006, 8007, 8008, 8009, 8010, 8011, 8012, 8013, 8014, 8015, 8016, 8017, 8018, 8019]
+  },
+  "model_seeds": [5101, 5102, 5103],
+  "horizons": [1, 3, 5],
+  "source_inputs": {
+    "protocol_id": "pcc_v1",
+    "train_manifest_digest": "fd948356c45e68ccf4f95824902487ba62d6cc1eb912df812cc08842c9ce57db",
+    "calibration_manifest_digest": "18f04a375bc59598047342bc59e27c05f29aaac96bc92d2583407e51f14d647b"
+  },
+  "model": {
+    "class": "PCCPairedDeltaMember",
+    "representation": "action_relative",
+    "hidden_dim": 32,
+    "ema_decay": 0.99,
+    "transfer_checkpoint_sha256": "fd3cdeeb827dc59a30e559a36fc95166db77447dc6e7d1d4b5b4c081704c947f"
+  },
+  "pilot_training": {
+    "epochs": 20,
+    "batch_size": 128,
+    "learning_rate": 0.001
+  },
+  "offline_sampling": {
+    "train": {"states_per_trajectory": 20, "candidate_actions": 8},
+    "calibration": {"states_per_trajectory": 10, "candidate_actions": 8},
+    "dongxing_adaptation": {"states_per_trajectory": 20, "candidate_actions": 8},
+    "dongxing_calibration": {"states_per_trajectory": 10, "candidate_actions": 8}
+  },
+  "dongxing_adaptation_training": {
+    "epochs": 50,
+    "batch_size": 128,
+    "learning_rate": 0.001,
+    "hidden_dim": 32,
+    "trainable_scope": "objective_heads",
+    "representation": "action_relative",
+    "county_action_count": null
+  },
+  "offline_reference_policy": {
+    "name": "paper9_mpc",
+    "checkpoint_sha256": "fd3cdeeb827dc59a30e559a36fc95166db77447dc6e7d1d4b5b4c081704c947f",
+    "planning_horizon": 5,
+    "top_k": 50,
+    "gamma": 0.99,
+    "continuation": "paper9_mpc"
+  },
+  "candidate_selection": {
+    "executable_probability_threshold": 0.95,
+    "proposal_order": [
+      "paper9_reference",
+      "paper9_reward_ranker",
+      "paper9_value_ranker",
+      "stable_executable_index"
+    ],
+    "base_rule": "reward_mean_among_mean_safe",
+    "planning_objectives": [
+      "slope_benefit",
+      "contiguity_benefit",
+      "connected_area_benefit"
+    ],
+    "tie_break": [
+      "reward_mean_desc",
+      "worst_planning_mean_desc",
+      "planning_scale_asc",
+      "action_index_asc"
+    ]
+  },
+  "selected_conformal": {
+    "coverages": [0.8, 0.9, 0.95],
+    "score": "one_sided_selected_trajectory_planning_max",
+    "objectives": [
+      "slope_benefit",
+      "contiguity_benefit",
+      "connected_area_benefit"
+    ],
+    "epsilon": 1e-06
+  },
+  "compute_modes": {
+    "matched": "floor(50 / ensemble_size)",
+    "full": 50
+  },
+  "viability": {
+    "ensemble_size": 3,
+    "policy_round": 1,
+    "development_seeds": [3000, 3001, 3002, 3003, 3004, 3005, 3006, 3007, 3008, 3009],
+    "states_per_trajectory": 20,
+    "minimum_nonfallback_rate": 0.1,
+    "minimum_action_difference_rate": 0.1,
+    "minimum_reward_delta": 0.0,
+    "minimum_planning_delta": 0.0,
+    "minimum_supporting_model_seeds": 2,
+    "coverage_selection": "highest_passing"
+  },
+  "grid": {
+    "ensemble_size": [3, 5],
+    "joint_coverage": [0.8, 0.9, 0.95],
+    "tolerance_scale": [0.0, 0.05, 0.1],
+    "planning_horizon": [3, 5],
+    "residual_window": [10, 20],
+    "policy_round": [1, 2]
+  },
+  "development_baseline_anchor": {
+    "ensemble_size": 3,
+    "policy_round": 1,
+    "joint_coverage": 0.9,
+    "tolerance_scale": 0.05,
+    "planning_horizon": 3,
+    "residual_window": 10,
+    "risk_penalty": 1.0,
+    "expert_learning_rate": 0.1,
+    "stage_a_seeds": [3000, 3001, 3002, 3003, 3004],
+    "stage_a_rollout_steps": 3,
+    "baseline_seeds": [3000, 3001, 3002, 3003, 3004, 3005, 3006, 3007, 3008, 3009],
+    "baseline_rollout_steps": 100,
+    "candidates": [
+      "executable_random",
+      "paper9_mpc",
+      "legacy_value_filter",
+      "model_reward_greedy",
+      "rank_only",
+      "distributional_risk",
+      "online_expert_selector"
+    ]
+  },
+  "confirmation": {
+    "rollout_steps": 100,
+    "one_sided_confidence": 0.95,
+    "primary_comparison_count": 1,
+    "objective_noninferiority_margin": 0.0
+  },
+  "online_information_set": {
+    "current_observable_state": true,
+    "executable_action_mask": true,
+    "frozen_models_calibrators_and_policies": true,
+    "executed_action_outcomes_only": true,
+    "unexecuted_real_reward_queries": 0,
+    "environment_clone_rewind_or_restore": false,
+    "confirmation_weight_updates": false
+  },
+  "deployable_baselines": [
+    "executable_random",
+    "paper9_mpc",
+    "legacy_value_filter",
+    "model_reward_greedy",
+    "rank_only",
+    "distributional_risk",
+    "online_expert_selector",
+    "pcc_matched",
+    "pcc_full"
+  ],
+  "diagnostic_policies": ["oracle_action_audit_diagnostic"],
+  "required_ablations": [
+    "county_specific_action_embedding",
+    "single_model",
+    "no_aleatoric_scale",
+    "uncalibrated_ensemble_scale",
+    "reward_only",
+    "no_executed_feedback",
+    "no_reference_fallback",
+    "one_policy_improvement_round"
+  ],
+  "compute_budget": {
+    "single_model_candidate_equivalents": 50,
+    "matched_ensemble_pool_rule": "floor(50 / ensemble_size)",
+    "maximum_excess_candidate_equivalents": 1
+  },
+  "success_gates": {
+    "minimum_jointly_supporting_model_seeds": 2,
+    "matched_compute_must_reach_same_conclusion": true,
+    "bishan": {
+      "reward_lower_bound_strictly_positive": true,
+      "planning_lower_bound_minimum": 0.0
+    },
+    "dongxing": {
+      "reward_lower_bound_minimum": 0.0,
+      "planning_lower_bound_minimum": 0.0
+    },
+    "information_audit_requires_zero_unexecuted_real_reward_queries": true
+  }
+}
