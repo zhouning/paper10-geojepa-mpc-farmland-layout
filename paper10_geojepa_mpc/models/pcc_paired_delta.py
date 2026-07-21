@@ -85,16 +85,19 @@ class PCCPairedDeltaMember(nn.Module):
         ema_decay: float = 0.99,
     ) -> None:
         super().__init__()
+        self.block_feature_dim = int(block_feature_dim)
+        self.global_feature_dim = int(global_feature_dim)
+        self.hidden_dim = int(hidden_dim)
         self.ema_decay = float(ema_decay)
         self.online_encoder = ActionRelativeEncoder(
-            block_feature_dim,
-            global_feature_dim,
-            hidden_dim,
+            self.block_feature_dim,
+            self.global_feature_dim,
+            self.hidden_dim,
         )
         self.target_encoder = copy.deepcopy(self.online_encoder)
         self.target_encoder.requires_grad_(False)
 
-        latent_dim = hidden_dim * 2
+        latent_dim = self.hidden_dim * 2
         self.jepa_predictor = nn.Sequential(
             nn.Linear(latent_dim, latent_dim),
             nn.ReLU(),
@@ -115,6 +118,14 @@ class PCCPairedDeltaMember(nn.Module):
             2 * len(OBJECTIVE_NAMES),
         )
         self.executable_head = nn.Linear(latent_dim, 1)
+
+    def model_kwargs(self) -> dict[str, int | float]:
+        return {
+            "block_feature_dim": self.block_feature_dim,
+            "global_feature_dim": self.global_feature_dim,
+            "hidden_dim": self.hidden_dim,
+            "ema_decay": self.ema_decay,
+        }
 
     @torch.no_grad()
     def encode_target(

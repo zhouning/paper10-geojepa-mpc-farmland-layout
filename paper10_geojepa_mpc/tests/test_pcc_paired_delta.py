@@ -137,3 +137,23 @@ def test_direct_pair_is_invariant_to_consistent_block_permutation():
         original_output.executable_logit,
         permuted_output.executable_logit,
     )
+
+
+def test_model_kwargs_reconstruct_the_checkpoint_architecture():
+    model = PCCPairedDeltaMember(
+        17,
+        12,
+        hidden_dim=16,
+        ema_decay=0.95,
+    )
+
+    kwargs = model.model_kwargs()
+    restored = PCCPairedDeltaMember(**kwargs)
+
+    assert kwargs == {
+        "block_feature_dim": 17,
+        "global_feature_dim": 12,
+        "hidden_dim": 16,
+        "ema_decay": 0.95,
+    }
+    restored.load_state_dict(model.state_dict(), strict=True)

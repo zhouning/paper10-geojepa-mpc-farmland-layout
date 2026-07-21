@@ -604,10 +604,12 @@ jepa_loss = 0.5 * (
     F.smooth_l1_loss(model.jepa_predictor(output.candidate_latent), candidate_target)
     + F.smooth_l1_loss(model.jepa_predictor(output.reference_latent), reference_target)
 )
-rank_loss = F.softplus(
-    -torch.sign(target_delta_normalized[..., 0])
-    * output.delta_mean[..., 0]
-).mean()
+rank_loss = zero_boundary_delta_ranking_loss(
+    target_delta[..., :1],
+    predicted_normalized=output.delta_mean[..., :1],
+    center=delta_center[..., :1],
+    scale=delta_scale[..., :1],
+)
 executable_bce = F.binary_cross_entropy_with_logits(
     output.executable_logit,
     executable,
@@ -627,6 +629,11 @@ loss = (
 ~~~
 
 After "optimizer.step()", call "model.update_target_encoder()".
+
+The rank term uses the sign of the uncentered candidate-minus-reference target.
+Its normalized prediction is shifted by `center / scale`, so the decision
+boundary remains a raw delta of zero rather than the training-set median. Exact
+zero targets do not impose a ranking direction.
 
 - [ ] **Step 4: Implement checkpoint transfer, lineage, and IO**
 
