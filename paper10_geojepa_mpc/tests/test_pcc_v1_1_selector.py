@@ -55,6 +55,26 @@ def test_base_selector_optimizes_reward_mean_without_reward_lcb():
     assert info["mean_safe_actions"] == [10, 20]
 
 
+def test_base_selector_keeps_reference_when_all_safe_rewards_are_negative():
+    selected, info = selector.choose_base_candidate(
+        np.array([10, 20]),
+        np.array(
+            [
+                [-0.2, 0.1, 0.1, 0.1],
+                [-0.1, 0.2, 0.2, 0.2],
+            ]
+        ),
+        scales=np.ones((2, 4)),
+        executable_probability=np.ones(2),
+        tolerances=np.zeros(3),
+        executable_threshold=0.95,
+    )
+
+    assert selected is None
+    assert info["base_selection_reason"] == "reference_reward_dominates"
+    assert info["mean_safe_actions"] == [10, 20]
+
+
 @pytest.mark.parametrize(
     ("probability", "planning", "expected_reason"),
     [

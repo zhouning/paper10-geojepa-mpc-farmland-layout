@@ -120,6 +120,16 @@ def choose_base_candidate(
             int(actions[index]),
         ),
     )[0]
+    if float(means[selected_index, 0]) < 0.0:
+        return None, {
+            "base_selection_reason": "reference_reward_dominates",
+            "executable_actions": [
+                int(actions[index]) for index in executable_indexes
+            ],
+            "mean_safe_actions": [
+                int(actions[index]) for index in mean_safe_indexes
+            ],
+        }
     return int(actions[selected_index]), {
         "base_selection_reason": "reward_mean_among_mean_safe",
         "base_selected_index": int(selected_index),
