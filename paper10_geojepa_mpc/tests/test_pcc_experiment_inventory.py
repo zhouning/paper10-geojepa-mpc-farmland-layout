@@ -8,6 +8,7 @@ import pytest
 import torch
 
 from paper10_geojepa_mpc.experiments.pcc_experiment_inventory import (
+    audit_checkpoint_only_inventory,
     build_adapted_inventory,
     build_inventory,
     main,
@@ -577,3 +578,113 @@ def test_inventory_cli_emits_digest_bound_json_summary(tmp_path, capsys):
     )
     assert record["member_indexes"] == [0, 1, 2]
     assert set(record["calibrators"]) == {"0.8", "0.9", "0.95"}
+
+
+def create_checkpoint_only_fixture(
+    root: Path,
+    *,
+    duplicate_across_k=False,
+    external_first_checkpoint=False,
+):
+    registry = load_registry()
+    label_digest = "train-labels"
+    for model_seed in registry["model_seeds"]:
+        k3_paths = []
+        for ensemble_size in (3, 5):
+            block = root / f"seed{model_seed}_k{ensemble_size}"
+            block.mkdir(parents=True)
+            rows = []
+            for member_index in range(ensemble_size):
+                path = block / f"member_{member_index}.pt"
+                if duplicate_across_k and ensemble_size == 5 and member_index < 3:
+                    shutil.copy2(k3_paths[member_index], path)
+                else:
+                    torch.save(
+                        {
+                            "model_seed": model_seed,
+                            "ensemble_size": ensemble_size,
+                            "member_seed": (
+                                model_seed * 1000
+                                + ensemble_size * 10
+                                + member_index
+                            ),
+                            "member_index": member_index,
+                            "bootstrap_trajectory_ids": [
+                                1000 + ((member_index + offset) % 8)
+                                for offset in range(8)
+                            ],
+                            "labels_manifest_digest": label_digest,
+                            "protocol_id": registry["protocol_id"],
+                            "objective_names": list(OBJECTIVE_NAMES),
+                            "region": "bishan",
+                            "trainable_scope": "all",
+                        },
+                        path,
+                    )
+                if (
+                    external_first_checkpoint
+                    and model_seed == 5101
+                    and ensemble_size == 3
+                    and member_index == 0
+                ):
+                    external_path = root.parent / "external_member.pt"
+                    shutil.copy2(path, external_path)
+                    path = external_path
+                rows.append({"path": str(path), "sha256": _sha256_file(path)})
+                if ensemble_size == 3:
+                    k3_paths.append(path)
+            (block / "training_summary.json").write_text(
+                json.dumps(
+                    {
+                        "protocol_id": registry["protocol_id"],
+                        "registry_digest": None,
+                        "model_seed": model_seed,
+                        "ensemble_size": ensemble_size,
+                        "region": "bishan",
+                        "parent_checkpoint_digests": [],
+                        "trainable_scope": "all",
+                        "representation": "action_relative",
+                        "county_action_count": None,
+                        "checkpoints": rows,
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+
+def test_checkpoint_only_inventory_audits_declared_training_factorial(tmp_path):
+    create_checkpoint_only_fixture(tmp_path)
+
+    report = audit_checkpoint_only_inventory(
+        tmp_path,
+        registry=load_registry(),
+        model_seeds=(5101, 5102, 5103),
+    )
+
+    assert report["passed"] is True
+    assert report["n_summaries"] == 6
+    assert report["n_checkpoints"] == 24
+    assert report["ensemble_sizes"] == [3, 5]
+
+
+def test_checkpoint_only_inventory_rejects_cross_k_checkpoint_reuse(tmp_path):
+    create_checkpoint_only_fixture(tmp_path, duplicate_across_k=True)
+
+    with pytest.raises(ValueError, match="reused|ensemble size"):
+        audit_checkpoint_only_inventory(
+            tmp_path,
+            registry=load_registry(),
+            model_seeds=(5101, 5102, 5103),
+        )
+
+
+def test_checkpoint_only_inventory_rejects_checkpoint_outside_root(tmp_path):
+    root = tmp_path / "inventory"
+    create_checkpoint_only_fixture(root, external_first_checkpoint=True)
+
+    with pytest.raises(ValueError, match="outside the inventory root"):
+        audit_checkpoint_only_inventory(
+            root,
+            registry=load_registry(),
+            model_seeds=(5101, 5102, 5103),
+        )

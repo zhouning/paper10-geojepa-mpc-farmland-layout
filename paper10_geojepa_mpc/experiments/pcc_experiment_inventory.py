@@ -568,6 +568,161 @@ def _summary_checkpoint_path(summary_path: Path, raw_path: object) -> Path:
     return path.resolve()
 
 
+def audit_checkpoint_only_inventory(
+    root: str | Path,
+    *,
+    registry: dict[str, object],
+    model_seeds: Sequence[int],
+) -> dict[str, object]:
+    root = Path(root).resolve()
+    if not root.is_dir():
+        raise FileNotFoundError(f"checkpoint inventory root does not exist: {root}")
+    validate_registry(registry)
+    expected_models = tuple(int(value) for value in model_seeds)
+    if (
+        not expected_models
+        or len(expected_models) != len(set(expected_models))
+        or not set(expected_models).issubset(
+            {int(value) for value in registry["model_seeds"]}
+        )
+    ):
+        raise ValueError("checkpoint-only model seeds are invalid")
+    expected_sizes = tuple(
+        sorted(int(value) for value in registry["grid"]["ensemble_size"])
+    )
+    expected_keys = {
+        (model_seed, ensemble_size)
+        for model_seed in expected_models
+        for ensemble_size in expected_sizes
+    }
+
+    summaries = {}
+    for path, payload in _json_payloads(root):
+        if payload.get("region") != "bishan" or "checkpoints" not in payload:
+            continue
+        key = (
+            int(payload.get("model_seed", -1)),
+            int(payload.get("ensemble_size", -1)),
+        )
+        if key in summaries:
+            raise ValueError("checkpoint-only training summary is duplicated")
+        summaries[key] = (path, payload)
+    if set(summaries) != expected_keys:
+        raise ValueError("checkpoint-only training factorial is incomplete")
+
+    records = []
+    all_digests = []
+    all_member_seeds = []
+    all_label_digests = []
+    for model_seed, ensemble_size in sorted(expected_keys):
+        summary_path, summary = summaries[(model_seed, ensemble_size)]
+        if (
+            summary.get("protocol_id") != registry["protocol_id"]
+            or summary.get("registry_digest") is not None
+            or summary.get("region") != "bishan"
+            or summary.get("trainable_scope") != "all"
+            or summary.get("representation") != "action_relative"
+            or summary.get("county_action_count") is not None
+            or summary.get("parent_checkpoint_digests") != []
+        ):
+            raise ValueError("checkpoint-only training summary lineage mismatch")
+        checkpoint_rows = summary.get("checkpoints")
+        if (
+            not isinstance(checkpoint_rows, list)
+            or len(checkpoint_rows) != ensemble_size
+        ):
+            raise ValueError("checkpoint-only member block is incomplete")
+
+        block_digests = []
+        block_member_seeds = []
+        block_bootstraps = []
+        block_label_digests = []
+        for expected_member, row in enumerate(checkpoint_rows):
+            checkpoint_path = _summary_checkpoint_path(summary_path, row["path"])
+            if not checkpoint_path.is_relative_to(root):
+                raise ValueError("checkpoint-only member is outside the inventory root")
+            if not checkpoint_path.is_file():
+                raise FileNotFoundError("checkpoint-only member file is missing")
+            digest = _sha256_file(checkpoint_path)
+            if digest != str(row.get("sha256", "")):
+                raise ValueError("checkpoint-only physical digest mismatch")
+            checkpoint = torch.load(
+                checkpoint_path,
+                map_location="cpu",
+                weights_only=False,
+            )
+            if int(checkpoint.get("ensemble_size", -1)) != ensemble_size:
+                raise ValueError("checkpoint-only member ensemble size mismatch")
+            if (
+                int(checkpoint.get("model_seed", -1)) != model_seed
+                or int(checkpoint.get("member_index", -1)) != expected_member
+                or checkpoint.get("protocol_id") != registry["protocol_id"]
+                or checkpoint.get("region") != "bishan"
+                or checkpoint.get("trainable_scope") != "all"
+                or tuple(checkpoint.get("objective_names", ()))
+                != OBJECTIVE_NAMES
+            ):
+                raise ValueError("checkpoint-only member lineage mismatch")
+            member_seed = int(checkpoint.get("member_seed", -1))
+            bootstrap = tuple(
+                int(value)
+                for value in checkpoint.get("bootstrap_trajectory_ids", [])
+            )
+            labels_digest = str(checkpoint.get("labels_manifest_digest", ""))
+            if (
+                member_seed < 0
+                or len(bootstrap) != len(registry["partitions"]["train"])
+                or not set(bootstrap).issubset(
+                    {int(value) for value in registry["partitions"]["train"]}
+                )
+                or not labels_digest
+            ):
+                raise ValueError("checkpoint-only member data lineage mismatch")
+            block_digests.append(digest)
+            block_member_seeds.append(member_seed)
+            block_bootstraps.append(bootstrap)
+            block_label_digests.append(labels_digest)
+        if (
+            len(set(block_digests)) != ensemble_size
+            or len(set(block_member_seeds)) != ensemble_size
+            or len(set(block_bootstraps)) != ensemble_size
+            or len(set(block_label_digests)) != 1
+        ):
+            raise ValueError("checkpoint-only ensemble members are duplicated")
+        all_digests.extend(block_digests)
+        all_member_seeds.extend(block_member_seeds)
+        all_label_digests.extend(block_label_digests)
+        records.append(
+            {
+                "model_seed": model_seed,
+                "ensemble_size": ensemble_size,
+                "summary_path": str(summary_path),
+                "summary_sha256": _sha256_file(summary_path),
+                "checkpoint_digests": block_digests,
+                "member_seeds": block_member_seeds,
+                "bootstrap_trajectory_ids": [list(row) for row in block_bootstraps],
+                "labels_manifest_digest": block_label_digests[0],
+            }
+        )
+    if len(set(all_digests)) != len(all_digests):
+        raise ValueError("checkpoint-only checkpoint is reused across ensembles")
+    if len(set(all_member_seeds)) != len(all_member_seeds):
+        raise ValueError("checkpoint-only member seed is reused across ensembles")
+    if len(set(all_label_digests)) != 1:
+        raise ValueError("checkpoint-only training label lineage is inconsistent")
+    return {
+        "passed": True,
+        "protocol_id": registry["protocol_id"],
+        "root": str(root),
+        "model_seeds": list(expected_models),
+        "ensemble_sizes": list(expected_sizes),
+        "n_summaries": len(records),
+        "n_checkpoints": len(all_digests),
+        "labels_manifest_digest": all_label_digests[0],
+        "records": records,
+    }
+
+
 def build_adapted_inventory(
     root: str | Path,
     *,
@@ -770,6 +925,7 @@ def parse_args(argv: Sequence[str] | None = None):
     parser.add_argument("--root", required=True)
     parser.add_argument("--registry", default=str(DEFAULT_REGISTRY))
     parser.add_argument("--model-seeds", required=True)
+    parser.add_argument("--checkpoint-only", action="store_true")
     parser.add_argument("--output-json", default=None)
     return parser.parse_args(argv)
 
@@ -777,13 +933,21 @@ def parse_args(argv: Sequence[str] | None = None):
 def main(argv: Sequence[str] | None = None) -> None:
     args = parse_args(argv)
     registry = load_registry(args.registry)
-    inventory = build_inventory(
-        args.root,
-        model_seeds=_parse_model_seeds(args.model_seeds),
-        registry=registry,
-    )
+    model_seeds = _parse_model_seeds(args.model_seeds)
+    if args.checkpoint_only:
+        report = audit_checkpoint_only_inventory(
+            args.root,
+            registry=registry,
+            model_seeds=model_seeds,
+        )
+    else:
+        report = build_inventory(
+            args.root,
+            model_seeds=model_seeds,
+            registry=registry,
+        ).report()
     rendered = json.dumps(
-        inventory.report(),
+        report,
         indent=2,
         sort_keys=True,
         ensure_ascii=True,
