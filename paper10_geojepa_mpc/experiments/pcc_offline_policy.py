@@ -171,6 +171,40 @@ def _sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def build_pcc_policy_metadata(
+    *,
+    model_seed: int,
+    checkpoint_digests,
+    calibrator_digest: str,
+    joint_coverage: float,
+    planning_horizon: int,
+    candidate_budget: int,
+    tolerance_scale: float,
+    reference_checkpoint_sha256: str,
+    reference_horizon: int,
+    reference_top_k: int,
+    reference_gamma: float,
+) -> dict[str, object]:
+    return {
+        "name": "pcc_round1",
+        "model_seed": int(model_seed),
+        "checkpoint_digests": list(map(str, checkpoint_digests)),
+        "calibrator_digest": str(calibrator_digest),
+        "joint_coverage": float(joint_coverage),
+        "planning_horizon": int(planning_horizon),
+        "candidate_budget": int(candidate_budget),
+        "tolerance_scale": float(tolerance_scale),
+        "executed_feedback": False,
+        "reference_policy": {
+            "name": "paper9_mpc",
+            "checkpoint_sha256": str(reference_checkpoint_sha256),
+            "planning_horizon": int(reference_horizon),
+            "top_k": int(reference_top_k),
+            "gamma": float(reference_gamma),
+        },
+    }
+
+
 def build_pcc_checkpoint_policy_factory(
     *,
     checkpoint_root: str | Path,
@@ -230,21 +264,17 @@ def build_pcc_checkpoint_policy_factory(
         executable_threshold=executable_threshold,
     )
     calibrator_payload = json.loads(Path(calibrator_path).read_text(encoding="utf-8"))
-    metadata = {
-        "name": "pcc_round1",
-        "model_seed": int(model_seed),
-        "checkpoint_digests": list(checkpoint_digests),
-        "calibrator_digest": str(calibrator_payload["calibrator_digest"]),
-        "planning_horizon": int(planning_horizon),
-        "candidate_budget": int(candidate_budget),
-        "tolerance_scale": float(tolerance_scale),
-        "executed_feedback": False,
-        "reference_policy": {
-            "name": "paper9_mpc",
-            "checkpoint_sha256": _sha256_file(Path(reference_checkpoint)),
-            "planning_horizon": int(reference_horizon),
-            "top_k": int(reference_top_k),
-            "gamma": float(reference_gamma),
-        },
-    }
+    metadata = build_pcc_policy_metadata(
+        model_seed=model_seed,
+        checkpoint_digests=checkpoint_digests,
+        calibrator_digest=str(calibrator_payload["calibrator_digest"]),
+        joint_coverage=calibrator.coverage,
+        planning_horizon=planning_horizon,
+        candidate_budget=candidate_budget,
+        tolerance_scale=tolerance_scale,
+        reference_checkpoint_sha256=_sha256_file(Path(reference_checkpoint)),
+        reference_horizon=reference_horizon,
+        reference_top_k=reference_top_k,
+        reference_gamma=reference_gamma,
+    )
     return factory, metadata

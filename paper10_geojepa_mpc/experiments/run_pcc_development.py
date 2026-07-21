@@ -1392,6 +1392,7 @@ def main(argv: Sequence[str] | None = None) -> None:
         calibrator_root=args.calibration_root,
         model_seeds=registry["model_seeds"],
         registry=registry,
+        require_complete=True,
     )
     plan = build_execution_plan(
         registry,

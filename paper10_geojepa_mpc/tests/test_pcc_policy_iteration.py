@@ -16,6 +16,9 @@ from paper10_geojepa_mpc.experiments.run_pcc_policy_iteration import (
 )
 from paper10_geojepa_mpc.experiments.pcc_protocol_registry import load_registry
 from paper10_geojepa_mpc.experiments.pcc_objectives import OBJECTIVE_NAMES
+from paper10_geojepa_mpc.experiments.pcc_offline_policy import (
+    build_pcc_policy_metadata,
+)
 from paper10_geojepa_mpc.planning.paired_conformal import (
     JointPairedCalibrator,
     save_joint_calibrator,
@@ -170,25 +173,66 @@ def test_iteration_command_plan_carries_model_seed_lineage(tmp_path):
     plan = build_iteration_command_plan(
         args,
         model_seed=5101,
-        round1_checkpoint_root=tmp_path / "round1_checkpoints",
+        round1_checkpoint_roots={
+            3: tmp_path / "seed_5101" / "round1" / "k3" / "checkpoints",
+            5: tmp_path / "seed_5101" / "round1" / "k5" / "checkpoints",
+        },
     )
 
     assert set(plan) == {
-        "round1_calibration",
+        "round1_calibrations",
         "round2_train_labels",
         "round2_calibration_labels",
         "round2_training",
-        "round2_calibration",
+        "round2_calibrations",
     }
     label_command = plan["round2_train_labels"]
     assert label_command[label_command.index("--policy") + 1] == "pcc"
     assert label_command[label_command.index("--pcc-model-seed") + 1] == "5101"
     assert "paper10_geojepa_mpc.experiments.run_pcc_train" in plan[
         "round2_training"
+    ][3]
+    assert set(plan["round2_training"]) == {3, 5}
+    assert set(plan["round1_calibrations"]) == {
+        (ensemble_size, coverage)
+        for ensemble_size in (3, 5)
+        for coverage in (0.8, 0.9, 0.95)
+    }
+    assert set(plan["round2_calibrations"]) == set(
+        plan["round1_calibrations"]
+    )
+    assert label_command[
+        label_command.index("--pcc-checkpoint-root") + 1
+    ].endswith("round1\\k3\\checkpoints")
+    assert label_command[label_command.index("--pcc-calibrator") + 1].endswith(
+        "round1\\k3\\calibration\\coverage_0p90\\calibrator.json"
+    )
+
+
+def test_round1_label_metadata_binds_joint_coverage_and_artifact_lineage():
+    metadata = build_pcc_policy_metadata(
+        model_seed=5101,
+        checkpoint_digests=("checkpoint-0", "checkpoint-1", "checkpoint-2"),
+        calibrator_digest="calibrator",
+        joint_coverage=0.9,
+        planning_horizon=3,
+        candidate_budget=50,
+        tolerance_scale=0.05,
+        reference_checkpoint_sha256="reference",
+        reference_horizon=5,
+        reference_top_k=50,
+        reference_gamma=0.99,
+    )
+
+    assert metadata["name"] == "pcc_round1"
+    assert metadata["joint_coverage"] == 0.9
+    assert metadata["checkpoint_digests"] == [
+        "checkpoint-0",
+        "checkpoint-1",
+        "checkpoint-2",
     ]
-
-
-def test_verify_only_requires_complete_three_seed_two_round_lineage(tmp_path):
+    assert metadata["calibrator_digest"] == "calibrator"
+def test_verify_only_rejects_incomplete_ensemble_coverage_factorial(tmp_path):
     registry = load_registry()
     calibration_seeds = registry["partitions"]["calibration"]
     for model_seed in registry["model_seeds"]:
@@ -231,8 +275,5 @@ def test_verify_only_requires_complete_three_seed_two_round_lineage(tmp_path):
             )
             parent = manifest["round_digest"]
 
-    report = verify_policy_iteration_root(tmp_path, registry=registry)
-
-    assert report["passed"] is True
-    assert report["model_seeds"] == registry["model_seeds"]
-    assert len(report["rounds"]) == 6
+    with pytest.raises(ValueError, match="factorial"):
+        verify_policy_iteration_root(tmp_path, registry=registry)

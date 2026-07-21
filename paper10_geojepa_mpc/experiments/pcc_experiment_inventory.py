@@ -455,12 +455,93 @@ def _validate_round_parents(
             raise ValueError("policy round parent lineage mismatch")
 
 
+def _validate_complete_factorial(
+    records: Sequence[EnsembleInventoryRecord],
+    model_seeds: tuple[int, ...],
+    *,
+    registry: dict[str, object],
+) -> None:
+    expected_keys = {
+        (int(ensemble_size), int(policy_round))
+        for ensemble_size in registry["grid"]["ensemble_size"]
+        for policy_round in registry["grid"]["policy_round"]
+    }
+    expected_coverages = {
+        float(value) for value in registry["grid"]["joint_coverage"]
+    }
+    by_key = {
+        (record.model_seed, record.ensemble_size, record.policy_round): record
+        for record in records
+    }
+    for model_seed in model_seeds:
+        observed_keys = {
+            (record.ensemble_size, record.policy_round)
+            for record in records
+            if record.model_seed == model_seed
+        }
+        if observed_keys != expected_keys:
+            raise ValueError("complete experiment factorial is missing a declared key")
+        for ensemble_size, policy_round in expected_keys:
+            record = by_key[(model_seed, ensemble_size, policy_round)]
+            if set(record.calibrators) != expected_coverages:
+                raise ValueError("complete calibration coverage factorial is missing")
+
+        round1_k3 = by_key[(model_seed, 3, 1)]
+        round1_records = [
+            by_key[(model_seed, ensemble_size, 1)]
+            for ensemble_size in registry["grid"]["ensemble_size"]
+        ]
+        if len({record.train_labels_digest for record in round1_records}) != 1:
+            raise ValueError("round-1 factorial must share one training label manifest")
+        if len({record.calibration_labels_digest for record in round1_records}) != 1:
+            raise ValueError(
+                "round-1 factorial must share one calibration label manifest"
+            )
+        for record in round1_records:
+            payload = json.loads(
+                record.round_manifest_path.read_text(encoding="utf-8")
+            )
+            if payload["continuation_policy"].get("name") != "paper9_mpc":
+                raise ValueError("round-1 continuation policy lineage mismatch")
+
+        round2_records = [
+            by_key[(model_seed, ensemble_size, 2)]
+            for ensemble_size in registry["grid"]["ensemble_size"]
+        ]
+        for record in round2_records:
+            payload = json.loads(
+                record.round_manifest_path.read_text(encoding="utf-8")
+            )
+            continuation = payload["continuation_policy"]
+            if payload["parent_digest"] != round1_k3.round_digest:
+                raise ValueError("round-2 factorial must share the round-1 K=3 parent")
+            if continuation.get("name") != "pcc_round1":
+                raise ValueError("round-2 continuation policy lineage mismatch")
+            if int(continuation.get("model_seed", -1)) != int(model_seed):
+                raise ValueError("round-2 continuation model seed mismatch")
+            if tuple(continuation.get("checkpoint_digests", ())) != tuple(
+                round1_k3.checkpoint_digests
+            ):
+                raise ValueError("round-2 continuation checkpoint lineage mismatch")
+            if continuation.get("calibrator_digest") != round1_k3.calibrator_digests[
+                0.9
+            ]:
+                raise ValueError("round-2 continuation calibrator lineage mismatch")
+            if float(continuation.get("joint_coverage", -1.0)) != 0.9:
+                raise ValueError("round-2 continuation coverage mismatch")
+        if len({record.train_labels_digest for record in round2_records}) != 1:
+            raise ValueError("round-2 factorial must share one training label manifest")
+        if len({record.calibration_labels_digest for record in round2_records}) != 1:
+            raise ValueError("round-2 factorial must share one calibration label manifest")
+
+
 def build_inventory(
     root: str | Path,
     *,
     calibrator_root: str | Path | None = None,
     model_seeds: Sequence[int],
     registry: dict[str, object] | None = None,
+    require_complete: bool = False,
 ) -> ExperimentInventory:
     root = Path(root).resolve()
     if not root.is_dir():
@@ -558,6 +639,12 @@ def build_inventory(
             registry["offline_reference_policy"]["checkpoint_sha256"]
         ),
     )
+    if require_complete:
+        _validate_complete_factorial(
+            records,
+            expected_model_seeds,
+            registry=registry,
+        )
     return ExperimentInventory(tuple(records))
 
 
@@ -945,6 +1032,7 @@ def main(argv: Sequence[str] | None = None) -> None:
             args.root,
             model_seeds=model_seeds,
             registry=registry,
+            require_complete=True,
         ).report()
     rendered = json.dumps(
         report,

@@ -1,6 +1,7 @@
 import hashlib
 import json
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 
@@ -22,23 +23,41 @@ DEFAULT_REFERENCE_CHECKPOINT = (
     / "e0_bishan_rank_seed2028"
     / "rank_seed2028.pt"
 )
+DEVELOPMENT_COVERAGES = (0.8, 0.9, 0.95)
+
+
+def _coverage_token(coverage: float) -> str:
+    return f"{float(coverage):.2f}".replace(".", "p")
 
 
 def build_iteration_command_plan(
     args,
     *,
     model_seed: int,
-    round1_checkpoint_root: str | Path,
-) -> dict[str, list[str]]:
+    round1_checkpoint_roots: dict[int, str | Path],
+) -> dict[str, object]:
     output_root = Path(args.output_dir)
     seed_root = output_root / f"seed_{int(model_seed)}"
-    round1_calibration = seed_root / "round1" / "calibration"
     round2_root = seed_root / "round2"
     round2_train_labels = round2_root / "labels" / "train"
     round2_calibration_labels = round2_root / "labels" / "calibration"
-    round2_checkpoints = round2_root / "checkpoints"
-    round2_calibration = round2_root / "calibration"
-    round1_calibrator = round1_calibration / "calibrator.json"
+
+    def family_root(round_index: int, ensemble_size: int) -> Path:
+        return seed_root / f"round{round_index}" / f"k{int(ensemble_size)}"
+
+    def calibrator_dir(
+        round_index: int,
+        ensemble_size: int,
+        coverage: float,
+    ) -> Path:
+        return (
+            family_root(round_index, ensemble_size)
+            / "calibration"
+            / f"coverage_{_coverage_token(coverage)}"
+        )
+
+    round1_k3 = Path(round1_checkpoint_roots[3])
+    round1_calibrator = calibrator_dir(1, 3, 0.9) / "calibrator.json"
 
     def label_command(partition: str, output: Path) -> list[str]:
         command = [
@@ -66,7 +85,7 @@ def build_iteration_command_plan(
             "--gamma",
             str(args.gamma),
             "--pcc-checkpoint-root",
-            str(round1_checkpoint_root),
+            str(round1_k3),
             "--pcc-calibrator",
             str(round1_calibrator),
             "--pcc-model-seed",
@@ -86,30 +105,43 @@ def build_iteration_command_plan(
             command.append("--resume")
         return command
 
-    return {
-        "round1_calibration": [
+    def calibration_command(
+        *,
+        labels_manifest: str | Path,
+        checkpoint_root: str | Path,
+        coverage: float,
+        output_dir: str | Path,
+    ) -> list[str]:
+        return [
             sys.executable,
             "-m",
             "paper10_geojepa_mpc.planning.paired_conformal",
             "--registry",
             str(args.registry),
             "--labels-manifest",
-            str(args.round0_calibration_labels),
+            str(labels_manifest),
             "--checkpoint-root",
-            str(round1_checkpoint_root),
+            str(checkpoint_root),
             "--coverage",
-            str(args.round1_iteration_coverage),
+            str(float(coverage)),
             "--device",
             str(args.device),
             "--output-dir",
-            str(round1_calibration),
-        ],
-        "round2_train_labels": label_command("train", round2_train_labels),
-        "round2_calibration_labels": label_command(
-            "calibration",
-            round2_calibration_labels,
-        ),
-        "round2_training": [
+            str(output_dir),
+        ]
+
+    round1_calibrations = {
+        (ensemble_size, coverage): calibration_command(
+            labels_manifest=args.round0_calibration_labels,
+            checkpoint_root=round1_checkpoint_roots[ensemble_size],
+            coverage=coverage,
+            output_dir=calibrator_dir(1, ensemble_size, coverage),
+        )
+        for ensemble_size in (3, 5)
+        for coverage in DEVELOPMENT_COVERAGES
+    }
+    round2_training = {
+        ensemble_size: [
             sys.executable,
             "-m",
             "paper10_geojepa_mpc.experiments.run_pcc_train",
@@ -120,7 +152,7 @@ def build_iteration_command_plan(
             "--model-seed",
             str(model_seed),
             "--ensemble-size",
-            str(args.round1_iteration_ensemble_size),
+            str(ensemble_size),
             "--epochs",
             str(args.epochs),
             "--batch-size",
@@ -132,25 +164,29 @@ def build_iteration_command_plan(
             "--device",
             str(args.device),
             "--output-dir",
-            str(round2_checkpoints),
-        ],
-        "round2_calibration": [
-            sys.executable,
-            "-m",
-            "paper10_geojepa_mpc.planning.paired_conformal",
-            "--registry",
-            str(args.registry),
-            "--labels-manifest",
-            str(round2_calibration_labels / "manifest.json"),
-            "--checkpoint-root",
-            str(round2_checkpoints),
-            "--coverage",
-            str(args.round1_iteration_coverage),
-            "--device",
-            str(args.device),
-            "--output-dir",
-            str(round2_calibration),
-        ],
+            str(family_root(2, ensemble_size) / "checkpoints"),
+        ]
+        for ensemble_size in (3, 5)
+    }
+    round2_calibrations = {
+        (ensemble_size, coverage): calibration_command(
+            labels_manifest=round2_calibration_labels / "manifest.json",
+            checkpoint_root=family_root(2, ensemble_size) / "checkpoints",
+            coverage=coverage,
+            output_dir=calibrator_dir(2, ensemble_size, coverage),
+        )
+        for ensemble_size in (3, 5)
+        for coverage in DEVELOPMENT_COVERAGES
+    }
+    return {
+        "round1_calibrations": round1_calibrations,
+        "round2_train_labels": label_command("train", round2_train_labels),
+        "round2_calibration_labels": label_command(
+            "calibration",
+            round2_calibration_labels,
+        ),
+        "round2_training": round2_training,
+        "round2_calibrations": round2_calibrations,
     }
 
 
@@ -317,6 +353,77 @@ def _calibrator_or_none(
         return None
 
 
+def _family_root(
+    output_root: str | Path,
+    *,
+    model_seed: int,
+    round_index: int,
+    ensemble_size: int,
+) -> Path:
+    return (
+        Path(output_root)
+        / f"seed_{int(model_seed)}"
+        / f"round{int(round_index)}"
+        / f"k{int(ensemble_size)}"
+    )
+
+
+def _calibrator_path(
+    output_root: str | Path,
+    *,
+    model_seed: int,
+    round_index: int,
+    ensemble_size: int,
+    coverage: float,
+) -> Path:
+    return (
+        _family_root(
+            output_root,
+            model_seed=model_seed,
+            round_index=round_index,
+            ensemble_size=ensemble_size,
+        )
+        / "calibration"
+        / f"coverage_{_coverage_token(coverage)}"
+        / "calibrator.json"
+    )
+
+
+def _import_checkpoint_family(
+    source_root: str | Path,
+    destination_root: str | Path,
+    *,
+    model_seed: int,
+    ensemble_size: int,
+) -> Path:
+    source_root = Path(source_root).resolve()
+    destination_root = Path(destination_root).resolve()
+    source_digests = _checkpoint_digests(
+        source_root,
+        model_seed=model_seed,
+        ensemble_size=ensemble_size,
+    )
+    destination_root.mkdir(parents=True, exist_ok=True)
+    source_paths = sorted(source_root.glob("member_*.pt"))
+    for source_path, expected_digest in zip(source_paths, source_digests, strict=True):
+        destination_path = destination_root / source_path.name
+        if destination_path.exists() and _sha256_file(destination_path) == expected_digest:
+            continue
+        temporary = destination_path.with_suffix(destination_path.suffix + ".tmp")
+        shutil.copy2(source_path, temporary)
+        if _sha256_file(temporary) != expected_digest:
+            raise ValueError("imported checkpoint digest mismatch")
+        temporary.replace(destination_path)
+    observed = _checkpoint_digests(
+        destination_root,
+        model_seed=model_seed,
+        ensemble_size=ensemble_size,
+    )
+    if observed != source_digests:
+        raise ValueError("imported checkpoint family differs from its source")
+    return destination_root
+
+
 def execute_policy_iteration(args, *, registry: dict[str, object]) -> dict[str, object]:
     from paper10_geojepa_mpc.experiments.pcc_protocol_registry import (
         validate_registry,
@@ -373,67 +480,103 @@ def execute_policy_iteration(args, *, registry: dict[str, object]) -> dict[str, 
 
     output_root = Path(args.output_dir)
     output_root.mkdir(parents=True, exist_ok=True)
+    ensemble_sizes = tuple(int(value) for value in registry["grid"]["ensemble_size"])
+    coverages = tuple(float(value) for value in registry["grid"]["joint_coverage"])
+    if ensemble_sizes != (3, 5) or coverages != DEVELOPMENT_COVERAGES:
+        raise ValueError("policy iteration factorial differs from the locked grid")
+
     for model_seed in map(int, registry["model_seeds"]):
-        round1_checkpoints = _resolve_round1_checkpoint_root(
-            args.round1_checkpoints,
-            model_seed=model_seed,
-            ensemble_size=args.round1_iteration_ensemble_size,
-        )
-        round1_digests = _checkpoint_digests(
-            round1_checkpoints,
-            model_seed=model_seed,
-            ensemble_size=args.round1_iteration_ensemble_size,
-        )
+        round1_checkpoints = {}
+        round1_digests = {}
+        for ensemble_size in ensemble_sizes:
+            source_root = _resolve_round1_checkpoint_root(
+                args.round1_checkpoints,
+                model_seed=model_seed,
+                ensemble_size=ensemble_size,
+            )
+            destination_root = _family_root(
+                output_root,
+                model_seed=model_seed,
+                round_index=1,
+                ensemble_size=ensemble_size,
+            ) / "checkpoints"
+            round1_checkpoints[ensemble_size] = _import_checkpoint_family(
+                source_root,
+                destination_root,
+                model_seed=model_seed,
+                ensemble_size=ensemble_size,
+            )
+            round1_digests[ensemble_size] = _checkpoint_digests(
+                destination_root,
+                model_seed=model_seed,
+                ensemble_size=ensemble_size,
+            )
         plan = build_iteration_command_plan(
             args,
             model_seed=model_seed,
-            round1_checkpoint_root=round1_checkpoints,
+            round1_checkpoint_roots=round1_checkpoints,
         )
         seed_root = output_root / f"seed_{model_seed}"
-        round1_root = seed_root / "round1"
         round2_root = seed_root / "round2"
-        round1_calibrator_path = round1_root / "calibration" / "calibrator.json"
-        round1_calibrator = (
-            _calibrator_or_none(
-                round1_calibrator_path,
-                labels_manifest_digest=round0_calibration["manifest_digest"],
-                checkpoint_digests=round1_digests,
-                calibration_seeds=calibration_seeds,
+        round1_calibrators = {}
+        for ensemble_size in ensemble_sizes:
+            for coverage in coverages:
+                path = _calibrator_path(
+                    output_root,
+                    model_seed=model_seed,
+                    round_index=1,
+                    ensemble_size=ensemble_size,
+                    coverage=coverage,
+                )
+                calibrator = (
+                    _calibrator_or_none(
+                        path,
+                        labels_manifest_digest=round0_calibration["manifest_digest"],
+                        checkpoint_digests=round1_digests[ensemble_size],
+                        calibration_seeds=calibration_seeds,
+                    )
+                    if args.resume
+                    else None
+                )
+                if calibrator is None:
+                    _run_command(
+                        plan["round1_calibrations"][(ensemble_size, coverage)],
+                        log_path=path.parent / "calibration.log",
+                    )
+                    calibrator = _load_valid_calibrator(
+                        path,
+                        labels_manifest_digest=round0_calibration["manifest_digest"],
+                        checkpoint_digests=round1_digests[ensemble_size],
+                        calibration_seeds=calibration_seeds,
+                    )
+                round1_calibrators[(ensemble_size, coverage)] = path
+
+        round1_manifests = {}
+        for ensemble_size in ensemble_sizes:
+            primary_payload = json.loads(
+                round1_calibrators[(ensemble_size, 0.9)].read_text(
+                    encoding="utf-8"
+                )
             )
-            if args.resume
-            else None
-        )
-        if round1_calibrator is None:
-            _run_command(
-                plan["round1_calibration"],
-                log_path=round1_root / "calibration.log",
+            family_root = _family_root(
+                output_root,
+                model_seed=model_seed,
+                round_index=1,
+                ensemble_size=ensemble_size,
             )
-            round1_calibrator = _load_valid_calibrator(
-                round1_calibrator_path,
-                labels_manifest_digest=round0_calibration["manifest_digest"],
-                checkpoint_digests=round1_digests,
-                calibration_seeds=calibration_seeds,
+            round1_manifests[ensemble_size] = write_round_manifest(
+                family_root / "round_manifest.json",
+                model_seed=model_seed,
+                round_index=1,
+                parent_digest=str(
+                    registry["offline_reference_policy"]["checkpoint_sha256"]
+                ),
+                train_labels_digest=str(round0_train["manifest_digest"]),
+                calibration_labels_digest=str(round0_calibration["manifest_digest"]),
+                checkpoint_digests=round1_digests[ensemble_size],
+                calibrator_digest=str(primary_payload["calibrator_digest"]),
+                continuation_policy=dict(round0_train["continuation_policy"]),
             )
-        round1_calibrator_payload = json.loads(
-            round1_calibrator_path.read_text(encoding="utf-8")
-        )
-        round1_manifest = write_round_manifest(
-            round1_root / "round_manifest.json",
-            model_seed=model_seed,
-            round_index=1,
-            parent_digest=str(
-                registry["offline_reference_policy"]["checkpoint_sha256"]
-            ),
-            train_labels_digest=str(round0_train["manifest_digest"]),
-            calibration_labels_digest=str(
-                round0_calibration["manifest_digest"]
-            ),
-            checkpoint_digests=round1_digests,
-            calibrator_digest=str(
-                round1_calibrator_payload["calibrator_digest"]
-            ),
-            continuation_policy=dict(round0_train["continuation_policy"]),
-        )
 
         _run_command(
             plan["round2_train_labels"],
@@ -464,68 +607,92 @@ def execute_policy_iteration(args, *, registry: dict[str, object]) -> dict[str, 
         ):
             raise ValueError("round-2 label continuation lineage mismatch")
 
-        round2_checkpoints = round2_root / "checkpoints"
-        round2_digests = None
-        if args.resume:
-            try:
-                round2_digests = _checkpoint_digests(
-                    round2_checkpoints,
-                    model_seed=model_seed,
-                    ensemble_size=args.round1_iteration_ensemble_size,
-                )
-            except (OSError, ValueError, KeyError, TypeError):
-                round2_digests = None
-        if round2_digests is None:
-            _run_command(
-                plan["round2_training"],
-                log_path=round2_root / "training.log",
-            )
-            round2_digests = _checkpoint_digests(
-                round2_checkpoints,
+        round2_digests = {}
+        for ensemble_size in ensemble_sizes:
+            checkpoints = _family_root(
+                output_root,
                 model_seed=model_seed,
-                ensemble_size=args.round1_iteration_ensemble_size,
-            )
+                round_index=2,
+                ensemble_size=ensemble_size,
+            ) / "checkpoints"
+            digests = None
+            if args.resume:
+                try:
+                    digests = _checkpoint_digests(
+                        checkpoints,
+                        model_seed=model_seed,
+                        ensemble_size=ensemble_size,
+                    )
+                except (OSError, ValueError, KeyError, TypeError):
+                    digests = None
+            if digests is None:
+                _run_command(
+                    plan["round2_training"][ensemble_size],
+                    log_path=checkpoints.parent / "training.log",
+                )
+                digests = _checkpoint_digests(
+                    checkpoints,
+                    model_seed=model_seed,
+                    ensemble_size=ensemble_size,
+                )
+            round2_digests[ensemble_size] = digests
 
-        round2_calibrator_path = round2_root / "calibration" / "calibrator.json"
-        round2_calibrator = (
-            _calibrator_or_none(
-                round2_calibrator_path,
-                labels_manifest_digest=round2_calibration["manifest_digest"],
-                checkpoint_digests=round2_digests,
-                calibration_seeds=calibration_seeds,
+        round2_calibrators = {}
+        for ensemble_size in ensemble_sizes:
+            for coverage in coverages:
+                path = _calibrator_path(
+                    output_root,
+                    model_seed=model_seed,
+                    round_index=2,
+                    ensemble_size=ensemble_size,
+                    coverage=coverage,
+                )
+                calibrator = (
+                    _calibrator_or_none(
+                        path,
+                        labels_manifest_digest=round2_calibration["manifest_digest"],
+                        checkpoint_digests=round2_digests[ensemble_size],
+                        calibration_seeds=calibration_seeds,
+                    )
+                    if args.resume
+                    else None
+                )
+                if calibrator is None:
+                    _run_command(
+                        plan["round2_calibrations"][(ensemble_size, coverage)],
+                        log_path=path.parent / "calibration.log",
+                    )
+                    calibrator = _load_valid_calibrator(
+                        path,
+                        labels_manifest_digest=round2_calibration["manifest_digest"],
+                        checkpoint_digests=round2_digests[ensemble_size],
+                        calibration_seeds=calibration_seeds,
+                    )
+                round2_calibrators[(ensemble_size, coverage)] = path
+
+        for ensemble_size in ensemble_sizes:
+            primary_payload = json.loads(
+                round2_calibrators[(ensemble_size, 0.9)].read_text(
+                    encoding="utf-8"
+                )
             )
-            if args.resume
-            else None
-        )
-        if round2_calibrator is None:
-            _run_command(
-                plan["round2_calibration"],
-                log_path=round2_root / "calibration.log",
+            family_root = _family_root(
+                output_root,
+                model_seed=model_seed,
+                round_index=2,
+                ensemble_size=ensemble_size,
             )
-            round2_calibrator = _load_valid_calibrator(
-                round2_calibrator_path,
-                labels_manifest_digest=round2_calibration["manifest_digest"],
-                checkpoint_digests=round2_digests,
-                calibration_seeds=calibration_seeds,
+            write_round_manifest(
+                family_root / "round_manifest.json",
+                model_seed=model_seed,
+                round_index=2,
+                parent_digest=str(round1_manifests[3]["round_digest"]),
+                train_labels_digest=str(round2_train["manifest_digest"]),
+                calibration_labels_digest=str(round2_calibration["manifest_digest"]),
+                checkpoint_digests=round2_digests[ensemble_size],
+                calibrator_digest=str(primary_payload["calibrator_digest"]),
+                continuation_policy=dict(round2_train["continuation_policy"]),
             )
-        round2_calibrator_payload = json.loads(
-            round2_calibrator_path.read_text(encoding="utf-8")
-        )
-        write_round_manifest(
-            round2_root / "round_manifest.json",
-            model_seed=model_seed,
-            round_index=2,
-            parent_digest=str(round1_manifest["round_digest"]),
-            train_labels_digest=str(round2_train["manifest_digest"]),
-            calibration_labels_digest=str(
-                round2_calibration["manifest_digest"]
-            ),
-            checkpoint_digests=round2_digests,
-            calibrator_digest=str(
-                round2_calibrator_payload["calibrator_digest"]
-            ),
-            continuation_policy=dict(round2_train["continuation_policy"]),
-        )
 
     report = verify_policy_iteration_root(output_root, registry=registry)
     verification_path = output_root / "verification.json"

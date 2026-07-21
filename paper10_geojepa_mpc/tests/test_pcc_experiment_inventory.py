@@ -33,7 +33,8 @@ def create_inventory_fixture(
     root: Path,
     *,
     model_seeds=(5101, 5102, 5103),
-    member_indexes=(0, 1, 2),
+    ensemble_sizes=(3,),
+    member_indexes=None,
     rounds=(1, 2),
     coverages=(0.8, 0.9, 0.95),
     calibrator_overrides=None,
@@ -51,120 +52,157 @@ def create_inventory_fixture(
         for round_index in rounds:
             train_digest = f"train-{model_seed}-{round_index}"
             calibration_digest = f"calibration-{model_seed}-{round_index}"
-            # The misleading path makes filename-based seed/round inference fail.
-            checkpoint_root = (
-                root
-                / f"looks_like_seed_{model_seed + 77}"
-                / f"looks_like_round_{round_index + 5}"
-                / "checkpoints"
-            )
-            checkpoint_root.mkdir(parents=True, exist_ok=True)
-            checkpoint_paths = []
-            for ordinal, member_index in enumerate(member_indexes):
-                checkpoint_path = checkpoint_root / f"blob_{ordinal}.pt"
-                torch.save(
-                    {
-                        "model_seed": int(model_seed),
-                        "ensemble_size": int(
-                            checkpoint_overrides.get(
-                                "ensemble_size", len(member_indexes)
-                            )
-                        ),
-                        "member_seed": int(model_seed * 100 + ordinal),
-                        "member_index": int(member_index),
-                        "bootstrap_trajectory_ids": [
-                            *checkpoint_overrides.get(
-                                "bootstrap_trajectory_ids",
-                                (1000 + ordinal, 1001 + ordinal),
-                            )
-                        ],
-                        "labels_manifest_digest": train_digest,
-                        "registry_digest": checkpoint_overrides.get(
-                            "registry_digest"
-                        ),
-                        "protocol_id": registry["protocol_id"],
-                        "objective_names": list(OBJECTIVE_NAMES),
-                        "objective_scaling": {"center": [], "scale": []},
-                        "trainable_scope": "all",
-                    },
-                    checkpoint_path,
+            if round_index > min(rounds):
+                previous_sizes = sorted(
+                    size
+                    for seed, size, index in records
+                    if seed == model_seed and index == round_index - 1
                 )
-                checkpoint_paths.append(checkpoint_path)
-            checkpoint_digests = tuple(
-                _sha256_file(path) for path in checkpoint_paths
-            )
-
-            calibrators = {}
-            calibrator_payloads = {}
-            for coverage in coverages:
-                calibrator_path = (
+                parent_size = 3 if 3 in previous_sizes else previous_sizes[0]
+                parent_digest = records[
+                    (model_seed, parent_size, round_index - 1)
+                ]["manifest"]["round_digest"]
+            for ensemble_size in ensemble_sizes:
+                indexes = (
+                    tuple(range(ensemble_size))
+                    if member_indexes is None
+                    else tuple(member_indexes)
+                )
+                # The misleading path makes filename-based lineage inference fail.
+                checkpoint_root = (
                     root
-                    / "calibration_blobs"
-                    / f"artifact_{model_seed}_{round_index}_{coverage}.json"
+                    / f"looks_like_seed_{model_seed + 77}"
+                    / f"looks_like_round_{round_index + 5}"
+                    / f"looks_like_k_{ensemble_size + 11}"
+                    / "checkpoints"
                 )
-                calibrator = JointPairedCalibrator(
-                    coverage=float(overrides.get("coverage", coverage)),
-                    q_joint=1.0,
-                    trajectory_ids=np.asarray(
-                        overrides.get("trajectory_ids", calibration_seeds)
-                    ),
-                    trajectory_scores=np.ones(len(calibration_seeds)),
-                    objective_names=tuple(
-                        overrides.get("objective_names", OBJECTIVE_NAMES)
-                    ),
-                    protocol_id=str(
-                        overrides.get("protocol_id", registry["protocol_id"])
-                    ),
-                    calibration_seeds=tuple(
-                        overrides.get("calibration_seeds", calibration_seeds)
-                    ),
-                    labels_manifest_digest=str(
-                        overrides.get(
-                            "labels_manifest_digest", calibration_digest
-                        )
-                    ),
-                    checkpoint_digests=tuple(
-                        overrides.get(
-                            "checkpoint_digests", checkpoint_digests
-                        )
-                    ),
-                )
-                calibrator_payloads[coverage] = save_joint_calibrator(
-                    calibrator_path,
-                    calibrator,
-                )
-                calibrators[coverage] = calibrator_path
-
-            primary_coverage = 0.9 if 0.9 in coverages else coverages[0]
-            manifest_path = (
-                root
-                / "lineage_blobs"
-                / f"artifact_{model_seed}_{round_index}.json"
-            )
-            manifest = write_round_manifest(
-                manifest_path,
-                model_seed=model_seed,
-                round_index=round_index,
-                parent_digest=parent_digest,
-                train_labels_digest=train_digest,
-                calibration_labels_digest=calibration_digest,
-                checkpoint_digests=list(checkpoint_digests),
-                calibrator_digest=calibrator_payloads[primary_coverage][
-                    "calibrator_digest"
-                ],
-                continuation_policy={
-                    "name": (
-                        "paper9_mpc" if round_index == 1 else "pcc_round1"
+                checkpoint_root.mkdir(parents=True, exist_ok=True)
+                checkpoint_paths = []
+                for ordinal, member_index in enumerate(indexes):
+                    checkpoint_path = checkpoint_root / f"blob_{ordinal}.pt"
+                    torch.save(
+                        {
+                            "model_seed": int(model_seed),
+                            "ensemble_size": int(
+                                checkpoint_overrides.get(
+                                    "ensemble_size", ensemble_size
+                                )
+                            ),
+                            "member_seed": int(
+                                model_seed * 1000
+                                + round_index * 100
+                                + ensemble_size * 10
+                                + ordinal
+                            ),
+                            "member_index": int(member_index),
+                            "bootstrap_trajectory_ids": [
+                                *checkpoint_overrides.get(
+                                    "bootstrap_trajectory_ids",
+                                    (1000 + ordinal, 1001 + ordinal),
+                                )
+                            ],
+                            "labels_manifest_digest": train_digest,
+                            "registry_digest": checkpoint_overrides.get(
+                                "registry_digest"
+                            ),
+                            "protocol_id": registry["protocol_id"],
+                            "objective_names": list(OBJECTIVE_NAMES),
+                            "objective_scaling": {"center": [], "scale": []},
+                            "trainable_scope": "all",
+                        },
+                        checkpoint_path,
                     )
-                },
-            )
-            parent_digest = manifest["round_digest"]
-            records[(model_seed, len(member_indexes), round_index)] = {
-                "checkpoint_root": checkpoint_root,
-                "checkpoint_paths": checkpoint_paths,
-                "calibrators": calibrators,
-                "manifest_path": manifest_path,
-            }
+                    checkpoint_paths.append(checkpoint_path)
+                checkpoint_digests = tuple(
+                    _sha256_file(path) for path in checkpoint_paths
+                )
+
+                calibrators = {}
+                calibrator_payloads = {}
+                for coverage in coverages:
+                    calibrator_path = (
+                        root
+                        / "calibration_blobs"
+                        / (
+                            f"artifact_{model_seed}_{ensemble_size}_"
+                            f"{round_index}_{coverage}.json"
+                        )
+                    )
+                    calibrator = JointPairedCalibrator(
+                        coverage=float(overrides.get("coverage", coverage)),
+                        q_joint=1.0,
+                        trajectory_ids=np.asarray(
+                            overrides.get("trajectory_ids", calibration_seeds)
+                        ),
+                        trajectory_scores=np.ones(len(calibration_seeds)),
+                        objective_names=tuple(
+                            overrides.get("objective_names", OBJECTIVE_NAMES)
+                        ),
+                        protocol_id=str(
+                            overrides.get("protocol_id", registry["protocol_id"])
+                        ),
+                        calibration_seeds=tuple(
+                            overrides.get("calibration_seeds", calibration_seeds)
+                        ),
+                        labels_manifest_digest=str(
+                            overrides.get(
+                                "labels_manifest_digest", calibration_digest
+                            )
+                        ),
+                        checkpoint_digests=tuple(
+                            overrides.get(
+                                "checkpoint_digests", checkpoint_digests
+                            )
+                        ),
+                    )
+                    calibrator_payloads[coverage] = save_joint_calibrator(
+                        calibrator_path,
+                        calibrator,
+                    )
+                    calibrators[coverage] = calibrator_path
+
+                primary_coverage = 0.9 if 0.9 in coverages else coverages[0]
+                manifest_path = (
+                    root
+                    / "lineage_blobs"
+                    / f"artifact_{model_seed}_{ensemble_size}_{round_index}.json"
+                )
+                if round_index == 1:
+                    continuation_policy = {"name": "paper9_mpc"}
+                else:
+                    source = records[(model_seed, 3, 1)]["manifest"]
+                    continuation_policy = {
+                        "name": "pcc_round1",
+                        "model_seed": model_seed,
+                        "checkpoint_digests": list(
+                            source["checkpoint_digests"]
+                        ),
+                        "calibrator_digest": source["calibrator_digest"],
+                        "planning_horizon": 3,
+                        "candidate_budget": 50,
+                        "tolerance_scale": 0.05,
+                        "joint_coverage": 0.9,
+                    }
+                manifest = write_round_manifest(
+                    manifest_path,
+                    model_seed=model_seed,
+                    round_index=round_index,
+                    parent_digest=parent_digest,
+                    train_labels_digest=train_digest,
+                    calibration_labels_digest=calibration_digest,
+                    checkpoint_digests=list(checkpoint_digests),
+                    calibrator_digest=calibrator_payloads[primary_coverage][
+                        "calibrator_digest"
+                    ],
+                    continuation_policy=continuation_policy,
+                )
+                records[(model_seed, ensemble_size, round_index)] = {
+                    "checkpoint_root": checkpoint_root,
+                    "checkpoint_paths": checkpoint_paths,
+                    "calibrators": calibrators,
+                    "manifest_path": manifest_path,
+                    "manifest": manifest,
+                }
     return records
 
 
@@ -534,6 +572,66 @@ def test_inventory_requires_same_ensemble_round_keys_for_each_model_seed(tmp_pat
         build_inventory(tmp_path, model_seeds=(5101, 5102))
 
 
+def test_complete_inventory_requires_declared_ensemble_round_factorial(tmp_path):
+    create_inventory_fixture(
+        tmp_path,
+        ensemble_sizes=(3,),
+        rounds=(1, 2),
+    )
+
+    with pytest.raises(ValueError, match="factorial"):
+        build_inventory(
+            tmp_path,
+            model_seeds=(5101, 5102, 5103),
+            require_complete=True,
+        )
+
+
+def test_complete_inventory_requires_every_declared_coverage(tmp_path):
+    create_inventory_fixture(
+        tmp_path,
+        ensemble_sizes=(3, 5),
+        rounds=(1, 2),
+        coverages=(0.9,),
+    )
+
+    with pytest.raises(ValueError, match="coverage factorial"):
+        build_inventory(
+            tmp_path,
+            model_seeds=(5101, 5102, 5103),
+            require_complete=True,
+        )
+
+
+def test_complete_inventory_binds_round2_to_round1_k3_parent(tmp_path):
+    fixture = create_inventory_fixture(
+        tmp_path,
+        ensemble_sizes=(3, 5),
+        rounds=(1, 2),
+    )
+    record = fixture[(5101, 5, 2)]
+    round1_k5 = fixture[(5101, 5, 1)]["manifest"]
+    manifest = record["manifest"]
+    write_round_manifest(
+        record["manifest_path"],
+        model_seed=5101,
+        round_index=2,
+        parent_digest=round1_k5["round_digest"],
+        train_labels_digest=manifest["train_labels_digest"],
+        calibration_labels_digest=manifest["calibration_labels_digest"],
+        checkpoint_digests=manifest["checkpoint_digests"],
+        calibrator_digest=manifest["calibrator_digest"],
+        continuation_policy=manifest["continuation_policy"],
+    )
+
+    with pytest.raises(ValueError, match="round-1 K=3 parent"):
+        build_inventory(
+            tmp_path,
+            model_seeds=(5101, 5102, 5103),
+            require_complete=True,
+        )
+
+
 def test_frozen_registry_accepts_checkpoints_trained_before_freeze(tmp_path):
     create_inventory_fixture(
         tmp_path / "artifacts",
@@ -563,7 +661,8 @@ def test_inventory_cli_emits_digest_bound_json_summary(tmp_path, capsys):
     fixture = create_inventory_fixture(
         tmp_path,
         model_seeds=(5101,),
-        rounds=(1,),
+        ensemble_sizes=(3, 5),
+        rounds=(1, 2),
     )
 
     main(["--root", str(tmp_path), "--model-seeds", "5101"])
@@ -571,13 +670,25 @@ def test_inventory_cli_emits_digest_bound_json_summary(tmp_path, capsys):
     report = json.loads(capsys.readouterr().out)
     assert report["passed"] is True
     assert report["model_seeds"] == [5101]
-    assert report["n_records"] == 1
+    assert report["n_records"] == 4
     record = report["records"][0]
     assert record["checkpoint_root"] == str(
         fixture[(5101, 3, 1)]["checkpoint_root"].resolve()
     )
     assert record["member_indexes"] == [0, 1, 2]
     assert set(record["calibrators"]) == {"0.8", "0.9", "0.95"}
+
+
+def test_inventory_cli_rejects_partial_development_factorial(tmp_path):
+    create_inventory_fixture(
+        tmp_path,
+        model_seeds=(5101,),
+        ensemble_sizes=(3,),
+        rounds=(1, 2),
+    )
+
+    with pytest.raises(ValueError, match="factorial"):
+        main(["--root", str(tmp_path), "--model-seeds", "5101"])
 
 
 def create_checkpoint_only_fixture(
