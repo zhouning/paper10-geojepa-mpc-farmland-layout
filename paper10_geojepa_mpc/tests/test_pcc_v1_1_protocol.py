@@ -15,6 +15,15 @@ REGISTRY = (
     / "protocols"
     / "pcc_v1_1.json"
 )
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def test_pcc_protocol_registry_line_endings_are_digest_stable():
+    attributes = (ROOT / ".gitattributes").read_text(encoding="utf-8")
+    assert (
+        "paper10_geojepa_mpc/experiments/protocols/*.json text eol=lf"
+        in attributes.splitlines()
+    )
 
 
 def test_pcc_v1_1_locks_source_protocol_and_selected_risk_contract():
