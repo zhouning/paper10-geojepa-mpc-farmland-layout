@@ -1,0 +1,51 @@
+{
+  "artifacts": [
+    {
+      "path": "D:\\test\\paper10_pcc_v1_completion_runs\\policy_iteration\\seed_5101\\round2\\labels\\train\\seed_1000\\trajectory_1000.npz",
+      "seed": 1000,
+      "sha256": "ec373f4f7bf5e6009dcbe96f985e06096d614276898f63f5cf3b989f14a22b21"
+    },
+    {
+      "path": "D:\\test\\paper10_pcc_v1_completion_runs\\policy_iteration\\seed_5101\\round2\\labels\\train\\seed_1001\\trajectory_1001.npz",
+      "seed": 1001,
+      "sha256": "e9e2b93b180f6edad1111b6520100a3fb62244b92cbc36b5697752700d742990"
+    },
+    {
+      "path": "D:\\test\\paper10_pcc_v1_completion_runs\\policy_iteration\\seed_5101\\round2\\labels\\train\\seed_1002\\trajectory_1002.npz",
+      "seed": 1002,
+      "sha256": "da25bd084dbc04ba64cf1ace8ed6679d73b61d9cbca6d237092507db2d7e1223"
+    },
+    {
+      "path": "D:\\test\\paper10_pcc_v1_completion_runs\\policy_iteration\\seed_5101\\round2\\labels\\train\\seed_1003\\trajectory_1003.npz",
+      "seed": 1003,
+      "sha256": "ee8f42e8b6071d5b10129bfcf345e4f543eb5adaf8f2ee76e46fcbbf4fd4a68c"
+    },
+    {
+      "path": "D:\\test\\paper10_pcc_v1_completion_runs\\policy_iteration\\seed_5101\\round2\\labels\\train\\seed_1005\\trajectory_1005.npz",
+      "seed": 1005,
+      "sha256": "e47e73ad245f5331da1a6dd41e565358348f37040f8a7f75d99b1bbd529260ac"
+    }
+  ],
+  "byte_identical_to_round0_seeds": [
+    1000,
+    1001,
+    1002,
+    1003,
+    1005
+  ],
+  "completed_round2_train_seeds": [
+    1000,
+    1001,
+    1002,
+    1003,
+    1005
+  ],
+  "confirmation_seeds_run": [],
+  "eligible_for_pcc_v1_1_resume": false,
+  "incomplete_seed_directories": [],
+  "protocol_id": "pcc_v1",
+  "registry_digest": "b223943d912c07183c05adb5bff529b73ee07e54e12213f7dba8195bcfa27d40",
+  "schema_version": 1,
+  "status": "abandoned_before_freeze",
+  "stop_verified_at": "2026-07-21T15:40:55.5792196+08:00"
+}
